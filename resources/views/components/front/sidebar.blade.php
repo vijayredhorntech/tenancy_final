@@ -1,12 +1,12 @@
 <div id="sideBarDiv" class="z-20 w-72 p-4 h-[100vh] bg-ternary overflow-x-hidden overflow-y-auto flex-none xl:static lg:static absolute top-0 left-0 xl:block lg:block hidden ">
     <div class="w-full flex flex-col justify-center items-center border-b-[1px] pb-2 border-b-gray-100/20 shadow-lg shadow-gray-700/10">
-        <img src="{{asset('assets/images/logo.png')}}" class="h-16 w-auto" alt="Cloud Travels">
-        <span class="font-semibold text-white/90 mt-2 text-2xl">Cloud Travels</span>
+        <img src="{{asset('assets/images/logo.png')}}" class="h-16 w-auto" alt="Cloud Travel">
+        <span class="font-semibold text-white/90 mt-2 text-2xl">Cloud Travel</span>
         <p class="text-secondary/90 text-xs" ><i class="fa-regular fa-calendar-days mr-1"></i> <span id="clockDiv"></span> </p>
     </div>
 
     <div class="w-full flex flex-col mt-12 gap-3 ">
-        <a href="">
+        <a href="{{route('index')}}">
             <div class="{{Route::currentRouteName()==='index'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
                     <i class="fa fa-tv mr-2 text-sm"></i>
@@ -64,8 +64,8 @@
 
             </ul>
         </div>
-        <a href="">
-            <div class="{{Route::currentRouteName()==='dashboard'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+        <a href="{{route('agency')}}">
+            <div class="{{Route::currentRouteName()==='agency'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
                     <i class="fa-regular fa-building mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Agency</span>
