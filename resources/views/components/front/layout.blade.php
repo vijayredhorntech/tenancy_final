@@ -32,6 +32,39 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+
+        input[type="date"]::-webkit-datetime-edit {
+            color: #172432b3; /* Change placeholder text color */
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 0;
+        }
+
+
+        select {
+            -webkit-appearance: none !important; /* Hides the arrow in WebKit-based browsers (Chrome, Safari, Edge) */
+            -moz-appearance: none !important;    /* Hides the arrow in Firefox */
+            appearance: none !important;         /* Standard property */
+            background: white !important ;
+            color: rgba(75, 85, 99, 0.7);/* Removes background if needed */
+        }
+        select option {
+            color: rgba(75, 85, 99, 0.7); /* Match placeholder text */
+            background-color: #ffffff; /* Ensure options have a white background */
+        }
+
     </style>
     @yield('styles')
 
