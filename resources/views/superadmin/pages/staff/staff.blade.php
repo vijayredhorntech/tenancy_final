@@ -28,8 +28,8 @@
 
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">Agency List </span>
-                <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">Create New Agency</button>
+                <span class="font-semibold text-ternary text-xl">Staff List </span>
+                <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">Create New Staff</button>
             </div>
 {{--        === heading section code ends here===--}}
 
@@ -37,53 +37,107 @@
 
 {{--        === this is code for form section ===--}}
              <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 hidden">
-                 <form action="">
+                 
+        <form action="{{ route('superadmin_staffstore') }}" method="POST" enctype="multipart/form-data"> 
+        @csrf
                      <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
 
-                         {{--               === text type input field ===--}}
+                     <div class="w-full relative group flex flex-col gap-1">
+                             <label for="profile" class="font-semibold text-ternary/90 text-sm">Profile</label>
+                             <div class="w-full relative">
+                                 <input type="file" name="profile" id="profile" placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-file absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                             </div>
+                         </div>
+
+
+
                          <div class="w-full relative group flex flex-col gap-1">
-                             <label for="name" class="font-semibold text-ternary/90 text-sm">Agency Name</label>
+                             <label for="name" class="font-semibold text-ternary/90 text-sm">Name</label>
                              <div class="w-full relative">
                                  <input type="text" name="name" id="name" placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
+                        
+                        
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="email" class="font-semibold text-ternary/90 text-sm">Email</label>
+                             <div class="w-full relative">
+                                 <input type="email" name="email" id="email" placeholder="Email....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-envelope absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                             </div>
+                         </div>
 
-                         {{--               === number type input field ===--}}
+
+             
+                 
+                         
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Phone</label>
                              <div class="w-full relative">
-                                 <input type="number" name="name" id="name" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="number" name="agency_phone" id="agency_phone" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-phone absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
 
 
-                         {{--                === date type input field ===--}}
+                
+
+
+                          
+
+
+                         {{--   === number type input field ===--}}
                          <div class="w-full relative group flex flex-col gap-1">
-                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Date</label>
+                             <label for="name" class="font-semibold text-ternary/90 text-sm">Zip Code</label>
                              <div class="w-full relative">
-                                 <input type="date" name="date" id="datePicker"
-                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                 <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
-                                    onclick="document.getElementById('datePicker').showPicker();"></i>
+                                 <input type="text" name="zip_code" id="zip_code" placeholder="zip code....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
 
 
-                         {{--               === textarea input field ===--}}
                          <div class="w-full relative group flex flex-col gap-1">
-                             <label for="name" class="font-semibold text-ternary/90 text-sm">Description</label>
+                           <!-- <div class="address"> </div>  -->
+                           <label for="name" class="font-semibold text-ternary/90 text-sm">Address</label>
                              <div class="w-full relative">
-                                 <textarea   name="name" id="name" rows="1" placeholder="Description....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"></textarea>
-                                 <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
+                                 <input type="text" name="address" id="address" placeholder="Address....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                             </div>
+                         </div>
+
+
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="name" class="font-semibold text-ternary/90 text-sm">City</label>
+                             <div class="w-full relative">
+                                 <input type="text" name="city" id="city" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                             </div>
+                         </div>
+
+
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="name" class="font-semibold text-ternary/90 text-sm">State</label>
+                             <div class="w-full relative">
+                                 <input type="text" name="state" id="state" placeholder="State....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-flag absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                             </div>
+                         </div>
+
+
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="name" class="font-semibold text-ternary/90 text-sm">Country</label>
+                             <div class="w-full relative">
+                                 <input type="test" name="country" id="country" placeholder="Country....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
 
 
                          {{-- === select input field ===--}}
                          <div class="w-full relative group flex flex-col gap-1">
-                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Select box</label>
+                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Role</label>
                              <div class="w-full relative">
                                  <select  name="date" id="datePicker"
                                           class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
@@ -98,29 +152,9 @@
                          </div>
 
 
-                         {{--               === radio input field ===--}}
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <span class="font-semibold text-ternary/90 text-sm">Select an Option</span>
-                             <div class="flex gap-4">
-                                 <label class="flex items-center gap-2">
-                                     <input type="radio" name="option" value="option1" class="appearance-none rounded-full text-ternary/90 w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
-                                     Option 1
-                                 </label>
-                                 <label class="flex items-center gap-2">
-                                     <input type="radio" name="option" value="option2" class="appearance-none rounded-full text-ternary/90 w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
-                                     Option 2
-                                 </label>
-                             </div>
-                         </div>
 
 
-                         {{--               === checkbox input field ===--}}
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <label for="agree" class="font-semibold text-ternary/90 text-sm flex items-center gap-2">
-                                 <input type="checkbox" name="agree" id="agree" class="appearance-none w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
-                                 I Agree to Terms
-                             </label>
-                         </div>
+                        
                      </div>
                      <div class="w-full flex justify-end px-4 pb-4 gap-2">
                           <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">Cancel</button>
@@ -152,63 +186,40 @@
                 <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                     <tr>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency Name</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Staff Name</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Created At</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Services</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Fund Allotted</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Fund Remaining</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Email</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Phone Number</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Role</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Status</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                     </tr>
-                    @php
-                        $bookings = [
-                                         ['name' => 'Skyline Tours', 'created_at' => '12-02-2025', 'service' => '5', 'fund_allotted' => '£ 1,50,000.00', 'fund_remaining' => '£ 75,000.00', 'status' => 'Active'],
-                                         ['name' => 'Elite Voyages', 'created_at' => '25-01-2025', 'service' => '2', 'fund_allotted' => '£ 3,00,000.00', 'fund_remaining' => '£ 1,25,000.00', 'status' => 'Inactive'],
-                                         ['name' => 'Global Getaways', 'created_at' => '08-12-2024', 'service' => '4', 'fund_allotted' => '£ 2,50,000.00', 'fund_remaining' => '£ 90,000.00', 'status' => 'Active'],
-                                         ['name' => 'Sunshine Holidays', 'created_at' => '19-11-2024', 'service' => '1', 'fund_allotted' => '£ 1,75,000.00', 'fund_remaining' => '£ 60,000.00', 'status' => 'Active'],
-                                         ['name' => 'Oceanic Travels', 'created_at' => '30-01-2025', 'service' => '3', 'fund_allotted' => '£ 2,00,000.00', 'fund_remaining' => '£ 80,000.00', 'status' => 'Inactive'],
-                                         ['name' => 'Mountain Peak Adventures', 'created_at' => '14-02-2025', 'service' => '6', 'fund_allotted' => '£ 4,00,000.00', 'fund_remaining' => '£ 1,75,000.00', 'status' => 'Active'],
-                                         ['name' => 'Nomad Travel Co.', 'created_at' => '05-01-2025', 'service' => '2', 'fund_allotted' => '£ 2,75,000.00', 'fund_remaining' => '£ 1,00,000.00', 'status' => 'Active'],
-                                         ['name' => 'Blue Horizon Tours', 'created_at' => '22-12-2024', 'service' => '5', 'fund_allotted' => '£ 3,50,000.00', 'fund_remaining' => '£ 1,50,000.00', 'status' => 'Active'],
-                                         ['name' => 'Wanderlust Ventures', 'created_at' => '10-02-2025', 'service' => '4', 'fund_allotted' => '£ 2,25,000.00', 'fund_remaining' => '£ 85,000.00', 'status' => 'Active'],
-                                         ['name' => 'Exotic Escape', 'created_at' => '28-01-2025', 'service' => '3', 'fund_allotted' => '£ 1,80,000.00', 'fund_remaining' => '£ 70,000.00', 'status' => 'Inactive'],
-
-                                     ];
-                    @endphp
-
 
                     
-                    @forelse($bookings as $booking)
+                    @forelse($users as $user)
                         <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking['name']}}</td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['created_at']}}</td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                              <div class="flex  gap-2">
-                                  {{$booking['service']}}
-                                  <button type="button" title="View Services" onclick="document.getElementById('viewServiceModel').classList.toggle('hidden')">
-                                      <div class=" bg-primary/10 text-primary h-6 w-6 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                          <i class="fa fa-eye"></i>
-                                      </div>
-                                  </button>
-                              </div>
-                            </td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$user['name']}}</td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$user['created_at']}}</td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$user['email']}}</td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $user->userdetails->phone_number ?? 'N/A' }}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex justify-between gap-2">
-                                    {{$booking['fund_allotted']}}
-                                    <a href="" title="Add Funds">
-                                        <div class=" bg-success/10 text-success h-6 w-6 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-database"></i>
-                                        </div>
-                                    </a>
+                                {{ $user->roles->isNotEmpty() ? $user->roles->pluck('name')->implode(', ') : 'No Role' }}
                                 </div>
                             </td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"> {{$booking['fund_remaining']}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                <span class="bg-{{$booking['status']==='Inactive'?'danger':'success'}}/10 text-{{$booking['status']==='Inactive'?'danger':'success'}} px-2 py-1 rounded-[3px] font-bold">{{$booking['status']}}</span>
+                                <span class="bg-{{$user['status']==='Inactive'?'danger':'success'}}/10 text-{{$user['status']==='Inactive'?'danger':'success'}} px-2 py-1 rounded-[3px] font-bold">{{$user['status']}}</span>
                             </td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
+
+                                <a href="{{route('superadmin_staffupdate',['id' => $user->id])}}" title="Edit">
+                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                            <i class="fa fa-pen"></i>
+                                        </div>
+                                    </a>
+
                                     <a href="" title="Remind for funds">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-bell"></i>
