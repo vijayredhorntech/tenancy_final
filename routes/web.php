@@ -10,6 +10,7 @@ use App\Http\Controllers\SuperAdmin\SuperadminController;
 use App\Http\Controllers\SuperAdmin\RoleController;
 use App\Http\Controllers\SuperAdmin\PermissionController;
 use App\Http\Controllers\SuperAdmin\FundManagementController;
+use App\Http\Controllers\SuperAdmin\ServiceController;
 use App\Http\Controllers\SuperAdmin\InventoryController;
 
 
@@ -67,26 +68,32 @@ Route::prefix('super-admin')->middleware(['auth', 'verified'])->group(function (
             Route::get('/permissiondelete/{id}', 'hs_permissiondelete')->middleware('can:permission delete')->name('superadmin_permissiondelete');
         });
         
-               /*** Route for permissions ***/
-          Route::controller(InventoryController::class)->group(function () {
-                Route::get('/inventory', 'hs_inventory')->name('superadmin.inventory');
-               
-            });
 
            // Fund Management
         Route::controller(FundManagementController::class)->group(function () {
             Route::get('fund/{id}', 'him_addfund_agency')->name('agencies.fund');
             Route::post('storefund', 'him_storefund')->name('agencies.fund.store');
+            Route::post('deduction', 'him_deduction')->name('deduction');
            
-            Route::get('test', 'him_test')->name('test');  // Unique path
-            Route::get('flight', 'him_test2')->name('Flight'); // Unique path
-            Route::get('hotel', 'him_test3')->name('Hotel'); // Unique path
-            Route::post('deduction','him_deduction')->name('deduction');
+         
      
         });
 
-        
 
+         // Service  Management
+         Route::controller(ServiceController::class)->group(function () {
+            Route::get('test', 'him_test')->name('test');  // Unique path
+            Route::get('flight', 'him_flight')->name('Flight'); // Unique path
+            Route::get('hotel', 'him_hotel')->name('Hotel'); // Unique path
+            Route::get('flight_search','him_flight')->name('flight.search');
+     
+        });
+        
+     Route::controller(InventoryController::class)->group(function () {
+        Route::get('inventory', 'hs_inventory')->name('superadmin.inventory');  // Unique path
+        
+ 
+    });
 
 
 

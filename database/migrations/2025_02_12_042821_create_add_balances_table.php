@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('add_balances', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('agency_id');
-            $table->decimal('added_amount', 15, 2);
+            $table->decimal('amount', 15, 2);
             $table->date('added_date');
             $table->timestamps();
             $table->softDeletes();
