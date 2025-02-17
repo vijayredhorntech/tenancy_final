@@ -26,7 +26,7 @@
             </div>
             <ul id="servicesDiv" class="pl-10 mt-2 flex flex-col hidden">
                 <a href="">
-                    <li class="{{Route::currentRouteName()==='dashboard'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                         <div class="flex items-center">
                             <i class="fa fa-plane-departure mr-2 text-sm"></i>
                             <span class="text-lg font-medium">Flights</span>
@@ -35,7 +35,7 @@
                     </li>
                 </a>
                 <a href="">
-                    <li class="{{Route::currentRouteName()==='dashboard'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                         <div class="flex items-center">
                             <i class="fa fa-hotel mr-2 text-sm"></i>
                             <span class="text-lg font-medium">Hotels</span>
@@ -44,7 +44,7 @@
                     </li>
                 </a>
                 <a href="">
-                    <li class="{{Route::currentRouteName()==='dashboard'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                         <div class="flex items-center">
                             <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
                             <span class="text-lg font-medium">Visa</span>
@@ -53,7 +53,7 @@
                     </li>
                 </a>
                 <a href="">
-                    <li class="{{Route::currentRouteName()==='dashboard'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                         <div class="flex items-center">
                             <i class="fa fa-network-wired mr-2 text-sm"></i>
                             <span class="text-lg font-medium">Others</span>
