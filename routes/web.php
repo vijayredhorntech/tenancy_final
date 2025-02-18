@@ -36,7 +36,8 @@ Route::prefix('super-admin')->middleware(['auth', 'verified'])->group(function (
             Route::post('editstore', 'him_editstore')->name('agencies.editstore');
             Route::get('delete/{id}', 'him_delete_agency')->name('agencies.delete');
             Route::get('/export-agency','exportAgency')->name('agencies.downloade');
-            Route::get('/generate-pdf',  'generatePDF')->name('agencies.invoice');;
+            Route::get('/generate-pdf',  'generatePDF')->name('agencies.invoice');
+            Route::get('/agency/{id}','hs_agency_hisoty')->name('agencies.history');
 
         });
 
@@ -74,6 +75,7 @@ Route::prefix('super-admin')->middleware(['auth', 'verified'])->group(function (
             Route::get('fund/{id}', 'him_addfund_agency')->name('agencies.fund');
             Route::post('storefund', 'him_storefund')->name('agencies.fund.store');
             Route::post('deduction', 'him_deduction')->name('deduction');
+            Route::get('transaction_approvals','him_transaction_approvals')->name('transaction_approvals');
            
          
      
@@ -85,7 +87,8 @@ Route::prefix('super-admin')->middleware(['auth', 'verified'])->group(function (
             Route::get('test', 'him_test')->name('test');  // Unique path
             Route::get('flight', 'him_flight')->name('Flight'); // Unique path
             Route::get('hotel', 'him_hotel')->name('Hotel'); // Unique path
-            Route::get('flight_search','him_flight')->name('flight.search');
+            Route::post('flight_search','him_flightsearch')->name('flight.search');
+            Route::post('flight_price','him_flightsearch')->name('flight.pricing');
      
         });
         

@@ -54,7 +54,7 @@
         $airports = \App\Models\Airport::all();
         //  dd($airports);
     @endphp
-    <form method="post" action="{{ route('flight.search') }}" autocomplete="off" id="flightSearch">
+    <form  action="{{ route('flight.search') }}" method="post" autocomplete="off" id="flightSearch">
         @csrf
         <div class="flex gap-4 lg:flex-row md:flex-row sm:flex-row flex-col ">
             <div data-validation-key="type" class="flex gap-2 items-center">
@@ -303,10 +303,10 @@
             </div>
             <div class="w-full relative flex justify-end lg:col-span-6 md:col-span-4 col-span-2">
                 <div class="">
-                    <button type="submit" id="searchFlightButton"
+                    <input type="submit" id="searchFlightButton" value="Search Flight"
                             class="showLoader font-bold text-lg bg-primary text-white px-6 py-2 rounded-[3px]  hover:bg-secondary hover:text-white transition ease-in duration-2000">
-                            Search Flight <i class="fa fa-arrow-right ml-2"></i>
-                    </button>
+                            <!-- Search Flight <i class="fa fa-arrow-right ml-2"></i>
+                    </button> -->
                 </div>
             </div>
         </div>
@@ -328,6 +328,8 @@
             // Get the values entered by the user
             var leavingFrom = document.getElementById('originInput').value;
             var arriveTo = document.getElementById('destinationInput').value;
+
+            alert(leavingFrom);
 
             document.getElementById('loaderLeavingFrom').textContent = leavingFrom;
             document.getElementById('loaderArrivalTo').textContent = arriveTo;
@@ -455,10 +457,10 @@
 </script>
 
 
-<script>
+<!-- <script>
     $(document).ready(function () {
         $('.showLoader').click(function () {
-            $('#loading_overlay1').show();
+            $('#loading_overlay1').hide();
         });
     });
-</script>
+</script> -->
