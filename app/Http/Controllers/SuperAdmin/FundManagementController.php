@@ -44,50 +44,69 @@ class FundManagementController extends Controller
 
  /**** Store blanace in the  balance and add table ****/
  public function him_storefund(Request $request)
- {
-     $uid = Auth::id(); // Optimized user ID retrieval
+{
+    $uid = Auth::id(); // Get authenticated user ID
+
+    // Validate input data
+    $validatedData = $request->validate([
+        'id' => 'required|integer',
+        'add_ammount' => 'required|numeric|min:1', // Fixed key name for consistency
+    ]);
+
+
+    try {
+        DB::beginTransaction();
+
+        // Create a new AddBalance record
+        $addbalance = new AddBalance();
+        $addbalance->agency_id = $request->id;
+        $addbalance->amount = $request->add_ammount;
+        $addbalance->added_date = now();
+
+        // Check if it's a credit note or regular transaction
+        if (isset($request->creditnote)) {
+            $addbalance->status = 1;
+        } else {
+            $addbalance->status = 0;
+            $addbalance->payment_number = $request->payment_number;
+            $addbalance->remark = $request->remark;
+        }
+        $invoice_number = 'INV-' . now()->format('Ymd') . '-' . str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+        $addbalance->invoice_number = $invoice_number;
+        $addbalance->payment_type = $request->modepayment;
+        $addbalance->save();
+        // Save the record to generate an ID
+      
+
+
+         // Save the invoice number update
+
+        // Update or create balance record (only if NOT a credit note)
+        if (!isset($request->creditnote)) {
+            $balance = Balance::where('agency_id', $request->id)->first();
+
+            if ($balance) {
+                $balance->balance += $request->add_ammount;
+                $message = 'Balance updated successfully.';
+            } else {
+                $balance = new Balance();
+                $balance->agency_id = $request->id;
+                $balance->balance = $request->add_ammount;
+                $message = 'Balance created successfully.';
+            }
+
+            $balance->created_user_id = $uid;
+            $balance->save();
+        }
  
-     // Validate input data
-     $validatedData = $request->validate([
-         'id' => 'required|integer',
-         'add_ammount' => 'required|numeric|min:1',
-     ]);
- 
-     try {
-         DB::beginTransaction();
- 
-         // Add a new balance transaction record
-         $addbalance = new AddBalance(); 
-         $addbalance->agency_id = $request->id; 
-         $addbalance->amount = $request->add_ammount; 
-         $addbalance->added_date = now(); // Storing the current timestamp
-         $addbalance->save();
- 
-         // Update or create the balance record
-         $balance = Balance::where('agency_id', $request->id)->first();
- 
-         if ($balance) {
-             $balance->balance += $request->add_ammount;
-             $balance->created_user_id = $uid;
-             $message = 'Balance updated successfully.';
-         } else {
-             $balance = new Balance();
-             $balance->agency_id = $request->id;
-             $balance->balance = $request->add_ammount;
-             $balance->created_user_id = $uid;
-             $message = 'Balance created successfully.';
-         }
- 
-         $balance->save();
- 
-         DB::commit();
-          return redirect()->back()->with('success', $message);
-  
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'Failed to update balance: ' . $e->getMessage());
-     }
- }
+        DB::commit();
+        return redirect()->back()->with('success', $message);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->with('error', 'Failed to update balance: ' . $e->getMessage());
+    }
+}
+
 
 
  /****Deduction ***/
@@ -128,27 +147,15 @@ class FundManagementController extends Controller
 }
 
 
+/***Approvel ***/
 
- /**** */
- public function him_test(){
+public function him_transaction_approvals(){
 
-    $id = Auth::user()->id;
-    // dd($id); 
-    $userData = \session('user_data');
-    DatabaseHelper::setDatabaseConnection($userData['database']);
-    $user = User::on('user_database')->where('id', $id)->first();
-    $agency_record=Agency::where('email',$user->email)->first(); 
-    $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-   
-    $services = $agency->userAssignments->pluck('service.name', 'service.icon');
-      return view('agencies.pages.test',[
-        'user_data' => $user,
-        'services' => $services,
-        'agency'=>$agency_record,
-        'all_agency'=>$agency
-        ]);
-
- }
+    $credits = AddBalance::with('agency')->where('status',1)->get();
+    return view('superadmin.pages.agencies.transaction_approvals',[
+        'credits'=>$credits
+       ]);
+}
 
 
  

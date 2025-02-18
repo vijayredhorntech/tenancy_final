@@ -82,6 +82,8 @@
     {{--    ===font awesome link ends===--}}
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 
 </head>
 <body class="bg-gray-100 relative"

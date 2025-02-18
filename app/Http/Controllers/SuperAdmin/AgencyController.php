@@ -19,6 +19,9 @@ use App\Models\UserServiceAssignment;
 use App\Exports\AgencyExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\AddBalance;
+use App\Models\Balance;
+use App\Models\Deduction;
 
 
 class AgencyController extends Controller
@@ -232,6 +235,17 @@ public function him_editstore(Request $request)
 }
 
 
+
+/*** Single view agency ***/
+public function hs_agency_hisoty($id)
+{
+    $agency = Agency::with('balance')->where('id', $id)->first();
+    // $deductions = Deduction::with('agency', 'service')->where('agency_id', $id)->get();
+    $deductions = Deduction::with('service_name')->where('agency_id', $id)->get();
+    $credits = AddBalance::with('agency')->where('agency_id', $id)->where('status',0)->get();
+
+    return view('superadmin.pages.agencies.agencyhistory', compact('agency', 'deductions', 'credits'));
+}
 
 
 

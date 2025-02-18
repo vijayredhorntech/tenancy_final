@@ -87,6 +87,11 @@
 </head>
 <body class="bg-gray-100 relative"
       style="font-family: 'Public Sans', serif; height: 100vh; width: 100%; overflow:hidden">
+
+
+
+
+
 {{--===Side bar overlay===--}}
 <div id="sideBarOverlay" class="xl:w-0 lg:w-0  h-full bg-black/40 absolute top-0 left-0"
      onclick="document.getElementById('sideBarDiv').classList.toggle('hidden');document.getElementById('sideBarOverlay').classList.toggle('w-full');"></div>

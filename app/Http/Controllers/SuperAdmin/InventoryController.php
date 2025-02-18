@@ -25,7 +25,10 @@ class InventoryController extends Controller
     public function hs_inventory(Request $request)
 {
     // Fetch all records with agency relationship
-    $inventory = AddBalance::with('agency')->get()->map(function ($item) {
+    $inventory = AddBalance::with('agency')
+    ->where('status', 0) // Filter by status = 0
+    ->get()
+    ->map(function ($item) {
         $item->type = 'credit'; // Mark as credit
         $item->amount = $item->amount; // Standardize amount field
         unset($item->added_amount);
