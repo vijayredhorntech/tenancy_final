@@ -28,8 +28,8 @@
 
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">Staff List </span>
-                <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">Create New Staff</button>
+                <span class="font-semibold text-ternary text-xl">Permissions List </span>
+                <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">Create New Permission</button>
             </div>
 {{--        === heading section code ends here===--}}
 
@@ -37,28 +37,23 @@
 
 {{--        === this is code for form section ===--}}
              <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 hidden">
-                 
-        <form action="{{ route('superadmin_permissionstore') }}" method="POST" enctype="multipart/form-data"> 
-        @csrf
-                     <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
 
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <label for="name" class="font-semibold text-ternary/90 text-sm">Permission Name</label>
-                             <div class="w-full relative">
-                                 <input type="text" name="name" id="name" placeholder="Permission name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                 <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+        <form action="{{ route('superadmin_permissionstore') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+
+                         <div class="flex justify-end px-4 py-2">
+                             <div class="xl:w-[400px] lg:w-[400px] md:w-[300px] w-full  relative group flex flex-col gap-1">
+                                 <label for="name" class="font-semibold text-ternary/90 text-sm">Permission Name</label>
+                                 <div class="w-full relative">
+                                     <input type="text" name="name" id="name" placeholder="Permission name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                     <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                 </div>
                              </div>
                          </div>
-                        
-                        
 
-
-
-                        
-                     </div>
-                     <div class="w-full flex justify-end px-4 pb-4 gap-2">
+                     <div class="w-full flex justify-end px-4 py-4 gap-2">
                           <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">Cancel</button>
-                          <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Create Agency</button>
+                          <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Create Permission</button>
                      </div>
                  </form>
              </div>
@@ -91,14 +86,14 @@
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                     </tr>
 
-                    
+
                     @forelse($permissions as $permission)
                         <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$permission['name']}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$permission['created_at']}}</td>
-                         
-                          
+
+
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
                                     <a href="" title="Remind for funds">
@@ -121,8 +116,6 @@
                                 </div>
                             </td>
                         </tr>
-
-
                     @empty
                         <tr>
                             <td colspan="8" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
@@ -135,10 +128,10 @@
                   <!-- Pagination Links -->
           <div class="d-flex justify-content-between align-items-center mt-3">
                     <div>
-                        Showing {{ $permissions->firstItem() }} to {{ $permissions->lastItem() }} 
+                        Showing {{ $permissions->firstItem() }} to {{ $permissions->lastItem() }}
                         of {{ $permissions->total() }} results (Page {{ $permissions->currentPage() }} of {{ $permissions->lastPage() }})
                     </div>
-   
+
                     <div>
                         {{ $permissions->links() }}
                     </div>
