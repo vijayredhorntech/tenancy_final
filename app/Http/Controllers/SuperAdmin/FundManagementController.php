@@ -45,6 +45,7 @@ class FundManagementController extends Controller
  /**** Store blanace in the  balance and add table ****/
  public function him_storefund(Request $request)
 {
+
     $uid = Auth::id(); // Get authenticated user ID
 
     // Validate input data
@@ -64,9 +65,11 @@ class FundManagementController extends Controller
         $addbalance->added_date = now();
 
         // Check if it's a credit note or regular transaction
-        if (isset($request->creditnote)) {
+        if ($request->modepayment == 'creditnote') {
+         
             $addbalance->status = 1;
         } else {
+         
             $addbalance->status = 0;
             $addbalance->payment_number = $request->payment_number;
             $addbalance->remark = $request->remark;
@@ -82,7 +85,7 @@ class FundManagementController extends Controller
          // Save the invoice number update
 
         // Update or create balance record (only if NOT a credit note)
-        if (!isset($request->creditnote)) {
+        if ($request->modepayment != 'creditnote') {
             $balance = Balance::where('agency_id', $request->id)->first();
 
             if ($balance) {
@@ -152,9 +155,50 @@ class FundManagementController extends Controller
 public function him_transaction_approvals(){
 
     $credits = AddBalance::with('agency')->where('status',1)->get();
+
     return view('superadmin.pages.agencies.transaction_approvals',[
         'credits'=>$credits
        ]);
+}
+
+
+/** View transaction ***/
+public function him_transaction_update($uid)
+{
+ 
+    $credits = AddBalance::with('agency')->where('id', $uid)->where('status', 1)->first();
+
+    if ($credits) {
+
+        return view('superadmin.pages.agencies.transaction_approvalsform', [
+            'credits' => $credits,
+        ]);
+    } else {
+       
+        return back()->with('message', 'Wrong selection');
+    }
+}
+
+/****Store fund *****/
+
+public function him_transaction_store(Request $request){
+
+     // Fetch the credit record based on the id and status
+     $credits = AddBalance::with('agency')->where('id', $request->id)->where('status', 1)->first();
+
+     if ($credits) {
+
+         $credits->amount = $request->ammount;
+         $credits->status = $request->status;
+         if (isset($request->remark)) {
+             $credits->remark = $request->remark;
+         }
+         $credits->save();
+         return redirect()->route('transaction_approvals')->with('message', 'Transaction updated successfully.');
+
+     }
+     return redirect()->route('transaction_approvals')->with('error', 'Transaction not found or invalid status.');
+
 }
 
 

@@ -76,6 +76,9 @@ Route::prefix('super-admin')->middleware(['auth', 'verified'])->group(function (
             Route::post('storefund', 'him_storefund')->name('agencies.fund.store');
             Route::post('deduction', 'him_deduction')->name('deduction');
             Route::get('transaction_approvals','him_transaction_approvals')->name('transaction_approvals');
+            Route::get('transaction_update/{id}','him_transaction_update')->name('transaction_update');
+            Route::post('transaction_store','him_transaction_store')->name('transaction_store');
+            Route::get('transaction_delete','him_transaction_delete')->name('transaction_delete');
            
          
      
