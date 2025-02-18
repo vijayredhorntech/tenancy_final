@@ -13,6 +13,7 @@ use App\Http\Controllers\SuperAdmin\PermissionController;
 use App\Http\Controllers\SuperAdmin\FundManagementController;
 use App\Http\Controllers\SuperAdmin\ServiceController;
 use App\Http\Controllers\SuperAdmin\InventoryController;
+use App\Http\Controllers\Agencies\SupportController;
 
 
 
@@ -76,7 +77,10 @@ Route::prefix('super-admin')->middleware(['auth', 'verified'])->group(function (
             });
                /*** Route for conversations ***/
           Route::controller(ConversationController::class)->group(function () {
-                Route::get('/conversation', 'hs_conversation')->name('superadmin.conversation');
+                Route::get('/ticket','hs_viewticket')->name('superadmin.ticket');
+                Route::get('/conversation/{id}', 'hs_conversation')->name('superadmin.conversation');
+                Route::post('/message', 'hs_storeconversation')->name('send_message');
+                
             });
 
 
@@ -123,12 +127,15 @@ Route::prefix('super-admin')->middleware(['auth', 'verified'])->group(function (
 
 });
 
+/****** Route For agency *******/
 
-// /route for agency
 Route::group(['prefix' => 'agencies'], function () {
        Route::post('agencies_store', [AgencyController::class, 'him_agencies_store'])->name('agency_login');
        Route::get('/dashboard',[AgencyController::class, 'him_agenciesdashboard'])->name('agency_dashboard');
-       Route::get('/support',[AgencyController::class, 'him_agenciesupport'])->name('agency_support');
+       Route::get('/support',[SupportController::class, 'him_agenciesupport'])->name('agency_support');
+       Route::post('/storeticket',[SupportController::class, 'him_storeticket'])->name('store_ticket');
+
+       
 
 });
 

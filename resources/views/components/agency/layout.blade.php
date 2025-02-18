@@ -82,7 +82,12 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     {{--    ===font awesome link ends===--}}
 
+
+ 
+     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 </head>
 <body class="bg-gray-100 relative"
@@ -108,5 +113,40 @@
     </div>
 </div>
 @yield('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editors = document.querySelectorAll('.quill-editor');
+        editors.forEach(function(editorElement) {
+            const quill = new Quill(editorElement, {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ 'header': 1 }, { 'header': 2 }],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'script': 'sub' }, { 'script': 'super' }],
+                        [{ 'indent': '-1' }, { 'indent': '+1' }],
+                        [{ 'direction': 'rtl' }],
+                        [{ 'size': ['small', false, 'large', 'huge'] }],
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'font': [] }],
+                        [{ 'align': [] }],
+                        ['clean'],
+                        ['link', 'image', 'video']
+                    ]
+                },
+                placeholder: 'Compose your content...'
+            });
+
+            // Apply custom height using CSS
+            editorElement.style.height = "200px";
+            editorElement.style.overflow = "auto";
+            editorElement.style.border="1px solid #ff421666"
+        });
+    });
+</script>
+
 </body>
 </html>

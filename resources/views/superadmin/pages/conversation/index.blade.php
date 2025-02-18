@@ -34,6 +34,7 @@
                     </div>
                     <div class="p-4  w-full h-[600px] bg-white overflow-y-auto ">
 
+                   
 {{--                        client chat div--}}
                           <div class="flex flex-col gap-2 w-full">
                               <div class="w-[70%] flex flex-col ">
@@ -46,16 +47,7 @@
                                       </div>
                                   </div>
                               </div>
-                              <div class="w-[70%] flex flex-col ">
-                                  <div class="w-max" >
-                                      <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
-                                          <span>What's going on?</span>
-                                      </div>
-                                      <div class="flex justify-end">
-                                          <p class="text-secondary text-xs ">2m ago</p>
-                                      </div>
-                                  </div>
-                              </div>
+                    
                           </div>
 {{--                        client chat div ends here--}}
 
@@ -73,123 +65,30 @@
                                     </div>
                                 </div>
                             </div>
-                               <div class="w-[70%] flex flex-col items-end">
-                                <div class="w-max" >
-                                    <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-br-full rounded-tr-full">
-                                        <span>I am fine. What about you?</span>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <p class="text-secondary text-xs ">11-02-2025</p>
-                                    </div>
-                                </div>
-                            </div>
+                        
 
                         </div>
 {{--                        executive chat ends here--}}
 
-                          <div class="flex flex-col gap-2 w-full">
-                            <div class="w-[70%] flex flex-col ">
-                                <div class="w-max" >
-                                    <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
-                                        <span>I am also fine.</span>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <p class="text-secondary text-xs ">11-02-2025</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-[70%] flex flex-col ">
-                                <div class="w-max" >
-                                    <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
-                                        <span>Where are you?</span>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <p class="text-secondary text-xs ">2m ago</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                          <div class="flex flex-col items-end w-full gap-2 ">
-                            <div class="w-[70%] flex flex-col items-end">
-                                <div class="w-max" >
-                                    <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-br-full rounded-tr-full">
-                                        <span> I am at Delhi. What about you?</span>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <p class="text-secondary text-xs ">11-02-2025</p>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                        </div>
-                          <div class="flex flex-col gap-2 w-full">
-                            <div class="w-[70%] flex flex-col ">
-                                <div class="w-max" >
-                                    <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
-                                        <span>I am at Home</span>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <p class="text-secondary text-xs ">11-02-2025</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-[70%] flex flex-col ">
-                                <div class="w-max" >
-                                    <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
-                                        <span>Can you call me?</span>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <p class="text-secondary text-xs ">2m ago</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                          <div class="flex flex-col items-end w-full gap-2 ">
-                            <div class="w-[70%] flex flex-col items-end">
-                                <div class="w-max" >
-                                    <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-br-full rounded-tr-full">
-                                        <span>Sure</span>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <p class="text-secondary text-xs ">11-02-2025</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-[70%] flex flex-col items-end">
-                                <div class="w-max" >
-                                    <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-br-full rounded-tr-full">
-                                        <span>I will call you after 1 hour.</span>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <p class="text-secondary text-xs ">11-02-2025</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="w-[70%] flex flex-col items-end">
-                                <div class="w-max" >
-                                    <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-br-full rounded-tr-full">
-                                        <span>Currently I am at office</span>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <p class="text-secondary text-xs ">11-02-2025</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
+                         
 
 
 
 
                     </div>
-                    <div class="w-full h-10 border-t-[2px] border-ternary/10 rounded-b-[10px]  flex">
-                        <input type="text" placeholder="Type a message" class="w-full border-none px-4 focus:outline-none focus:ring-0 focus:border-none text-ternary/80 rounded-bl-[10px]">
+                    <form action="{{ route('send_message') }}" method="POST" enctype="multipart/form-data" class="w-full h-10 border-t-[2px] border-ternary/10 rounded-b-[10px]  flex">
+                    @csrf
 
+                    
+                       <input type="text" placeholder="Type a message" name="message" class="w-full border-none px-4 focus:outline-none focus:ring-0 focus:border-none text-ternary/80 rounded-bl-[10px]">
+                        <input type="hidden" name="ticket_number" value="{{$detials->ticket_id}}"> 
+                        <input type="hidden"  name="recevier_id" value="{{$detials->agency_id}}"> 
+                        <input type="hidden"  name="sender_id" value="{{$current_user->id}}">
+                        <input type="hidden"  name="id" value="{{$detials->id}}">
                         <button class="w-40 px-4 bg-secondary/30 text-ternary font-semibold hover:bg-secondary hover:text-white transition ease-in duration-2000 rounded-br-[10px]">
                              Send  <i class="fas fa-paper-plane text-sm ml-2"></i>
                         </button>
-                    </div>
+                    </form>
                 </div>
         </div>
 
