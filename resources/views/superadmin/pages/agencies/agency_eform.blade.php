@@ -39,7 +39,7 @@
                          </div>
 
                                  <input type="hidden" name="id" value="{{ old('name', $edit_agency->id ?? '')  }}" id="id" placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                        
+
 
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Agency Name</label>
@@ -48,8 +48,8 @@
                                  <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
-                        
-                        
+
+
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="email" class="font-semibold text-ternary/90 text-sm">Email</label>
                              <div class="w-full relative">
@@ -66,8 +66,8 @@
                                  <i class="fa fa-phone absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
-                 
-                         
+
+
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Phone</label>
                              <div class="w-full relative">
@@ -84,7 +84,7 @@
                                  <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
-                        
+
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Contact person Phone</label>
                              <div class="w-full relative">
@@ -104,7 +104,7 @@
 
 
 
-                          
+
 
 
                          {{--   === number type input field ===--}}
@@ -154,34 +154,28 @@
                          </div>
 
 
-                 
+
 
                     <!-- checkbox service -->
+
+
                          <div class="w-full relative group flex flex-col gap-2">
-                         <label class="font-semibold text-ternary/90 text-sm">Select Services</label>
+                             <label class="font-semibold text-ternary/90 text-sm">Select Services</label>
+                             <div class="flex gap-2 flex-wrap">
+                                 @forelse($services as $service)
+                                     <div class="flex items-center gap-2">
+                                         <input type="checkbox" id="service_{{ $service->id }}" value="{{ $service->id }}"  name="services[]"
+                                                value="{{ $service->id }}" @if($edit_agency->userAssignments->contains('service_id', $service->id)) checked @endif
+                                                class="appearance-none w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
+                                         <label for="service_{{ $service->id }}"
+                                                class="font-semibold text-ternary/90 text-sm flex items-center gap-2">{{ $service->name }}</label>
+                                     </div>
+                                 @empty
+                                     <div class="text-sm text-red-500">No services available</div>
+                                 @endforelse
+                             </div>
+                         </div>
 
-
-                         
-                         @if(isset($services) && $services->isNotEmpty())
-                        @foreach($services as $service)
-                            <div class="col-6 col-md-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="services[]" value="{{ $service->id }}" 
-                                        id="service_{{ $service->id }}" 
-                                        @if($edit_agency->userAssignments->contains('service_id', $service->id)) checked @endif>
-                                    <label class="form-check-label" for="service_{{ $service->id }}" style="font-weight: 500; color: black;">
-                                        {{ $service->name }}
-                                    </label>
-                                </div>
-                            </div>
-                        @endforeach
-                        @else
-                            <p>No services available</p>
-                        @endif
-                                       </div>
-<!-- checkbox -->
-
-                      
                      </div>
                      <div class="w-full flex justify-end px-4 pb-4 gap-2">
                            <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Update Agency</button>
