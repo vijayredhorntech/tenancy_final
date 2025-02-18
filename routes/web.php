@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AgentController;
@@ -19,7 +20,7 @@ use App\Http\Controllers\SuperAdmin\InventoryController;
 
 Route::get('/login',function (){
     dd('heelo');
-}); 
+});
 
 Route::get('/generate-pdf', [AgencyController::class, 'generatePDF']);
 
@@ -43,13 +44,13 @@ Route::prefix('super-admin')->middleware(['auth', 'verified'])->group(function (
 
 
           /*** Route for staff ***/
-         Route::controller(SuperadminController::class)->group(function () {   
+         Route::controller(SuperadminController::class)->group(function () {
             Route::get('/staffindex', 'hs_staffindex')->name('staff');
             Route::post('/staffstore', 'hs_staffstore')->name('superadmin_staffstore');
             Route::get('/staffupdate/{id}', 'hs_staffupdate')->name('superadmin_staffupdate');
             Route::post('/staffupdate', 'hs_supdatedstore')->name('hs_supdatedstore');
             Route::get('/staffdelete/{id}', 'hs_staffdelete')->middleware('can:staff delete')->name('superadmin_staffdelete'); // Fixed incorrect controller method
-            Route::get('/staffDetails/{id}', 'hs_staffDetails')->middleware('can:view staffdetails')->name('superadmin_staffDetails');          
+            Route::get('/staffDetails/{id}', 'hs_staffDetails')->middleware('can:view staffdetails')->name('superadmin_staffDetails');
         });
 
 
@@ -68,12 +69,27 @@ Route::prefix('super-admin')->middleware(['auth', 'verified'])->group(function (
             Route::post('/permissionstore', 'hs_permissionstore')->name('superadmin_permissionstore');
             Route::get('/permissiondelete/{id}', 'hs_permissiondelete')->middleware('can:permission delete')->name('superadmin_permissiondelete');
         });
-        
+
+               /*** Route for permissions ***/
+          Route::controller(InventoryController::class)->group(function () {
+                Route::get('/inventory', 'hs_inventory')->name('superadmin.inventory');
+            });
+               /*** Route for conversations ***/
+          Route::controller(ConversationController::class)->group(function () {
+                Route::get('/conversation', 'hs_conversation')->name('superadmin.conversation');
+            });
+
 
            // Fund Management
         Route::controller(FundManagementController::class)->group(function () {
             Route::get('fund/{id}', 'him_addfund_agency')->name('agencies.fund');
             Route::post('storefund', 'him_storefund')->name('agencies.fund.store');
+
+            Route::get('test', 'him_test')->name('test');  // Unique path
+            Route::get('flight', 'him_test2')->name('Flight'); // Unique path
+            Route::get('hotel', 'him_test3')->name('Hotel'); // Unique path
+            Route::post('deduction','him_deduction')->name('deduction');
+
             Route::post('deduction', 'him_deduction')->name('deduction');
             Route::get('transaction_approvals','him_transaction_approvals')->name('transaction_approvals');
             Route::get('transaction_update/{id}','him_transaction_update')->name('transaction_update');
@@ -92,19 +108,20 @@ Route::prefix('super-admin')->middleware(['auth', 'verified'])->group(function (
             Route::get('hotel', 'him_hotel')->name('Hotel'); // Unique path
             Route::post('flight_search','him_flightsearch')->name('flight.search');
             Route::post('flight_price','him_flightsearch')->name('flight.pricing');
-     
+
         });
-        
+
      Route::controller(InventoryController::class)->group(function () {
         Route::get('inventory', 'hs_inventory')->name('superadmin.inventory');  // Unique path
-        
- 
+
+
     });
 
 
 
 
-}); 
+
+});
 
 
 // /route for agency
