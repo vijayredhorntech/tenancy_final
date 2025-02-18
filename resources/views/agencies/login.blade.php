@@ -151,10 +151,10 @@
                       @enderror
                   </div>
 
-                  <input type="hidden" id="form2Example22" class="form-control" 
+                  <input type="hidden" id="form2Example22" class="form-control"
                               name="domain" value="{{ $agency->domains->domain_name }}" />
-                              
-                              <input type="hidden" id="form2Example22" class="form-control" 
+
+                              <input type="hidden" id="form2Example22" class="form-control"
                               name="database" value="{{ $agency->database_name }}" />
 
 
@@ -200,10 +200,10 @@
                       @enderror
                   </div>
 
-                  <input type="hidden" id="form2Example22" class="form-control" 
+                  <input type="hidden" id="form2Example22" class="form-control"
                               name="domain" value="{{ $agency->domains->domain_name }}" />
-                              
-                              <input type="hidden" id="form2Example22" class="form-control" 
+
+                              <input type="hidden" id="form2Example22" class="form-control"
                               name="database" value="{{ $agency->database_name }}" />
 
 

@@ -12,14 +12,14 @@ use App\Models\Service;
 
 class AuthController extends Controller
 {
-  
+
     public function login_form(){
-        
+
 //   $id = "/superadmin/dashboard";
         // AuthocheckHelper::logincheck();
         return view('auth.login');
     }
-    // function for loginm 
+    // function for loginm
     public function superadmin_login(Request $request)
     {
         // Validate input
@@ -31,7 +31,7 @@ class AuthController extends Controller
 
         // Attempt authentication
         if (Auth::attempt($request->only('email', 'password'))) {
-        
+
             return redirect("/superadmin/dashboard");
         }
         return redirect()->back()->with('error', 'Invalid credentials');
@@ -49,7 +49,7 @@ class AuthController extends Controller
 
 
    public function superadmin_logout(){
-            Auth::logout(); 
+            Auth::logout();
             return redirect('/');
    }
 }

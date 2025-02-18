@@ -147,25 +147,25 @@
                     <i class="fa fa-user-lock mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Transaction Approvals</span>
                 </div>
-                <div class="absolute -top-2 -right-0 h-6 w-6 z-10 rounded-tl-full rounded-tr-full rounded-br-full bg-secondary text-white flex justify-center items-center">
-                      
-
+                <div class="absolute -top-2 -right-0 h-6 w-6 z-10 rounded-tl-full rounded-tr-full rounded-br-full bg-secondary text-white flex justify-center items-center font-bold text-xs">
+                    0
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>
         </a>
 
-        
 
-        <a href="">
-            <div class="{{Route::currentRouteName()==='logout'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+
+        <form action="{{route('logout')}}">
+            @csrf
+            <button type="submit" class="{{Route::currentRouteName()==='logout'?'border-gray-100/60 bg-secondary/90':'border-ternary'}} cursor-pointer w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
                     <i class="fa fa-right-from-bracket mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Logout</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-            </div>
-        </a>
+            </button>
+        </form>
     </div>
 
 
