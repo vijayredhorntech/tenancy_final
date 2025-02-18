@@ -36,7 +36,7 @@
 
 
 {{--        === this is code for form section ===--}}
-             <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 ">
+             <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 hidden">
 
         <form action="{{ route('superadmin_permissionstore') }}" method="POST" enctype="multipart/form-data">
         @csrf
