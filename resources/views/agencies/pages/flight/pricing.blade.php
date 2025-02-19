@@ -149,6 +149,7 @@
             </div>
             <form method="POST" class="p-2" action="{{ route('flight.passenger-details') }}" :default="['details' => json_encode($details), 'flightSearch' => $flightSearch]">
                  @csrf
+            
                 <input  name="details" class="hidden" style="display: none" value="{{json_encode($details)}}">
                 <input name="flightSearch" class="hidden" style="display: none" value='@json($flightSearch)'>
                 <input type ="submit" class="showLoader w-full font-semibold text-md bg-secondary/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-secondary hover:bg-secondary hover:text-white transition ease-in duration-2000"

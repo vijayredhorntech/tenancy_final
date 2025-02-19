@@ -11,6 +11,12 @@ use App\Models\Deduction;
 use App\Models\User;
 use App\Models\Service;
 use App\Models\Agency;
+use App\Models\FlightBooking;
+use App\Models\PassengerInformation;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
+
 
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
@@ -158,6 +164,8 @@ class ServiceController extends Controller
 }
 
 
+/****For Flight Price  ****/
+
 public function him_flightprice(Request $request)
 {
     // Retrieve JSON-encoded flight data from the request
@@ -201,6 +209,8 @@ public function him_flightprice(Request $request)
    
 }
 
+
+/****For passangerDetails  */
 public function passengerDetails(Request $request){
 
        $details = json_decode($request->details);
@@ -210,5 +220,131 @@ public function passengerDetails(Request $request){
 }
 
 
+public function payment(Request $request)
+{
+    // Retrieve session data
+    $userData = session('user_data');
+
+    // Debugging output
+    // echo "<pre>";
+    // print_r($userData);
+    // dd($request->all());
+
+    $data = $request->all(); // Use $request->all() as $data
+
+    $adults = [];
+    $children = [];
+    $infants = [];
+
+    $adultCount = count($data['adultPrefix'] ?? []);
+    $childCount = count($data['childTitle'] ?? []);
+    $infantCount = count($data['infantPrefix'] ?? []);
+
+    // Process Adults
+    for ($i = 0; $i < $adultCount; $i++) {
+        $adults[] = [
+            'prefix' => $data['adultPrefix'][$i] ?? null,
+            'firstName' => $data['adultFirstName'][$i] ?? null,
+            'middleName' => $data['adultMiddleName'][$i] ?? null,
+            'lastName' => $data['adultLastName'][$i] ?? null,
+            'gender' => $data['adultGender'][$i] ?? null,
+            'dob' => $data['adultDateOfBirth'][$i] ?? null,
+            'seatingPreference' => $data['adultSeatingPreference'][$i] ?? null,
+            'assistance' => $data['adultAssistance'][$i] ?? null,
+            'mealPreference' => $data['adultMealPreference'][$i] ?? null,
+        ];
+    }
+
+    // Process Children
+    for ($i = 0; $i < $childCount; $i++) {
+        $children[] = [
+            'title' => $data['childTitle'][$i] ?? null,
+            'firstName' => $data['childFirstName'][$i] ?? null,
+            'middleName' => $data['childMiddleName'][$i] ?? null,
+            'lastName' => $data['childLastName'][$i] ?? null,
+            'gender' => $data['childGender'][$i] ?? null,
+            'dob' => $data['childDateOfBirth'][$i] ?? null,
+            'seatingPreference' => $data['childSeatingPreference'][$i] ?? null,
+            'assistance' => $data['childAssistance'][$i] ?? null,
+            'mealPreference' => $data['childMealPreference'][$i] ?? null,
+        ];
+    }
+
+    // Process Infants
+    for ($i = 0; $i < $infantCount; $i++) {
+        $infants[] = [
+            'prefix' => $data['infantPrefix'][$i] ?? null,
+            'firstName' => $data['infantFirstName'][$i] ?? null,
+            'middleName' => $data['infantMiddleName'][$i] ?? null,
+            'lastName' => $data['infantLastName'][$i] ?? null,
+            'gender' => $data['infantGender'][$i] ?? null,
+            'dob' => $data['infantDateOfBirth'][$i] ?? null,
+            'seatingPreference' => $data['infantSeatingPreference'][$i] ?? null,
+            'assistance' => $data['infantAssistance'][$i] ?? null,
+            'mealPreference' => $data['infantMealPreference'][$i] ?? null,
+        ];
+    }
+
+    // Fetch agency based on email
+ 
+    $agency = Agency::where('email', $userData['email'])->first();
+ 
+    if (!$agency) {
+        return response()->json(['error' => 'Agency not found'], 404);
+    }
+
+    try {
+        // Generate unique booking & invoice numbers
+        $now = Carbon::now();
+        $dateTime = $now->format('Ymd-His'); // Format: YYYYMMDD-HHMMSS
+        $randomPart = strtoupper(Str::random(4)); // Random 4-character string
+
+        $bookingNumber = "BN-{$dateTime}-{$randomPart}";
+        $invoiceNumber = "INV-{$dateTime}-{$randomPart}";
+
+        // Create Flight Booking
+        $flight = new FlightBooking();
+        $flight->agnecy_email = $userData['email'];
+        $flight->domain = $userData['domain'];
+        $flight->database = $userData['database'];
+        $flight->agency_id = $agency->id;
+        $flight->booking_number = $bookingNumber;
+        $flight->invoice_number = $invoiceNumber;
+        $flight->details = json_encode($request->details);
+        $flight->flightSearch = json_encode($request->flightSearch);
+        $flight->save();
+
+        // Create Passenger Information
+        $passenger = new PassengerInformation();
+        $passenger->agency_id = $agency->id;
+        $passenger->flight_booking_id = $flight->id;
+        $passenger->booking_number = $bookingNumber;
+        $passenger->invoice_number = $invoiceNumber;
+        $passenger->adult = json_encode($adults);
+        $passenger->children = json_encode($children);
+        $passenger->infant = json_encode($infants);
+        $passenger->postcode = $request->postcode;
+        $passenger->address_line = $request->addressLine1;
+        $passenger->address_line_2 = $request->addressLine2;
+        $passenger->city = $request->city;
+        $passenger->state = $request->state;
+        $passenger->country = $request->country;
+        $passenger->email_id = $request->email;
+        $passenger->mobile = $request->phone;
+        $passenger->save();
+
+        dd('hello'); 
+        return response()->json([
+            'message' => 'Payment and booking successfully recorded',
+            'booking_number' => $bookingNumber,
+            'invoice_number' => $invoiceNumber,
+            'flight' => $flight,
+            'passenger' => $passenger
+        ], 201);
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'Failed to process booking: ' . $e->getMessage()], 500);
+    }
+
+}
 
 }
