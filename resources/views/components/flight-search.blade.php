@@ -329,7 +329,7 @@
             var leavingFrom = document.getElementById('originInput').value;
             var arriveTo = document.getElementById('destinationInput').value;
 
-            alert(leavingFrom);
+   
 
             document.getElementById('loaderLeavingFrom').textContent = leavingFrom;
             document.getElementById('loaderArrivalTo').textContent = arriveTo;

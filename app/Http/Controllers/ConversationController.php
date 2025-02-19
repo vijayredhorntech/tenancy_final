@@ -25,7 +25,8 @@ class ConversationController extends Controller
 
         $currentUser = auth()->user();
           $details=Support::with('agency')->where('id',$id)->first(); 
-           $message=Message::where('ticket_id',$details->ticket_id)->get(); 
+           $message=Message::where('ticket_code',$details->ticket_id)->get(); 
+         
         return view('superadmin.pages.conversation.index',[
             'detials'=>$details,
              'messages'=>$message,
@@ -36,19 +37,20 @@ class ConversationController extends Controller
     /****Store Conversation****/
     public function hs_storeconversation(Request $request)
         {
-            // Validation rules
+  
             $validated = $request->validate([
                 'message' => 'required|string', 
-                'ticket_id' => 'required|exists:tickets,id', 
-                'receiver_id' => 'required|exists:users,id',
-                'sender_id' => 'required|exists:users,id',
+                'ticket_number' => 'required', 
+                'recevier_id' => 'required',
+                'sender_id' => 'required',
             ]);
 
+        
             // Store the message in the database
             $message = new Message();
             $message->message = $validated['message'];
-            $message->ticket_id = $validated['ticket_id'];
-            $message->receiver_id = $validated['receiver_id'];
+            $message->ticket_code = $validated['ticket_number'];
+            $message->receiver_id = $validated['recevier_id'];
             $message->sender_id = $validated['sender_id'];
             $message->type = 'ticket';
             $message->status = 'sent';
@@ -56,7 +58,12 @@ class ConversationController extends Controller
             // Save the message
             $message->save();
 
-            return redirect()->route('superadmin.conversation', ['id' => $validated['id']])
+            if($request->agency=="agency"){
+                  
+                return redirect()->route('agency.conversation', ['id' => $request->id])
+                ->with('status', 'Message sent successfully!');
+            }
+            return redirect()->route('superadmin.conversation', ['id' => $request->id])
                             ->with('status', 'Message sent successfully!');
         }
 

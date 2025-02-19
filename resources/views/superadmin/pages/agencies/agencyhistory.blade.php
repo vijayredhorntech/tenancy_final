@@ -166,11 +166,11 @@
                                         </div>
                                         <div class="flex ">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Agency name: </span>
-                                            <span class="text-ternary text-medium italic">  AGENCY 1</span>
+                                            <span class="text-ternary text-medium italic">   {{$agency->name}}</span>
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Vat number: </span>
-                                            <span class="text-ternary text-medium italic">AGENCY231 </span>
+                                            <span class="text-ternary text-medium italic"></span>
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Services</span>
@@ -178,11 +178,11 @@
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Contact person name</span>
-                                            <span class="text-ternary text-medium italic">PERSON NAME</span>
+                                            <span class="text-ternary text-medium italic">{{$agency->contact_person}}</span>
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Contact person contact</span>
-                                            <span class="text-ternary text-medium italic">0123456789</span>
+                                            <span class="text-ternary text-medium italic">{{$agency->contact_phone}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -193,7 +193,7 @@
                                     <div class="flex flex-col mt-4 ">
                                         <div class="flex ">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Email:</span>
-                                            <span class="text-ternary text-medium italic">AGENCY@GMAIL.COM</span>
+                                            <span class="text-ternary text-medium italic">{{$agency->email}}</span>
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Telephone: </span>
@@ -201,7 +201,7 @@
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Phone:</span>
-                                            <span class="text-ternary text-medium italic">0123456789</span>
+                                            <span class="text-ternary text-medium italic">{{$agency->phone}}</span>
                                         </div>
                                     </div>
 
@@ -215,7 +215,7 @@
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Database: </span>
-                                            <span class="text-ternary text-medium italic">AGENCY DATABASE </span>
+                                            <span class="text-ternary text-medium italic">{{$agency->database_name}} </span>
                                         </div>
 
                                     </div>
@@ -227,23 +227,23 @@
                                     <div class="flex flex-col mt-4">
                                         <div class="flex ">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Address:</span>
-                                            <span class="text-ternary text-medium italic">AGENCY FULL ADDRESS</span>
+                                            <span class="text-ternary text-medium italic">{{$agency->address}}</span>
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">City: </span>
-                                            <span class="text-ternary text-medium italic">AGENCY CITY </span>
+                                            <span class="text-ternary text-medium italic"> </span>
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">State:</span>
-                                            <span class="text-ternary text-medium italic">AGENCY STATE</span>
+                                            <span class="text-ternary text-medium italic"></span>
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Country:</span>
-                                            <span class="text-ternary text-medium italic">AGENCY COUNTRY</span>
+                                            <span class="text-ternary text-medium italic">{{$agency->country}}</span>
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Zip Code:</span>
-                                            <span class="text-ternary text-medium italic">100702</span>
+                                            <span class="text-ternary text-medium italic"></span>
                                         </div>
                                     </div>
                                 </div>

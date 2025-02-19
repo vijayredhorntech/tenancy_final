@@ -1,5 +1,7 @@
-<x-front.layout>
+<x-agency.layout>
     @section('title')Agency @endsection
+
+    
 
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
@@ -34,7 +36,7 @@
                     </div>
                     <div class="p-4  w-full h-[600px] bg-white overflow-y-auto ">
                                    @foreach($messages as $message)
-                                        @if($message->sender_id !== $detials->agency_id)
+                                        @if($message->sender_id == $detials->agency_id)
                                             {{-- Client chat div --}}
                                             <div class="flex flex-col gap-2 w-full">
                                                 <div class="w-[70%] flex flex-col">
@@ -82,9 +84,10 @@
                     
                        <input type="text" placeholder="Type a message" name="message" class="w-full border-none px-4 focus:outline-none focus:ring-0 focus:border-none text-ternary/80 rounded-bl-[10px]">
                         <input type="hidden" name="ticket_number" value="{{$detials->ticket_id}}"> 
-                        <input type="hidden"  name="recevier_id" value="{{$detials->agency_id}}"> 
-                        <input type="hidden"  name="sender_id" value="{{$current_user->id}}">
+                        <input type="hidden"  name="recevier_id" value="{{$current_user->id}}"> 
+                        <input type="hidden"  name="sender_id" value="{{$detials->agency_id}}">
                         <input type="hidden"  name="id" value="{{$detials->id}}">
+                        <input type="hidden" name="agency" value="agency">
                         <button class="w-40 px-4 bg-secondary/30 text-ternary font-semibold hover:bg-secondary hover:text-white transition ease-in duration-2000 rounded-br-[10px]">
                              Send  <i class="fas fa-paper-plane text-sm ml-2"></i>
                         </button>
@@ -93,4 +96,7 @@
         </div>
 
     </div>
-</x-front.layout>
+
+
+</x-agency.layout>
+     

@@ -36,10 +36,15 @@
         {{--        === this is code for heading section ===--}}
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
             <span class="font-semibold text-ternary text-xl">Agency List </span>
+        
+          @canany(['agency create', 'manage everything']) 
             <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')"
                     class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">
                 Create New Agency
             </button>
+         @endcanany 
+
+         
         </div>
         {{--        === heading section code ends here===--}}
 
@@ -232,6 +237,8 @@
 
                     </div>
                 </div>
+           
+              
                 <div class="w-full flex justify-end px-4 pb-4 gap-2 mt-8">
                     <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')"
                             class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">
@@ -242,6 +249,7 @@
                         Create Agency
                     </button>
                 </div>
+           
             </form>
         </div>
         {{--        === form section code ends here===--}}
@@ -251,24 +259,35 @@
         <div class="w-full overflow-x-auto p-4">
             <div class="w-full flex justify-between gap-2 items-center">
                 <div class="flex gap-2">
+                @canany(['export excel', 'manage everything']) 
                     <a href="{{route('agencies.downloade')}}">
                         <button title="Export to excel"
                                 class="bg-success/20 text-success h-8 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white  cursor-pointer transition ease-in duration-2000">
                             <i class="fa fa-file-excel"></i>
                         </button>
                     </a>
+                @endcanany
+
+                @canany(['export pdf', 'manage everything']) 
                     <button title="Export to pdf"
                             class="bg-danger/20 text-danger h-8 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white  cursor-pointer transition ease-in duration-2000">
                         <i class="fa fa-file-pdf"></i>
                     </button>
+                @endcanany    
+               
                 </div>
                 <div class="flex items-center gap-2">
-                    <input type="text" placeholder="Agency name....."
+                {{--    <form action="{{ route('search') }}" method="POST" enctype="multipart/form-data">
+                 @csrf--}}
+                 <input type="hidden" value="agency"> 
+                    <input type="text" placeholder="Agency name....." name="search"
+                   
                            class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000">
-                    <button
+                    <button type="submit"
                         class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
                         <i class="fa fa-search mr-1"></i> Search
                     </button>
+                    {{--   </form> --}}
                 </div>
             </div>
             <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
@@ -339,46 +358,57 @@
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                             <div class="flex gap-2 items-center">
 
+                            @canany(['agency update', 'manage everything'])
                                 <a href="{{route('agencies.edit',['id' => $agency->id])}}" title="Edit">
                                     <div
                                         class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                         <i class="fa fa-pen"></i>
                                     </div>
                                 </a>
+                            @endcanany     
 
+                            @canany(['agency delete', 'manage everything'])
                                 <a href="" title="Delete">
                                     <div
                                         class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                         <i class="fa fa-trash"></i>
                                     </div>
                                 </a>
-
+                             @endcanany   
+                           
+                             @canany(['reminder', 'manage everything'])
                                 <a href="" title="Remind for funds">
                                     <div
                                         class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                         <i class="fa fa-bell"></i>
                                     </div>
                                 </a>
+                             @endcanany    
+
                                 <a href="{{route('agencies.invoice')}}" title="View Invoices">
                                     <div
                                         class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
                                         <i class="fa fa-file"></i>
                                     </div>
                                 </a>
+
+                            @canany(['view agencydashboard', 'manage everything'])   
                                 <a href="{{route('agencies.history',['id' => $agency->id])}}" title="View Dashboard">
                                     <div
                                         class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                         <i class="fa fa-computer"></i>
                                     </div>
                                 </a>
+                             @endcanany   
 
+                            @canany(['add fund', 'manage everything'])
                                 <a href="{{route('agencies.fund',['id' => $agency->id])}}" title="Add Fund">
                                     <div
                                         class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                         <i class="fa-solid fa-sack-dollar"></i>
                                     </div>
                                 </a>
-
+                            @endcanany   
 
                             </div>
                         </td>

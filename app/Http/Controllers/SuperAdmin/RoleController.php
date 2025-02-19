@@ -60,7 +60,7 @@ class RoleController extends Controller
      
       public function hs_permissionassign($id)
       {
-    
+
           $user = User::findOrFail(Auth::id());
           $role = Role::findOrFail($id);
           $permissions = Permission::all();
@@ -73,7 +73,7 @@ class RoleController extends Controller
           $services = Service::all();
       
           // Pass data to Blade view
-          return view('auth.admin.pages.Roles.role_permissionedit', [
+          return view('superadmin.pages.role.single_role', [
               'user_data' => $user,
               'services' => $services,
               'roles' => $role,
@@ -87,6 +87,7 @@ class RoleController extends Controller
 
     public function hs_permissioned(Request $request){
      
+       
         $request->validate([
             'role_name' => 'required|string|exists:roles,name',
             'permissions' => 'array',

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ticket_id')->constrained('supports')->onDelete('cascade');
-            $table->foreignId('sender_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('receiver_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->string('ticket_code');
+            $table->foreignId('sender_id');
+            $table->foreignId('receiver_id');
             $table->text('message');
             $table->text('type');
             $table->json('attachments')->nullable();

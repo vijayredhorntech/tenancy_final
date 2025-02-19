@@ -65,7 +65,6 @@ class ServiceController extends Controller
 
     // http://127.0.0.1:8002/
 
-    // dd($request->all());
     $origin = $request->origin;
     $destination = $request->destination;
     $type = $request->type;
@@ -99,9 +98,10 @@ class ServiceController extends Controller
         'fareType' => $fareType,
     ];
     if ($type == 'return') {
-        $query['returndeptime'] = $returnDeptime;
+        $data['returndeptime'] = $returnDeptime;
     }
 
+ 
 
     $token = 'JSDkdhf73hdkHFKjdsf7Hkdsf83hskfd7HsdjfKJHdf738dhskfjhS';
     
@@ -111,7 +111,9 @@ class ServiceController extends Controller
     $queryString = http_build_query($data);
     
     // Append query string to URL
-    $url = 'http://127.0.0.1:8002/api/flight/search/results?' . $queryString;
+    $baseUrl = env('APP_BASE_URL');  
+    // $url = 'http://127.0.0.1:8006/api/flight/search/results?' . $queryString;
+    $url = $baseUrl . '/api/flight/search/results?' . $queryString;
 
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -133,6 +135,7 @@ class ServiceController extends Controller
     // Print response
     if ($httpCode === 200) {
       
+    //   dd($responseData);
         return view('agencies.pages.flight.result')
         ->with('airlines', $responseData['data']['airlines'])
         ->with('defaultSettings', $responseData['data']['defaultSettings'])
@@ -146,15 +149,66 @@ class ServiceController extends Controller
         ->with('cheapestPrice', $responseData['data']['cheapestPrice'])
         ->with('flightSearch', $responseData['data']['flightSearch']);
 
+        
+
     } else {
         echo "Error: " . $httpCode . "<br>";
         echo "Response: " . $response;
     }
+}
 
 
+public function him_flightprice(Request $request)
+{
+    // Retrieve JSON-encoded flight data from the request
+
+    $data = $request->input('flight');
+ 
 
 
+    // Ensure it's properly formatted
+    $formattedData = [
+        "flight" => json_encode(json_decode($data, true), JSON_UNESCAPED_SLASHES) 
+    ];
+   
+
+    $baseUrl = env('APP_BASE_URL'); 
+    $token = 'JSDkdhf73hdkHFKjdsf7Hkdsf83hskfd7HsdjfKJHdf738dhskfjhS'; // API Token
+
+    $curl = curl_init();
+    
+    curl_setopt_array($curl, [
+        CURLOPT_URL => $baseUrl . '/api/flight/pricing',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30, // Better timeout for API requests
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => json_encode($formattedData, JSON_UNESCAPED_SLASHES), // Encode data properly
+        CURLOPT_HTTPHEADER => [
+            "Authorization: Bearer $token", // Fixed string interpolation issue
+            "Content-Type: application/json",
+        ],
+    ]);
+    
+    $response = curl_exec($curl);
+    $responseData = json_decode($response, true);
+
+    return view('agencies.pages.flight.pricing')->with('details', $responseData['details'])->with('flightSearch', json_decode($request->flightSearch))->with('airports', $responseData['airports']);
+    
+   
+}
+
+public function passengerDetails(Request $request){
+
+       $details = json_decode($request->details);
+        $flightSearch =json_decode($request->flightSearch);
+        return view('agencies.pages.flight.passengerdetails')->with('details', $details)->with('flightSearch', $flightSearch);
 
 }
+
+
 
 }

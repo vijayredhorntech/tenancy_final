@@ -83,6 +83,20 @@ class SupportController extends Controller
         $support->save();
         return redirect()->route('agency_support')->with('success', 'Support ticket created successfully!');
     }
+
+    public function hs_conversation($id){
+
+    
+        $currentUser = auth()->user();
+        $details=Support::with('agency')->where('id',$id)->first(); 
+         $message=Message::where('ticket_code',$details->ticket_id)->get(); 
+       
+      return view('agencies.pages.supports.viewmessage',[
+          'detials'=>$details,
+           'messages'=>$message,
+           'current_user'=>$currentUser,
+      ]);
+    }
     
 
 
