@@ -6,12 +6,15 @@
 
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
-            <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">{{ $agency->name ?? 'N/A' }}</span>
-                <button type="button" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000"> Balance :: {{ '£'. $agency->balance->balance ?? '' }}</button>
-            </div>
+        <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
+            <span class="font-semibold text-ternary text-xl">{{ $agency->name ?? 'N/A' }}</span>
+            <button type="button" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">
+                Balance :: {{ '£ ' . (isset($agency) && isset($agency->balance) && isset($agency->balance->balance) && $agency->balance->balance > 0 ? $agency->balance->balance : '0.00') }}
+            </button>
+        </div>
 
-            <div class="w-full overflow-x-auto p-4">
+
+        <div class="w-full overflow-x-auto p-4">
                 <div class="w-full flex flex-wrap ">
                 <div data-tid ="fundsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] bg-secondary/40 border-[2px] border-secondary/60 border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer ">
                         Funds
