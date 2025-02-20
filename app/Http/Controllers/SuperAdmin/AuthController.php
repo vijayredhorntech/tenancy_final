@@ -86,8 +86,7 @@ class AuthController extends Controller
             return redirect('/');
    }
 
-   public function hs_invoice(){
-     dd('heelo');
-   }
+
+   
 }
 

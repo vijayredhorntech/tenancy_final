@@ -374,6 +374,8 @@ public function payment(Request $request)
         $deduction = new Deduction();
         $deduction->agency_id = $agency->id;
         $deduction->service = $service_id;
+        $deduction->invoice_number = $invoiceNumber;
+        $deduction->flight_booking_id = $flight->id;
         $deduction->amount = $price;
         $deduction->date = now();
         $deduction->save();
