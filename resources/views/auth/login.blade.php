@@ -98,7 +98,7 @@
                     <label for="email" class="font-semibold text-md text-gray-300">Email</label>
                     <div class="relative w-full">
                         <i class="fa fa-user absolute text-gray-300 left-8 top-[50%] translate-y-[-50%]"></i>
-                        <input class="w-full px-4 pl-16 py-3 border-[2px] border-gray-400 bg-transparent text-gray-300 placeholder-gray-400 rounded-full focus:outline-none focus:ring-0 focus:border-gray-300" id="email"  type="email" name="email" :value="old('email')"   placeholder="Enter your email....."/>
+                        <input  class="w-full px-4 pl-16 py-3 border-[2px] border-gray-400 bg-transparent text-gray-300 placeholder-gray-400 rounded-full focus:outline-none focus:ring-0 focus:border-gray-300" id="email"  type="email" name="email" :value="old('email')"   placeholder="Enter your email....."/>
                     </div>
                     @error('email') <span class="text-danger font-semibold text-sm mt-1"><i class="fa fa-triangle-exclamation mr-2"></i> {{ $message }}</span> @enderror
                 </div>

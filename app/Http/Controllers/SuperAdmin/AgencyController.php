@@ -252,7 +252,7 @@ public function hs_agency_hisoty($id)
     /*****  Route for agency   ***** */
             public function him_agencylogin($domain)
             {    
-                //  dd($domain);  
+               
                 $agency = Agency::whereHas('domains', function ($query) use ($domain) {
                     $query->where('domain_name', $domain);
                 })->with('domains')->first();
@@ -260,7 +260,7 @@ public function hs_agency_hisoty($id)
                 if ($agency) {
                     return view('agencies.login', ['agency' => $agency]);
                 } else {
-                    return redirect()->route('superadmin_login')->with('error', 'Domain not found.');
+                    return redirect()->route('login')->with('error', 'Domain not found.');
                 }
             }
     
@@ -320,16 +320,43 @@ public function hs_agency_hisoty($id)
                                 DatabaseHelper::setDatabaseConnection($userData['database']);
                                 $user = User::on('user_database')->where('id', $id)->first();
                                 $agency_record=Agency::where('email',$user->email)->first(); 
-                                $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+                                $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])->find($agency_record->id);
                                 $services = $agency->userAssignments->pluck('service.name', 'service.icon');
-                                // dd($services);
-                                // $services = $agency->userAssignments;
-                                // dd($services);
-                                // dd($agency);
+                              
+                                
+                                $total = Balance::where('agency_id', $agency_record->id)->sum('balance');
+                               
+                                $balance = Deduction::with(['service_name', 'agency'])
+                                ->where('agency_id', $agency_record->id)
+                                ->get();
+
+
+                              $bookings = Deduction::with(['service_name', 'agency'])
+                                ->where('agency_id', $agency_record->id)
+                              
+                                ->get();
+                              
+                                $credits = AddBalance::where('agency_id', $agency_record->id)
+                                ->orderBy('created_at', 'desc')
+                                ->take(5)
+                                ->get();
+                                                        
+                                $recent_booking = Deduction::with(['service_name', 'agency'])
+                                ->where('agency_id', $agency_record->id)
+                                ->orderBy('created_at', 'desc')
+                                ->take(5)
+                                ->get();
+                            
 
                                 
-                            
-                                return view('agencies.pages.welcome', ['user_data' => $user,'services' => $services]);
+                                return view('agencies.pages.welcome', [
+                                    'agency' => $agency,
+                                    'services' => $services,
+                                    'total' => $total,
+                                    'bookings' => $bookings,
+                                    'recent_booking' => $recent_booking,
+                                    'credits'=>$credits
+                                ]);
                  }
 
  

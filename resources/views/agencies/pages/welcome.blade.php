@@ -7,8 +7,8 @@
     <div class="w-full grid xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-2">
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
-                       <span class="font-semibold text-ternary/70 text-md">Total Agency</span>
-                       <span class="font-bold text-2xl text-ternary">05</span>
+                       <span class="font-semibold text-ternary/70 text-md">Balance</span>
+                       <span class="font-bold text-2xl text-ternary">{{ $agency->balance['balance'] > 0 ? $agency->balance['balance'] : '' }}</span>
             </div>
 
             <div>
@@ -171,8 +171,8 @@
         </div>
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-secondary bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
-                <span class="font-semibold text-ternary/70 text-md">Total Agency</span>
-                <span class="font-bold text-2xl text-ternary">05</span>
+                <span class="font-semibold text-ternary/70 text-md">Total Service </span>
+                <span class="font-bold text-2xl text-ternary">{{ $services->count() > 0 ? $services->count() : '' }}</span>
             </div>
 
             <div>
@@ -335,8 +335,8 @@
         </div>
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-success bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
-                <span class="font-semibold text-ternary/70 text-md">Total Agency</span>
-                <span class="font-bold text-2xl text-ternary">05</span>
+                <span class="font-semibold text-ternary/70 text-md">Users</span>
+                <span class="font-bold text-2xl text-ternary"></span>
             </div>
 
             <div>
@@ -499,8 +499,8 @@
         </div>
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
-                <span class="font-semibold text-ternary/70 text-md">Total Agency</span>
-                <span class="font-bold text-2xl text-ternary">05</span>
+                <span class="font-semibold text-ternary/70 text-md">Total Booking</span>
+                <span class="font-bold text-2xl text-ternary">{{ $bookings->count() > 0 ? $bookings->count() : '' }}</span>
             </div>
 
             <div>
@@ -708,27 +708,20 @@
                     <table class="w-full border-[1px] border-secondary/30 border-collapse">
                         <tr>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice Number</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Date</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                         </tr>
-                        @php
-                            $funds=[
-                                ['name'=>'Agency 1','date'=>'01-01-2025','amount'=>'£ 200.00'],
-                                ['name'=>'Agency 2','date'=>'01-01-2025','amount'=>'£ 200.00'],
-                                ['name'=>'Agency 3','date'=>'01-01-2025','amount'=>'£ 200.00'],
-                                ['name'=>'Agency 4','date'=>'01-01-2025','amount'=>'£ 200.00'],
-                                ['name'=>'Agency 5','date'=>'01-01-2025','amount'=>'£ 200.00'],
-                            ]
-                        @endphp
+                
 
-                        @forelse($funds as $fund)
+                        @forelse($credits as $credit)
+                     
                             <tr>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$fund['name']}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$fund['date']}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$fund['amount']}}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$credit['invoice_number']}}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$credit['created_at']}}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$credit['amount']}}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                     <div class="flex gap-2 items-center">
                                         <a href="" title="View Details">
@@ -761,27 +754,20 @@
                     <table class="w-full border-[1px] border-secondary/30 border-collapse">
                         <tr>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice Number</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Date</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Status</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                         </tr>
-                        @php
-                            $bookings=[
-                                ['name'=>'Agency 1','date'=>'05-01-2025','service'=>'Flight', 'status'=>'Pending'],
-                                ['name'=>'Agency 3','date'=>'05-01-2025','service'=>'Flight', 'status'=>'Approved'],
-                                ['name'=>'Agency 3','date'=>'04-01-2025','service'=>'Hotel', 'status'=>'Pending'],
-                                ['name'=>'Agency 2','date'=>'04-01-2025','service'=>'Visa', 'status'=>'Pending'],
-                                ['name'=>'Agency 2','date'=>'04-01-2025','service'=>'Flight', 'status'=>'Approved'],
-                            ]
-                        @endphp
 
-                        @forelse($bookings as $booking)
+
+                        @forelse($recent_booking as $booking)
+                        
                             <tr>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking['name']}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['service']}}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"></td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['date']}}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                     <span class="bg-{{$booking['status']==='Pending'?'danger':'primary'}}/10 text-{{$booking['status']==='Pending'?'danger':'primary'}} px-2 py-1 rounded-[3px] font-bold">{{$booking['status']}}</span>
@@ -814,136 +800,177 @@
 
 
     @section('scripts')
-            <script>
-                var options = {
-                    series: [{
-                        name: 'Flight Bookings',
-                        data: [44, 55, 41, 67, 22, ]
-                    }, {
-                        name: 'Hotel Bookings',
-                        data: [13, 23, 20, 8, 13, ]
-                    }, {
-                        name: 'Visa Bookings',
-                        data: [11, 17, 15, 15, 21, ]
-                    }],
-                    chart: {
-                        type: 'bar',
-                        height: 250,
-                        stacked: true,
-                        stackType: '100%'
-                    },
-                    xaxis: {
-                        categories: ['Agency 1', 'Agency 2', 'Agency 3', 'Agency 4', 'Agency 5'],
-                    },
-                    fill: {
-                        opacity: 1
-                    },
-                    legend: {
-                        position: 'top',
-                        offsetX: 0,
-                        offsetY: 0
-                    },
-                };
-                var chart = new ApexCharts(document.querySelector("#agencyBookingChart"), options);
-                chart.render();
+    <script>
+    var bookings = <?php echo json_encode($bookings); ?>;
 
-                var agencyFundsOptions = {
-                    series: [44, 55, 67, 83, 70],
-                    chart: {
-                        height: 250,
-                        type: 'radialBar',
-                    },
-                    plotOptions: {
-                        radialBar: {
-                            dataLabels: {
-                                name: {
-                                    fontSize: '22px',
-                                },
-                                value: {
-                                    fontSize: '16px',
-                                },
-                                total: {
-                                    show: true,
-                                    label: 'Total',
 
-                                }
+// Step 1: Process Data
+var agencyData = {};
+var serviceCategories = ["Flight Bookings", "Hotel Bookings", "Visa Bookings"];
+
+bookings.forEach(booking => {
+    let agencyName = booking.agency ? booking.agency.name : "Unknown Agency";
+    let serviceName = booking.service_name ? booking.service_name.name : "Unknown Service";
+
+    if (!agencyData[agencyName]) {
+        agencyData[agencyName] = { "Flight Bookings": 0, "Hotel Bookings": 0, "Visa Bookings": 0 };
+    }
+
+    // Increment the respective service type count
+    if (serviceName.toLowerCase().includes("flight")) {
+        agencyData[agencyName]["Flight Bookings"]++;
+    } else if (serviceName.toLowerCase().includes("hotel")) {
+        agencyData[agencyName]["Hotel Bookings"]++;
+    } else if (serviceName.toLowerCase().includes("visa")) {
+        agencyData[agencyName]["Visa Bookings"]++;
+    }
+});
+
+
+
+// Step 2: Prepare Data for ApexCharts
+var agencies = Object.keys(agencyData); // Extract agency names
+var seriesData = serviceCategories.map(serviceType => {
+    return {
+        name: serviceType,
+        data: agencies.map(agency => agencyData[agency][serviceType] || 0)
+    };
+});
+
+// Step 3: Initialize ApexCharts
+var options = {
+    series: seriesData,
+    chart: {
+        type: 'bar',
+        height: 250,
+        stacked: true,
+        stackType: '100%'
+    },
+    xaxis: {
+        categories: agencies, // Dynamically generated agencies
+    },
+    fill: {
+        opacity: 1
+    },
+    legend: {
+        position: 'top',
+        offsetX: 0,
+        offsetY: 0
+    },
+};
+
+var chart = new ApexCharts(document.querySelector("#agencyBookingChart"), options);
+chart.render();
+
+// pricedata
+
+            var agencyFundsOptions = {
+                series: [44, 55, 67, 83, 70],
+                chart: {
+                    height: 250,
+                    type: 'radialBar',
+                },
+                plotOptions: {
+                    radialBar: {
+                        dataLabels: {
+                            name: {
+                                fontSize: '22px',
+                            },
+                            value: {
+                                fontSize: '16px',
+                            },
+                            total: {
+                                show: true,
+                                label: 'Total',
+
                             }
                         }
-                    },
-                    labels: ['Agency 1', 'Agency 2', 'Agency 3', 'Agency 4', 'Agency 5'],
-                };
-                var agencyFundsChart = new ApexCharts(document.querySelector("#agencyFundsChart"), agencyFundsOptions);
-                agencyFundsChart.render();
-
-
-                var agencyBookingDayOptions = {
-                    series: [
-                        {
-                            name: "Agency 1",
-                            data: [45, 52, 38, 24, 33, 26, 21, 20, 6, 8, 15, 10, 28, 47, 19, 42, 50, 35, 18, 22, 45, 30, 37, 41, 25, 30, 22, 33, 40, 29, 18]
-                        },
-                        {
-                            name: "Agency 2",
-                            data: [35, 41, 62, 42, 13, 18, 29, 37, 36, 51, 32, 35, 44, 53, 28, 60, 47, 33, 40, 55, 24, 50, 42, 39, 48, 27, 18, 26, 31, 49, 20]
-                        },
-                        {
-                            name: 'Agency 3',
-                            data: [87, 57, 74, 99, 75, 38, 62, 47, 82, 56, 45, 47, 63, 75, 42, 77, 80, 65, 70, 58, 49, 72, 85, 61, 78, 52, 66, 70, 55, 74, 59]
-                        },
-                        {
-                            name: 'Agency 4',
-                            data: [21, 45, 74, 30, 75, 30, 12, 45, 54, 42, 21, 2, 38, 51, 28, 42, 33, 47, 50, 35, 60, 28, 24, 32, 29, 40, 36, 44, 21, 49, 27]
-                        },
-                        {
-                            name: 'Agency 5',
-                            data: [12, 90, 74, 15, 75, 78, 35, 54, 45, 24, 12, 20, 57, 40, 67, 22, 30, 48, 55, 68, 42, 59, 73, 35, 41, 52, 20, 31, 29, 26, 45]
-                        }
-                    ],
-
-                    chart: {
-                        height: 250,
-                        type: 'line',
-                        zoom: {
-                            enabled: false
-                        },
-                    },
-                    dataLabels: {
-                        enabled: false
-                    },
-                    stroke: {
-                        width: [2, 2, 2, 2, 2],
-                        curve: 'straight',
-                        dashArray: [2, 2, 2, 2, 2]
-                    },
-
-                    legend: {
-                        tooltipHoverFormatter: function(val, opts) {
-                            return val + ' - <strong>' + opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] + '</strong>'
-                        }
-                    },
-                    markers: {
-                        size: 0,
-                        hover: {
-                            sizeOffset: 6
-                        }
-                    },
-                    xaxis: {
-                        categories: [
-                            '01 Jan', '02 Jan', '03 Jan', '04 Jan', '05 Jan', '06 Jan', '07 Jan', '08 Jan', '09 Jan',
-                            '10 Jan', '11 Jan', '12 Jan', '13 Jan', '14 Jan', '15 Jan', '16 Jan', '17 Jan', '18 Jan',
-                            '19 Jan', '20 Jan', '21 Jan', '22 Jan', '23 Jan', '24 Jan', '25 Jan', '26 Jan', '27 Jan',
-                            '28 Jan', '29 Jan', '30 Jan', '31 Jan'
-                        ],
-                    },
-
-
-                    grid: {
-                        borderColor: '#f1f1f1',
                     }
-                };
-                var agencyBookingDayChart = new ApexCharts(document.querySelector("#agencyBookingDayChart"), agencyBookingDayOptions);
-                agencyBookingDayChart.render();
-            </script>
+                },
+                labels: ['Agency 1', 'Agency 2', 'Agency 3', 'Agency 4', 'Agency 5'],
+            };
+            var agencyFundsChart = new ApexCharts(document.querySelector("#agencyFundsChart"), agencyFundsOptions);
+            agencyFundsChart.render();
+
+
+
+         
+
+
+//  Price data this
+// Step 1: Process Data (Group by Date and Agency)
+var agencyDataByDate = {}; // { "2025-02-01": { "Agency 1": 3, "Agency 2": 5 }, "2025-02-02": { "Agency 1": 2, "Agency 3": 7 } }
+
+bookings.forEach(booking => {
+    let agencyName = booking.agency ? booking.agency.name : "Unknown Agency";
+    let bookingDate = booking.date;
+
+    if (!agencyDataByDate[bookingDate]) {
+        agencyDataByDate[bookingDate] = {};
+    }
+
+    if (!agencyDataByDate[bookingDate][agencyName]) {
+        agencyDataByDate[bookingDate][agencyName] = 0;
+    }
+
+    agencyDataByDate[bookingDate][agencyName]++;
+});
+
+
+
+
+// Step 2: Prepare Data for ApexCharts
+var allDates = Object.keys(agencyDataByDate).sort(); // Sorted list of unique dates
+var allAgencies = [...new Set(bookings.map(b => b.agency ? b.agency.name : "Unknown Agency"))]; // Unique agencies
+
+var seriesData = allAgencies.map(agency => {
+    return {
+        name: agency,
+        data: allDates.map(date => agencyDataByDate[date][agency] || 0) // Fill missing dates with 0
+    };
+});
+
+// Step 3: Initialize ApexCharts
+var options = {
+    series: seriesData,
+    chart: {
+        height: 250,
+        type: 'line',
+        zoom: {
+            enabled: false
+        },
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        width: 2,
+        curve: 'straight',
+        dashArray: [2, 2, 2, 2, 2]
+    },
+    legend: {
+        tooltipHoverFormatter: function(val, opts) {
+            return val + ' - <strong>' + opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] + '</strong>';
+        }
+    },
+    markers: {
+        size: 0,
+        hover: {
+            sizeOffset: 6
+        }
+    },
+    xaxis: {
+        categories: allDates, // Dynamically generated dates
+    },
+    grid: {
+        borderColor: '#f1f1f1',
+    }
+};
+
+var chart = new ApexCharts(document.querySelector("#agencyBookingDayChart"), options);
+chart.render();
+       
+</script>
     @endsection
 
 

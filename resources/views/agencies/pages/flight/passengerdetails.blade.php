@@ -10,6 +10,15 @@
         </div>
     @endif
 
+    @php
+    $amount = $details[2]->price->TotalPrice;
+    $price = floatval(preg_replace('/[^0-9.]/', '', $amount)); // Convert to float
+    $balanceAmount = floatval($balance->balance); // Ensure balance is also a float
+
+    $status = $price <= $balanceAmount; // Check if balance is sufficient
+
+    @endphp
+
     <form action="{{ route('flight.payment') }}" method="POST">
         @csrf
         <section class=" w-full mx-auto grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-8 pt-6 px-4">
@@ -644,10 +653,15 @@
                     </div>
                 </div>
             </div>
-             <div class="px-2 py-4 flex justify-end">
+            @if($status)
+            <div class="px-2 py-4 flex justify-end">
                  <button type="submit" class="showLoader w-max font-semibold text-md bg-secondary/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-secondary hover:bg-secondary hover:text-white transition ease-in duration-2000">Proceed to
                      Payment </button>
              </div>
+            @else
+                <p class="text-danger">Insufficient balance</p>
+            @endif
+            
 
 </div>
 
@@ -705,15 +719,22 @@
                 <span class="text-secondary font-semibold text-md">{{ currencySymbol($flightSearch->currency) }}
                     {{ str_replace($flightSearch->currency, '', $details[2]->price->TotalPrice) }}</span>
             </div>
-
+                <input type="hidden" name="service_id" value="{{$service->id}}">
+                <!-- <input type="hidden" name="price" value="{{$service->id}}"> -->
                 <input type="text" name="details" class="hidden" value="{{ json_encode($details) }}" required
                        readonly>
                 <input type="text" name="flightSearch" class="hidden" value="{{ json_encode($flightSearch) }}"
                        required readonly>
-            <div class="w-full p-2">
-                <button type="submit" class="showLoader w-full font-semibold text-md bg-secondary/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-secondary hover:bg-secondary hover:text-white transition ease-in duration-2000">Proceed to
-                    Payment </button>
-            </div>
+                       
+                       @if($status)
+                       <div class="w-full p-2">
+                        <button type="submit" class="showLoader w-full font-semibold text-md bg-secondary/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-secondary hover:bg-secondary hover:text-white transition ease-in duration-2000">Proceed to
+                            Payment </button>
+                        </div>
+                    @else
+                        <p class="text-danger">Insufficient balance</p>
+                    @endif
+          
         </div>
     </section>
 

@@ -213,9 +213,19 @@ public function him_flightprice(Request $request)
 /****For passangerDetails  */
 public function passengerDetails(Request $request){
 
+        $userData = session('user_data');
+        $agency = Agency::where('email', $userData['email'])->first();
+
        $details = json_decode($request->details);
         $flightSearch =json_decode($request->flightSearch);
-        return view('agencies.pages.flight.passengerdetails')->with('details', $details)->with('flightSearch', $flightSearch);
+        $service=Service::where('name','Flight')->first();
+        $balance = Balance::where('agency_id', $agency->id)->first();
+     
+
+        return view('agencies.pages.flight.passengerdetails')
+        ->with('details', $details)->with('flightSearch', $flightSearch)
+        ->with('service', $service)
+        ->with('balance', $balance);
 
 }
 
@@ -229,8 +239,12 @@ public function payment(Request $request)
     // echo "<pre>";
     // print_r($userData);
     // dd($request->all());
-
+    $price_data=json_decode($request->details);
+ 
+     
+ 
     $data = $request->all(); // Use $request->all() as $data
+
 
     $adults = [];
     $children = [];
@@ -333,18 +347,62 @@ public function payment(Request $request)
         $passenger->mobile = $request->phone;
         $passenger->save();
 
-        dd('hello'); 
-        return response()->json([
-            'message' => 'Payment and booking successfully recorded',
-            'booking_number' => $bookingNumber,
-            'invoice_number' => $invoiceNumber,
-            'flight' => $flight,
-            'passenger' => $passenger
-        ], 201);
+        
+
+    $service_id = $request->service_id;
+  
+    $amount = $price_data[2]->price->TotalPrice;
+    $price = preg_replace('/[^0-9.]/', '', $amount);
+    // Fetch balance record
+    $balance = Balance::where('agency_id', $agency->id)->first();
+
+    // Check if balance record exists
+    if (!$balance) {
+        dd('soory');
+        return back()->with('error', 'Balance record not found.');
+    }
+
+    $fundRemaining = $balance->balance;
+  
+
+    // Ensure agency has enough balance
+    if ($price > $fundRemaining) {
+        dd("heelo");
+        return back()->with('error', 'Insufficient balance.');
+    } else {
+        // Deduct amount and save deduction record
+        $deduction = new Deduction();
+        $deduction->agency_id = $agency->id;
+        $deduction->service = $service_id;
+        $deduction->amount = $price;
+        $deduction->date = now();
+        $deduction->save();
+
+        // Update balance
+        $balance->balance -= $price;
+        $balance->save();
+        dd("Flight is booked");
+    }
+
+
+   
     } catch (\Exception $e) {
         return response()->json(['error' => 'Failed to process booking: ' . $e->getMessage()], 500);
     }
 
+}
+
+
+/*** Invoice details ****/
+public function hs_invoice(){
+    $invoice_number ="INV-20250219-155749-WE3Q";
+
+    $flight=FlightBooking::where('invoice_number',$invoice_number)->first(); 
+    $flight_serach=json_decode($flight->flightSearch);
+    $details=json_decode($flight->details);
+
+
+    return view('agencies.pages.invoices.flightinvoice',['details'=>$details,'flightSearch'=>$flight_serach]);
 }
 
 }

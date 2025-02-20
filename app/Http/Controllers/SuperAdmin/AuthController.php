@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Helpers\AuthocheckHelper;
 use App\Models\User;
 use App\Models\Service;
+use Spatie\Permission\Models\Role;
+use App\Models\AddBalance;
+use App\Models\Balance;
+use App\Models\Deduction;
+use App\Models\Agency;
+
 
 class AuthController extends Controller
 {
@@ -40,10 +46,37 @@ class AuthController extends Controller
 
     public function hs_dashbord(){
 
-        return view('superadmin.pages.welcome');
+       
         $id = Auth::user()->id;
+  
         $user = User::find($id);
-        $service=Service::get();
+        $roles = $user->roles->pluck('name')->implode(', ');
+        $service = Service::all(); // Use all() instead of get() (optional)
+    
+    // $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])->get(); // Array format for clarity
+    $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])
+    ->take(5) // Limits the result to 5 records
+    ->get();
+    
+    $total = Balance::sum('balance'); // Add quotes around balance
+
+    // $bookings = Deduction::with('agency')->orderBy('id', 'desc')->get();
+    $bookings = Deduction::with(['service_name', 'agency'])
+    // ->orderBy('created_at', 'desc') // Orders by latest records
+    // ->take(5)
+    ->get();
+
+    $recent_booking = Deduction::with(['service_name', 'agency'])
+    ->orderBy('created_at', 'desc') // Orders by latest records
+    ->take(5)
+    ->get();
+
+ 
+    // dd($bookings); 
+
+    $users = User::get();
+        
+        return view('superadmin.pages.welcome',compact('roles', 'service', 'agency', 'total', 'bookings','users','recent_booking'));
          return view('auth.admin.pages.index', ['user_data' => $user,'services' => $service]);
     }
 
@@ -51,6 +84,10 @@ class AuthController extends Controller
    public function superadmin_logout(){
             Auth::logout();
             return redirect('/');
+   }
+
+   public function hs_invoice(){
+     dd('heelo');
    }
 }
 

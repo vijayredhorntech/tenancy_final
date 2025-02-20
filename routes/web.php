@@ -21,9 +21,16 @@ use App\Http\Middleware\LogUserActivity;
 
 
 
-Route::get('/login',function (){
-    dd('heelo');
+
+Route::fallback(function() {
+    return redirect('/login');
 });
+
+
+Route::get('/login',[AuthController::class,'login_form'])->name('login');
+Route::post('/login',[AuthController::class,'superadmin_login'])->name("superadmin_login");
+Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
+Route::get('/invoice',[ServiceController::class,'hs_invoice']);
 
 // Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
 Route::middleware([LogUserActivity::class])->group(function () {
@@ -126,22 +133,6 @@ Route::middleware([LogUserActivity::class])->group(function () {
                 
                     });
 
-
-                    // Service  Management
-                    Route::controller(ServiceController::class)->group(function () {
-                        Route::get('test', 'him_test')->name('test');  // Unique path
-                        Route::get('flight', 'him_flight')->name('Flight'); // Unique path
-                        Route::get('hotel', 'him_hotel')->name('Hotel'); // Unique path
-                        Route::post('flight_search','him_flightsearch')->name('flight.search');
-                        Route::post('flight_price','him_flightprice')->name('flight.pricing');
-                        Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
-                        Route::post('/payment',  'payment')->name('flight.payment');
-
-                    });
-
-                
-                    
-
                 Route::controller(InventoryController::class)->group(function () {
                     Route::get('inventory', 'hs_inventory')->name('superadmin.inventory');  // Unique path
 
@@ -162,6 +153,20 @@ Route::group(['prefix' => 'agencies'], function () {
        Route::get('/support',[SupportController::class, 'him_agenciesupport'])->name('agency_support');
        Route::post('/storeticket',[SupportController::class, 'him_storeticket'])->name('store_ticket');
        Route::get('/conversation/{id}', [SupportController::class, 'hs_conversation'])->name('agency.conversation');
+
+             
+      
+         // Service  Management
+        Route::controller(ServiceController::class)->group(function () {
+                    Route::get('test', 'him_test')->name('test');  // Unique path
+                    Route::get('flight', 'him_flight')->name('Flight'); // Unique path
+                    Route::get('hotel', 'him_hotel')->name('Hotel'); // Unique path
+                    Route::post('flight_search','him_flightsearch')->name('flight.search');
+                    Route::post('flight_price','him_flightprice')->name('flight.pricing');
+                    Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
+                    Route::post('/payment',  'payment')->name('flight.payment');
+
+                });
        
 
        
