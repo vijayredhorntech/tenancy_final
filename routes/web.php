@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\ProfileController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AgentController;
 use App\Http\Controllers\SuperAdmin\AuthController;
@@ -26,7 +27,13 @@ Route::fallback(function() {
     return redirect('/login');
 });
 
-
+Route::get('/test',function (){
+    $user = User::find(1);
+    if ($user) {
+        $user->assignRole('super admin');
+        return "User has been assigned Super Admin role.";
+       }
+});
 Route::get('/login',[AuthController::class,'login_form'])->name('login');
 Route::post('/login',[AuthController::class,'superadmin_login'])->name("superadmin_login");
 Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
@@ -34,7 +41,7 @@ Route::get('/invoice',[ServiceController::class,'hs_invoice']);
 
 // Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
 Route::middleware([LogUserActivity::class])->group(function () {
-  
+
 
             Route::get('/generate-pdf', [AgencyController::class, 'generatePDF']);
 
@@ -111,7 +118,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                             Route::get('/ticket','hs_viewticket')->name('superadmin.ticket');
                             Route::get('/conversation/{id}', 'hs_conversation')->name('superadmin.conversation');
                             Route::post('/message', 'hs_storeconversation')->name('send_message');
-                            
+
                         });
 
 
@@ -130,7 +137,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('transaction_update/{id}','him_transaction_update')->name('transaction_update');
                         Route::post('transaction_store','him_transaction_store')->name('transaction_store');
                         Route::get('transaction_delete','him_transaction_delete')->name('transaction_delete');
-                
+
                     });
 
                 Route::controller(InventoryController::class)->group(function () {
@@ -138,7 +145,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
 
                 });
-  
+
     });
 
 
@@ -154,8 +161,8 @@ Route::group(['prefix' => 'agencies'], function () {
        Route::post('/storeticket',[SupportController::class, 'him_storeticket'])->name('store_ticket');
        Route::get('/conversation/{id}', [SupportController::class, 'hs_conversation'])->name('agency.conversation');
 
-             
-      
+
+
          // Service  Management
         Route::controller(ServiceController::class)->group(function () {
                     Route::get('test', 'him_test')->name('test');  // Unique path
@@ -167,9 +174,9 @@ Route::group(['prefix' => 'agencies'], function () {
                     Route::post('/payment',  'payment')->name('flight.payment');
 
                 });
-       
 
-       
+
+
 
 });
 

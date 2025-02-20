@@ -8,7 +8,7 @@
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
                        <span class="font-semibold text-ternary/70 text-md">Total Agency</span>
-                       <span class="font-bold text-2xl text-ternary">{{ $agency->count() > 0 ? $agency->count() : '' }}</span>
+                       <span class="font-bold text-2xl text-ternary">{{ $agency->count() > 0 ? $agency->count() : '0' }}</span>
             </div>
 
             <div>
@@ -172,7 +172,7 @@
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-secondary bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
                 <span class="font-semibold text-ternary/70 text-md">Total User</span>
-                <span class="font-bold text-2xl text-ternary"> {{ $users->count() > 0 ? $users->count() : '' }}</span>
+                <span class="font-bold text-2xl text-ternary"> {{ $users->count() > 0 ? $users->count() : '0' }}</span>
             </div>
 
             <div>
@@ -336,7 +336,7 @@
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-success bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
                 <span class="font-semibold text-ternary/70 text-md">Total Balance</span>
-                <span class="font-bold text-2xl text-ternary"> {{ $total > 0 ? $total : '' }}</span>
+                <span class="font-bold text-2xl text-ternary"> {{ $total > 0 ? '£ '.  $total : '£ 0.00' }}</span>
             </div>
 
             <div>
@@ -500,7 +500,7 @@
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
                 <span class="font-semibold text-ternary/70 text-md">Total Services</span>
-                <span class="font-bold text-2xl text-ternary">{{ $service->count() > 0 ? $service->count() : '' }} </span>
+                <span class="font-bold text-2xl text-ternary">{{ $service->count() > 0 ? $service->count() : '0' }} </span>
             </div>
 
             <div>
@@ -698,8 +698,56 @@
 
 
 
-    <div class="w-full grid xl:grid-cols-2 grid-cols-1 gap-2 mt-6">
-            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col ">
+    <div class="w-full grid xl:grid-cols-1 grid-cols-1 gap-2 mt-6">
+        <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 flex-col ">
+            <div class="bg-warning/10 px-4 py-2 border-b-[2px] border-b-warning/20">
+                <span class="font-semibold text-ternary text-xl">Recent Bookings</span>
+            </div>
+
+            <div class="w-full overflow-x-auto p-4">
+                <table class="w-full border-[1px] border-secondary/30 border-collapse">
+                    <tr>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
+                    </tr>
+
+
+                    @forelse($recent_booking as $booking)
+                        <tr>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$booking['date']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">£ 350.12</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">INVOICE001</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                <div class="flex gap-2 items-center">
+                                    <a href="" title="View Invoice">
+                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                            <i class="fa fa-file"></i>
+                                        </div>
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+
+
+                    @empty
+                        <tr>
+                            <td colspan="6" class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
+                        </tr>
+                    @endforelse
+
+
+                </table>
+            </div>
+        </div>
+        <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col ">
                 <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20">
                     <span class="font-semibold text-ternary text-xl">Recent Fund Details</span>
                 </div>
@@ -708,19 +756,26 @@
                     <table class="w-full border-[1px] border-secondary/30 border-collapse">
                         <tr>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Date</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction Date</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction Amount</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Mode of Payment</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction/ Receipt No.</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Remarks</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
+
                         </tr>
 
 
                         @forelse($agency as $agency_data)
                             <tr>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$agency_data['name']}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$agency_data['created_at']}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$agency_data->balance['balance']}}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$agency_data['created_at']}}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm"> {{ isset($agency_data->balance['balance']) && $agency_data->balance['balance'] > 0 ? $agency_data->balance['balance']:' ' }}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">Cash</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">#012548MJH54</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">Funds added to agency account</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">INVOICE001</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                     <div class="flex gap-2 items-center">
                                         <a href="" title="View Details">
@@ -738,58 +793,9 @@
                             </tr>
                         @empty
                             <tr>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
+                                <td colspan="8" class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
                             </tr>
                         @endforelse
-                    </table>
-                </div>
-            </div>
-            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 flex-col ">
-                <div class="bg-warning/10 px-4 py-2 border-b-[2px] border-b-warning/20">
-                    <span class="font-semibold text-ternary text-xl">Recent Bookings</span>
-                </div>
-
-                <div class="w-full overflow-x-auto p-4">
-                    <table class="w-full border-[1px] border-secondary/30 border-collapse">
-                        <tr>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Date</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Status</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
-                        </tr>
-                     
-
-                        @forelse($recent_booking as $booking)
-                            <tr>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking->agency['name']}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['date']}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                    <span class="bg-{{$booking['status']==='Pending'?'danger':'primary'}}/10 text-{{$booking['status']==='Pending'?'danger':'primary'}} px-2 py-1 rounded-[3px] font-bold">{{$booking['status']}}</span>
-                                </td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                    <div class="flex gap-2 items-center">
-                                        <a href="" title="View Invoice">
-                                            <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                                <i class="fa fa-file"></i>
-                                            </div>
-                                        </a>
-
-                                    </div>
-                                </td>
-                            </tr>
-
-
-                        @empty
-                            <tr>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
-                            </tr>
-                        @endforelse
-
-
                     </table>
                 </div>
             </div>
@@ -799,8 +805,8 @@
 
     @section('scripts')
             <script>
-      
-                
+
+
     var bookings = <?php echo json_encode($bookings); ?>;
 
 
@@ -894,8 +900,8 @@
 
 
 
-             
-   
+
+
 
 //  Price data this
     // Step 1: Process Data (Group by Date and Agency)
@@ -916,7 +922,7 @@
         agencyDataByDate[bookingDate][agencyName]++;
     });
 
-  
+
 
 
     // Step 2: Prepare Data for ApexCharts
@@ -969,8 +975,8 @@
 
     var chart = new ApexCharts(document.querySelector("#agencyBookingDayChart"), options);
     chart.render();
-           
-           
+
+
            </script>
     @endsection
 
