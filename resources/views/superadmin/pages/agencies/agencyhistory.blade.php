@@ -6,12 +6,15 @@
 
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
-            <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">{{ $agency->name ?? 'N/A' }}</span>
-                <button type="button" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000"> Balance :: {{ '£'. $agency->balance->balance ?? '' }}</button>
-            </div>
+        <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
+            <span class="font-semibold text-ternary text-xl">{{ $agency->name ?? 'N/A' }}</span>
+            <button type="button" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">
+                Balance :: {{ '£ ' . (isset($agency) && isset($agency->balance) && isset($agency->balance->balance) && $agency->balance->balance > 0 ? $agency->balance->balance : '0.00') }}
+            </button>
+        </div>
 
-            <div class="w-full overflow-x-auto p-4">
+
+        <div class="w-full overflow-x-auto p-4">
                 <div class="w-full flex flex-wrap ">
                 <div data-tid ="fundsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] bg-secondary/40 border-[2px] border-secondary/60 border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer ">
                         Funds
@@ -26,7 +29,7 @@
 
                 <div class="w-full mt-4 ">
                     <div id="fundsDiv" class="tab  ">
-                        <div class="w-full grid xl:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div class="w-full grid xl:grid-cols-1 lg:grid-cols-1 gap-4">
                             <div class="w-full ">
                                 <div class="  border-[2px] border-primary/70 ">
                                     <div class="flex justify-center bg-primary/40 px-4 py-0.5">
@@ -35,12 +38,15 @@
                                     <div class="mt-2 overflow-x-auto px-4 py-0.5">
                                         <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">
                                             <tr>
-                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice Number</td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction Date</td>
                                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount </td>
-                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Created At</td>
-                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment type</td>
-                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Number</td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Mode of Payment</td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction/ Receipt Number</td>
                                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Remarks</td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice Number</td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
+
 
                                             </tr>
 
@@ -49,20 +55,30 @@
                                             @forelse($credits as $credit)
 
                                                 <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{  $credit['invoice_number'] ?? '' }}</td>
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{ '£'. $credit['amount'] ?? 'No Amount' }}</td>
+                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $credit['created_at'] ? $credit['created_at'] : 'No Date' }}</td>
-
+                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{ '£'. $credit['amount'] ?? 'No Amount' }}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{  $credit['payment_type'] ?? '' }}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{  $credit['payment_number'] ?? '' }}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{  $credit['remark'] ?? '' }}</td>
+                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{  $credit['invoice_number'] ?? '' }}</td>
+                                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                                        <div class="flex gap-2 items-center">
+                                                            <a href="" title="View Invoice">
+                                                                <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                                                    <i class="fa fa-file"></i>
+                                                                </div>
+                                                            </a>
+
+                                                        </div>
+                                                    </td>
 
                                                 </tr>
 
 
                                             @empty
                                                 <tr>
-                                                    <td colspan="9" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
+                                                    <td colspan="8" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
                                                 </tr>
                                             @endforelse
 
@@ -80,11 +96,11 @@
                                         <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">
                                             <tr>
                                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
                                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>
-                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Created At</td>
                                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
-                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Type</td>
-                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment number</td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice Number</td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
 
                                             </tr>
 
@@ -93,18 +109,28 @@
 
                                                 <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm"> {{ $deduction->service_name ? $deduction->service_name->name : 'No Service' }}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $deduction['created_at'] ? $deduction['created_at'] : 'No Date' }}</td>
+
+                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm"> {{ $deduction->service_name ? $deduction->service_name->name : 'No Service' }}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">  {{ '£'.$deduction['amount'] ?? 'No Amount' }}</td>
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"></td>
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"> </td>
+                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">#INVOICE001</td>
+                                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                                        <div class="flex gap-2 items-center">
+                                                            <a href="" title="View Invoice">
+                                                                <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                                                    <i class="fa fa-file"></i>
+                                                                </div>
+                                                            </a>
+
+                                                        </div>
+                                                    </td>
 
                                                 </tr>
 
 
                                             @empty
                                                 <tr>
-                                                    <td colspan="9" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
+                                                    <td colspan="6" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
                                                 </tr>
                                             @endforelse
 
@@ -119,36 +145,28 @@
                          <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">
                                                     <tr>
                                                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
                                                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>
-                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Created At</td>
                                                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
-                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Type</td>
-                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment number</td>
+                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice Number</td>
 
-                                                            </tr>
+                                                    </tr>
 
-                                                                                    @forelse($deductions  as $deduction)
+                                                     @forelse($deductions  as $deduction)
+                                                         <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
+                                                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
+                                                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $deduction['created_at'] ? $deduction['created_at']->format('Y-m-d') : 'No Date' }}</td>
+                                                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm"> {{ $deduction->service_name ? $deduction->service_name->name : 'No Service' }}</td>
+                                                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">  {{ '£'.$deduction['amount'] ?? 'No Amount' }}</td>
+                                                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">#INVOICE001</td>
+                                                         </tr>
+                                                     @empty
+                                                         <tr>
+                                                             <td colspan="9" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
+                                                         </tr>
+                                                     @endforelse
 
-
-                                                                                        <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
-                                                                                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                                                                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm"> {{ $deduction->service_name ? $deduction->service_name->name : 'No Service' }}</td>
-                                                                                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $deduction['created_at'] ? $deduction['created_at']->format('Y-m-d') : 'No Date' }}</td>
-                                                                                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">  {{ '£'.$deduction['amount'] ?? 'No Amount' }}</td>
-                                                                                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"></td>
-                                                                                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"> </td>
-                                                                                        </tr>
-
-
-
-                                                                                    @empty
-                                                                                        <tr>
-                                                                                            <td colspan="9" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
-                                                                                        </tr>
-                                                                                                      @endforelse
-
-
-                                                                              </table>
+                         </table>
                      </div>
                     <div id="profileDiv" class="tab hidden ">
                         <div class="w-full border-[1px] border-success/40">
