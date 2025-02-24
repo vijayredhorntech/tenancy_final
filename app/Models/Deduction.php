@@ -19,5 +19,10 @@ class Deduction extends Model
     {
         return $this->belongsTo (Service::class, 'service'); // 'service' is the foreign key column in deductions table
     }
+
+    public function flightBooking()
+    {
+        return $this->belongsTo(FlightBooking::class, 'flight_booking_id');
+    }
     
 }

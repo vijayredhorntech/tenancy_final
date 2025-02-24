@@ -14,6 +14,8 @@ use App\Models\AddBalance;
 use App\Models\Balance;
 use App\Models\Deduction;
 use App\Models\Agency;
+use App\Models\Airport;
+
 
 
 class AuthController extends Controller
@@ -58,13 +60,77 @@ class AuthController extends Controller
     ->take(5) // Limits the result to 5 records
     ->get();
     
-    $total = Balance::sum('balance'); // Add quotes around balance
+    $total_balance = Balance::sum('balance'); // Add quotes around balance
+    $total_deduction = Deduction::sum('amount');
+  
 
     // $bookings = Deduction::with('agency')->orderBy('id', 'desc')->get();
-    $bookings = Deduction::with(['service_name', 'agency'])
-    // ->orderBy('created_at', 'desc') // Orders by latest records
+    $bookings = Deduction::with(['service_name', 'agency','flightBooking'])
+    ->orderBy('created_at', 'desc') // Orders by latest records
     // ->take(5)
     ->get();
+
+    
+
+            $airlineBookings = []; // Array to store bookings grouped by airline
+            $airlinePassengerTotals = []; // Array to store total passengers per airline
+            $processedBookings = []; // Track processed flight_booking_id per airline
+
+            foreach ($bookings as $booking) {
+                if (!$booking->flightBooking) {
+                    continue; // Skip if no flight booking data
+                }
+
+                $flight_booking_id = $booking->flight_booking_id; // Get flight_booking_id from booking
+
+                $flight_details = json_decode($booking->flightBooking->details, true);
+                $flightsearch = json_decode($booking->flightBooking->flightSearch, true);
+                $data = json_decode($flightsearch, true);
+                
+                $adult = $data['adult'] ?? 0;
+                $child = $data['child'] ?? 0;
+                $infant = $data['infant'] ?? 0;
+                $total = $adult + $child + $infant;
+
+                if (isset($flight_details[0]['journey']) && is_array($flight_details[0]['journey'])) {
+                    foreach ($flight_details[0]['journey'] as $journey) {
+                        $carrier = $journey['Carrier'] ?? 'Unknown'; // Get carrier or default to 'Unknown'
+
+                        // Store booking details
+                        $airlineBookings[$carrier][] = [
+                            'booking' => $booking, // Store full booking object
+                            'total_passengers' => $total
+                        ];
+
+                        // Ensure we only count unique flight_booking_id per airline
+                        if (!isset($processedBookings[$carrier])) {
+                            $processedBookings[$carrier] = [];
+                        }
+
+                        if (!in_array($flight_booking_id, $processedBookings[$carrier])) {
+                            $processedBookings[$carrier][] = $flight_booking_id; // Mark as counted
+                            
+                            // Sum up total passengers for each airline
+                            if (!isset($airlinePassengerTotals[$carrier])) {
+                                $airlinePassengerTotals[$carrier] = 0;
+                            }
+                            $airlinePassengerTotals[$carrier] += $total;
+                        }
+                    }
+                }
+            }
+
+
+
+// Now, $airlinePassengerTotals contains the total number of passengers per airline
+
+   
+    // dd($bookings[0]->flightBooking->details);
+
+    
+    // $data = json_decode(json_decode($bookings[0]->flightBooking->details, true), true);
+    // $data = json_decode($bookings[1]->flightBooking->details, true);
+    // $flight_search = json_decode($bookings[1]->flightBooking->flightSearch, true);
 
     $funds = AddBalance::with('agency')
     ->orderBy('created_at', 'desc') // Orders by latest records
@@ -73,18 +139,23 @@ class AuthController extends Controller
 
  
 
-    $recent_booking = Deduction::with(['service_name', 'agency'])
+    $recent_booking = Deduction::with(['service_name', 'agency','flightBooking'])
     ->orderBy('created_at', 'desc') // Orders by latest records
     ->take(5)
     ->get();
+
+
+// dd($airlineBookings);
 
  
     // dd($bookings); 
 
     $users = User::get();
         
-        return view('superadmin.pages.welcome',compact('roles', 'service', 'agency', 'total', 'bookings','users','recent_booking','funds'));
-         return view('auth.admin.pages.index', ['user_data' => $user,'services' => $service]);
+        return view('superadmin.pages.welcome',compact(
+            'roles', 'service', 'agency', 'total_balance', 'bookings','users','recent_booking','funds',
+            'airlineBookings','airlinePassengerTotals','total_deduction'));
+        //  return view('auth.admin.pages.index', ['user_data' => $user,'services' => $service]);
     }
 
 

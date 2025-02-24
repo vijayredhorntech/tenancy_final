@@ -98,6 +98,7 @@
                                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
                                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
                                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>
+                                                <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Supplier Name</td>
                                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
                                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice Number</td>
                                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
@@ -106,12 +107,19 @@
 
                                             @forelse($deductions  as $deduction)
 
+                                            @php                     
+                                                $flight_name=json_decode($deduction->flightBooking['details'], true);   
+                                                $flight_code=$flight_name[0]['journey'][0]['Carrier'];
+                                                $carrier = \App\Models\Airline::where('iata', $flight_code)->first();
+                                                $carrierName = $carrier ? $carrier->name : 'Unknown Carrier';
+                                                
+                                                @endphp
 
                                                 <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $deduction['created_at'] ? $deduction['created_at'] : 'No Date' }}</td>
-
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm"> {{ $deduction->service_name ? $deduction->service_name->name : 'No Service' }}</td>
+                                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$carrierName}} </td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">  {{ '£'.$deduction['amount'] ?? 'No Amount' }}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$deduction['invoice_number']}}</td>
                                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
@@ -180,7 +188,12 @@
                                     </div>
                                     <div class="flex flex-col mt-4 overflow-x-auto">
                                         <div class="w-full pb-4">
-                                            <img src="{{asset('assets/images/profile_photo.jpg')}}" class="h-40 rounded-md w-auto " alt="">
+                                        @if(isset($agency->profile_picture))
+                                            <img src="{{ asset('images/agencies/logo/' . $agency->profile_picture) }}" alt="Cloud Travel"  class="h-24 mr-4" />
+                                        @else
+                                        <img src="{{asset('assets/images/profile_photo.jpg')}}" class="h-40 rounded-md w-auto " alt="">
+                                        @endif
+                                           
                                         </div>
                                         <div class="flex ">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Agency name: </span>

@@ -713,6 +713,7 @@
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Services</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Supplier Name</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
@@ -720,11 +721,20 @@
 
 
                         @forelse($recent_booking as $booking)
+                        @php                     
+                        $flight_name=json_decode($booking->flightBooking['details'], true);   
+                        $flight_code=$flight_name[0]['journey'][0]['Carrier'];
+                        $carrier = \App\Models\Airline::where('iata', $flight_code)->first();
+                        $carrierName = $carrier ? $carrier->name : 'Unknown Carrier';
+                        
+                        @endphp
+     
                         
                             <tr>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking['date']}}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$carrierName}} </td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['amount']}}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['invoice_number']}}</td>
                                

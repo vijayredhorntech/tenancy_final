@@ -115,18 +115,7 @@ class AgencyController extends Controller
 
                     try {
                         // Insert into the 'agencies' table
-                        // $agency = Agency::create([
-                        //     'name' => $request->name,
-                        //     'email' => $request->email,  
-                        //     'phone' => $request->agency_phone,
-                        //     'database_name' => $request->database_name,
-                        //     'contact_person' => $request->contact_name,
-                        //     'contact_phone' => $request->contact_phone,
-                        //     'address' =>       $request->address,
-                        //     'country' =>       $request->country,
-                        //     'user_id' =>       $auth_id,  
-                        //     'profile_picture'=> $profile,
-                        // ]);
+           
 
                         $agency = new Agency();
                             $agency->name = $request->name;
@@ -392,7 +381,7 @@ public function hs_agency_hisoty($id)
                                 ->take(5)
                                 ->get();
                             
-
+                       
                                 
                                 return view('agencies.pages.welcome', [
                                     'agency' => $agency,

@@ -446,7 +446,7 @@ public function hs_invoice($invoice_number){
 
     $details = json_decode($flight->details, true);
     $flight_search = json_decode($flight->flightSearch, true);
-    
+  
 
 
     $segment = request()->segment(1); // Gets the first segment
@@ -463,6 +463,7 @@ public function hs_invoice($invoice_number){
             'adults'=>$adults,
             'children'=>$children,
             'infants'=>$infants,
+            'passenger_deatils'=>$passenger_deatils,
         ]);
         // return view('agencies.pages.invoices.paymentInvoice',['agency_data'=>$agency_data]);
     }else{
@@ -476,6 +477,7 @@ public function hs_invoice($invoice_number){
             'adults'=>$adults,
             'children'=>$children,
             'infants'=>$infants,
+            'passenger_deatils'=>$passenger_deatils,
         
         ]);
     }

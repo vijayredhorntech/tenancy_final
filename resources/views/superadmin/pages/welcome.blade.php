@@ -336,7 +336,8 @@
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-success bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
                 <span class="font-semibold text-ternary/70 text-md">Total Balance</span>
-                <span class="font-bold text-2xl text-ternary"> {{ $total > 0 ? '£ '.  $total : '£ 0.00' }}</span>
+   
+                <span class="font-bold text-2xl text-ternary"> {{ $total_balance > 0 ? '£ '.  $total_balance : '£ 0.00' }}</span>
             </div>
 
             <div>
@@ -497,10 +498,12 @@
                 </svg>
             </div>
         </div>
-        <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 items-center justify-between p-4">
+
+        <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-success bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
-                <span class="font-semibold text-ternary/70 text-md">Total Services</span>
-                <span class="font-bold text-2xl text-ternary">{{ $service->count() > 0 ? $service->count() : '0' }} </span>
+                <span class="font-semibold text-ternary/70 text-md">Total Deduction</span>
+   
+                <span class="font-bold text-2xl text-ternary"> {{ $total_deduction > 0 ? '£ '.  $total_deduction : '£ 0.00' }}</span>
             </div>
 
             <div>
@@ -661,6 +664,9 @@
                 </svg>
             </div>
         </div>
+
+
+   
     </div>
 
         <div class="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 grid-cols-1 gap-2 mt-6">
@@ -682,6 +688,16 @@
                     <div id="agencyFundsChart"></div>
                 </div>
             </div>
+            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 flex-col xl:col-span-2 lg:col-span-3 md:col-span-3">
+                <div class="bg-warning/10 px-4 py-2 border-b-[2px] border-b-warning/20">
+                    <span class="font-semibold text-ternary text-xl">Flight service</span>
+                </div>
+
+                <div class="w-full overflow-x-auto p-4">
+                    <div id="allflightsummery"></div>
+                </div>
+            </div>
+
             <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 flex-col xl:col-span-2 lg:col-span-3 md:col-span-3">
                 <div class="bg-warning/10 px-4 py-2 border-b-[2px] border-b-warning/20">
                     <span class="font-semibold text-ternary text-xl">Agency Bookings/ Day</span>
@@ -710,6 +726,7 @@
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Supplier Name</td>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
@@ -717,11 +734,20 @@
 
                     
                     @forelse($recent_booking as $booking)
-             
+
+                    @php 
+                    $flight_name=json_decode($booking->flightBooking['details'], true);
+                    $flight_code=$flight_name[0]['journey'][0]['Carrier'];
+                    $carrier = \App\Models\Airline::where('iata', $flight_code)->first();
+                    $carrierName = $carrier ? $carrier->name : 'Unknown Carrier';
+                    
+                    @endphp
+     
                         <tr>
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$booking['date']}}</td>
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$carrierName}}</td>
 
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$booking['amount']}}</td>
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['invoice_number']}}</td>
@@ -800,7 +826,7 @@
             </div>
         </div>
 
-
+   
 
     @section('scripts')
             <script>
@@ -868,7 +894,7 @@
     chart.render();
 
     // pricedata
-
+   
                 var agencyFundsOptions = {
                     series: [44, 55, 67, 83, 70],
                     chart: {
@@ -973,6 +999,69 @@
     };
 
     var chart = new ApexCharts(document.querySelector("#agencyBookingDayChart"), options);
+    chart.render();
+
+
+    // chart for flight
+    var airlineData = <?php echo json_encode($airlinePassengerTotals); ?>;
+    
+    // Extract keys (Airline names) and values (Passenger counts)
+    var airlineNames = Object.keys(airlineData); // ['LH', 'LX', 'AI', 'J2']
+    var passengerCounts = Object.values(airlineData); // [12, 12, 2, 24]
+
+    var options = {
+        series: [{
+            name: 'Total Passengers',
+            data: passengerCounts
+        }],
+        chart: {
+            height: 350,
+            type: 'bar',
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 10,
+                columnWidth: '50%',
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            width: 0
+        },
+        grid: {
+            row: {
+                colors: ['#fff', '#f2f2f2']
+            }
+        },
+        xaxis: {
+            categories: airlineNames, // Airline names as x-axis labels
+            labels: {
+                rotate: -45
+            },
+            tickPlacement: 'on'
+        },
+        yaxis: {
+            title: {
+                text: 'Total Passengers',
+            },
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shade: 'light',
+                type: "horizontal",
+                shadeIntensity: 0.25,
+                inverseColors: true,
+                opacityFrom: 0.85,
+                opacityTo: 0.85,
+                stops: [50, 0, 100]
+            },
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#allflightsummery"), options);
     chart.render();
 
 

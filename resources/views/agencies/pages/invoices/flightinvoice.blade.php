@@ -56,15 +56,16 @@
               <div class="mt-4 grid grid-cols-2 ">
                       <div class="w-full">
                         <h2 class="text-lg font-bold text-[#26ace2]">TO</h2>
-                        <p class="text-sm">{{ $booking->agency->name ?? 'N/A' }}</p>
-                        <p class="text-sm">{{ $booking->agency->address ?? 'N/A' }}</p>
-                        <p class="text-sm">{{ $booking->agency->country ?? 'N/A' }}</p>
-                        <p class="text-sm"><strong>TEL:</strong> {{ $booking->agency->phone ?? 'N/A' }}</p>
-                        <p class="text-sm"><strong>E-MAIL:</strong> {{ $booking->agency->email ?? 'N/A' }}</p>
+                        <p class="text-sm">{{ $adults[0]['firstName'] ?? 'N/A' }}</p>
+                        <p class="text-sm">{{ $passenger_deatils->address_line ?? 'N/A' }}</p>
+                        <p class="text-sm">{{ $passenger_deatils->country ?? 'N/A' }}</p>
+                        <p class="text-sm"><strong>TEL:</strong> {{ $passenger_deatils->mobile ?? 'N/A' }}</p>
+                        <p class="text-sm"><strong>E-MAIL:</strong> {{ $passenger_deatils->email_id ?? 'N/A' }}</p>
                     </div>
 
                     <div class="w-full text-right">
                         <h2 class="text-lg font-bold text-[#26ace2]">ISSUED BY</h2>
+                        <p class="text-sm"> {{ $booking->agency->name ?? 'N/A' }}</p>
                         <p class="text-sm">{{ $booking->agency->address ?? 'N/A' }}</p>
                         <p class="text-sm">{{ ($agency_address->city ?? '') . (($agency_address->city && $agency_address->state) ? ', ' : '') . ($agency_address->state ?? '') }}</p>
                         <p class="text-sm">{{ $booking->agency->country ?? 'N/A' }}</p>
@@ -90,83 +91,224 @@
                         <td class="p-1 border-r-[1px] border-gray-100">TITLE / FIRST NAME</td>
                         <td class="p-1 border-r-[1px] border-gray-100">LAST NAME</td>
                         <td class="p-1">GENDER</td>
+                        <td class="p-1">Date of Birth</td>
                     </tr>
 
                     {{-- Display Adult Passenger Details --}}
                     @if (isset($adults) && is_array($adults))
-                     {{dd($adults)}}
-                        @foreach ($adults[0] as $index => $title)
-                            <tr class="text-black text-sm border-b-[1px] border-blue-100">
-                                <td class="p-1">{{ $index + 1 }}</td>
-                                <td class="p-1">ADULT</td>
-                                <td class="p-1">{{ $title }} {{ $adultPassengerDetails[1][$index] ?? '' }}
-                                </td>
-                                <td class="p-1">{{ $adultPassengerDetails[3][$index] ?? '' }}</td>
-                                <td class="p-1">{{ $adultPassengerDetails[4][$index] ?? '' }}</td>
-                            </tr>
-                        @endforeach
+ 
+                    @foreach ($adults as $index => $title)
+                     
+                        <tr class="text-black text-sm border-b-[1px] border-blue-100">
+                            <td class="p-1">{{ $loop->iteration }}</td>
+                            <td class="p-1">ADULT</td>
+                            <td class="p-1">{{ $title['prefix'] }} {{ $title['firstName'] ?? '' }}</td>
+                            <td class="p-1">{{ $title['lastName'] ?? '' }}</td>
+                            <td class="p-1">{{ $title['gender'] ?? '' }}</td>
+                            <td class="p-1">{{ $title['dob'] ?? '' }}</td>
+                        </tr>
+                    @endforeach
+
                     @endif
 
                     {{-- Display Child Passenger Details --}}
-                    @if (isset($children[0]) && is_array($children[0]))
-                        @foreach ($children[0] as $index => $title)
+                    @if (isset($children) && is_array($children))
+                        @foreach ($children as $index => $title)
                             <tr class="text-black text-sm border-b-[1px] border-blue-100">
-                                <td class="p-1">{{ $index + 1 + count($adultPassengerDetails[0] ?? []) }}</td>
+                                <td class="p-1">{{ $loop->iteration }}</td>
                                 <td class="p-1">CHILD</td>
-                                <td class="p-1">{{ $title }} {{ $childPassengerDetails[1][$index] ?? '' }}
+                                <td class="p-1">{{ $title['title'] }} {{ $title['firstName'] ?? '' }}
                                 </td>
-                                <td class="p-1">{{ $childPassengerDetails[3][$index] ?? '' }}</td>
-                                <td class="p-1">{{ $childPassengerDetails[4][$index] ?? '' }}</td>
+                                <td class="p-1">{{ $title['lastName'] ?? '' }}</td>
+                                <td class="p-1">{{ $title['gender'] ?? '' }}</td>
+                                <td class="p-1">{{ $title['dob'] ?? '' }}</td>
                             </tr>
                         @endforeach
                     @endif
 
                     {{-- Display Infant Passenger Details --}}
-                    @if (isset($infantPassengerDetails[0]) && is_array($infantPassengerDetails[0]))
-                        @foreach ($infantPassengerDetails[0] as $index => $title)
+                    @if (isset($infants) && is_array($infants))
+                        @foreach ($infants as $index => $title)
                             <tr class="text-black text-sm border-b-[1px] border-blue-100">
                                 <td class="p-1">
-                                    {{ $index + 1 + count($adultPassengerDetails[0] ?? []) + count($childPassengerDetails[0] ?? []) }}
+                                {{ $loop->iteration }}
                                 </td>
                                 <td class="p-1">INFANT</td>
-                                <td class="p-1">{{ $title }} {{ $infantPassengerDetails[1][$index] ?? '' }}
+                                <td class="p-1">{{ $title['prefix'] }} {{ $title['firstName'] ?? '' }}
                                 </td>
-                                <td class="p-1">{{ $infantPassengerDetails[3][$index] ?? '' }}</td>
-                                <td class="p-1">{{ $infantPassengerDetails[4][$index] ?? '' }}</td>
+                                <td class="p-1">{{ $title['lastName'] ?? '' }}</td>
+                                <td class="p-1">{{ $title['gender'] ?? '' }}</td>
+                                <td class="p-1">{{ $title['dob'] ?? '' }}</td>
                             </tr>
                         @endforeach
                     @endif
 
                 </table>
 
+           </div>
 
+           
+          <!-- flight detials -->
 
-                <h3 class="text-md font-bold text-[#26ace2] ">Note - * denotes the lead passenger</h3>
+            <h3 class="text-md font-bold text-black mt-6">2. Flight Details ('test')</h3>
+            <div class="flex flex-wrap gap-2 mt-4">
+                <div class="pr-4 border-r-[1px] border-[#aed6f1]">
+                    <h3 class="text-sm font-bold text-[#26ace2]"><span class="text-black">AIRLINE REF:</span> VS DEIS32
+                    </h3>
+                </div>
+                   <div class="pr-4 border-r-[1px] border-[#aed6f1]">
+                    <h3 class="text-sm font-bold text-[#26ace2]"><span class="text-black">PNR:</span> 7ZP600</h3>
+                </div>
+                <div class="pr-4 border-r-[1px] border-[#aed6f1]">
+                    <h3 class="text-sm font-bold text-[#26ace2]"><span class="text-black">UN PNR:</span>
+                        IBE12052061-BS5479</h3>
+                </div>
+                <div class="pr-4 border-r-[1px] border-[#aed6f1]">
+                    <h3 class="text-sm font-bold text-[#26ace2]"><span class="text-black">BOOKING DATE:</span>
+                       {{$booking->date}}
+
+                    </h3>
+                </div>
+
+                <div class="pr-4 border-r-[1px] border-[#aed6f1]">
+                    <h3 class="text-sm font-bold text-[#26ace2]"><span class="text-black">Price</span>
+                    £ {{$booking->amount}}
+
+                    </h3>
+                </div>
 
             </div>
 
+            <br> 
+         <!-- flight details  -->
 
-            <div class="w-full overflow-hidden mt-2">
-                                      <table class="w-full">
-                                                <tr class="bg-[#aed6f1] text-black font-bold text-sm">
-                                                    <td class="p-1 border-r-[1px] border-gray-100">Booking Id</td>
-                                                    <td class="p-1 border-r-[1px] border-gray-100">Booking Date</td>
-                                                    <td class="p-1 border-r-[1px] border-gray-100">Flight Name</td>
-                                                    <td class="p-1 border-r-[1px] border-gray-100">Amount </td>
-                                                
-                                            
-                                                </tr>
-                                                        <tr class="text-black text-sm border-b-[1px] border-blue-100">
-                                                            <td class="p-1">{{$flight->booking_number}}</td>
-                                                            <td class="p-1">{{$booking->date}}</td>
-                                                            <td class="p-1">£ {{$booking->amount}}</td>
-                                                        </tr>
-                                       </table>
+
+         <table class="w-full">
+                    <thead>
+                        <tr class="bg-[#aed6f1] text-black font-bold text-sm">
+                            <td class="p-1 border-r-[1px] border-gray-100">AIRLINE</td>
+                            <td class="p-1 border-r-[1px] border-gray-100">DEPARTURE</td>
+                            <td class="p-1 border-r-[1px] border-gray-100">ARRIVAL</td>
+                            <td class="p-1 border-r-[1px] border-gray-100">CLASS</td>
+                            <td class="p-1 border-r-[1px] border-gray-100">BAGGAGE</td>
+                            <td class="p-1 border-r-[1px] border-gray-100">DURATION</td>
+                            <td class="p-1">STOPS</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $groupedFlights = [];
+
+                            foreach ($details[0]['journey'] as $flight) {
+                                $groupedFlights[$flight['Group']][] = $flight;
+                            }
+                        @endphp
+
+                        @foreach ($groupedFlights as $group => $flights)
+                            @php
+                                $firstFlight = $flights[0];
+                                $lastFlight = end($flights);
+                                $stopCount = count($flights) - 1;
+
+                                $totalTravelTime = 0;
+
+                                foreach ($flights as $flight) {
+                                    $totalTravelTime += intval($flight['TravelTime']);
+                                }
+
+                                $totalHours = intdiv($totalTravelTime, 60);
+                                $totalMinutes = $totalTravelTime % 60;
+                            @endphp
+
+                            <tr class="bg-[#d6eaf8] text-black font-bold text-sm cursor-pointer"
+                                onclick="toggleGroup('{{ $group }}')">
+                                <td colspan="7" class="p-2 text-center">
+                                    From {{ $firstFlight['Origin'] }} to {{ $lastFlight['Destination'] }}
+                                    ({{ $totalHours }} hrs {{ $totalMinutes }} mins, {{ $stopCount }} stops)
+                                </td>
+                            </tr>
+
+                            @foreach ($flights as $flight)
+                                @php
+                                    $departureTime = $flight['DepartureTime'];
+                                    $arrivalTime = $flight['ArrivalTime'];
+                                    $duration = "";
+                                    $hours = "";
+                                    $minutes ="" ;
+                                    $carryonAllowance = $details[1]['details']['carryonallowanceinfo'] ?? 'N/A';
+                                    $baggageAllowance = $details[1]['details']['baggageallowanceinfo'] ?? 'N/A';
+                                @endphp
+
+                                <tr
+                                    class="flight-row-{{ $group }} text-black text-sm border-b-[1px] border-blue-100">
+                                    <td class="p-1">
+                                        @php
+                                            $carrier = \App\Models\Airline::where('iata', $flight['Carrier'])->first();
+                                            $carrierName = $carrier ? $carrier->name : 'Unknown Carrier';
+                                        @endphp
+                                        {{ $carrierName }} ({{ $flight['Carrier'] }}) <br>
+                                        FLIGHT NO :- {{ $flight['FlightNumber'] }}
+                                    </td>
+
+                                    <td class="p-1">
+                                        @php
+                                            $originAirport = \App\Models\Airport::where(
+                                                'code',
+                                                $flight['Origin'],
+                                            )->first();
+                                            $originAirportName = $originAirport
+                                                ? $originAirport->airport
+                                                : 'Unknown Airport';
+                                        @endphp
+                                        {{ $originAirportName }} ({{ $flight['Origin'] }}) <br>
+                                      <br>
+                                        TERMINAL :- {{ $flight['Terminal'] ?? 'N/A' }}
+                                    </td>
+
+                                    <td class="p-1">
+                                        @php
+                                            $destinationAirport = \App\Models\Airport::where(
+                                                'code',
+                                                $flight['Destination'],
+                                            )->first();
+                                            $destinationAirportName = $destinationAirport
+                                                ? $destinationAirport->airport
+                                                : 'Unknown Airport';
+                                        @endphp
+                                        {{ $destinationAirportName }} ({{ $flight['Destination'] }}) <br>
+                                    <br>
+                                        TERMINAL :- {{ $flight['Terminal'] ?? 'N/A' }}
+                                    </td>
+
+                                    <td class="p-1">{{ $flight['ClassOfService'] }}</td>
+
+                                    <td class="p-1">
+                                        @if ($carryonAllowance != 'N/A' && $baggageAllowance != 'N/A')
+                                            {{ $carryonAllowance }} + {{ $baggageAllowance }}
+                                        @elseif($carryonAllowance != 'N/A')
+                                            {{ $carryonAllowance }}
+                                        @elseif($baggageAllowance != 'N/A')
+                                            {{ $baggageAllowance }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+
+                                    <td class="p-1">
+                                        {{ $hours }} hrs {{ $minutes }} mins
+                                    </td>
+
+                                    <td class="p-1">0</td>
+                                </tr>
+                            @endforeach
+                        @endforeach
+                    </tbody>
+
+                </table>
        
-            </div>
 
-
-        </div>
+   
+         
 
 
         <div class="flex flex-col mt-4">
