@@ -320,7 +320,10 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+
+
 <script>
+      
     var airports = @json($airports);
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -357,6 +360,7 @@
             } else {
                 console.error("Invalid Leaving From value");
                 showErrorMessage('leaveToErrorMessage', 'Invalid Leaving From value');
+              
                 event.preventDefault();
                 return;
 
@@ -366,6 +370,7 @@
                 console.log("Arrive To matched:", arriveToMatch);
             } else {
                 console.error("Invalid Arrive To value");
+           
                 showErrorMessage('arriveToErrorMessage', 'Invalid Arrive To value');
                 event.preventDefault();
                 return;
@@ -373,6 +378,7 @@
             }
             if (leavingFromMatch && arriveToMatch && leavingFromMatch.id === arriveToMatch.id) {
                 console.error("Leaving From and Arrive To are the same");
+            
                 showErrorMessage('sameAirportErrorMessage',
                     'Leaving From and Arrive To cannot be the same');
                 event.preventDefault();
@@ -416,10 +422,13 @@
 
     // Function to show an error message
     function showErrorMessage(elementId, message) {
+      
         var errorMessageElement = document.getElementById(elementId);
         if (errorMessageElement) {
+        
             errorMessageElement.textContent = message;
             errorMessageElement.style.display = 'block';
+            
         }
     }
 
@@ -457,10 +466,75 @@
 </script>
 
 
-<!-- <script>
-    $(document).ready(function () {
-        $('.showLoader').click(function () {
-            $('#loading_overlay1').hide();
+<script>
+$(document).ready(function () {
+    var originInput = $('#originInput');
+    var destinationInput = $('#destinationInput');
+    var originDropdownContainer = $('#originOptions');
+    var destinationDropdownContainer = $('#destinationOptions');
+
+    destinationInput.on('input', function () {
+        var inputText = $(this).val();
+        if (inputText.length >= 3) {
+            fetchAutocompleteResults(inputText, $(this), destinationDropdownContainer);
+        } else {
+            destinationDropdownContainer.empty();
+        }
+    });
+
+    originInput.on('input', function () {
+        var inputText = $(this).val();
+        if (inputText.length >= 3) {
+            fetchAutocompleteResults(inputText, $(this), originDropdownContainer);
+        } else {
+            originDropdownContainer.empty();
+        }
+    });
+
+    function fetchAutocompleteResults(inputText, input, dropdownContainer) {
+     
+        $.ajax({
+            url: '/agencies/airport/' + encodeURIComponent(inputText),
+            method: 'GET',
+            success: function (data) {
+                displayAutocompleteResults(data, input, dropdownContainer);
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX Error:", status, error);
+                console.log("Response Text:", xhr.responseText); // Logs the actual response for debugging
+            }
+        });
+}
+
+function displayAutocompleteResults(results, input, dropdownContainer) {
+    dropdownContainer.empty();
+
+    let uniqueResults = [...new Set(results)]; // Remove duplicate entries
+
+    $.each(uniqueResults, function (index, item) {
+        var option = $('<div class="dropdown-option"></div>').text(item);
+        dropdownContainer.append(option);
+    });
+
+    dropdownContainer.off('click').on('click', '.dropdown-option', function () {
+        input.val($(this).text());
+        dropdownContainer.empty();
+    });
+}
+});
+</script> 
+
+
+<script>
+      $(document).ready(function () {
+        $("#flightSearch").submit(function (e) {
+            $('#loading_overlay1').show(); // Show loader when form submits
+            
+            setTimeout(function () {
+                $('#loading_overlay1').hide();
+            }, 20000); // Hide after 20 seconds
         });
     });
-</script> -->
+
+
+</script>

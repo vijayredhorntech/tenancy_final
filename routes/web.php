@@ -15,6 +15,7 @@ use App\Http\Controllers\SuperAdmin\FundManagementController;
 use App\Http\Controllers\SuperAdmin\ServiceController;
 use App\Http\Controllers\SuperAdmin\InventoryController;
 use App\Http\Controllers\Agencies\SupportController;
+use App\Http\Controllers\SuperAdmin\TermsConditionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\LogUserActivity;
@@ -37,7 +38,7 @@ Route::get('/test',function (){
 Route::get('/login',[AuthController::class,'login_form'])->name('login');
 Route::post('/login',[AuthController::class,'superadmin_login'])->name("superadmin_login");
 Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
-Route::get('/invoice',[ServiceController::class,'hs_invoice']);
+Route::get('/getflight',[ServiceController::class,'getflight']);
 
 // Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
 Route::middleware([LogUserActivity::class])->group(function () {
@@ -48,6 +49,9 @@ Route::middleware([LogUserActivity::class])->group(function () {
             /**** Super Admin route ********/
             Route::prefix('super-admin')->middleware(['auth', 'verified'])->group(function () {
 
+                Route::get('/invoice/{invoice_number}', [ServiceController::class, 'hs_generateinvocie'])->name('superadmingenerateInvoice');
+                Route::get('/booking/{booking_number}', [ServiceController::class, 'hs_invoice'])->name('superadminbooking');
+    
                 Route::get('/dashboard', [AuthController::class, 'hs_dashbord'])->name('dashboard');
 
               /*** Service Routes ***/
@@ -58,6 +62,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     Route::get('/serviceupdate/{id}', 'hs_serviceupdate')->middleware('can:service update')->name('superadmin_serviceupdate');
                     Route::post('/serviceupdate_store', 'hs_update_store')->name('serviceupdate_store');
                     Route::get('/servicedelete/{id}', 'hs_servicedelete')->middleware('can:service delete')->name('superadmin_servicedelete');
+                  
                 });
 
 
@@ -145,6 +150,20 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
 
                 });
+             Route::controller(TermsConditionController::class)->group(function () {
+                    Route::get('terms', 'hs_index')->name('superadmin.terms');
+                    Route::post('storeterms','hs_store')->name('superadmin.termsstore');  
+                    Route::get('term/{id}','hs_edit')->name('superadmin.termedit');  
+                    Route::post('editstoreterms','hs_store')->name('superadmin.uptermsstore'); 
+                    
+                    
+                    // Unique path
+
+
+                });
+
+
+                
 
     });
 
@@ -163,6 +182,7 @@ Route::group(['prefix' => 'agencies'], function () {
 
 
 
+
          // Service  Management
         Route::controller(ServiceController::class)->group(function () {
                     Route::get('test', 'him_test')->name('test');  // Unique path
@@ -172,6 +192,10 @@ Route::group(['prefix' => 'agencies'], function () {
                     Route::post('flight_price','him_flightprice')->name('flight.pricing');
                     Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
                     Route::post('/payment',  'payment')->name('flight.payment');
+
+                    Route::get('/invoice/{invoice_number}','hs_generateinvocie')->name('generateInvoice');
+                    Route::get('/booking/{booking_number}','hs_invoice')->name('agency_booking');
+                    Route::get('/airport/{input}', 'airport')->name('search.airport');
 
                 });
 

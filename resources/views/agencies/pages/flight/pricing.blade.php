@@ -147,15 +147,36 @@
                 <span class="text-primaryDarkColor font-semibold text-lg">Total</span>
                 <span class="text-secondary font-semibold text-md">{{ $details[2]['price']['TotalPrice'] }}</span>
             </div>
+            @php
+                $amount = $details[2]['price']['TotalPrice'];
+                $price = floatval(preg_replace('/[^0-9.]/', '', $amount)); // Convert to float
+                $balanceAmount  = isset($balance->balance) ? floatval($balance->balance) : 0.0;
+    
+                // Ensure balance is also a float
+
+                $status = $price <= $balanceAmount; // Check if balance is sufficient
+
+             
+
+        @endphp
+
+        @if($status)
             <form method="POST" class="p-2" action="{{ route('flight.passenger-details') }}" :default="['details' => json_encode($details), 'flightSearch' => $flightSearch]">
                  @csrf
             
                 <input  name="details" class="hidden" style="display: none" value="{{json_encode($details)}}">
                 <input name="flightSearch" class="hidden" style="display: none" value='@json($flightSearch)'>
-                <input type ="submit" class="showLoader w-full font-semibold text-md bg-secondary/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-secondary hover:bg-secondary hover:text-white transition ease-in duration-2000"
+   
+                <input type ="submit" class="showLoader w-full font-semibold text-md bg-secondary/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-danger hover:bg-danger hover:text-white transition ease-in duration-2000"
                                  label="Book Now" value="Book Now" />
             </form>
-
+          @else
+          <button class="showLoader w-full font-semibold text-md bg-danger/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-danger hover:bg-danger hover:text-white transition ease-in duration-2000"
+          label="Book Now"> Insufficient Balance </button>
+          <div class="flex justify-center text-center mt-2 font-semibold text-danger">
+              <p >*** Please contect administrator for funds </p>
+          </div>
+          @endif
         </div>
     </section>
 

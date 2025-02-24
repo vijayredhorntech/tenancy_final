@@ -1,5 +1,5 @@
-<x-agency.layout>
-    @section('title')
+<x-front.layout>
+@section('title')
         Payment_invoice
     @endsection
 
@@ -7,17 +7,11 @@
     <div
         class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
-        @if(session('success'))
-            
-            <div class="px-4 py-2 rounded-sm bg-success/40 text-success border-[1px] border-success/50 font-semibold ">
-               *  {{ session('success') }}
-            </div>
-        @endif
-       
         {{--        === this is code for heading section ===--}}
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
             <span class="font-semibold text-ternary text-xl">{{$booking->invoice_number}} </span>
         </div>
+
 
     <div class="bg-white shadow-md shadow-ternary/20 border-[2px] border-ternary/30 rounded-lg px-16 w-[772px] py-12" id="invoiceContainer">
         <div class="flex items-center  flex-col justify-between">
@@ -27,7 +21,6 @@
             @else
                 <img src="{{ asset('images/agencies/logo/default.png') }}" alt="Cloud Travel"  class="h-24 mr-4" />
             @endif
-
             </div>
         </div>
 
@@ -53,105 +46,42 @@
 
             </div>
         </div>
-              <div class="mt-4 grid grid-cols-2 ">
-                      <div class="w-full">
-                        <h2 class="text-lg font-bold text-[#26ace2]">TO</h2>
-                        <p class="text-sm">{{ $booking->agency->name ?? 'N/A' }}</p>
-                        <p class="text-sm">{{ $booking->agency->address ?? 'N/A' }}</p>
-                        <p class="text-sm">{{ $booking->agency->country ?? 'N/A' }}</p>
-                        <p class="text-sm"><strong>TEL:</strong> {{ $booking->agency->phone ?? 'N/A' }}</p>
-                        <p class="text-sm"><strong>E-MAIL:</strong> {{ $booking->agency->email ?? 'N/A' }}</p>
-                    </div>
+        <div class="mt-4 grid grid-cols-2 ">
+            <div class="w-full ">
+                <h2 class="text-lg font-bold text-[#26ace2]">TO</h2>
+                <p class="text-sm">
+                {{$booking->agency->name}}
+                </p>
+                <p class="text-sm">{{ $booking->agency->address ?? 'N/A' }}</p>
+                <p class="text-sm">{{ ($agency_address->city ?? '') . (($agency_address->city && $agency_address->state) ? ', ' : '') . ($agency_address->state ?? '') }}</p>
+                <p class="text-sm">{{ $booking->agency->country ?? 'N/A' }}</p>
+                <p class="text-sm">{{ $agency_address->zipcode ?? 'N/A' }}</p>
+                <p class="text-sm"><strong>TEL:</strong> {{ $booking->agency->phone ?? 'N/A' }}</p>
+                <p class="text-sm"><strong>E-MAIL:</strong> {{ $booking->agency->email ?? 'N/A' }}</p>
+            </div>
 
-                    <div class="w-full text-right">
-                        <h2 class="text-lg font-bold text-[#26ace2]">ISSUED BY</h2>
-                        <p class="text-sm">{{ $booking->agency->address ?? 'N/A' }}</p>
-                        <p class="text-sm">{{ ($agency_address->city ?? '') . (($agency_address->city && $agency_address->state) ? ', ' : '') . ($agency_address->state ?? '') }}</p>
-                        <p class="text-sm">{{ $booking->agency->country ?? 'N/A' }}</p>
-                        <p class="text-sm">{{ $agency_address->zipcode ?? 'N/A' }}</p>
-                        <p class="text-sm"><strong>TEL:</strong> {{ $booking->agency->phone ?? 'N/A' }}</p>
-                        <p class="text-sm"><strong>E-MAIL:</strong> {{ $booking->agency->email ?? 'N/A' }}</p>
-                    </div>
-           </div>
+            <div class="w-full text-right">
+                <h2 class="text-lg font-bold text-[#26ace2]">ISSUED BY</h2>
+                <p class="text-sm">62 KING STREET,</p>
+                <p class="text-sm">SOUTHALL,</p>
+                <p class="text-sm">MIDDLESEX,</p>
+                <p class="text-sm">UB2 4DB</p>
+                <p class="text-sm"><strong>TEL:</strong> 02035000000</p>
+                <p class="text-sm"><strong>E-MAIL:</strong> info@cloudtravels.co.uk</p>
+            </div>
+        </div>
         <div class="mt-4 w-full">
             <h2 class="text-md font-bold  bg-[#26ace2] p-3 w-max text-white">FLIGHT</h2>
         
 
             <h3 class="text-md font-bold text-black mt-6">1. Flight Details</h3>
-
-           <!-- Passenger details -->
-
-           <h3 class="text-md font-bold text-black mt-6">1. Passenger Details</h3>
-            <div class="w-full overflow-hidden mt-2">
-                <table class="w-full">
-                    <tr class="bg-[#aed6f1] text-black font-bold text-sm">
-                        <td class="p-1 border-r-[1px] border-gray-100">S#</td>
-                        <td class="p-1 border-r-[1px] border-gray-100">PAX TYPE</td>
-                        <td class="p-1 border-r-[1px] border-gray-100">TITLE / FIRST NAME</td>
-                        <td class="p-1 border-r-[1px] border-gray-100">LAST NAME</td>
-                        <td class="p-1">GENDER</td>
-                    </tr>
-
-                    {{-- Display Adult Passenger Details --}}
-                    @if (isset($adults) && is_array($adults))
-                     {{dd($adults)}}
-                        @foreach ($adults[0] as $index => $title)
-                            <tr class="text-black text-sm border-b-[1px] border-blue-100">
-                                <td class="p-1">{{ $index + 1 }}</td>
-                                <td class="p-1">ADULT</td>
-                                <td class="p-1">{{ $title }} {{ $adultPassengerDetails[1][$index] ?? '' }}
-                                </td>
-                                <td class="p-1">{{ $adultPassengerDetails[3][$index] ?? '' }}</td>
-                                <td class="p-1">{{ $adultPassengerDetails[4][$index] ?? '' }}</td>
-                            </tr>
-                        @endforeach
-                    @endif
-
-                    {{-- Display Child Passenger Details --}}
-                    @if (isset($children[0]) && is_array($children[0]))
-                        @foreach ($children[0] as $index => $title)
-                            <tr class="text-black text-sm border-b-[1px] border-blue-100">
-                                <td class="p-1">{{ $index + 1 + count($adultPassengerDetails[0] ?? []) }}</td>
-                                <td class="p-1">CHILD</td>
-                                <td class="p-1">{{ $title }} {{ $childPassengerDetails[1][$index] ?? '' }}
-                                </td>
-                                <td class="p-1">{{ $childPassengerDetails[3][$index] ?? '' }}</td>
-                                <td class="p-1">{{ $childPassengerDetails[4][$index] ?? '' }}</td>
-                            </tr>
-                        @endforeach
-                    @endif
-
-                    {{-- Display Infant Passenger Details --}}
-                    @if (isset($infantPassengerDetails[0]) && is_array($infantPassengerDetails[0]))
-                        @foreach ($infantPassengerDetails[0] as $index => $title)
-                            <tr class="text-black text-sm border-b-[1px] border-blue-100">
-                                <td class="p-1">
-                                    {{ $index + 1 + count($adultPassengerDetails[0] ?? []) + count($childPassengerDetails[0] ?? []) }}
-                                </td>
-                                <td class="p-1">INFANT</td>
-                                <td class="p-1">{{ $title }} {{ $infantPassengerDetails[1][$index] ?? '' }}
-                                </td>
-                                <td class="p-1">{{ $infantPassengerDetails[3][$index] ?? '' }}</td>
-                                <td class="p-1">{{ $infantPassengerDetails[4][$index] ?? '' }}</td>
-                            </tr>
-                        @endforeach
-                    @endif
-
-                </table>
-
-
-
-                <h3 class="text-md font-bold text-[#26ace2] ">Note - * denotes the lead passenger</h3>
-
-            </div>
-
+        
 
             <div class="w-full overflow-hidden mt-2">
                                       <table class="w-full">
                                                 <tr class="bg-[#aed6f1] text-black font-bold text-sm">
                                                     <td class="p-1 border-r-[1px] border-gray-100">Booking Id</td>
                                                     <td class="p-1 border-r-[1px] border-gray-100">Booking Date</td>
-                                                    <td class="p-1 border-r-[1px] border-gray-100">Flight Name</td>
                                                     <td class="p-1 border-r-[1px] border-gray-100">Amount </td>
                                                 
                                             
@@ -315,5 +245,4 @@
     </div>
 
 
-
-                    </x-agency.layout>
+                    </x-front.layout>

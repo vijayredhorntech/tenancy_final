@@ -85,6 +85,7 @@
     
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
 
+
 </head>
 <body class="bg-gray-100 relative"
       style="font-family: 'Public Sans', serif; height: 100vh; width: 100%; overflow:hidden">
@@ -103,5 +104,8 @@
     </div>
 </div>
 @yield('scripts')
+
+
+
 </body>
 </html>

@@ -37,8 +37,8 @@
 
 {{--        === this is code for form section ===--}}
              <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 hidden">
-
-        <form action="{{ route('superadmin_staffstore') }}" method="POST" enctype="multipart/form-data">
+                 
+        <form action="{{ route('superadmin_staffstore') }}" method="POST" enctype="multipart/form-data"> 
         @csrf
                      <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
 
@@ -59,8 +59,8 @@
                                  <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
-
-
+                        
+                        
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="email" class="font-semibold text-ternary/90 text-sm">Email</label>
                              <div class="w-full relative">
@@ -70,9 +70,9 @@
                          </div>
 
 
-
-
-
+             
+                 
+                         
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Phone</label>
                              <div class="w-full relative">
@@ -82,10 +82,10 @@
                          </div>
 
 
+                
 
 
-
-
+                          
 
 
                          {{--   === number type input field ===--}}
@@ -136,25 +136,12 @@
 
 
                          {{-- === select input field ===--}}
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Role</label>
-                             <div class="w-full relative">
-                                 <select  name="date" id="datePicker"
-                                          class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                     <option value="">---Select---</option>
-                                     <option value="">Option 1</option>
-                                     <option value="">Option 2</option>
-                                     <option value="">Option 3</option>
-                                     <option value="">Option 4</option>
-                                 </select>
-                                 <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
-                             </div>
-                         </div>
+                   
 
 
 
 
-
+                        
                      </div>
                      <div class="w-full flex justify-end px-4 pb-4 gap-2">
                           <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">Cancel</button>
@@ -186,8 +173,8 @@
                 <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                     <tr>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Name</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Enrollment Date</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Staff Name</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Created At</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Email</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Phone Number</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Role</td>
@@ -195,7 +182,7 @@
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                     </tr>
 
-
+                    
                     @forelse($users as $user)
                         <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>

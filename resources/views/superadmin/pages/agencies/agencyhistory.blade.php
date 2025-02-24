@@ -64,8 +64,8 @@
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{  $credit['invoice_number'] ?? '' }}</td>
                                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                                         <div class="flex gap-2 items-center">
-                                                            <a href="" title="View Invoice">
-                                                                <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                                            <a href="{{ route('superadmingenerateInvoice', ['invoice_number' => $credit['invoice_number'] ?? '']) }}" title="View Invoice">
+                                                                <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                                                     <i class="fa fa-file"></i>
                                                                 </div>
                                                             </a>
@@ -113,10 +113,10 @@
 
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm"> {{ $deduction->service_name ? $deduction->service_name->name : 'No Service' }}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">  {{ '£'.$deduction['amount'] ?? 'No Amount' }}</td>
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">#INVOICE001</td>
+                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$deduction['invoice_number']}}</td>
                                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                                         <div class="flex gap-2 items-center">
-                                                            <a href="" title="View Invoice">
+                                                            <a href="{{ route('superadminbooking', ['booking_number' => $deduction['invoice_number'] ?? '']) }}" title="View Invoice">
                                                                 <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                                                     <i class="fa fa-file"></i>
                                                                 </div>

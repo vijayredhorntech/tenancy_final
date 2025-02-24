@@ -1,5 +1,11 @@
 <x-agency.layout>
 
+<style>
+    .h-max.mx-auto.md\:w-\[90\%\].w-full.relative.bg-white.rounded-md.pt-12.px-4.pb-0 {
+    display: none;
+}
+</style>
+
     @if ($errors->any())
         <div class="rounded-md bg-red-300 py-4 px-8">
             <ol class="list-disc font-semibold">
@@ -20,6 +26,33 @@
             }
         }
     @endphp
+
+    <!-- loader -->
+
+    
+<div id="loading_overlay1" class="hidden">
+    <div class="fixed inset-0 justify-center flex h-screen w-full bg-ternary items-center z-50 opacity-90"> </div>
+
+    <div class="z-50 fixed inset-0  justify-center  flex  h-screen w-full items-center p-4">
+        <div class="w-max rounded-[10px]  bg-white gap-6 shadow-lg shadow-black/60 flex flex-col items-center px-6 py-12 ">
+            <div class="relative flex justify-center items-center">
+                <div class="absolute animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-secondary"></div>
+                <img src="https://www.svgrepo.com/show/509001/avatar-thinking-9.svg"  class="rounded-full h-16 w-16">
+            </div>
+             <div class="w-full mt-4 flex justify-center flex items-center flex-col">
+               
+              <span class="font-medium text-md text-secondary">Please wait. We are fetching data</span>
+              <div class="flex">
+              <div class="h-1 w-1 rounded-full bg-secondary animate-ping ml-2"></div>
+                <div class="h-1 w-1 rounded-full bg-secondary animate-ping ml-2"></div>
+                <div class="h-1 w-1 rounded-full bg-secondary animate-ping ml-2"></div>
+                <div class="h-1 w-1 rounded-full bg-secondary animate-ping ml-2"></div>
+              </div>
+              </div>
+            
+        </div>
+    </div>
+</div>
 
         <div class=" w-full px-4 mx-auto  z-40 mt-4 lg:sticky" style=" top:85px;">
             <div class="w-full bg-white border-[1px] border-ternary/10 shadow-md shadow-ternary/10 rounded-[10px] p-2 flex xl:flex-row lg:flex-row flex-col gap-4">
@@ -321,18 +354,26 @@
         </div>
     @endif
 
-    <!-- <script> 
+    <script> 
         jQuery(document).ready(function (){
                
-            jQuery(".modify_flight").hide(); 
+               jQuery(document).on("click",".showLoader",function (){
+      
+                jQuery("#loading_overlay1").show(); 
+            
+                setTimeout(function () {
+                    $('#loading_overlay1').hide();
+                }, 20000); 
+               })
+            // jQuery(".modify_flight").hide(); 
 
-            jQuery("#modifySearch").on("click",function (){
-                jQuery(".modify_flight").show(); 
-            });
+            // jQuery("#modifySearch").on("click",function (){
+            //     jQuery(".modify_flight").show(); 
+            // });
 
             
         });
 
-    </script>  -->
+    </script> 
 </x-agency.layout>
 

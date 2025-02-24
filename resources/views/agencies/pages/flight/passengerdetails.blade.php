@@ -10,14 +10,7 @@
         </div>
     @endif
 
-    @php
-    $amount = $details[2]->price->TotalPrice;
-    $price = floatval(preg_replace('/[^0-9.]/', '', $amount)); // Convert to float
-    $balanceAmount = floatval($balance->balance); // Ensure balance is also a float
 
-    $status = $price <= $balanceAmount; // Check if balance is sufficient
-
-    @endphp
 
     <form action="{{ route('flight.payment') }}" method="POST">
         @csrf
@@ -653,14 +646,12 @@
                     </div>
                 </div>
             </div>
-            @if($status)
+        
             <div class="px-2 py-4 flex justify-end">
                  <button type="submit" class="showLoader w-max font-semibold text-md bg-secondary/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-secondary hover:bg-secondary hover:text-white transition ease-in duration-2000">Proceed to
                      Payment </button>
              </div>
-            @else
-                <p class="text-danger">Insufficient balance</p>
-            @endif
+     
             
 
 </div>
@@ -726,14 +717,12 @@
                 <input type="text" name="flightSearch" class="hidden" value="{{ json_encode($flightSearch) }}"
                        required readonly>
                        
-                       @if($status)
+               
                        <div class="w-full p-2">
                         <button type="submit" class="showLoader w-full font-semibold text-md bg-secondary/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-secondary hover:bg-secondary hover:text-white transition ease-in duration-2000">Proceed to
                             Payment </button>
                         </div>
-                    @else
-                        <p class="text-danger">Insufficient balance</p>
-                    @endif
+               
           
         </div>
     </section>

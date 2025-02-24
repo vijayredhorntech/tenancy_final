@@ -22,6 +22,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\AddBalance;
 use App\Models\Balance;
 use App\Models\Deduction;
+use App\Models\AgencyDetail;
+
 
 
 class AgencyController extends Controller
@@ -113,18 +115,48 @@ class AgencyController extends Controller
 
                     try {
                         // Insert into the 'agencies' table
-                        $agency = Agency::create([
-                            'name' => $request->name,
-                            'email' => $request->email,  
-                            'phone' => $request->agency_phone,
-                            'database_name' => $request->database_name,
-                            'contact_person' => $request->contact_name,
-                            'contact_phone' => $request->contact_phone,
-                            'address' =>       $request->address,
-                            'country' =>       $request->country,
-                            'user_id' =>       $auth_id,  
-                            'profile_picture'=> $profile,
-                        ]);
+                        // $agency = Agency::create([
+                        //     'name' => $request->name,
+                        //     'email' => $request->email,  
+                        //     'phone' => $request->agency_phone,
+                        //     'database_name' => $request->database_name,
+                        //     'contact_person' => $request->contact_name,
+                        //     'contact_phone' => $request->contact_phone,
+                        //     'address' =>       $request->address,
+                        //     'country' =>       $request->country,
+                        //     'user_id' =>       $auth_id,  
+                        //     'profile_picture'=> $profile,
+                        // ]);
+
+                        $agency = new Agency();
+                            $agency->name = $request->name;
+                            $agency->email = $request->email;
+                            $agency->phone = $request->agency_phone;
+                            $agency->database_name = $request->database_name;
+                            $agency->contact_person = $request->contact_name;
+                            $agency->contact_phone = $request->contact_phone;
+                            $agency->address = $request->address;
+                            $agency->country = $request->country;
+                            $agency->user_id = $auth_id;
+                            $agency->profile_picture = $profile;
+                            $agency->save();
+
+
+                            $agency_details=new AgencyDetail();
+                            $agency_details->agency_id  = $agency->id;
+                            $agency_details->user_id  = $auth_id;
+                            $agency_details->country = $request->country;
+                            $agency_details->telephone = $request->telephone;
+                            $agency_details->agency_phone = $request->agency_phone;
+                            $agency_details->state  = $request->state;
+                            $agency_details->city = $request->city;
+                            $agency_details->zipcode  = $request->zip_code;
+                            $agency_details->vat_number = $request->agency_phone;
+                            $agency_details->status ='1';
+                            $agency_details->save(); 
+
+
+
                 
                         $full_url=env('DOMAIN')."/".$request->domain_name;
                 
@@ -136,6 +168,8 @@ class AgencyController extends Controller
                             'user_id' => $auth_id,             
                             'full_url' => $full_url,  
                         ]);
+
+
 
 
                         // Assign Services if provided
@@ -241,8 +275,19 @@ public function hs_agency_hisoty($id)
 {
     $agency = Agency::with('balance')->where('id', $id)->first();
     // $deductions = Deduction::with('agency', 'service')->where('agency_id', $id)->get();
-    $deductions = Deduction::with('service_name')->where('agency_id', $id)->get();
-    $credits = AddBalance::with('agency')->where('agency_id', $id)->where('status',0)->get();
+    // $deductions = Deduction::with('service_name')->where('agency_id', $id)->get();
+    // $credits = AddBalance::with('agency')->where('agency_id', $id)->where('status',0)->get();
+            $deductions = Deduction::with('service_name')
+            ->where('agency_id', $id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $credits = AddBalance::with('agency')
+            ->where('agency_id', $id)
+            ->where('status', 0)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
 
     return view('superadmin.pages.agencies.agencyhistory', compact('agency', 'deductions', 'credits'));
 }

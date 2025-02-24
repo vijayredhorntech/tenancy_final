@@ -15,7 +15,9 @@ use App\Models\FlightBooking;
 use App\Models\PassengerInformation;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-
+use App\Models\Airport;
+use App\Models\AgencyDetail;
+use App\Models\TermsCondition;
 
 
 use App\Helpers\DatabaseHelper;
@@ -204,9 +206,16 @@ public function him_flightprice(Request $request)
     $response = curl_exec($curl);
     $responseData = json_decode($response, true);
 
-    return view('agencies.pages.flight.pricing')->with('details', $responseData['details'])->with('flightSearch', json_decode($request->flightSearch))->with('airports', $responseData['airports']);
-    
-   
+    $userData = session('user_data');
+    $agency = Agency::where('email', $userData['email'])->first();
+
+    $balance = Balance::where('agency_id', $agency->id)->first();
+    return view('agencies.pages.flight.pricing')
+    ->with('details', $responseData['details'])
+    ->with('flightSearch', json_decode($request->flightSearch))
+    ->with('airports', $responseData['airports'])
+    ->with('balance', $balance);;
+
 }
 
 
@@ -240,8 +249,7 @@ public function payment(Request $request)
     // print_r($userData);
     // dd($request->all());
     $price_data=json_decode($request->details);
- 
-     
+    
  
     $data = $request->all(); // Use $request->all() as $data
 
@@ -324,7 +332,7 @@ public function payment(Request $request)
         $flight->agency_id = $agency->id;
         $flight->booking_number = $bookingNumber;
         $flight->invoice_number = $invoiceNumber;
-        $flight->details = json_encode($request->details);
+        $flight->details = $request->details;
         $flight->flightSearch = json_encode($request->flightSearch);
         $flight->save();
 
@@ -383,7 +391,8 @@ public function payment(Request $request)
         // Update balance
         $balance->balance -= $price;
         $balance->save();
-        dd("Flight is booked");
+        return redirect()->route('agency_booking', ['booking_number' => $invoiceNumber])
+        ->with('success', 'Your booking is confirmed!');
     }
 
 
@@ -396,15 +405,154 @@ public function payment(Request $request)
 
 
 /*** Invoice details ****/
-public function hs_invoice(){
-    $invoice_number ="INV-20250219-155749-WE3Q";
+public function hs_generateinvocie($invoice){
+    // $invoice_number ="INV-20250220-080104-9ZMZ";
 
-    $flight=FlightBooking::where('invoice_number',$invoice_number)->first(); 
-    $flight_serach=json_decode($flight->flightSearch);
-    $details=json_decode($flight->details);
+   $agency_data=AddBalance::with('agency')->where('invoice_number',$invoice)->first(); 
+   $termcondition=TermsCondition::where('name','super admin')->where('status',1)->first(); 
 
-
-    return view('agencies.pages.invoices.flightinvoice',['details'=>$details,'flightSearch'=>$flight_serach]);
+ 
+    // $flight=FlightBooking::where('invoice_number',$invoice_number)->first(); 
+    // $flight_serach=json_decode($flight->flightSearch);
+    // $details=json_decode($flight->details);
+    $segment = request()->segment(1); // Gets the first segment
+    if($segment=='agencies'){
+        return view('agencies.pages.invoices.paymentInvoice',['agency_data'=>$agency_data,'termcondition'=>$termcondition]);
+    }else{
+         return view('superadmin.pages.invoice.paymentInvoice',['agency_data'=>$agency_data,'termcondition'=>$termcondition]);
+    }
+   
 }
+
+
+/*** Invoice details ****/
+public function hs_invoice($invoice_number){
+    // $invoice_number ="INV-20250220-080104-9ZMZ";
+
+ 
+ 
+    $flight=FlightBooking::where('invoice_number',$invoice_number)->first(); 
+    $price_data=$flight->invoice_number;
+    $booking=Deduction::with('agency')->where('invoice_number',$price_data)->first(); 
+    $agency_id=$booking->agency->id;
+    $agency_address=AgencyDetail::where('agency_id',$agency_id)->first();
+    $termcondition=TermsCondition::where('name','agency')->where('status',1)->first(); 
+    $passenger_deatils=PassengerInformation::where('invoice_number',$invoice_number)->first(); 
+
+    $adults=json_decode($passenger_deatils->adult, true);
+    $children=json_decode($passenger_deatils->children, true);
+    $infants=json_decode($passenger_deatils->infant, true);
+   
+
+    $details = json_decode($flight->details, true);
+    $flight_search = json_decode($flight->flightSearch, true);
+    
+
+
+    $segment = request()->segment(1); // Gets the first segment
+
+   
+    if($segment=='agencies'){
+        return view('agencies.pages.invoices.flightinvoice',[
+            'flight_serach'=>$flight_search,
+            'details'=>$details,
+            'booking'=>$booking,
+            'flight'=>$flight,
+            'agency_address'=>$agency_address,
+            'termcondition'=>$termcondition,
+            'adults'=>$adults,
+            'children'=>$children,
+            'infants'=>$infants,
+        ]);
+        // return view('agencies.pages.invoices.paymentInvoice',['agency_data'=>$agency_data]);
+    }else{
+         return view('superadmin.pages.invoice.bookinginvoice',[
+            'flight_serach'=>$flight_search,
+            'details'=>$details,
+            'booking'=>$booking,
+            'flight'=>$flight,
+            'agency_address'=>$agency_address,
+            'termcondition'=>$termcondition,
+            'adults'=>$adults,
+            'children'=>$children,
+            'infants'=>$infants,
+        
+        ]);
+    }
+   
+}
+
+
+/****
+ * 
+ * 
+ * Serach function for flight
+ * 
+ * 
+ * ******/
+public function airport($input){
+
+        $airports = Airport::where('code', 'LIKE', '%' . $input . '%')
+            ->orWhere('country', 'LIKE', '%' . $input . '%')
+            ->orWhere('airport', 'LIKE', '%' . $input . '%')
+            ->orderByRaw("CASE
+                WHEN code LIKE '%$input%' THEN 1
+                WHEN airport LIKE '%$input%' THEN 2
+                ELSE 3
+            END")
+            ->orderBy('airport', 'desc')
+            ->get()
+            ->map(function ($airport) {
+                return $airport->airport . ', [' . $airport->code . '], ' . $airport->country;
+            });
+    
+
+    
+        return $airports;
+
+}
+
+/****
+ * 
+ * 
+ * Serach for flight details
+ * 
+ * 
+ * ******/
+
+ public function getflight()
+ {
+     $invoice = "INV-20250221-111550-RYZY";
+ 
+     $flight = FlightBooking::where('invoice_number', $invoice)->first();
+ 
+     if (!$flight) {
+         return "No flight found for this invoice.";
+     }
+ 
+     // Decode JSON
+    //  $data = json_decode($flight->details, true);
+    $data = json_decode(json_decode($flight->details, true), true);
+    $flight_serach=json_decode(json_decode($flight->flightSearch, true), true);
+
+ 
+    dd($data);
+     if (!is_array($data)) {
+         return "Invalid JSON format.";
+     }
+ 
+     // Extract journey data
+     $journeyData = [];
+     foreach ($data as $item) {
+         if (isset($item['journey'])) {
+             $journeyData = $item['journey']; // Store journey data
+             break; // Stop after finding first journey
+         }
+     }
+ 
+     // Print journey data in the controller
+     dd($journeyData); // Debug and check output
+ }
+ 
 
 }

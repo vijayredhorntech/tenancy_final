@@ -169,7 +169,7 @@
             <form method="POST" action="{{ route('flight.pricing') }}" :default="['flight'=>json_encode($flight),'flightSearch'=>$flightSearch]">
                 <input name="flight" class="hidden">
                 <input name="flightSearch" class="hidden">
-                <input type="submit"> class="showLoader font-semibold text-md bg-secondary/80 text-white/90 px-6 py-2 rounded-[2px] border-[1px] border-secondary/80 hover:bg-secondary hover:text-white transition ease-in duration-2000"
+                <input type="submit" class="showLoader font-semibold text-md bg-secondary/80 text-white/90 px-6 py-2 rounded-[2px] border-[1px] border-secondary/80 hover:bg-secondary hover:text-white transition ease-in duration-2000"
                                  label="Book Now"/>
             </form>
             <label for="{{ $id }}" class="text-xs animate-bounce cursor-pointer text-secondary mt-4 group">

@@ -66,6 +66,13 @@ class AuthController extends Controller
     // ->take(5)
     ->get();
 
+    $funds = AddBalance::with('agency')
+    ->orderBy('created_at', 'desc') // Orders by latest records
+    ->take(5)
+    ->get();
+
+ 
+
     $recent_booking = Deduction::with(['service_name', 'agency'])
     ->orderBy('created_at', 'desc') // Orders by latest records
     ->take(5)
@@ -76,7 +83,7 @@ class AuthController extends Controller
 
     $users = User::get();
         
-        return view('superadmin.pages.welcome',compact('roles', 'service', 'agency', 'total', 'bookings','users','recent_booking'));
+        return view('superadmin.pages.welcome',compact('roles', 'service', 'agency', 'total', 'bookings','users','recent_booking','funds'));
          return view('auth.admin.pages.index', ['user_data' => $user,'services' => $service]);
     }
 
