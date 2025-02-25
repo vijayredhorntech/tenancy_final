@@ -723,12 +723,13 @@
             <div class="w-full overflow-x-auto p-4">
                 <table class="w-full border-[1px] border-secondary/30 border-collapse">
                     <tr>
-                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
-                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>
-                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Supplier Name</td>
-                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
-                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency Name</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>                       
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>                 
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Supplier Name</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                     </tr>
 
@@ -745,12 +746,20 @@
      
                         <tr>
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$booking['date']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->agency['name']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                            <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}">{{$booking['invoice_number']}} </a> </td> 
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
-                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$carrierName}}</td>
-
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$booking['amount']}}</td>
-                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['invoice_number']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$carrierName}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$booking['date']}}</td>
+                           
+                    
+
+
+                           
+                          
+                            
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
                                                 <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
@@ -782,14 +791,14 @@
                 <div class="w-full overflow-x-auto p-4">
                     <table class="w-full border-[1px] border-secondary/30 border-collapse">
                         <tr>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction Date</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>  
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction Amount</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Mode of Payment</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction/ Receipt No.</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction Date</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Remarks</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
 
                         </tr>
@@ -799,13 +808,18 @@
                        
                             <tr>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$fund['created_at']}}</td>
+                              
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$fund->agency->name}}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                <a href="{{ route('superadmingenerateInvoice', ['invoice_number' => $fund['invoice_number'] ?? '']) }}">  {{ $fund['invoice_number'] }}
+                                  </a> 
+                                </td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm"> {{ $fund['amount'] }}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $fund['payment_type'] }}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $fund['payment_number'] }}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$fund['created_at']}}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $fund['remark'] }}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $fund['invoice_number'] }}</td>
+                              
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                  
                                         <a href="{{ route('superadmingenerateInvoice', ['invoice_number' => $fund['invoice_number'] ?? '']) }}" title="View Details">

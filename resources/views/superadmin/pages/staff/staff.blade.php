@@ -2,28 +2,7 @@
     @section('title')Agency @endsection
 
 
-{{--    === this is code for model ===--}}
-    <div id="viewServiceModel" class="w-full h-full absolute top-0 left-0 bg-white/40 z-20 flex hidden  justify-center items-center cursor-pointer" >
-                 <div class="rounded-[3px] bg-white px-8 py-12 shadow-lg shadow-gray-300 border-[2px] border-gray-400/50 max-w-7xl relative">
-                     <div class="absolute top-1 right-1 h-6 w-6 flex rounded-full justify-center items-center bg-danger/30 border-[1px] border-danger/70 text-ternary hover:bg-danger hover:text-white transition ease-in duration-2000" onclick="document.getElementById('viewServiceModel').classList.toggle('hidden')">
-                          <i class="fa fa-xmark"></i>
-                     </div>
-                         <span class="font-medium text-lg ">Services for agency  <i class="font-semibold text-secondary"><u>Skyline Tours</u></i></span>
 
-                         <div class="w-full grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-3 mt-4">
-                             <div class="w-full flex justify-center">
-                                 <span class="font-semibold"># Flight</span>
-                             </div>
-                             <div class="w-full flex justify-center">
-                                 <span class="font-semibold"># Hotel</span>
-                             </div>
-                             <div class="w-full flex justify-center">
-                                 <span class="font-semibold"># Visas</span>
-                             </div>
-                         </div>
-                 </div>
-           </div>
-{{--        === model code ends ===--}}
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
 {{--        === this is code for heading section ===--}}
@@ -45,7 +24,7 @@
                      <div class="w-full relative group flex flex-col gap-1">
                              <label for="profile" class="font-semibold text-ternary/90 text-sm">Profile</label>
                              <div class="w-full relative">
-                                 <input type="file" name="profile" id="profile" placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="file" name="profile" id="profile" placeholder="Staff name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-file absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -55,7 +34,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Name</label>
                              <div class="w-full relative">
-                                 <input type="text" name="name" id="name" placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="text" name="name" id="name" placeholder="Staff name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -76,7 +55,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Phone</label>
                              <div class="w-full relative">
-                                 <input type="number" name="agency_phone" id="agency_phone" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="number" name="staff_phone" id="staff_phone" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-phone absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -129,23 +108,88 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Country</label>
                              <div class="w-full relative">
-                                 <input type="test" name="country" id="country" placeholder="Country....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="text" name="country" id="country" placeholder="Country....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
 
 
                          {{-- === select input field ===--}}
+
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
+                             <div class="w-full relative">
+                                 <input type="date" name="date_ofbirth" id="date_ofbirth" max=""
+                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
+                                    onclick="document.getElementById('date_ofbirth').showPicker();"></i>
+                             </div>
+                         </div>
                    
 
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="name" class="font-semibold text-ternary/90 text-sm">Passport Number</label>
+                             <div class="w-full relative">
+                                 <input type="text" name="passport_number" id="passport_number" placeholder="Passport Number....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                             </div>
+                         </div>
 
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="name" class="font-semibold text-ternary/90 text-sm">Place of Issue</label>
+                             <div class="w-full relative">
+                                 <input type="text" name="place_of_issue" id="place_of_issue" placeholder="Place of Issue....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                             </div>
+                         </div>
+
+                         
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Passport Expire Date</label>
+                             <div class="w-full relative">
+                                 <input type="date" name="passport_expiredate" id="passport_expiredate" min=""
+                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
+                                    onclick="document.getElementById('passport_expiredate').showPicker();"></i>
+                             </div>
+                         </div>
+
+                         
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Date of Issue</label>
+                             <div class="w-full relative">
+                                 <input type="date" name="passport_issuedate" id="passport_issuedate"  max=""
+                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
+                                    onclick="document.getElementById('passport_issuedate').showPicker();"></i>
+                             </div>
+                         </div>
+
+
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Password Front</label>
+                             <div class="w-full relative">
+                                 <input type="file" name="passportfront" id="datePicker"
+                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                             
+                             </div>
+                         </div>
+
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Passport back</label>
+                             <div class="w-full relative">
+                                 <input type="file" name="date" id="datePicker"
+                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                              
+                             </div>
+                         </div>
 
 
                         
                      </div>
                      <div class="w-full flex justify-end px-4 pb-4 gap-2">
                           <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">Cancel</button>
-                          <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Create Agency</button>
+                          <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Create Staff</button>
                      </div>
                  </form>
              </div>
@@ -239,5 +283,45 @@
                 </table>
             </div>
 {{--        === table section code ends here===--}}
+<script>
+    // Set max date to today
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let today = new Date().toISOString().split('T')[0]; 
+
+        const issuedate = document.getElementById('passport_issuedate');
+        const birthdate = document.getElementById('date_ofbirth');
+        const expiredate = document.getElementById('passport_expiredate');
+
+        if (issuedate) issuedate.setAttribute('max', today);
+        if (birthdate) birthdate.setAttribute('max', today);
+        if (expiredate) expiredate.setAttribute('min', today);
+
+        function validateDateInput(input, type) {
+            input.addEventListener("change", function () {
+                // Ensure the input is fully entered (YYYY-MM-DD is 10 characters long)
+                if (this.value.length !== 10) return;
+       
+                let selectedDate = new Date(this.value);
+
+                let minDate = this.getAttribute("min") ? new Date(this.getAttribute("min")) : null;
+                let maxDate = this.getAttribute("max") ? new Date(this.getAttribute("max")) : null;
+                
+                // Check if the entered date is within the allowed range
+                if ((minDate && selectedDate < minDate) || (maxDate && selectedDate > maxDate)) {
+                    alert(`Invalid ${type}! Please select a valid date.`);
+                    this.value = ""; // Reset invalid value
+                }
+            });
+        }
+
+        if (issuedate) validateDateInput(issuedate, "Issue Date");
+        if (birthdate) validateDateInput(birthdate, "Birth Date");
+        // if (expiredate) validateDateInput(expiredate, "Expiry Date");
+    });
+
+
+</script>
         </div>
 </x-front.layout>

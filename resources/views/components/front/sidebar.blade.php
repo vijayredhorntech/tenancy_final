@@ -78,7 +78,7 @@
       @endcanany
 
 
-    @canany(['staff view', 'manage everything'])
+    <!-- @canany(['staff view', 'manage everything'])
       <a href="{{route('staff')}}">
             <div class="{{Route::currentRouteName()==='staff'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
@@ -88,7 +88,47 @@
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>
         </a>
-    @endcanany
+    @endcanany -->
+
+    <div class="">
+            <div onclick="document.getElementById('staffDiv').classList.toggle('hidden');document.getElementById('staffArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='service'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fa fa-users mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Staff</span>
+                </div>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="staffArrow"> </i>
+            </div>
+            <ul id="staffDiv" class="pl-10 mt-2 flex flex-col hidden">
+            <a href="{{route('staff')}}">
+                    <li class="{{Route::currentRouteName()==='staff'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fa fa-eye mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">View Staff</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fa fa-hotel mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Add Leave</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Leave Approvals </span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+            </ul>
+        </div>
 
     @canany(['role view', 'manage everything'])
     <a href="{{route('superadmin.role')}}">

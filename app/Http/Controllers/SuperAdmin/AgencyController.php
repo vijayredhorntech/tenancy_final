@@ -23,6 +23,8 @@ use App\Models\AddBalance;
 use App\Models\Balance;
 use App\Models\Deduction;
 use App\Models\AgencyDetail;
+use App\Mail\UserRegisteredMail;
+use Illuminate\Support\Facades\Mail;
 
 
 
@@ -172,6 +174,9 @@ class AgencyController extends Controller
                                 $serviceassign->save(); 
                             }
                         }     
+                     
+                        Mail::to($agency->email)->send(new UserRegisteredMail($agency));
+
                         // Create database and run migrations         
                         \DB::commit();
                          DatabaseHelper::createDatabaseForUser($request->database_name,$agency,$profile);

@@ -122,17 +122,7 @@ class AuthController extends Controller
 
 
 
-// Now, $airlinePassengerTotals contains the total number of passengers per airline
-
-   
-    // dd($bookings[0]->flightBooking->details);
-
-    
-    // $data = json_decode(json_decode($bookings[0]->flightBooking->details, true), true);
-    // $data = json_decode($bookings[1]->flightBooking->details, true);
-    // $flight_search = json_decode($bookings[1]->flightBooking->flightSearch, true);
-
-    $funds = AddBalance::with('agency')
+     $funds = AddBalance::with('agency')
     ->orderBy('created_at', 'desc') // Orders by latest records
     ->take(5)
     ->get();

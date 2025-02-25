@@ -711,11 +711,11 @@
                     <table class="w-full border-[1px] border-secondary/30 border-collapse">
                         <tr>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Services</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Supplier Name</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                         </tr>
 
@@ -732,11 +732,15 @@
                         
                             <tr>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking['date']}}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    <a href="{{ route('agency_booking', ['booking_number' => $booking['invoice_number'] ?? '']) }}">{{$booking['invoice_number']}}
+                                     </a> 
+                                    </td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$carrierName}} </td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['amount']}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['invoice_number']}}</td>
+                               
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking['date']}}</td>
                                
                             
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
@@ -773,12 +777,12 @@
                     <table class="w-full border-[1px] border-secondary/30 border-collapse">
                         <tr>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction Date</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No. </td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction Amount</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Mode of Payment</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction No. / Receipt </td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction Date</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Remarks</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No. </td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                         
                         </tr>
@@ -788,12 +792,16 @@
                         
                             <tr>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$credit['created_at']}}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">
+                                    <a href="{{ route('generateInvoice', ['invoice_number' => $credit['invoice_number'] ?? '']) }}">{{$credit['invoice_number']}}
+                                       </a> 
+                                    </td>        
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$credit['amount']}}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$credit['payment_type']}}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$credit['payment_number']}}</td>
+                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$credit['created_at']}}</td>
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$credit['remark']}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$credit['invoice_number']}}</td>
+                            
                                 
                          
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">

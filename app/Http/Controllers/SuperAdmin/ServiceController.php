@@ -18,6 +18,8 @@ use Carbon\Carbon;
 use App\Models\Airport;
 use App\Models\AgencyDetail;
 use App\Models\TermsCondition;
+use App\Mail\BookingConfirmationMail;
+use Illuminate\Support\Facades\Mail;
 
 
 use App\Helpers\DatabaseHelper;
@@ -391,6 +393,9 @@ public function payment(Request $request)
         // Update balance
         $balance->balance -= $price;
         $balance->save();
+     
+        Mail::to($request->email)->send(new BookingConfirmationMail($flight,$agency));
+
         return redirect()->route('agency_booking', ['booking_number' => $invoiceNumber])
         ->with('success', 'Your booking is confirmed!');
     }

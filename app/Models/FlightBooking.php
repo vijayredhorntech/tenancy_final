@@ -22,9 +22,6 @@ class FlightBooking extends Model
         return $this->belongsTo(User::class)->withDefault();
     }
 
-    public function flightBooking()
-        {
-            return $this->belongsTo(FlightBooking::class, 'flight_booking_id');
-        }
+   
 
 }
