@@ -13,6 +13,11 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use App\Models\UserMetaPassportDetails;
+use App\Models\UserMetaDeduction;
+use App\Models\UserActivityLog;
+
+
 
 class SuperadminController extends Controller
 {
@@ -29,7 +34,7 @@ class SuperadminController extends Controller
     /*** Staff Create Form ***/
     public function hs_staffcreate()
     {
-        return view('auth.admin.pages.staff.staff_form', [
+        return view('superadmin.pages.staff.createstaff_form', [
             'user_data' => Auth::user(),
             'services'  => Service::all(),
             'users'     => User::all(),
@@ -39,7 +44,8 @@ class SuperadminController extends Controller
     /*** Store Staff ***/
     public function hs_staffstore(Request $request)
     {
-        
+         
+        //    dd($request->all());
         $validated = $request->validate([
             'name'    => 'required|string|max:255',
             'email'   => 'required|email|unique:users,email',
@@ -59,7 +65,7 @@ class SuperadminController extends Controller
                     $user->save(); // Save user data
 
                     // Assign Role
-                    $user->assignRole('admin');
+                    $user->assignRole('simple user');
 
                     // Create User Meta Data
                     $userMeta = new UserMeta();
@@ -69,12 +75,44 @@ class SuperadminController extends Controller
                     $userMeta->address = $request->address;
                     $userMeta->state = $request->state;
                     $userMeta->country = $request->country;
+                    $userMeta->emergency_person_name = $request->emergencyperson_name;
+                    $userMeta->emergency_contact_number	 = $request->emergencyperson_contact;
+                    $userMeta->emergency_email_id = $request->emergencyperson_email;
+                    $userMeta->account_number = $request->bankdetails;
+                    $userMeta->short_code = $request->short_code;
+                    $userMeta->bank_name = $request->bank_name;
+                    $userMeta->wages_type = $request->wages_type;
+                    $userMeta->wage = $request->wage;
                     $userMeta->save();
+
+                    $userpassport = new UserMetaPassportDetails();
+                    $userpassport->user_id=$user->id;
+                    $userpassport->passport_number =$request->passport_number;
+                    $userpassport->place_of_issue=$request->place_of_issue;
+                    $userpassport->passport_expire_date=$request->passport_expiredate;
+                    $userpassport->date_of_issue=$request->passport_issuedate;
+                    // $userpassport->passport_front_side=$user->id;
+                    // $userpassport->passport_back_side=$user->id;
+                    // $userpassport->other_doc_details=$user->id;
+                    $userpassport->save(); 
+
+                    $userdeduction = new UserMetaDeduction();
+                    $userdeduction->user_id=$user->id;
+                    // $userdeduction->taxslab =$user->passport_number;
+                    $userdeduction->accommodation=$request->accommandation;
+                    $userdeduction->cab=$request->cab;
+                    $userdeduction->food=$request->food;
+                    // $userdeduction->other=$user->passport_issuedate;
+                    // $userpassport->passport_front_side=$user->id;
+                    // $userpassport->passport_back_side=$user->id;
+                    // $userpassport->other_doc_details=$user->id;
+                    $userdeduction->save(); 
+
 
     DB::commit();
 
             DB::commit();
-            return redirect()->route('superadmin.staff')->with('success', 'User created successfully.');
+            return redirect()->route('staff')->with('success', 'User created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
             dd($e); 
@@ -186,4 +224,16 @@ class SuperadminController extends Controller
 
         return $user ? $user->profile : null;
     }
+
+
+    public function hs_staff_hisoty($id){
+ 
+            $user=User::with('userdetails','passport','log')->where('id',$id)->first(); 
+   
+    //    dd($user);
+    
+        return view('superadmin.pages.staff.staffhistory', compact('user'));
+    }
+
+
 }

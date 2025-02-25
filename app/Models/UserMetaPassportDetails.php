@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class UserActivityLog extends Model
+
+class UserMetaPassportDetails extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'url', 'method', 'ip', 'user_agent'];
-
+    protected $table = 'user_meta_passportdetails';
 
     public function user()
     {

@@ -85,11 +85,13 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     /*** Route for staff ***/
                     Route::controller(SuperadminController::class)->group(function () {
                         Route::get('/staffindex', 'hs_staffindex')->name('staff');
+                        Route::get('/staffcreate', 'hs_staffcreate')->name('superadmin_staffcreate');
                         Route::post('/staffstore', 'hs_staffstore')->name('superadmin_staffstore');
                         Route::get('/staffupdate/{id}', 'hs_staffupdate')->name('superadmin_staffupdate');
                         Route::post('/staffupdate', 'hs_supdatedstore')->name('hs_supdatedstore');
                         Route::get('/staffdelete/{id}', 'hs_staffdelete')->middleware('can:staff delete')->name('superadmin_staffdelete'); // Fixed incorrect controller method
                         Route::get('/staffDetails/{id}', 'hs_staffDetails')->middleware('can:view staffdetails')->name('superadmin_staffDetails');
+                        Route::get('/staff/{id}','hs_staff_hisoty')->name('staff.history');
                     });
 
 

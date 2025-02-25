@@ -14,11 +14,16 @@
         <div class="rounded-full h-10 w-10 flex justify-center items-center hover:bg-ternary/60 hover:text-white cursor-pointer"><i class="fa fa-gear animate-spin" title="Search......"></i></div>
         <div class="flex items-center gap-2 mx-4 cursor-pointer">
             <div class="">
-                <img src="{{asset('assets/images/profile_photo.jpg')}}" class="w-auto h-10 rounded-full" alt="Cloud Travels">
+            @if(isset($user->profile))
+                  <img src="{{ asset('images/user/profile/' . $user->profile) }}" alt="Cloud Travel"  class="w-auto h-10 rounded-full" class="h-24 mr-4" />
+           @else
+           <img src="{{asset('assets/images/logo.png')}}" class="w-auto h-10 rounded-full" alt="">
+    @endif
+                <!-- <img src="{{asset('assets/images/profile_photo.jpg')}}" class="w-auto h-10 rounded-full" alt="Cloud Travels"> -->
             </div>
             <div class="flex flex-col items-start justify-center">
-                <span class="text-ternary text-sm font-semibold">James William</span>
-                <span class="text-ternary/90 text-xs font-semibol">Super Admin</span>
+                <span class="text-ternary text-sm font-semibold">{{$user->name}}</span>
+                <span class="text-ternary/90 text-xs font-semibol">{{ auth()->user()->getRoleNames()->implode(', ') }}</span>
             </div>
 
         </div>

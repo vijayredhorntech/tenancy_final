@@ -50,4 +50,15 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserMeta::class, 'user_id', 'id'); 
     }
+
+    
+    public function passport()
+    {
+        return $this->hasOne(UserMetaPassportDetails::class, 'user_id', 'id'); 
+    }
+
+    public function log()
+    {
+        return $this->hasMany(UserActivityLog::class, 'user_id', 'id'); 
+    }
 }

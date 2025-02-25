@@ -79,7 +79,7 @@ class AgencyController extends Controller
     public function him_store_agency(Request $request)
                 {
 
-                    // dd($request->all());
+                  
                     // Validate the incoming data
                     $validated = $request->validate([
                         'name' => 'required|string|max:255',
@@ -94,7 +94,7 @@ class AgencyController extends Controller
                     ]);
       
              
-      
+                   
                     // Get the authenticated user's ID
                     $auth_id = Auth::user()->id;
                
