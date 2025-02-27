@@ -16,6 +16,7 @@ use App\Http\Controllers\SuperAdmin\ServiceController;
 use App\Http\Controllers\SuperAdmin\InventoryController;
 use App\Http\Controllers\Agencies\SupportController;
 use App\Http\Controllers\SuperAdmin\TermsConditionController;
+use App\Http\Controllers\SuperAdmin\LeaveManagementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\LogUserActivity;
@@ -82,6 +83,19 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     });
 
 
+                      /***Route for Leave Managment  ***/
+                      Route::controller(LeaveManagementController::class)->group(function () {
+                        Route::get('/addleave','hs_addleave')->name('add.leave');
+                        Route::post('/leave','hs_leavestore')->name('leavestore');
+                        Route::get('/leave/{id}','hs_update')->name('update.leave');
+                        Route::post('/updateleave','hs_updatestore')->name('update.leavestore');
+
+                        Route::get('/leaves','hs_leaves')->name('leaves');
+                        ROute::post('/applyleave_store','hs_applyleave')->name('application_leave');
+
+                    });
+
+
                     /*** Route for staff ***/
                     Route::controller(SuperadminController::class)->group(function () {
                         Route::get('/staffindex', 'hs_staffindex')->name('staff');
@@ -92,6 +106,16 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/staffdelete/{id}', 'hs_staffdelete')->middleware('can:staff delete')->name('superadmin_staffdelete'); // Fixed incorrect controller method
                         Route::get('/staffDetails/{id}', 'hs_staffDetails')->middleware('can:view staffdetails')->name('superadmin_staffDetails');
                         Route::get('/staff/{id}','hs_staff_hisoty')->name('staff.history');
+
+                    
+                        Route::get('/attandance','hs_attendance')->name('attendance');
+                        Route::get('/profile','hs_profile')->name('profile');
+
+                      
+
+
+                        
+                        
                     });
 
 

@@ -155,7 +155,7 @@ class FundManagementController extends Controller
 public function him_transaction_approvals(){
 
     $credits = AddBalance::with('agency')->where('status',1)->get();
-
+ 
     return view('superadmin.pages.agencies.transaction_approvals',[
         'credits'=>$credits
        ]);
@@ -181,25 +181,47 @@ public function him_transaction_update($uid)
 
 /****Store fund *****/
 
-public function him_transaction_store(Request $request){
+public function him_transaction_store(Request $request)
+{
+    // Fetch the credit record based on the ID and status
 
-     // Fetch the credit record based on the id and status
-     $credits = AddBalance::with('agency')->where('id', $request->id)->where('status', 1)->first();
+    $cid = Auth::id();
+    $credits = AddBalance::with('agency')->where('id', $request->id)->where('status', 1)->first();
 
-     if ($credits) {
+    if (!$credits) {
+        return redirect()->route('transaction_approvals')->with('error', 'Transaction not found or invalid status.');
+    }
 
-         $credits->amount = $request->ammount;
-         $credits->status = $request->status;
-         if (isset($request->remark)) {
-             $credits->remark = $request->remark;
-         }
-         $credits->save();
-         return redirect()->route('transaction_approvals')->with('message', 'Transaction updated successfully.');
+    // Fetch the agency balance
+    $balance = Balance::where('agency_id', $credits->agency_id)->first();
 
-     }
-     return redirect()->route('transaction_approvals')->with('error', 'Transaction not found or invalid status.');
+    if ($request->status == 0) {
+        if ($balance) {
+            $balance->balance += $request->ammount;
+            $message = 'Balance updated successfully.';
+        } else {
+            $balance = new Balance();
+            $balance->agency_id = $credits->agency_id;
+            $balance->balance = $request->ammount;
+            $message = 'Balance created successfully.';
+        }
+        $balance->created_user_id = $cid;
+        $balance->save();
+    }
 
+    // Update credit details
+    $credits->amount = $request->ammount;
+    $credits->status = $request->status;
+
+    if (!empty($request->remark)) {
+        $credits->remark = $request->remark;
+    }
+
+    $credits->save();
+
+    return redirect()->route('transaction_approvals')->with('message', 'Transaction updated successfully.');
 }
+
 
 
  

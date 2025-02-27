@@ -61,4 +61,23 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserActivityLog::class, 'user_id', 'id'); 
     }
+
+    public function leaves()
+    {
+        return $this->hasMany(LeaveAssign::class, 'user_id', 'id'); 
+    }
+
+    public function attendance()
+    {
+        return $this->hasMany(Attendance::class, 'user_id', 'id'); 
+    }
+
+    public function applyLeaves()
+    {
+        return $this->hasMany(ApplyUserLeave::class, 'user_id', 'id'); 
+    }
+
+    
+
+    
 }

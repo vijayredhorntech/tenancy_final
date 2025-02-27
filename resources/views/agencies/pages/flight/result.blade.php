@@ -361,9 +361,9 @@
       
                 jQuery("#loading_overlay1").show(); 
             
-                setTimeout(function () {
-                    $('#loading_overlay1').hide();
-                }, 20000); 
+                // setTimeout(function () {
+                //     $('#loading_overlay1').hide();
+                // }, 20000); 
                })
             // jQuery(".modify_flight").hide(); 
 

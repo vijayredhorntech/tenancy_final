@@ -295,7 +295,7 @@
                         <div class="w-full relative group flex flex-col gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Accommandation</label>
                              <div class="w-full relative">
-                                 <input type="text" name="wage" id="wage" placeholder="Wages....."
+                                 <input type="text" name="accommandation" id="accommandation" placeholder="Accommandation....."
                                         class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                               
                              </div>
@@ -304,7 +304,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Cab</label>
                              <div class="w-full relative">
-                                 <input type="text" name="wage" id="wage" placeholder="Wages....."
+                                 <input type="text" name="cab" id="cab" placeholder="Wages....."
                                         class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                               
                              </div>
@@ -313,9 +313,8 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Food</label>
                              <div class="w-full relative">
-                                 <input type="text" name="wage" id="wage" placeholder="Wages....."
+                                 <input type="text" name="food" id="food" placeholder="Wages....."
                                         class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                              
                              </div>
                          </div>
 

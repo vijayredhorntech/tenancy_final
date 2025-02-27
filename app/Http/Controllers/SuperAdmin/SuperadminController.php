@@ -16,8 +16,13 @@ use Illuminate\Support\Facades\DB;
 use App\Models\UserMetaPassportDetails;
 use App\Models\UserMetaDeduction;
 use App\Models\UserActivityLog;
+use App\Models\Leave;
+use App\Models\LeaveAssign;
+use App\Models\Attendance;
+use App\Models\LoginDetail;
+use Illuminate\Support\Carbon;
 
-
+        
 
 class SuperadminController extends Controller
 {
@@ -70,7 +75,7 @@ class SuperadminController extends Controller
                     // Create User Meta Data
                     $userMeta = new UserMeta();
                     $userMeta->user_id = $user->id;
-                    $userMeta->phone_number = $request->contact_phone;
+                    $userMeta->phone_number = $request->staff_phone;
                     $userMeta->phone_code = $request->phone_code; // Change this if needed
                     $userMeta->address = $request->address;
                     $userMeta->state = $request->state;
@@ -146,11 +151,14 @@ class SuperadminController extends Controller
     /*** Edit Staff Form ***/
     public function hs_staffupdate($eid)
     {
+
+        // dd(User::with('userdetails','leaves')->findOrFail($eid));
         return view('superadmin.pages.staff.staff_eform', [
             'user_data'  => Auth::user(),
             'services'   => Service::all(),
-            'edit_user'  => User::with('userdetails')->findOrFail($eid),
+            'edit_user'  => User::with('userdetails','leaves')->findOrFail($eid),
             'roles'      => Role::all(),
+            'allleaves'     => Leave::all(),
         ]);
     }
 
@@ -158,7 +166,8 @@ class SuperadminController extends Controller
     /*** Update Staff ***/
     public function hs_supdatedstore(Request $request)
     {
-        // dd($request->all());
+    
+
         $validated = $request->validate([
             'name'    => 'string',
             'email'   => 'email',
@@ -190,6 +199,32 @@ class SuperadminController extends Controller
                     // 'country'      => $request->country,
                 ]
             );
+
+
+            $leave = LeaveAssign::where('user_id', $request->id)->get();
+
+            // Delete previous leave assignments if they exist
+            if ($leave->isNotEmpty()) {
+                $leave->each->delete();
+            }
+
+          if (!empty($request->leaves) && is_array($request->leaves)) {
+                $staff_id = $request->id;
+
+                foreach ($request->leaves as $leave) {
+                    $leave_add = new LeaveAssign();
+                    $leave_add->user_id = $staff_id;
+                    $leave_add->leave_type = $leave; // Use loop variable instead of $request->leave
+                    $leave_add->save();
+                }
+            }
+
+            // Debugging output (optional)
+       
+          
+        
+
+
 
             DB::commit();
             return redirect()->route('staff')->with('success', 'User updated successfully.');
@@ -226,14 +261,148 @@ class SuperadminController extends Controller
     }
 
 
+    /**** Staf history*****/
     public function hs_staff_hisoty($id){
  
-            $user=User::with('userdetails','passport','log')->where('id',$id)->first(); 
+            $user=User::with('userdetails','passport','log','attendance')->where('id',$id)->first(); 
+            $date = Carbon::now()->toDateString();
+            $attendance = Attendance::where('user_id', $user->id)
+                ->where('date', $date) // Corrected 'data' to 'date'
+                ->first();
+
+            $login_time = $attendance ? $attendance->login_time : null; 
+            
    
     //    dd($user);
     
-        return view('superadmin.pages.staff.staffhistory', compact('user'));
+        return view('superadmin.pages.staff.staffhistory', compact('user','login_time'));
     }
+
+
+
+    /***Add leave****/
+
+    public function hs_addleave(){
+
+        $leaves=Leave::get(); 
+   
+        return view('superadmin.pages.leavemanagment.leave',compact('leaves'));
+    }
+
+
+    /**Store the leave*** */
+    public function hs_leavestore(Request $request){
+       
+  
+    $validatedData = $request->validate([
+        'leave_type' => 'required|string|max:255',
+        'total_day' => 'integer',
+    ]);
+
+   Leave::create([
+        'user_id' => Auth::id(),
+        'leave_type' => $validatedData['leave_type'],
+        'total_days' => $validatedData['total_day'],
+        'status' => true, // Assuming 'true' indicates an active status
+    ]);
+
+    // Redirect back to the 'add.leave' route with a success message
+    return redirect()->route('add.leave')->with('message', 'Leave created successfully.');
+    }
+
+
+    public function hs_update($id){
+        $leave=Leave::find($id);
+        return view('superadmin.pages.leavemanagment.updateleave',compact('leave'));
+      
+    }
+
+
+    public function hs_updatestore(Request $request){
+       
+        $validatedData = $request->validate([
+            'leave_type' => 'required|string|max:255',
+            'total_day' => 'integer',
+        ]);
+
+        $leave=Leave::find($request->id);
+        $leave->leave_type=$request->leave_type; 
+        $leave->total_days=$request->total_day; 
+        $leave->status=$request->status; 
+        $leave->save();
+
+        return redirect()->route('add.leave')->with('message', 'Leave updated successfully.');
+    
+    }
+
+
+    /***attandance  */
+  
+    
+    public function hs_attendance(Request $request) {
+        try {
+            DB::beginTransaction(); // Start Transaction
+    
+            $user_id = Auth::id();
+            $date = Carbon::now()->toDateString();  // Gets current date (YYYY-MM-DD)
+            $time = Carbon::now()->toTimeString();  // Gets current time (HH:MM:SS)
+
+    
+            // Create Login Detail Entry
+            $login = new LoginDetail();
+            $login->user_id = $user_id;
+            $login->date = $date;
+            $login->login_time = $time;
+            $login->status = 'Present';
+            $login->save();
+    
+            // Check if Attendance already exists for the user on the current date
+            $get_attendance = Attendance::where('user_id', $user_id)->where('date', $date)->first();
+            
+            if (!$get_attendance) {
+                // Create Attendance Entry
+                $attendance = new Attendance();
+                $attendance->login_id = $login->id;
+                $attendance->user_id = $user_id;
+                $attendance->date = $date;
+                $attendance->login_time = $time;
+                $attendance->attendance_status = 'Present'; // 'P' stands for Present
+                $attendance->save();
+            }
+    
+            // Update User Status
+            $user = User::find($user_id); 
+            if ($user) {
+                $user->status = 'online';
+                $user->save();
+            }
+    
+            DB::commit(); // Commit the transaction
+    
+            return redirect()->route('dashboard')->with('message', 'Attendance successfully recorded');
+        } catch (\Exception $e) {
+            DB::rollBack(); // Rollback if any error occurs
+            return redirect()->route('dashboard')->with('error', 'Failed to record attendance: ' . $e->getMessage());
+        }
+    }
+
+
+    public function hs_profile(){
+      
+        $id=Auth::id();
+        $user=User::with('userdetails','passport','log','attendance')->where('id',$id)->first(); 
+            $date = Carbon::now()->toDateString();
+            $attendance = Attendance::where('user_id', $user->id)
+                ->where('date', $date) // Corrected 'data' to 'date'
+                ->first();
+
+            $login_time = $attendance ? $attendance->login_time : null; 
+        return view('superadmin.pages.proflie.profile', compact('user','login_time'));
+
+    }
+    
+    
+
 
 
 }

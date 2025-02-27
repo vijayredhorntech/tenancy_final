@@ -158,61 +158,17 @@
                     <div data-tid ="attendanceDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
                        Attendance
                     </div>
-                    <div data-tid ="fundsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px]  border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer ">
-                        Logs
+
+                    <div data-tid ="documentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
+                       Document
                     </div>
+                
 
 
                 </div>
 
                 <div class="w-full mt-4 ">
-                    <div id="fundsDiv" class="tab  hidden">
-                        <div class="w-full grid xl:grid-cols-1 lg:grid-cols-1 gap-4">
-                            <div class="w-full ">
-                                <div class="  border-[2px] border-primary/70 ">
-                                    <div class="flex justify-center bg-primary/40 px-4 py-0.5">
-                                        <span class="font-semibold text-ternary text-xl">Logs</span>
-                                    </div>
-                                    <div class="mt-2 overflow-x-auto px-4 py-0.5">
-                                        <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">
-                                            <tr>
-                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">User Name</td>
-                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Url </td>
-                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Date</td>
-                                        
-
-
-                                            </tr>
-
-
-
-                                            @forelse($user->log as $log)
-
-                                                <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $user->name ?? 'N/A' }}</td>
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$log->url ?? 'N/A'}}</td>
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$log->created_at ?? 'N/A'}}</td>
-                                              
-
-                                                </tr>
-
-
-                                            @empty
-                                                <tr>
-                                                    <td colspan="8" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
-                                                </tr>
-                                            @endforelse
-
-
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                         
-                        </div>
-                    </div>
+             
 
                     <!-- icard -->
                     <div id="icardDiv" class="tab hidden">
@@ -263,6 +219,20 @@
                             </div>
                         </div>
 
+                        
+                        <div class="flex w-[772px] justify-center mt-16">
+                                <button id="printInvoice" class="bg-secondary text-white text-sm px-2 py-1 rounded-sm"  onclick="
+                                var printContents = document.getElementById('icardDiv').innerHTML;
+                                var originalContents = document.body.innerHTML;
+
+                                document.body.innerHTML = printContents;
+                                window.print();
+                                document.body.innerHTML = originalContents;
+                                " >
+                                    Print Icard
+                                </button>
+                            </div>
+
                       </div>
 
                       <!-- attendance -->
@@ -299,7 +269,7 @@
                       </div>
 
 
-                    <div id="bookingDiv" class="tab hidden">
+                    <div id="documentDiv" class="tab hidden">
                       
                      </div>
                     <div id="profileDiv" class="tab  ">

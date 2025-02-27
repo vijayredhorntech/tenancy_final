@@ -82,7 +82,40 @@
                              </div>
                          </div>
 
+
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Select box</label>
+                             <div class="w-full relative">
+                                 <select  name="date" id="datePicker"
+                                          class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                     <option value="">---Select---</option>
+                                     <option value="technical">Technical</option>
+                                     <option value="accountant">Accountant</option>
+                                  </select>
+                                 <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
+                             </div>
+                         </div>
+
                
+
+                         <div class="w-full relative group flex flex-col gap-2">
+                             <label class="font-semibold text-ternary/90 text-sm">Select Leves</label>
+                             <div class="flex gap-2 flex-wrap">
+                                 @forelse($allleaves as $leave)
+                                     <div class="flex items-center gap-2">
+                                         <input type="checkbox" id="service_{{ $leave->id }}" value="{{ $leave->id }}"  name="leaves[]"
+                                                value="{{ $leave->id }}"  
+                                                @if($edit_user->leaves->contains('leave_type', $leave->id)) checked @endif
+                                                class="appearance-none w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
+                                        
+                                         <label for="service_{{ $leave->id }}"
+                                                class="font-semibold text-ternary/90 text-sm flex items-center gap-2">{{ $leave->leave_type }}</label>
+                                     </div>
+                                 @empty
+                                     <div class="text-sm text-red-500">No services available</div>
+                                 @endforelse
+                             </div>
+                         </div>
 
                       
                      </div>
