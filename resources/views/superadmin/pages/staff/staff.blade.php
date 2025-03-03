@@ -1,5 +1,5 @@
 <x-front.layout>
-    @section('title')Agency @endsection
+    @section('title')Staff @endsection
 
 
 
@@ -208,7 +208,7 @@
                          </button>
                      </div>
                     <div class="flex items-center gap-2">
-                           <input type="text" placeholder="Agency name....." class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000" >
+                           <input type="text" placeholder="Staff....." class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000" >
                            <button class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
                                 <i class="fa fa-search mr-1"></i> Search
                            </button>
@@ -257,7 +257,7 @@
                                         </div>
                                     </a>
 
-                                    <a href="" title="Remind for funds">
+                                    <!-- <a href="" title="Remind for funds">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-bell"></i>
                                         </div>
@@ -266,7 +266,7 @@
                                         <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-file"></i>
                                         </div>
-                                    </a>
+                                    </a> -->
                                     <a href="{{route('staff.history',['id' => $user->id])}}" title="View Dashboard">
                                         <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-computer"></i>

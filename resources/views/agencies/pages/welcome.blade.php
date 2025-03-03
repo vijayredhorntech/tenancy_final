@@ -172,7 +172,8 @@
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-secondary bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
                 <span class="font-semibold text-ternary/70 text-md">Total Service </span>
-                <span class="font-bold text-2xl text-ternary">{{ $services->count() > 0 ? $services->count() : '' }}</span>
+                <span class="font-bold text-2xl text-ternary">{{ isset($services) && $services->count() > 0 ? $services->count() : '' }}
+                </span>
             </div>
 
             <div>
@@ -500,7 +501,9 @@
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
                 <span class="font-semibold text-ternary/70 text-md">Total Booking</span>
-                <span class="font-bold text-2xl text-ternary">{{ $bookings->count() > 0 ? $bookings->count() : '' }}</span>
+                <span class="font-bold text-2xl text-ternary">{{ isset($bookings) && count($bookings) > 0 ? count($bookings) : '' }}
+
+                </span>
             </div>
 
             <div>
@@ -746,8 +749,8 @@
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                     <div class="flex gap-2 items-center">
                                         <a href="{{ route('agency_booking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
-                                            <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                                <i class="fa fa-file"></i>
+                                            <div class=" bg-danger/10 text-damger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
+                                                <i class="fa fa-file-pdf"></i>
                                             </div>
                                         </a>
 
@@ -810,7 +813,7 @@
                                     <a href="{{ route('generateInvoice', ['invoice_number' => $credit['invoice_number'] ?? '']) }}" 
                                             title="View Invoice">
                                                 <div class="bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-200">
-                                                    <i class="fa fa-file"></i>
+                                                    <i class="fa fa-file-pdf"></i>
                                                 </div>
                                             </a>
 

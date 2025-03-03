@@ -24,6 +24,8 @@ class Navbar extends Component
         $this->user = Auth::user();
 
         if ($this->user) {
+
+            // dd($this->user);
             // Get the latest login time from Attendance table for today's date
             $attendance = Attendance::where('user_id', $this->user->id)
                 ->where('date', $date) // Corrected 'data' to 'date'

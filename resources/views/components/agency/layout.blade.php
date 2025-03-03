@@ -88,6 +88,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <style>
 
         * {
@@ -184,6 +185,65 @@
         });
     });
 </script>
+<script>
+        let counter = 1; // Initial counter for unique field names
+
+        document.getElementById('addDocumentBtn').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default behavior
+
+            let container = document.getElementById('documentContainer');
+
+            if (counter < 10) { // Limit to 10 sets
+                counter++; // Increment counter
+
+                // Create a new wrapper div
+                let docWrapper = document.createElement('div');
+                docWrapper.className = "p-4 border border-gray-300 rounded-lg flex flex-col gap-2";
+
+                // Document Name Field
+                let documentField = `
+                    <div class="w-full flex flex-col gap-1">
+                        <label for="document${counter}" class="font-semibold text-gray-700 text-sm">Document Name</label>
+                        <div class="w-full relative">
+                            <input type="text" name="document${counter}" id="document${counter}" placeholder="Document name..."
+                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                            <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-gray-500"></i>
+                        </div>
+                    </div>`;
+
+                // File Upload Field
+                let fileField = `
+                    <div class="w-full flex flex-col gap-1">
+                        <label for="file${counter}" class="font-semibold text-gray-700 text-sm">Attachment</label>
+                        <div class="w-full relative">
+                            <input type="file" name="file${counter}" id="file${counter}"
+                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                            <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-gray-500"></i>
+                        </div>
+                    </div>`;
+
+                // Remove Button
+                let removeBtn = `
+                    <button type="button" class="mt-2 px-4 py-1 bg-red-500 text-black rounded remove-btn">Remove</button>
+                `;
+
+                // Append fields and button to the wrapper
+                docWrapper.innerHTML = documentField + fileField + removeBtn;
+
+                // Append the wrapper to the container
+                container.appendChild(docWrapper);
+
+                // Add event listener to remove the section
+                docWrapper.querySelector(".remove-btn").addEventListener('click', function() {
+                    docWrapper.remove();
+                });
+
+            } else {
+                alert("You can only add up to 10 documents.");
+            }
+        });
+    </script>
+
 
 </body>
 </html>

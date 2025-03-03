@@ -21,5 +21,9 @@ class Leave extends Model
         'status',
     ];
 
+    public function Leavesbalance()
+    {
+        return $this->hasOne(LeaveBalance::class, 'leave_id', 'id'); 
+    }
     // ... other model methods and relationships ...
 }

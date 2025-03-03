@@ -50,13 +50,13 @@ class AuthController extends Controller
 
     public function hs_dashbord(){
 
-       
+   
         $id = Auth::user()->id;
   
         $user = User::find($id);
         $roles = $user->roles->pluck('name')->implode(', ');
         $service = Service::all(); // Use all() instead of get() (optional)
-    
+     
     // $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])->get(); // Array format for clarity
     $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])
     ->take(5) // Limits the result to 5 records
@@ -64,7 +64,8 @@ class AuthController extends Controller
     
     $total_balance = Balance::sum('balance'); // Add quotes around balance
     $total_deduction = Deduction::sum('amount');
-  
+ 
+    // dd($total_deduction);
 
     // $bookings = Deduction::with('agency')->orderBy('id', 'desc')->get();
     $bookings = Deduction::with(['service_name', 'agency','flightBooking'])
@@ -143,6 +144,8 @@ class AuthController extends Controller
     // dd($bookings); 
 
     $users = User::get();
+
+    // dd("hyyy this"); 
         
         return view('superadmin.pages.welcome',compact(
             'roles', 'service', 'agency', 'total_balance', 'bookings','users','recent_booking','funds',
@@ -159,6 +162,86 @@ class AuthController extends Controller
             DB::beginTransaction(); // Start Transaction
     
             $user_id = Auth::id();
+            $date = Carbon::now()->toDateString();  
+            $time = Carbon::now()->toTimeString();  
+    
+            // Get the latest login record for the user
+            $login = LoginDetail::where('date', $date)
+                        ->where('user_id', $user_id)
+                        ->orderBy('id', 'desc') // Get the latest record first
+                        ->first();
+             $get_attendance = Attendance::where('user_id', $user_id)->where('date', $date)->first();
+          
+  
+            if ($login) {
+                // $login_time = Carbon::parse($get_attendance->login_time);  // Convert login_time to Carbon instance
+                $login_time = Carbon::parse($login->login_time);
+                $logout_time = Carbon::parse($time);
+                $work_hours = $login_time->diff($logout_time)->format('%H:%I:%S'); // Calculate work duration
+    
+                $login->logout_time = $time;
+                $login->work_hours = $work_hours;
+                $login->status = 'Logged Out';
+                $login->save();
+    
+                // Get attendance record for the user
+            
+                if ($get_attendance) {
+                      
+        
+                    if (!empty($get_attendance->work_hours)) {
+                        // Convert stored work hours to seconds and add new work duration
+                        $existing_hours = Carbon::parse($get_attendance->work_hours)->secondsSinceMidnight();
+                        $new_hours = Carbon::parse($work_hours)->secondsSinceMidnight();
+                        $total_seconds = $existing_hours + $new_hours;
+                        
+                        $get_attendance->work_hours = gmdate("H:i:s", $total_seconds);
+                        $get_attendance->logout_time =$time;
+
+                        $get_attendance->save(); 
+                    } else {
+                    
+                        $get_attendance->work_hours = $work_hours;
+                        $get_attendance->logout_time = $time;
+                        $get_attendance->save();
+                    }
+                } else {
+                    // Create Attendance Entry if it does not exist
+                    $get_attendance->work_hours = $work_hours;
+                    $attendance->save();
+                }
+            }
+    
+  
+            // Update user status to offline
+            $user = User::find($user_id);
+            if ($user) {
+                $user->status = 'offline';
+                $user->save();
+            }
+    
+            DB::commit(); // Commit the transaction
+    
+            Auth::logout(); // Logout the user
+    
+            return redirect('/')->with('message', 'Logout successful');
+        } catch (\Exception $e) {
+            DB::rollBack(); // Rollback if any error occurs
+            return redirect()->route('dashboard')->with('error', 'Failed to logout: ' . $e->getMessage());
+        }
+    }
+
+    /******Agency Logout********/
+    public function agency_logout(){
+
+        try {
+     
+
+            DB::beginTransaction(); // Start Transaction
+    
+            $user_id = Auth::id();
+
+            
             $date = Carbon::now()->toDateString();  
             $time = Carbon::now()->toTimeString();  
     
@@ -225,6 +308,7 @@ class AuthController extends Controller
             DB::rollBack(); // Rollback if any error occurs
             return redirect()->route('dashboard')->with('error', 'Failed to logout: ' . $e->getMessage());
         }
+
     }
     
     

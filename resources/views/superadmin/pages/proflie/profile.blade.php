@@ -126,7 +126,7 @@
             <span class="font-semibold text-ternary text-xl">
                 {{ $user->status ?? 'N/A' }} 
                 @if (!empty($login_time) && $user->status == 'online')
-                <i class="fa fa-clock font-semibold text-ternary text-xl"></i> Logged in {{ $login_time }}
+                <i class="fa fa-clock font-semibold text-ternary text-xl"></i> Logged in {{ \Carbon\Carbon::createFromFormat('H:i:s',  $login_time)->format('h:i:s A') }}
             @endif
 
 </span>
@@ -158,17 +158,70 @@
                     <div data-tid ="attendanceDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
                        Attendance
                     </div>
-
-                    <div data-tid ="documentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
-                       Document
+                    <div data-tid ="documentsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px]  border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer ">
+                        Documents
                     </div>
-                
+
+                    <div data-tid ="deductionsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px]  border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer ">
+                    Deductions
+                    </div>
+
+
+                    <!-- <div data-tid ="fundsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px]  border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer ">
+                        Logs
+                    </div> -->
 
 
                 </div>
 
                 <div class="w-full mt-4 ">
-             
+                    <div id="fundsDiv" class="tab  hidden">
+                        <div class="w-full grid xl:grid-cols-1 lg:grid-cols-1 gap-4">
+                            <div class="w-full ">
+                                <div class="  border-[2px] border-primary/70 ">
+                                    <div class="flex justify-center bg-primary/40 px-4 py-0.5">
+                                        <span class="font-semibold text-ternary text-xl">Logs</span>
+                                    </div>
+                                    <div class="mt-2 overflow-x-auto px-4 py-0.5">
+                                        <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">
+                                            <tr>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">User Name</td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Url </td>
+                                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Date</td>
+                                        
+
+
+                                            </tr>
+
+
+
+                                            @forelse($user->log as $log)
+
+                                                <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
+                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
+                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $user->name ?? 'N/A' }}</td>
+                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$log->url ?? 'N/A'}}</td>
+                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$log->created_at ?? 'N/A'}}</td>
+                                              
+
+                                                </tr>
+
+
+                                            @empty
+                                                <tr>
+                                                    <td colspan="8" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
+                                                </tr>
+                                            @endforelse
+
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                         
+                        </div>
+                    </div>
 
                     <!-- icard -->
                     <div id="icardDiv" class="tab hidden">
@@ -219,20 +272,6 @@
                             </div>
                         </div>
 
-                        
-                        <div class="flex w-[772px] justify-center mt-16">
-                                <button id="printInvoice" class="bg-secondary text-white text-sm px-2 py-1 rounded-sm"  onclick="
-                                var printContents = document.getElementById('icardDiv').innerHTML;
-                                var originalContents = document.body.innerHTML;
-
-                                document.body.innerHTML = printContents;
-                                window.print();
-                                document.body.innerHTML = originalContents;
-                                " >
-                                    Print Icard
-                                </button>
-                            </div>
-
                       </div>
 
                       <!-- attendance -->
@@ -252,24 +291,189 @@
                                 <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100/40' : '' }} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000">
                                     <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $loop->iteration }}</td>
                                     <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $attendance->date }}</td>
-                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">{{ $attendance->login_time }}</td>
-                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $attendance->logout_time ?? 'N/A' }}</td>
+                                    
+                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                        {{ $attendance->login_time ? \Carbon\Carbon::createFromFormat('H:i:s', $attendance->login_time)->format('h:i:s A') : 'N/A' }}
+                                    </td>
+                                    
+                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                        {{ $attendance->logout_time ? \Carbon\Carbon::createFromFormat('H:i:s', $attendance->logout_time)->format('h:i:s A') : 'N/A' }}
+                                    </td>
+
                                     <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $attendance->attendance_status }}</td>
                                     <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $attendance->work_hours ?? '0:00:00' }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm text-center">
-                                        No Record Found
-                                    </td>
+                                    <td colspan="6" class="text-center py-2 text-gray-500">No attendance records found.</td>
                                 </tr>
                             @endforelse
+
                         </table>
 
                       </div>
 
+                      
+                      <div id="documentsDiv" class="tab hidden">
+                      <div class="w-full grid xl:grid-cols-1 lg:grid-cols-1 gap-4">
+                            <div class="w-full ">
+                                <div class="  border-[2px] border-primary/70 ">
+                                    <div class="flex justify-center bg-primary/40 px-4 py-0.5">
+                                        <span class="font-semibold text-ternary text-xl">Passport</span>
+                                    </div>
+                                    <div class="mt-2 overflow-x-auto px-4 py-0.5">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-full ">
+                                <div class="  border-[2px] border-danger/70 ">
+                                    <div class="flex justify-center bg-danger/40 px-4 py-0.5">
+                                        <span class="font-semibold text-ternary text-xl">Oher Document</span>
+                                    </div>
+                            <div class="mt-2 overflow-x-auto px-4 py-0.5">
+                               <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">              
+                                    <tr>
+                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Name</td>
+                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Images</td>
+                                    </tr>
 
-                    <div id="documentDiv" class="tab hidden">
+                                        @php
+                                        $documents = $user->passport->other_doc_details ? json_decode($user->passport->other_doc_details, true) : [];
+                                        @endphp
+                                       
+
+                                        @forelse($documents as $document)
+                                            <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100/40' : '' }} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000">
+                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $loop->iteration }}</td>
+                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $document['name'] }}</td>
+                                                
+                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                                <a href="{{ asset('images/user/documents/' . $document['file']) }}" target="_blank" class="text-blue-500 underline">
+                                                                            View File
+                                                                            </a>
+                                                </td>
+                                                
+                                                </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" class="text-center py-2 text-gray-500">No attendance records found.</td>
+                                            </tr>
+                                        @endforelse
+                            </table>
+                           </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                      <div id="deductionsDiv" class="tab hidden">
+                      
+                   
+                      <div class="w-full grid xl:grid-cols-1 lg:grid-cols-1 gap-4">
+                            <div class="w-full ">
+                                <div class="  border-[2px] border-primary/70 ">
+                                    <div class="flex justify-center bg-primary/40 px-4 py-0.5">
+                                        <span class="font-semibold text-ternary text-xl"> Deduction </span>
+                                    </div>
+                                    <div class="mt-2 overflow-x-auto px-4 py-0.5">
+
+                                    <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">              
+                                                    <tr>
+                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Category</td>
+                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Value</td>
+                                                    </tr>
+
+                                                    @php
+                                                        $deduction = $user->userdeduction; // Assuming it's a single object
+                                                        $other_data = json_decode($deduction->other ?? '{}', true); // Decode JSON safely
+                                                        $index = 1;
+                                                    @endphp
+
+                                                    
+                                                    <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">              
+                                                    <tr>
+                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Category</td>
+                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Value</td>
+                                                    </tr>
+
+                                                    @if ($deduction)
+                                                        {{-- Display Direct Properties --}}
+                                                        @foreach (['accommodation', 'cab', 'food'] as $key)
+                                                            <tr class="{{ $index % 2 === 0 ? 'bg-gray-100/40' : '' }} hover:bg-secondary/10 cursor-pointer transition ease-in duration-200">
+                                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $index++ }}</td>
+                                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ ucfirst($key) }}</td>
+                                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">{{ $deduction->$key }}</td>
+                                                            </tr>
+                                                        @endforeach
+
+                                                        {{-- Display JSON "other" Properties --}}
+                                                        @foreach ($other_data as $sub_key => $sub_value)
+                                                            <tr class="{{ $index % 2 === 0 ? 'bg-gray-100/40' : '' }} hover:bg-secondary/10 cursor-pointer transition ease-in duration-200">
+                                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $index++ }}</td>
+                                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ ucfirst($sub_key) }}</td>
+                                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">{{ $sub_value }}</td>
+                                                            </tr>
+                                                        @endforeach
+                                                    @else
+                                                        <tr>
+                                                            <td colspan="3" class="text-center py-2 text-gray-500">No deduction data found.</td>
+                                                        </tr>
+                                                    @endif
+                                                </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-full ">
+                                <div class="  border-[2px] border-danger/70 ">
+                                    <div class="flex justify-center bg-danger/40 px-4 py-0.5">
+                                        <span class="font-semibold text-ternary text-xl">Taxes</span>
+                                    </div>
+                            <div class="mt-2 overflow-x-auto px-4 py-0.5">
+                               <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">              
+                                    <tr>
+                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Name</td>
+                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Images</td>
+                                    </tr>
+
+                                        @php
+                                        $documents = $user->passport->other_doc_details ? json_decode($user->passport->other_doc_details, true) : [];
+                                        @endphp
+                                        @forelse($documents as $document)
+                                            <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100/40' : '' }} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000">
+                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $loop->iteration }}</td>
+                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $document['name'] }}</td>
+                                                
+                                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                                <a href="{{ asset('images/user/documents/' . $document['file']) }}" target="_blank" class="text-blue-500 underline">
+                                                                            View File
+                                                                            </a>
+                                                </td>
+                                                
+                                                </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="6" class="text-center py-2 text-gray-500">No attendance records found.</td>
+                                            </tr>
+                                        @endforelse
+                            </table>
+                           </div>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+
+
+
+
+
+                    <div id="bookingDiv" class="tab hidden">
                       
                      </div>
                     <div id="profileDiv" class="tab  ">

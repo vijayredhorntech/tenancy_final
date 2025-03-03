@@ -30,7 +30,14 @@ class Sidebar extends Component
      */
     private function initializeData()
     {
-        $user = Auth::user();
+        $userData = session('user_data', []);
+
+        if (!isset($userData['database'])) {
+            return;
+        }
+
+        DatabaseHelper::setDatabaseConnection($userData['database']);
+        $user = User::on('user_database')->where('email', $userData['email'])->first();
 
         if (!$user) {
             return;
@@ -40,15 +47,12 @@ class Sidebar extends Component
 
 
         // Get session data safely
-        $userData = session('user_data', []);
-
-        if (!isset($userData['database'])) {
-            return;
-        }
+      
 
         // Set the dynamic database connection
-        DatabaseHelper::setDatabaseConnection($userData['database']);
+        // DatabaseHelper::setDatabaseConnection($userData['database']);
 
+        
         // Fetch user from the dynamic database connection
         $this->user = User::on('user_database')->where('id', $user->id)->first();
 
@@ -57,7 +61,14 @@ class Sidebar extends Component
         }
 
         // Fetch agency details
-        $agencyRecord = Agency::where('email', $this->user->email)->first();
+        if( $this->user->type=="staff"){
+
+            $agencyRecord = Agency::where('database_name', $userData['database'])->first();
+
+        }else{
+            $agencyRecord = Agency::where('email', $this->user->email)->first();
+        }
+       
       
         if (!$agencyRecord) {
             return;
@@ -65,10 +76,11 @@ class Sidebar extends Component
 
         $agency = Agency::with('userAssignments.service')->find($agencyRecord->id);
       
-
+      
         // Extract services safely
          $agency = Agency::with('userAssignments.service')->find($agency->id);
          $this->services = $agency->userAssignments->pluck('service.name', 'service.icon'); // Remove null values
+     
     }
 
 
@@ -79,7 +91,7 @@ class Sidebar extends Component
     public function render(): View|Closure|string
     {
         
-        return view('components.agency.sidebar',[
+         return view('components.agency.sidebar',[
             'user_data' => $this->user,
             'services' => $this->services,
         ]);

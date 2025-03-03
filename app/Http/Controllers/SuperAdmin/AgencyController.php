@@ -70,7 +70,7 @@ class AgencyController extends Controller
         $service=Service::get();
 
         $countries = DatabaseHelper::getCountries();
-        return view('auth.admin.pages.agencies_form', ['user_data' => $user,'services' => $service,'countries'=>$countries]);
+        return view('superadmin.pages.agencies.create_agency', ['user_data' => $user,'services' => $service,'countries'=>$countries]);
     }
 
 
@@ -80,6 +80,8 @@ class AgencyController extends Controller
                 {
 
                   
+
+   
                     // Validate the incoming data
                     $validated = $request->validate([
                         'name' => 'required|string|max:255',
@@ -116,7 +118,48 @@ class AgencyController extends Controller
                     }
 
                     try {
-                        // Insert into the 'agencies' table
+
+                        
+                        $documents = [];
+
+                        // Get and clean the agency name
+                        $agencyName = Str::slug(trim($request->name), '_');
+                        
+                        // Loop through request data to extract document name and file
+                        foreach ($request->all() as $key => $value) {
+                            if (str_starts_with($key, 'document')) { 
+                                $number = str_replace('document', '', $key); // Extract number (1,2,3..)
+                                $fileKey = 'file' . $number; // Match corresponding file input
+                                
+                                if ($request->hasFile($fileKey)) {
+                                    $file = $request->file($fileKey);
+                                    
+                                    // Define destination path
+                                    $destinationPath = public_path('images/agencies/documents/');
+                                    
+                                    // Create directory if it doesn't exist
+                                    if (!File::exists($destinationPath)) {
+                                        File::makeDirectory($destinationPath, 0755, true, true);
+                                    }
+                        
+                                    // Clean document name
+                                    $documentName = Str::slug(trim($value), '_');
+                        
+                                    // Generate filename format: documentName_agencyName_timestamp_randomString.extension
+                                    $fileName = "{$documentName}_{$agencyName}_" . time() . "_" . Str::random(10) . "." . $file->getClientOriginalExtension();
+                                    
+                                    // Move file to destination
+                                    $file->move($destinationPath, $fileName);
+                        
+                                    // Store document data in array
+                                    $documents[] = [
+                                        'name' => $value, // Document Name
+                                        'file' => $fileName, // Correct File Path
+                                    ];
+                                }
+                            }
+                        }
+                             // Insert into the 'agencies' table
            
 
                         $agency = new Agency();
@@ -143,6 +186,7 @@ class AgencyController extends Controller
                             $agency_details->city = $request->city;
                             $agency_details->zipcode  = $request->zip_code;
                             $agency_details->vat_number = $request->agency_phone;
+                            $agency_details->agency_document = json_encode($documents);
                             $agency_details->status ='1';
                             $agency_details->save(); 
 
@@ -267,7 +311,8 @@ public function him_editstore(Request $request)
 /*** Single view agency ***/
 public function hs_agency_hisoty($id)
 {
-    $agency = Agency::with('balance')->where('id', $id)->first();
+    $agency = Agency::with('balance','details')->where('id', $id)->first();
+  
     // $deductions = Deduction::with('agency', 'service')->where('agency_id', $id)->get();
     // $deductions = Deduction::with('service_name')->where('agency_id', $id)->get();
     // $credits = AddBalance::with('agency')->where('agency_id', $id)->where('status',0)->get();
@@ -317,6 +362,8 @@ public function hs_agency_hisoty($id)
                         $databaseName = $validatedData['database'];
                                 try {
                                 // Set the dynamic connection config using the helper function
+                                session()->flush(); // Clear previous sessions
+                                // session()->regenerate();
                                 DatabaseHelper::setDatabaseConnection($databaseName);
                                     // Check if user exists in the specified database
                                     $user = User::on('user_database')->where('email', $validatedData['email'])->first();
@@ -324,6 +371,8 @@ public function hs_agency_hisoty($id)
                                         // Log the user in if the password matches
                                         // Store validated data in the session
                                         \session(['user_data' => $validatedData]);
+
+
                                         Auth::login($user);
                                         
                                         return redirect()->route('agency_dashboard')->with('success', 'User updated successfully.');
@@ -353,53 +402,84 @@ public function hs_agency_hisoty($id)
           **/
 
               public function him_agenciesdashboard(){
-                                $id = Auth::user()->id;
+
+                // session()->flush();
+                
+                   // Print specific session value
+        
+
+                //    $user = User::on('user_database')->where('email', $validatedData['email'])->first();
+
+                                // $id = Auth::user()->id;
                                 // dd($id); 
                                 $userData = \session('user_data');
                                 DatabaseHelper::setDatabaseConnection($userData['database']);
-                                $user = User::on('user_database')->where('id', $id)->first();
-                                $agency_record=Agency::where('email',$user->email)->first(); 
-                                $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])->find($agency_record->id);
-                                $services = $agency->userAssignments->pluck('service.name', 'service.icon');
+                                $email = \session('user_data.email');
+                                $user = User::on('user_database')->where('email', $email)->first();
                               
-                                
-                                $total = Balance::where('agency_id', $agency_record->id)->sum('balance');
+                                $id=$user->id; 
+                           
+
+                                if(!$user->type=="staff"){
+                                  
+                                    $agency_record=Agency::where('email',$user->email)->first(); 
+                                    // if(dd($agency_record))
+                                    $user->assignRole('super admin');
+    
+                                    $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])->find($agency_record->id);
+                                    $services = $agency->userAssignments->pluck('service.name', 'service.icon');
+                                  
+                                    
+                                    $total = Balance::where('agency_id', $agency_record->id)->sum('balance');
+                                   
+                                    $balance = Deduction::with(['service_name', 'agency'])
+                                    ->where('agency_id', $agency_record->id)
+                                    ->get();
+    
+    
+                                  $bookings = Deduction::with(['service_name', 'agency'])
+                                    ->where('agency_id', $agency_record->id)
+                                  
+                                    ->get();
+                                  
+                                    $credits = AddBalance::where('agency_id', $agency_record->id)
+                                    ->orderBy('created_at', 'desc')
+                                    ->take(5)
+                                    ->get();
+                                                            
+                                    $recent_booking = Deduction::with(['service_name', 'agency'])
+                                    ->where('agency_id', $agency_record->id)
+                                    ->orderBy('created_at', 'desc')
+                                    ->take(5)
+                                    ->get();
+  
+                                    return view('agencies.pages.welcome', [
+                                        'agency' => $agency,
+                                        'services' => $services,
+                                        'total' => $total,
+                                        'bookings' => $bookings,
+                                        'recent_booking' => $recent_booking,
+                                        'credits'=>$credits
+                                    ]);
+                                }else{
+
+                                    $recent_booking=array();
+                                    $credits=array();
+                                    $bookings=array();  
+
+                                    return view('agencies.pages.welcome',[
+                                        'recent_booking' => $recent_booking,
+                                        'credits'=>$credits,
+                                        'bookings' => $bookings
+                                    ]);
+
+                                }
                                
-                                $balance = Deduction::with(['service_name', 'agency'])
-                                ->where('agency_id', $agency_record->id)
-                                ->get();
-
-
-                              $bookings = Deduction::with(['service_name', 'agency'])
-                                ->where('agency_id', $agency_record->id)
-                              
-                                ->get();
-                              
-                                $credits = AddBalance::where('agency_id', $agency_record->id)
-                                ->orderBy('created_at', 'desc')
-                                ->take(5)
-                                ->get();
-                                                        
-                                $recent_booking = Deduction::with(['service_name', 'agency'])
-                                ->where('agency_id', $agency_record->id)
-                                ->orderBy('created_at', 'desc')
-                                ->take(5)
-                                ->get();
-                            
-                       
-                                
-                                return view('agencies.pages.welcome', [
-                                    'agency' => $agency,
-                                    'services' => $services,
-                                    'total' => $total,
-                                    'bookings' => $bookings,
-                                    'recent_booking' => $recent_booking,
-                                    'credits'=>$credits
-                                ]);
                  }
 
  
 
+                 
           
 
 /****logout function for agency***** */

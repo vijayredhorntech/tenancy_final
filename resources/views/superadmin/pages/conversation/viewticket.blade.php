@@ -1,5 +1,5 @@
 <x-front.layout>
-    @section('title')Agency @endsection
+    @section('title')Conversation @endsection
 
 
 {{--        === model code ends ===--}}
@@ -24,7 +24,7 @@
                          </button>
                      </div>
                     <div class="flex items-center gap-2">
-                           <input type="text" placeholder="Agency name....." class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000" >
+                           <input type="text" placeholder="Conversation name....." class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000" >
                            <button class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
                                 <i class="fa fa-search mr-1"></i> Search
                            </button>

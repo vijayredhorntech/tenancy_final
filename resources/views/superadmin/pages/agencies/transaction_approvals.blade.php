@@ -1,6 +1,6 @@
 <x-front.layout>
     @section('title')
-        Agency
+      Transaction 
     @endsection
 
 
@@ -35,11 +35,11 @@
 
         {{--        === this is code for heading section ===--}}
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-            <span class="font-semibold text-ternary text-xl">Agency List </span>
-            <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')"
+            <span class="font-semibold text-ternary text-xl">Approvel List </span>
+            <!-- <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')"
                     class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">
                 Create New Agency
-            </button>
+            </button> -->
         </div>
         {{--        === heading section code ends here===--}}
 
@@ -253,7 +253,7 @@
                     </button>
                 </div>
                 <div class="flex items-center gap-2">
-                    <input type="text" placeholder="Agency name....."
+                    <input type="text" placeholder="Approvel name....."
                            class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000">
                     <button
                         class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">

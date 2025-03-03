@@ -13,8 +13,11 @@
             <span class="font-semibold text-ternary text-xl">
                 {{ $user->status ?? 'N/A' }} 
                 @if (!empty($login_time) && $user->status == 'online')
-                <i class="fa fa-clock font-semibold text-ternary text-xl"></i> Logged in {{ $login_time }}
+                <i class="fa fa-clock font-semibold text-ternary text-xl"></i> Logged in {{ \Carbon\Carbon::createFromFormat('H:i:s',  $login_time)->format('h:i:s A') }} 
             @endif
+
+            
+
 
 </span>
 
@@ -23,7 +26,17 @@
             
         </div>
 
-        
+        @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
 
         <div class="w-full overflow-x-auto p-4">
@@ -54,21 +67,40 @@
                       <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">              
                             <tr>
                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Date</td>
-                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Login Time</td>
-                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Logout Time</td>
+                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Type Of leave</td>
+                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Start Date</td>
+                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">End Date</td>
                                 <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Status</td>
-                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Working Hours</td>
+                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Reason</td>       
+                                <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                             </tr>
 
-                            @forelse($user->attendance as $attendance)
+                            @forelse($user->applyLeaves as $leave)
+                  
                                 <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100/40' : '' }} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000">
                                     <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $loop->iteration }}</td>
-                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $attendance->date }}</td>
-                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">{{ $attendance->login_time }}</td>
-                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $attendance->logout_time ?? 'N/A' }}</td>
-                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $attendance->attendance_status }}</td>
-                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $attendance->work_hours ?? '0:00:00' }}</td>
+                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{$leave->leave->leave_type ?? '0:00:00' }}</td>
+                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">{{ $leave->start_date ?? '0:00:00' }}</td>
+                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $leave->end_date ?? 'N/A' }}</td>
+                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $leave->status_of_leave ?? '0:00:00' }}</td>
+                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $leave->reason ?? '0:00:00' }}</td>
+                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                <div class="flex gap-2 items-center">
+                                    <a href="" title="Remind for funds">
+                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                            <i class="fa fa-pencil"></i>
+                                        </div>
+                                    </a>
+                                    <a href="" title="View Invoices">
+                                        <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
+                                            <i class="fa fa-cancel"></i>
+                                        </div>
+                                    </a>
+                                
+
+
+                                </div>
+                            </td>
                                 </tr>
                             @empty
                                 <tr>
@@ -137,7 +169,13 @@
                          </div>
 
                        
-
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <label for="name" class="font-semibold text-ternary/90 text-sm">Attachment</label>
+                             <div class="w-full relative">
+                                <input type="file" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
+                             </div>
+                         </div>
                      
 
 
@@ -146,7 +184,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Message</label>
                              <div class="w-full relative">
-                                 <textarea   name="reason" id="reason" rows="1" placeholder="Description....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"></textarea>
+                                 <textarea   name="reason" id="reason" rows="4" placeholder="Description....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"></textarea>
                                  <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -181,9 +219,9 @@
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $leave->leave->leave_type ?? 'No Leave Assigned' }}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{ $leave->leave->total_days ?? 'No Leave Assigned' }}</td>
-                                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">0</td>
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"> 0</td>
-                                                 
+                                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm"> {{ $leave->leave->Leavesbalance->used ?? '0' }} </td>
+                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $leave->leave->Leavesbalance->balance ?? $leave->leave->total_days }}</td>
+                                                    
                                           
                                                 </tr>
 
@@ -225,18 +263,26 @@
 
 
                 document.addEventListener("DOMContentLoaded", function () {
-                        let today = new Date().toISOString().split('T')[0]; 
+                let today = new Date().toISOString().split('T')[0]; 
 
-                        const issuedate = document.getElementById('from');
-                        const birthdate = document.getElementById('to');
+                const issuedate = document.getElementById('from');
+                const birthdate = document.getElementById('to');
 
-                        if (issuedate) issuedate.setAttribute('min', today);
-                        if (birthdate) birthdate.setAttribute('min', today);
+                if (issuedate) {
+                    issuedate.setAttribute('min', today);
+                    
+                    issuedate.addEventListener('change', function () {
+                        let selectedDate = this.value;
+                        if (birthdate) {
+                            birthdate.setAttribute('min', selectedDate); // Set 'to' min as 'from' value
+                        }
+                    });
+                }
 
-              
-
-                        // if (expiredate) validateDateInput(expiredate, "Expiry Date");
-    });
+                if (birthdate) {
+                    birthdate.setAttribute('min', today); // Default min as today
+                }
+            });
 
         </script>
 

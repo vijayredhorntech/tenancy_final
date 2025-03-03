@@ -746,7 +746,7 @@
      
                         <tr>
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->agency['name']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->agency['name']}}(User Id : {{$booking->flightBooking['user_id']}})</td>
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                             <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}">{{$booking['invoice_number']}} </a> </td> 
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
@@ -763,8 +763,8 @@
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
                                                 <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
-                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-file"></i>
+                                        <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
+                                            <i class="fa fa-file-pdf"></i>
                                         </div>
                                     </a>
 
@@ -823,8 +823,8 @@
                                 <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                  
                                         <a href="{{ route('superadmingenerateInvoice', ['invoice_number' => $fund['invoice_number'] ?? '']) }}" title="View Details">
-                                            <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                                <i class="fa fa-file"></i>
+                                            <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
+                                                <i class="fa fa-file-pdf"></i>
                                             </div>
                                         </a>
                                     </div>
@@ -1035,7 +1035,7 @@
         plotOptions: {
             bar: {
                 borderRadius: 10,
-                columnWidth: '50%',
+                columnWidth: '20%',
             }
         },
         dataLabels: {
@@ -1046,6 +1046,7 @@
         },
         grid: {
             row: {
+                // colors: ['#fff', '#f2f2f2']
                 colors: ['#fff', '#f2f2f2']
             }
         },

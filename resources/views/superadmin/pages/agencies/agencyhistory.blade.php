@@ -25,6 +25,12 @@
                     <div data-tid ="profileDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
                         Profile
                     </div>
+
+                    <div data-tid ="documentsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
+                        Documents
+                    </div>
+
+
                 </div>
 
                 <div class="w-full mt-4 ">
@@ -176,6 +182,46 @@
 
                          </table>
                      </div>
+
+                     
+
+                     <div id="documentsDiv" class="tab hidden">
+                         <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">
+                                                    <tr>
+                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Document name</td>
+                                                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Images</td>
+                                                       
+                                                       
+
+                                                    </tr>
+                                                    @php
+                                                    $documents = $agency->details->agency_document ? json_decode($agency->details->agency_document, true) : [];
+                                                    @endphp
+
+                             
+                                                  
+                                                     @forelse($documents  as $document)
+                                                         <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
+                                                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
+                                                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $document['name'] }}</td>
+                                                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">
+                                                             <a href="{{ asset('images/agencies/documents/' . $document['file']) }}" target="_blank" class="text-blue-500 underline">
+                                                                View File
+                                                                  </a>
+                                                             </td>
+                                                             </tr>
+                                                     @empty
+                                                         <tr>
+                                                             <td colspan="9" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
+                                                         </tr>
+                                                     @endforelse
+
+                         </table>
+                     </div>
+
+
+
                     <div id="profileDiv" class="tab hidden ">
                         <div class="w-full border-[1px] border-success/40">
                             <div class="flex bg-success/40 px-4 py-0.5">
@@ -205,7 +251,7 @@
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Services</span>
-                                            <span class="text-ternary text-medium italic">FLIGHT, HOTEL </span>
+                                            <span class="text-ternary text-medium italic">FLIGHT </span>
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Contact person name</span>

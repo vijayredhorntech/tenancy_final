@@ -28,6 +28,11 @@ class DatabaseHelper
     
         // Run migrations for the new database
         Artisan::call('migrate', ['--database' => 'tenant', '--path' => 'database/migrations']);
+
+        Artisan::call('db:seed', [
+            '--database' => 'tenant',
+            '--class' => 'RoleSeeder' // Change to your actual seeder class
+        ]);
     
         // Insert user into the new database
         DB::connection('tenant')->table('users')->insert([

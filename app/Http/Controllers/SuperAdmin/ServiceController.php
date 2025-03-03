@@ -53,14 +53,26 @@ class ServiceController extends Controller
  public function him_flight(){
 
  
-    $id = Auth::user()->id;
+    // $id = Auth::user()->id;
     // dd($id); 
+    $data = session()->all();
+
     $userData = \session('user_data');
     DatabaseHelper::setDatabaseConnection($userData['database']);
-    $user = User::on('user_database')->where('id', $id)->first();
-    $agency_record=Agency::where('email',$user->email)->first(); 
-    $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+    
+    // $user = User::on('user_database')->where('id', $id)->first();
+    $user = User::on('user_database')->where('email', $userData['email'])->first();
+  
+    if($user->type=="staff"){
+        $agency_record=Agency::where('database_name',$userData['database'])->first(); 
+        $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+    }else{
+        $agency_record=Agency::where('email',$user->email)->first(); 
+        $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+    }
+   
     $services = $agency->userAssignments->pluck('service.name', 'service.icon');
+
 
     return view('agencies.pages.flight.flight',[
         'user_data' => $user,
@@ -209,7 +221,20 @@ public function him_flightprice(Request $request)
     $responseData = json_decode($response, true);
 
     $userData = session('user_data');
-    $agency = Agency::where('email', $userData['email'])->first();
+
+    DatabaseHelper::setDatabaseConnection($userData['database']);
+    
+    // $user = User::on('user_database')->where('id', $id)->first();
+    $user = User::on('user_database')->where('email', $userData['email'])->first();
+  
+    if($user->type=="staff"){
+        $agency_record=Agency::where('database_name',$userData['database'])->first(); 
+        $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+    }else{
+        $agency_record=Agency::where('email',$user->email)->first(); 
+        $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+    }
+
 
     $balance = Balance::where('agency_id', $agency->id)->first();
     return view('agencies.pages.flight.pricing')
@@ -230,8 +255,25 @@ public function passengerDetails(Request $request){
        $details = json_decode($request->details);
         $flightSearch =json_decode($request->flightSearch);
         $service=Service::where('name','Flight')->first();
+
+        $userData = session('user_data');
+
+        DatabaseHelper::setDatabaseConnection($userData['database']);
+        
+        // $user = User::on('user_database')->where('id', $id)->first();
+        $user = User::on('user_database')->where('email', $userData['email'])->first();
+      
+        if($user->type=="staff"){
+            $agency_record=Agency::where('database_name',$userData['database'])->first(); 
+            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+        }else{
+            $agency_record=Agency::where('email',$user->email)->first(); 
+            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+        }
+
         $balance = Balance::where('agency_id', $agency->id)->first();
      
+
 
         return view('agencies.pages.flight.passengerdetails')
         ->with('details', $details)->with('flightSearch', $flightSearch)
@@ -252,6 +294,13 @@ public function payment(Request $request)
     // dd($request->all());
     $price_data=json_decode($request->details);
     
+    $userData = session('user_data');
+
+    DatabaseHelper::setDatabaseConnection($userData['database']);
+    
+    // $user = User::on('user_database')->where('id', $id)->first();
+    $user = User::on('user_database')->where('email', $userData['email'])->first();
+
  
     $data = $request->all(); // Use $request->all() as $data
 
@@ -311,7 +360,14 @@ public function payment(Request $request)
 
     // Fetch agency based on email
  
-    $agency = Agency::where('email', $userData['email'])->first();
+     if($user->type=="staff"){
+        // dd("heelo");
+            $agency_record=Agency::where('database_name',$userData['database'])->first(); 
+            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+        }else{
+            $agency_record=Agency::where('email',$user->email)->first(); 
+            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+        }
  
     if (!$agency) {
         return response()->json(['error' => 'Agency not found'], 404);
@@ -332,6 +388,7 @@ public function payment(Request $request)
         $flight->domain = $userData['domain'];
         $flight->database = $userData['database'];
         $flight->agency_id = $agency->id;
+        $flight->user_id = $user->id;
         $flight->booking_number = $bookingNumber;
         $flight->invoice_number = $invoiceNumber;
         $flight->details = $request->details;
@@ -559,6 +616,18 @@ public function airport($input){
  
      // Print journey data in the controller
      dd($journeyData); // Debug and check output
+ }
+
+
+
+ public function him_hotel(){
+   
+ return view('agencies.pages.hotel');
+ }
+
+ public function him_visa(){
+
+    return view('agencies.pages.hotel');
  }
  
 

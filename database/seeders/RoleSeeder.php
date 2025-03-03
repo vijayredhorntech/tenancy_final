@@ -62,7 +62,7 @@ class RoleSeeder extends Seeder
             // Create Roles
             $superAdmin = Role::firstOrCreate(['name' => 'super admin']);
             $admin = Role::firstOrCreate(['name' => 'admin']);
-            $agency = Role::firstOrCreate(['name' => 'agencies']);
+            $agency = Role::firstOrCreate(['name' => 'simple user']);
 
             // Assign Permissions to Roles
             $superAdmin->syncPermissions(Permission::all()); // Full access to Super Admin

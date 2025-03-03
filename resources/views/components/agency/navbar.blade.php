@@ -14,11 +14,16 @@
         <div class="rounded-full h-10 w-10 flex justify-center items-center hover:bg-ternary/60 hover:text-white cursor-pointer"><i class="fa fa-gear animate-spin" title="Search......"></i></div>
         <div class="flex items-center gap-2 mx-4 cursor-pointer">
             <div class="">
-                <img src="{{asset($user_data->profile ? 'images/agencies/logo/' . $user_data->profile : 'assets/images/profile_photo.jpg') }}" class="w-auto h-10 rounded-full" alt="Cloud Travels">
+               {{-- <img src="{{asset($user_data->profile ? 'images/agencies/logo/' . $user_data->profile : 'assets/images/profile_photo.jpg') }}" class="w-auto h-10 rounded-full" alt="Cloud Travels"> --}}
+               <img src="{{ asset($user_data->type == 'staff' ? 'images/user/agency/profile/' . $user_data->profile : 'images/agencies/logo/' . $user_data->profile) }}" 
+     onerror="this.onerror=null; this.src='{{ asset('assets/images/logo.png') }}';"
+     class="w-auto h-10 rounded-full" 
+     alt="Cloud Travel">
             </div>
             <div class="flex flex-col items-start justify-center">
                 <span class="text-ternary text-sm font-semibold">{{ ucwords($user_data->name ? $user_data->name : 'Login') }}</span>
-                <span class="text-ternary/90 text-xs font-semibol">Agency</span>
+                <span class="text-ternary/90 text-xs font-semibol">{{ $user_data->type == 'staff' ? 'Staff' : 'Agency' }}
+                </span>
             </div>
 
         </div>

@@ -30,12 +30,9 @@ class Navbar extends Component
      */
     private function initializeData()
     {
-        $user = Auth::user();
+        // $user = Auth::user();
 
-        if (!$user) {
-            return;
-        }
-
+      
      
 
 
@@ -48,6 +45,11 @@ class Navbar extends Component
 
         // Set the dynamic database connection
         DatabaseHelper::setDatabaseConnection($userData['database']);
+
+        $user = User::on('user_database')->where('email', $userData['email'])->first();
+        if (!$user) {
+            return;
+        }
 
         // Fetch user from the dynamic database connection
         $this->user = User::on('user_database')->where('id', $user->id)->first();

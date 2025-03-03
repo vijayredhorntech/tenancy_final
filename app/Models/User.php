@@ -57,6 +57,11 @@ class User extends Authenticatable
         return $this->hasOne(UserMetaPassportDetails::class, 'user_id', 'id'); 
     }
 
+    public function userdeduction()
+    {
+        return $this->hasOne(UserMetaDeduction::class, 'user_id', 'id'); 
+    }
+
     public function log()
     {
         return $this->hasMany(UserActivityLog::class, 'user_id', 'id'); 
@@ -77,6 +82,13 @@ class User extends Authenticatable
         return $this->hasMany(ApplyUserLeave::class, 'user_id', 'id'); 
     }
 
+   
+
+
+    public function salaryshilp()
+    {
+        return $this->hasMany(Salary::class, 'user_id', 'id'); 
+    }
     
 
     

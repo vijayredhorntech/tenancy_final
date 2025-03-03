@@ -58,4 +58,9 @@ class Agency extends Model
             return $this->hasMany(Deduction::class);
         }
 
+        public function details() // Adjust the name based on your table
+        {
+            return $this->hasOne(AgencyDetail::class);
+        }
+      
 }

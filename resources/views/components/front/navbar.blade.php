@@ -29,9 +29,10 @@
         </button>
     </a>
     @else
+
         <!-- Show Login Time if User is Logged In -->
         <div class="text-lg font-medium text-green-600">
-            <i class="fa fa-clock mr-2"></i> Logged in    {{$login_time}}       </div>
+            <i class="fa fa-clock mr-2"></i> Logged in     {{ \Carbon\Carbon::createFromFormat('H:i:s',  $login_time)->format('h:i:s A') }}     </div>
     @endif
 
         

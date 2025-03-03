@@ -38,10 +38,11 @@
             <span class="font-semibold text-ternary text-xl">Agency List </span>
 
           @canany(['agency create', 'manage everything'])
-            <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')"
+          <a href="{{route('create_agency')}}">   <button type="button" 
                     class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">
                 Create New Agency
             </button>
+        </a> 
          @endcanany
 
 
@@ -238,6 +239,77 @@
                     </div>
                 </div>
 
+<!-- 
+                <div class="w-full flex flex-col gap-2 px-4 mt-8">
+                    <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
+                        <span class="text-lg font-bold text-ternary">Document Information</span>
+                    </div>
+                    <div class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2">
+                        <div class="w-full relative group flex flex-col gap-1">
+                            <label for="name" class="font-semibold text-ternary/90 text-sm">Document name</label>
+                            <div class="w-full relative">
+                                <input type="text" name="document1" id="document1" placeholder="Document name....."
+                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                            </div>
+                        </div>
+
+
+                        <div class="w-full relative group flex flex-col gap-1">
+                            <label for="name" class="font-semibold text-ternary/90 text-sm">Attachment</label>
+                            <div class="w-full relative">
+                                <input type="file" name="attachment1" id="attachment1" placeholder="attachment....."
+                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                            </div>
+                        </div>
+
+                        
+
+                    </div>
+                </div> -->
+
+
+                
+        <div class="w-full flex flex-col gap-2 px-4 mt-8">
+            <!-- Header -->
+            <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
+                <span class="text-lg font-bold text-ternary">Document Information</span>
+            </div>
+    
+            <!-- Buttons -->
+            <div class="flex gap-2 mt-4">
+                <button onclick="addInput()" class="p-2 bg-blue-500 text-white rounded">Push</button>
+                <button onclick="removeInput()" class="p-2 bg-red-500 text-white rounded">Reduce</button>
+            </div>
+    
+            <!-- Document Container -->
+            <div id="documentContainer">
+                <!-- Initial Document and Attachment Fields -->
+                <div id="inputGroup1" class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2">
+                    <div class="w-full relative group flex flex-col gap-1">
+                        <label for="document1" class="font-semibold text-ternary/90 text-sm">Document Name</label>
+                        <div class="w-full relative">
+                            <input type="text" name="document1" id="document1" placeholder="Document name..."
+                                   class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                            <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                        </div>
+                    </div>
+    
+                    <div class="w-full relative group flex flex-col gap-1">
+                        <label for="attachment1" class="font-semibold text-ternary/90 text-sm">Attachment</label>
+                        <div class="w-full relative">
+                            <input type="file" name="attachment1" id="attachment1"
+                                   class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                            <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+    
+
 
                 <div class="w-full flex justify-end px-4 pb-4 gap-2 mt-8">
                     <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')"
@@ -421,6 +493,57 @@
 
             </table>
         </div>
+
+        <script> 
+
+        let counter = 1; // Initial counter for input names/IDs
+
+        function addInput() {
+            counter++; // Increment counter
+
+            let container = document.getElementById("documentContainer");
+
+            // Create a new div for document and attachment
+            let inputGroup = document.createElement("div");
+            inputGroup.classList.add("w-full", "grid", "xl:grid-cols-4", "lg:grid-cols-4", "md:grid-cols-3", "sm:grid-cols-2", "grid-cols-1", "gap-4", "mt-2");
+            inputGroup.setAttribute("id", `inputGroup${counter}`);
+
+            // Add Document Name and Attachment fields
+            inputGroup.innerHTML = `
+                <div class="w-full relative group flex flex-col gap-1">
+                    <label for="document${counter}" class="font-semibold text-ternary/90 text-sm">Document Name</label>
+                    <div class="w-full relative">
+                        <input type="text" name="document${counter}" id="document${counter}" placeholder="Document name..."
+                               class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                        <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                    </div>
+                </div>
+
+                <div class="w-full relative group flex flex-col gap-1">
+                    <label for="attachment${counter}" class="font-semibold text-ternary/90 text-sm">Attachment</label>
+                    <div class="w-full relative">
+                        <input type="file" name="attachment${counter}" id="attachment${counter}"
+                               class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                        <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                    </div>
+                </div>
+            `;
+
+            // Append to documentContainer
+            container.appendChild(inputGroup);
+        }
+
+        function removeInput() {
+            if (counter > 1) {
+                let lastInputGroup = document.getElementById(`inputGroup${counter}`);
+                if (lastInputGroup) {
+                    lastInputGroup.remove(); // Remove last added inputs
+                    counter--; // Decrement counter
+                }
+            }
+        }
+    </script>
+    
         {{--        === table section code ends here===--}}
     </div>
 </x-front.layout>
