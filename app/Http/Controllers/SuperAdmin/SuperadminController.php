@@ -23,28 +23,42 @@ use App\Models\LoginDetail;
 use App\Models\Salary;
 use Illuminate\Support\Carbon;
 use App\Models\LeaveBalance;
-use Barryvdh\DomPDF\Facade\Pdf;
+// use Barryvdh\DomPDF\Facade\Pdf;
+use App\Traits\Student\StudentPdfTrait;
+
+
 
 
         
 
 class SuperadminController extends Controller
 {
-   
-   
 
+    use StudentPdfTrait;
+
+   
+ /******Generate PDF file ******/
     public function generatePDF()
     {
-        $data = [
-            'title' => 'Staff Reports',
-             'users'     => User::with('roles', 'userdetails')->get()
-        ];
-    
-        $pdf = Pdf::loadView('pdf.staffpdf', $data);
-    
-        return $pdf->download('Staff.pdf');
+
+
+        $users =  User::with('roles', 'userdetails')->get();
+           $title = "Staff Reports";
+
+    return $this->generateStudentPDF($title, $users);
+
+
     }
 
+
+    /******Generate Excel file ******/
+    public function exportStudent()
+    {
+        $users = User::with('roles', 'userdetails');
+        return $this->generateStudentExcel($users);
+        
+    }
+    
    
    
     /*** Staff List ***/

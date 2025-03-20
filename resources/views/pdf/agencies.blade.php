@@ -60,7 +60,7 @@
             <th>Agency Name</th>
             <th>Email</th>
             <th>Contact Person</th>
-            <th>Services</th>
+       {{--     <th>Services</th> --}}
             <th>Fund Allotted</th>
             <th>Fund Remaining</th>
             <th>Status</th>
@@ -75,9 +75,9 @@
                 {{ $agency->contact_person }} <br>
                 <small> {{ $agency->contact_phone }}</small>
             </td>
-            <td>
+            {{--      <td>
                 {{ $agency->userAssignments ? $agency->userAssignments->count() : 0 }}
-            </td>
+            </td>--}}
             <td>£ {{ $agency->balance ? $agency->balance->balance : '0' }}</td>
             <td>£ {{ $agency->balance ? $agency->balance->balance : '0' }}</td>
             <td>

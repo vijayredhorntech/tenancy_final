@@ -129,6 +129,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     /*** Route for staff ***/
                     Route::controller(SuperadminController::class)->group(function () {
                         Route::get('/generate-pdf','generatePDF')->name('studentgenerate.pdf');
+                        Route::get('/generate-excel','exportStudent')->name('studentgenerate.excel');
                         Route::get('/staffindex', 'hs_staffindex')->name('staff');
                         Route::get('/staffcreate', 'hs_staffcreate')->name('superadmin_staffcreate');
                         Route::post('/staffstore', 'hs_staffstore')->name('superadmin_staffstore');
@@ -142,6 +143,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/attandance','hs_attendance')->name('attendance');
                         Route::get('/profile','hs_profile')->name('profile');
                         Route::get('/generate','hs_generatesaleryslip')->name('generate.saleryslip');
+
+                        
 
                       
                     });

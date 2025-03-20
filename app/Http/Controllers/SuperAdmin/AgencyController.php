@@ -16,9 +16,7 @@ use App\Models\Service;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\UserServiceAssignment;
-use App\Exports\AgencyExport;
-use Maatwebsite\Excel\Facades\Excel;
-use Barryvdh\DomPDF\Facade\Pdf;
+
 use App\Models\AddBalance;
 use App\Models\Balance;
 use App\Models\Deduction;
@@ -34,28 +32,35 @@ class AgencyController extends Controller
 
     use AgenciesPdfTrait;
 
+
+    
+    /*** Pdf Generate *****/
     public function generatePDF()
     {
-        // Fetch agencies data
         $agencies = Agency::with('domains', 'userAssignments.service', 'balance')
             ->get()
             ->sortByDesc(fn ($agency) => $agency->details->status == '0' ? 0 : 1);
-
-        // Set title
         $title = "Agency Reports";
 
-        // Call trait function
         return $this->generateAgenciesPDF($title, $agencies);
     }
 
 
 
 
+
+/******Generate Excel file ******/
     public function exportAgency()
     {
-        return Excel::download(new AgencyExport, 'agencies.xlsx');
+        $agencies = Agency::with('domains', 'userAssignments.service', 'balance')
+        ->get()
+        ->sortByDesc(fn ($agency) => $agency->details->status == '0' ? 0 : 1);
+        return $this->generateAgenciesExcel($agencies);
+        
     }
     
+
+
     
     // code for all superadmin to contenncted with agency
     public function him_agency_index(){
