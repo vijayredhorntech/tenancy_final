@@ -19,39 +19,46 @@ class RoleSeeder extends Seeder
             // Define Permissions
             $permissions = [
                 'manage everything', // Super Admin full access
-            
+
                 // Service Permissions
                 'service view',
                 'service create',
                 'service update',
                 'service delete',
-            
+
                 // Agency Permissions
                 'agency view',
                 'agency create',
                 'agency update',
                 'agency delete',
-            
+
                 // Staff Permissions
                 'staff view',
                 'staff create',
                 'staff update',
                 'staff delete',
-            
+
                 // Role Permissions
                 'role view',
                 'role create',
                 'role update',
                 'role delete',
-            
+
                 // Permission Management
                 'permission view',
                 'permission create',
                 'permission update',
                 'permission delete',
-                       
+
                 // Reports
-                'view reports'
+                'view reports',
+
+                // Assignment Permissions
+                'assignment create',
+
+                // Export Permissions
+                'export excel',
+                'export pdf',
             ];
 
             // Create Permissions if they do not exist

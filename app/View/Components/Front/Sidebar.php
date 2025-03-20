@@ -5,7 +5,8 @@ namespace App\View\Components\Front;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
+use App\Models\AddBalance;
 
 class Sidebar extends Component
 {
@@ -24,6 +25,11 @@ class Sidebar extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.front.sidebar', ['user' => $this->user]);
+        $transaction_approvals_count = AddBalance::where('status', 1)->count();
+
+        return view('components.front.sidebar', [
+            'user' => $this->user,
+            'transaction_approvals_count' => $transaction_approvals_count,
+        ]);
     }
 }
