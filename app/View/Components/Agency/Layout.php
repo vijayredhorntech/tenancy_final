@@ -20,6 +20,7 @@ class Layout extends Component
      */
     public function __construct()
     {
+       
         $this->initializeData();
     }
 
@@ -28,6 +29,10 @@ class Layout extends Component
      */
     private function initializeData()
     {
+        //    $data = session()->all();
+     
+        //    dd($data);
+        //     // $url=$data['agency_full_url'];
         $user = Auth::user();
 
         if (!$user) {
@@ -77,6 +82,8 @@ class Layout extends Component
      */
     public function render(): View|Closure|string
     {
+   
+      
         return view('components.agency.layout', [
             'user_data' => $this->user,
             'services' => $this->services,

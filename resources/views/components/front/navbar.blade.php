@@ -17,30 +17,35 @@
         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
       </button> </a>  -->
 
-      @if($user && $user->status == 'offline')
-    <!-- Show Attendance Button if User is Offline -->
-    <a href="{{ route('attendance') }}">
-        <button type="button" class="cursor-pointer w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-black border-[1px] border-b-[3px] border-r-[3px] border-ternary relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
-            <div class="flex items-center">
-                <i class="fa fa-calendar-check mr-2 text-sm"></i>
-                <span class="text-lg font-medium">Attendance</span>
-            </div>
-            <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-        </button>
-    </a>
-    @else
 
-        <!-- Show Login Time if User is Logged In -->
-        <div class="text-lg font-medium text-green-600">
-            <i class="fa fa-clock mr-2"></i> Logged in     {{ \Carbon\Carbon::createFromFormat('H:i:s',  $login_time)->format('h:i:s A') }}     </div>
-    @endif
+
+   
+            @if($user && $user->status == 'offline')
+                    
+            <!-- Show Attendance Button if User is Offline -->
+            <a href="{{ route('attendance') }}">
+                <button type="button" class="cursor-pointer w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-black border-[1px] border-b-[3px] border-r-[3px] border-ternary relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
+                    <div class="flex items-center">
+                        <i class="fa fa-calendar-check mr-2 text-sm"></i>
+                        <span class="text-lg font-medium">Attendance</span>
+                    </div>
+                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                </button>
+            </a>
+            @else
+
+                <!-- Show Login Time if User is Logged In -->
+                <div class="text-lg font-medium text-green-600">
+                    <i class="fa fa-clock mr-2"></i> Logged in     {{ \Carbon\Carbon::createFromFormat('H:i:s',  $login_time)->format('h:i:s A') }}     </div>
+            @endif
+
 
         
-        <div class="rounded-full h-10 w-10 flex justify-center items-center hover:bg-ternary/60 hover:text-white cursor-pointer"><i class="fa fa-search" title="Search......"></i></div>
+        <!-- <div class="rounded-full h-10 w-10 flex justify-center items-center hover:bg-ternary/60 hover:text-white cursor-pointer"><i class="fa fa-search" title="Search......"></i></div>
         <div class="rounded-full h-10 w-10 flex justify-center items-center hover:bg-ternary/60 hover:text-white cursor-pointer relative">
             <div class="absolute top-0 right-0 text-xs text-white bg-primary font-semibol h-4 w-4 rounded-full flex justify-center items-center">5</div>
             <i class="fa fa-bell" title="Search......"></i>
-        </div>
+        </div> -->
         <div class="rounded-full h-10 w-10 flex justify-center items-center hover:bg-ternary/60 hover:text-white cursor-pointer"><i class="fa fa-gear animate-spin" title="Search......"></i></div>
         <div class="flex items-center gap-2 mx-4 cursor-pointer">
             <div class="">

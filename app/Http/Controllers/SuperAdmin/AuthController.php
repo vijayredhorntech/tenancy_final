@@ -18,7 +18,9 @@ use App\Models\Airport;
 use App\Models\LoginDetail;
 use Illuminate\Support\Carbon;
 use App\Models\Attendance;
+use Illuminate\Support\Facades\Session;
 use DB; 
+use App\Models\Domain;
 
 class AuthController extends Controller
 {
@@ -236,9 +238,25 @@ class AuthController extends Controller
 
         try {
      
+           $data = session()->all();
+           $domin=session('user_data');
+  
+           $domindata=Domain::where('domain_name',$domin['domain'])->first(); 
+
+        //     $url=$data['agency_full_url'];
+      
+          $url=$domindata->full_url;
+
+
+        // Clear all session data
+        session()->flush();
+
+        // Redirect to the stored URL
+        return redirect()->to($url ?: route('login')); 
 
             DB::beginTransaction(); // Start Transaction
     
+
             $user_id = Auth::id();
 
             

@@ -13,6 +13,7 @@ class Navbar extends Component
 {
     public $user;
     public $login_time; // Declare login_time property
+    public $isSuperAdmin; 
 
     /**
      * Create a new component instance.
@@ -25,6 +26,7 @@ class Navbar extends Component
 
         if ($this->user) {
 
+            
             // dd($this->user);
             // Get the latest login time from Attendance table for today's date
             $attendance = Attendance::where('user_id', $this->user->id)
@@ -42,9 +44,11 @@ class Navbar extends Component
      */
     public function render(): View|Closure|string
     {
+
         return view('components.front.navbar', [
             'user' => $this->user,
-            'login_time' => $this->login_time // Pass login time to the view
+            'login_time' => $this->login_time,
+            'isSuperAdmin' => $this->isSuperAdmin,  // Pass login time to the view
         ]);
     }
 }

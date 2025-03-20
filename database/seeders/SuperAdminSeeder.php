@@ -4,24 +4,25 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User; // Assuming you're using the User model for authentication
+use App\Models\User;
 
 class SuperAdminSeeder extends Seeder
 {
     public function run()
     {
         // Check if the superadmin already exists to avoid duplication
-       
         $superAdmin = User::firstOrCreate(
-            ['email' => 'superadmin@example.com'], // email is unique for superadmin
+            ['email' => 'superadmin@example.com'], // Unique identifier
             [
                 'name' => 'Super Admin',
-                'email' => 'superadmin@example.com',
                 'password' => Hash::make('admin@1232'),
-                'type'  => 'superadmin',// Set a default password
+                'type'  => 'superadmin',
             ]
         );
 
-        // Optionally, you can assign roles or permissions here
+        // Ensure the role is assigned only if not already assigned
+        if (!$superAdmin->hasRole('super admin')) {
+            $superAdmin->assignRole('super admin');
+        }
     }
 }

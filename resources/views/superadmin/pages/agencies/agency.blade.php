@@ -341,17 +341,20 @@
                 @endcanany
 
                 @canany(['export pdf', 'manage everything'])
-                    <button title="Export to pdf"
+                <a href="{{ route('generate.pdf') }}"> 
+                <button title="Export to pdf"
                             class="bg-danger/20 text-danger h-8 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white  cursor-pointer transition ease-in duration-2000">
                         <i class="fa fa-file-pdf"></i>
                     </button>
+                </a>
                 @endcanany
 
                 </div>
                 <div class="flex items-center gap-2">
-                {{--    <form action="{{ route('search') }}" method="POST" enctype="multipart/form-data">
-                 @csrf--}}
-                 <input type="hidden" value="agency">
+                    
+               <form action="{{ route('search') }}" method="POST" enctype="multipart/form-data">
+                 @csrf
+                 <input type="hidden" name="type" value="agency">
                     <input type="text" placeholder="Agency name....." name="search"
 
                            class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000">
@@ -359,7 +362,15 @@
                         class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
                         <i class="fa fa-search mr-1"></i> Search
                     </button>
-                    {{--   </form> --}}
+                </form>
+            @if($searchback)
+                <a href="{{route('agency')}}">   <button type="button" 
+                    class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">
+                Back
+            </button>
+           </a> 
+
+           @endif
                 </div>
             </div>
             <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
@@ -440,7 +451,9 @@
                         </td>
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
 {{--                            <span class="bg-{{$agency['status']==='Inactive'?'danger':'success'}}/10 text-{{$agency['status']==='Inactive'?'danger':'success'}} px-2 py-1 rounded-[3px] font-bold">{{$agency['status']}}</span>--}}
-                            <span class="bg-success/10 text-success px-2 py-1 rounded-[3px] font-bold">Active</span>
+                                <span class="bg-{{$agency->details->status=='0'?'danger':'success'}}/10 text-{{$agency->details->status=='0'?'danger':'success'}} px-2 py-1 rounded-[3px] font-bold"> {{ $agency->details->status == '0' ? 'Inactive' : 'Active' }}</span>
+
+<!-- <span class="bg-success/10 text-success px-2 py-1 rounded-[3px] font-bold">Active</span> -->
 
 
                         </td>

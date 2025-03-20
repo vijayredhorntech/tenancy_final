@@ -86,12 +86,12 @@
                                     <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $leave->reason ?? '0:00:00' }}</td>
                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
-                                    <a href="" title="Remind for funds">
+                                    <a href="{{route('leave.edit',['leaveid'=>$leave->id])}}" title="Remind for funds">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-pencil"></i>
                                         </div>
                                     </a>
-                                    <a href="" title="View Invoices">
+                                    <a href="{{route('leave.cancel',['leaveid'=>$leave->id])}}" title="View Invoices">
                                         <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-cancel"></i>
                                         </div>

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('type_of_leave'); // Leave type reference
-            $table->enum('status_of_leave', ['pending', 'approved', 'rejected'])->default('pending'); // Leave status
+            $table->enum('status_of_leave', ['pending', 'approved', 'rejected','cancel'])->default('pending'); // Leave status
             $table->foreignId('reply_user_id')->nullable()->constrained('users')->onDelete('set null'); // Manager/Admin reviewing
             $table->text('reason')->nullable(); // Comments from admin
             $table->timestamps();

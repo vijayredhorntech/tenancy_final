@@ -25,22 +25,29 @@ use App\Models\Deduction;
 use App\Models\AgencyDetail;
 use App\Mail\UserRegisteredMail;
 use Illuminate\Support\Facades\Mail;
+use App\Traits\Agency\AgenciesPdfTrait;
 
 
 
 class AgencyController extends Controller
 {
 
-
+    use AgenciesPdfTrait;
 
     public function generatePDF()
     {
-        $data = ['title' => 'Welcome to Laravel PDF Generation'];
-        
-        $pdf = Pdf::loadView('pdf.sample', $data);
+        // Fetch agencies data
+        $agencies = Agency::with('domains', 'userAssignments.service', 'balance')
+            ->get()
+            ->sortByDesc(fn ($agency) => $agency->details->status == '0' ? 0 : 1);
 
-        return $pdf->download('sample.pdf');
+        // Set title
+        $title = "Agency Reports";
+
+        // Call trait function
+        return $this->generateAgenciesPDF($title, $agencies);
     }
+
 
 
 
@@ -49,15 +56,21 @@ class AgencyController extends Controller
         return Excel::download(new AgencyExport, 'agencies.xlsx');
     }
     
+    
     // code for all superadmin to contenncted with agency
     public function him_agency_index(){
            
        
             $id = Auth::user()->id;
             $user = User::find($id);
-            $agency=Agency::with('domains','userAssignments.service','balance')->get();   
+            // $agency=Agency::with('domains','userAssignments.service','balance','details')->get();   
+            $agency = Agency::with('domains', 'userAssignments.service', 'balance')
+                    ->get()
+                    ->sortByDesc(function ($agency) {
+                        return $agency->details->status == '0' ? 0 : 1;
+                    });
             $service=Service::get();
-            return  view('superadmin.pages.agencies.agency', ['user_data' => $user,'agencies'=>$agency,'services' => $service]);
+            return  view('superadmin.pages.agencies.agency', ['user_data' => $user,'agencies'=>$agency,'services' => $service,'searchback'=>false]);
          
 
     }
@@ -219,7 +232,7 @@ class AgencyController extends Controller
                             }
                         }     
                      
-                        Mail::to($agency->email)->send(new UserRegisteredMail($agency));
+                        Mail::to($agency->email)->queue(new UserRegisteredMail($agency));
 
                         // Create database and run migrations         
                         \DB::commit();
@@ -248,8 +261,8 @@ class AgencyController extends Controller
         $id = Auth::user()->id;
         $user = User::find($id);
         $service=Service::get();
-        $agency=Agency::with('userAssignments.service')->where('id',$eid)->first();
-        // dd($agency);
+        $agency=Agency::with('userAssignments.service','details')->where('id',$eid)->first();
+
 
     //   dd($countries);
         // dd($service);
@@ -267,6 +280,7 @@ class AgencyController extends Controller
 /**** Update function for agency *****/
 public function him_editstore(Request $request)
 {
+
     \DB::beginTransaction(); // Start transaction
 
     try {
@@ -278,10 +292,13 @@ public function him_editstore(Request $request)
         }
 
         $agency->name = $request->name;
+        $agency->email = $request->email;
         $agency->phone = $request->agency_phone;
+        $agency->contact_person = $request->contact_name;
+        $agency->contact_phone = $request->contact_phone;
         $agency->address = $request->address;
         $agency->country = $request->country;
-        $agency->save(); // Save agency details
+        $agency->save();
 
         // Delete existing service assignments for the agency
         UserServiceAssignment::where('agency_id', $request->id)->delete();
@@ -297,6 +314,18 @@ public function him_editstore(Request $request)
                 $serviceassign->save(); 
             }
         }
+
+        $agency_details=AgencyDetail::where('agency_id',$request->id)->first();
+        $agency_details->country = $request->country;
+        $agency_details->telephone = $request->telephone;
+        $agency_details->agency_phone = $request->agency_phone;
+        $agency_details->state  = $request->state;
+        $agency_details->city = $request->city;
+        $agency_details->zipcode  = $request->zip_code;
+        $agency_details->vat_number = $request->agency_phone;
+        $agency_details->status = $request->status;
+        $agency_details->save(); 
+
 
         \DB::commit(); 
         return redirect()->route('agency')->with('success', 'Agency and domain created successfully.');
@@ -337,11 +366,25 @@ public function hs_agency_hisoty($id)
             public function him_agencylogin($domain)
             {    
                
-                $agency = Agency::whereHas('domains', function ($query) use ($domain) {
+                $domin=session('user_data');
+            if(isset($domin)){
+                return redirect()->route('agency_dashboard');
+            }
+                $agency = Agency::with('details')->whereHas('domains', function ($query) use ($domain) {
                     $query->where('domain_name', $domain);
                 })->with('domains')->first();
-    
+                 
+   
+                  if($agency->details->status==0){
+                       return view('agencies.permission');
+                  }
+
                 if ($agency) {
+                    $fullUrl = optional($agency->domains->first())->full_url;
+              
+                  
+                    session(['agency_full_url' => $fullUrl]);
+
                     return view('agencies.login', ['agency' => $agency]);
                 } else {
                     return redirect()->route('login')->with('error', 'Domain not found.');
@@ -362,8 +405,7 @@ public function hs_agency_hisoty($id)
                         $databaseName = $validatedData['database'];
                                 try {
                                 // Set the dynamic connection config using the helper function
-                                session()->flush(); // Clear previous sessions
-                                // session()->regenerate();
+                                session()->flush(); 
                                 DatabaseHelper::setDatabaseConnection($databaseName);
                                     // Check if user exists in the specified database
                                     $user = User::on('user_database')->where('email', $validatedData['email'])->first();
@@ -480,17 +522,6 @@ public function hs_agency_hisoty($id)
  
 
                  
-          
-
-/****logout function for agency***** */
-                        public function him_agencies_logout(){    
-                            $userData = \session('user_data');
-                            dd($userData);
-                            DatabaseHelper::setDatabaseConnection($userData['database']);
-                            $user = User::on('user_database')->where('id', $id)->first();
-                            return view('agencies.admin.pages.index', ['user_data' => $user]);
-                    }
-    
 
 
             

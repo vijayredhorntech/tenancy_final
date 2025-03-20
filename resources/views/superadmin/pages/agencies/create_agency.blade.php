@@ -168,7 +168,13 @@
                                 <input type="text" name="zip_code" id="zip_code" placeholder="zip code....."
                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                 <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                           
                             </div>
+                            <button id="searchAddress" type="button" class="mt-2 w-full px-4 py-2 bg-secondary text-white font-semibold rounded-md shadow-md hover:bg-secondary/80 transition duration-200 flex items-center justify-center gap-2">
+                                <i class="fa fa-search"></i> Search
+                            </button>
+
+
                         </div>
                         <div class="w-full relative group flex flex-col gap-1">
                             <!-- <div class="address"> </div>  -->
@@ -320,12 +326,57 @@
         {{--        === form section code ends here===--}}
 
 
-        {{--        === this is code for table section ===--}}
-        
-       
-    
-
-    
-        {{--        === table section code ends here===--}}
     </div>
+    @section('scripts')
+            <script>
+                    $(document).ready(function() {
+                        $("#searchAddress").on("click", function(e) {
+                            e.preventDefault(); // Stop the default behavior
+
+                            var postcode = $("#zip_code").val().trim(); // Get postcode input
+
+                            if (postcode === "") {
+                                alert("Please enter a postcode.");
+                                return;
+                            }
+
+                            $.ajax({
+                                url: `https://api.postcodes.io/postcodes/${postcode}`,
+                                method: "GET",
+                                dataType: "json",
+                                success: function(response) {
+                                    if (response.status === 200) {
+                                        let data = response.result;
+                                        let address = `${data.nuts}, ${data.admin_ward}`; 
+
+                                        console.log("API Response:", data);
+
+                                        let country = data.country;
+                                        let state = data.region;
+                                        let city = data.admin_district || data.parish;
+
+
+                                        // Fill the input fields
+                                        $("#address").val(address);
+                                        $("#country").val(country);
+                                        $("#state").val(state);
+                                        $("#city").val(city);
+                                        
+                                    } else {
+                                        alert("Invalid postcode. Please try again.");
+                                    }
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error("Error fetching postcode data:", error);
+                                    alert("Could not fetch postcode data. Please try again.");
+                                }
+                            });
+
+                            return false; // Extra safeguard to prevent page refresh
+                        });
+                    });
+
+                    </script>
+        @endsection
+
 </x-front.layout>

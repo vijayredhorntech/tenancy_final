@@ -30,13 +30,13 @@
                      <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
 
                          {{--               === text type input field ===--}}
-                         <div class="w-full relative group flex flex-col gap-1">
+                         <!-- <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Agency Logo</label>
                              <div class="w-full relative">
                                  <input type="file" name="logo" id="name" placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-file absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
-                         </div>
+                         </div> -->
 
                                  <input type="hidden" name="id" value="{{ old('name', $edit_agency->id ?? '')  }}" id="id" placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
 
@@ -62,7 +62,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Telephone</label>
                              <div class="w-full relative">
-                                 <input type="number" name="telephone" id="telephone" placeholder="telephone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="number" name="telephone" value="{{ old('telephone', isset($edit_agency->details->telephone) ? $edit_agency->details->telephone : '') }}" id="telephone" placeholder="telephone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-phone absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -97,7 +97,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Vat Number</label>
                              <div class="w-full relative">
-                                 <input type="text" name="vat_number" id="vat_number" placeholder="Vat ....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="text" name="vat_number" id="vat_number" value="{{ old('vat_number', isset($edit_agency->details->vat_number) ? $edit_agency->details->vat_number : '') }}"  placeholder="Vat ....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-file-invoice absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -111,7 +111,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Zip Code</label>
                              <div class="w-full relative">
-                                 <input type="text" name="zip_code" id="zip_code" placeholder="zip code....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="text" name="zip_code" id="zip_code" value="{{ old('zip_code', isset($edit_agency->details->zipcode) ? $edit_agency->details->zipcode : '') }}"  placeholder="zip code....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -130,7 +130,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">City</label>
                              <div class="w-full relative">
-                                 <input type="text" name="city" id="city" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="text" name="city" id="city" value="{{ old('city', isset($edit_agency->details->city) ? $edit_agency->details->city : '') }}" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -139,7 +139,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">State</label>
                              <div class="w-full relative">
-                                 <input type="text" name="state" id="state" placeholder="State....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="text" name="state" value="{{ old('state', isset($edit_agency->details->state) ? $edit_agency->details->state : '') }}"  id="state" placeholder="State....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-flag absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -148,7 +148,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Country</label>
                              <div class="w-full relative">
-                                 <input type="test" name="country" id="country" value="{{ old('country', $edit_agency->country ?? '')  }}" placeholder="Country....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="test" name="country" id="country" value="{{ old('country', $edit_agency->details->country ?? '')  }}" placeholder="Country....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -175,6 +175,29 @@
                                  @endforelse
                              </div>
                          </div>
+
+                         <!-- Agency Status Selection -->
+                        <div class="w-full relative group flex flex-col gap-2 mt-4">
+                            <label class="font-semibold text-ternary/90 text-sm">Agency Status</label>
+                            <div class="flex gap-4">
+                                <!-- Active Radio Button -->
+                                <div class="flex items-center gap-2">
+                                    <input type="radio" id="status_active" name="status" value="1"
+                                        @if($edit_agency->details->status == '1') checked @endif
+                                        class="appearance-none w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px] checked:bg-success checked:border-success transition ease-in duration-200 focus:outline-none focus:ring-0">
+                                    <label for="status_active" class="font-semibold text-ternary/90 text-sm flex items-center gap-2">Active</label>
+                                </div>
+
+                                <!-- Inactive Radio Button -->
+                                <div class="flex items-center gap-2">
+                                    <input type="radio" id="status_inactive" name="status" value="0"
+                                        @if($edit_agency->details->status == '0') checked @endif
+                                        class="appearance-none w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px] checked:bg-danger checked:border-danger transition ease-in duration-200 focus:outline-none focus:ring-0">
+                                    <label for="status_inactive" class="font-semibold text-ternary/90 text-sm flex items-center gap-2">Inactive</label>
+                                </div>
+                            </div>
+                        </div>
+
 
                      </div>
                      <div class="w-full flex justify-end px-4 pb-4 gap-2">

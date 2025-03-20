@@ -72,7 +72,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Account Number</label>
                              <div class="w-full relative">
-                                 <input type="number" name="bankdetails" id="zip_code" placeholder="" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="number" name="bankdetails" id="bankdetails" placeholder="" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -105,11 +105,15 @@
                                  <input type="text" name="zip_code" id="zip_code" placeholder="zip code....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
+                           
+                             <button id="searchAddress" type="button" class="mt-2 w-full px-4 py-2 bg-secondary text-white font-semibold rounded-md shadow-md hover:bg-secondary/80 transition duration-200 flex items-center justify-center gap-2">
+                                <i class="fa fa-search"></i> Search
+                            </button>
                          </div>
 
 
                          <div class="w-full relative group flex flex-col gap-1">
-                           <!-- <div class="address"> </div>  -->
+          
                            <label for="name" class="font-semibold text-ternary/90 text-sm">Address</label>
                              <div class="w-full relative">
                                  <input type="text" name="address" id="address" placeholder="Address....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
@@ -145,6 +149,7 @@
                          </div>
 
                        
+                         
 
 
 
@@ -383,7 +388,7 @@
                   <div class="w-full relative group flex flex-col gap-1">
                         <label for="document1" class="font-semibold text-ternary/90 text-sm">Accommandation</label>
                         <div class="w-full relative">
-                            <input type="text" name="accommandation" id="accommandation" placeholder="Tax  name..."
+                            <input type="number" name="accommandation" id="accommandation" placeholder="Amount..."
                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                             <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                         </div>
@@ -392,7 +397,7 @@
                     <div class="w-full relative group flex flex-col gap-1">
                         <label for="document1" class="font-semibold text-ternary/90 text-sm">Cab</label>
                         <div class="w-full relative">
-                            <input type="text" name="cab" id="cab" placeholder="..."
+                            <input type="number" name="cab" id="cab" placeholder="..."
                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                             <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                         </div>
@@ -403,7 +408,7 @@
                     <div class="w-full relative group flex flex-col gap-1">
                         <label for="document1" class="font-semibold text-ternary/90 text-sm">Food</label>
                         <div class="w-full relative">
-                            <input type="text" name="food" id="food" placeholder="..."
+                            <input type="numbber" name="food" id="food" placeholder="..."
                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                             <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                         </div>
@@ -421,7 +426,7 @@
                     <div class="w-full relative group flex flex-col gap-1">
                         <label for="attachment1" class="font-semibold text-ternary/90 text-sm">Deductions Value </label>
                         <div class="w-full relative">
-                            <input type="text" name="deductionvalue1" id="deductionvalue1" placeholder="Tax Value..."
+                            <input type="number" name="deductionvalue1" id="deductionvalue1" placeholder="Tax Value..."
                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                             <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                         </div>
@@ -492,10 +497,59 @@
 
 
 
+        </div>
+
+        @section('scripts')
 
 
 <script>
    
+   $(document).ready(function() {
+                $("#searchAddress").on("click", function(e) {
+                    e.preventDefault(); // Stop the default behavior
+
+                    var postcode = $("#zip_code").val().trim(); // Get postcode input
+
+                    if (postcode === "") {
+                        alert("Please enter a postcode.");
+                        return;
+                    }
+
+                    $.ajax({
+                        url: `https://api.postcodes.io/postcodes/${postcode}`,
+                        method: "GET",
+                        dataType: "json",
+                        success: function(response) {
+                            if (response.status === 200) {
+                                let data = response.result;
+                                let address = `${data.nuts}, ${data.admin_ward}`; 
+
+                                console.log("API Response:", data);
+
+                                let country = data.country;
+                                let state = data.region;
+                                let city = data.admin_district || data.parish;
+
+
+                                // Fill the input fields
+                                $("#address").val(address);
+                                $("#country").val(country);
+                                $("#state").val(state);
+                                $("#city").val(city);
+                                
+                            } else {
+                                alert("Invalid postcode. Please try again.");
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Error fetching postcode data:", error);
+                            alert("Could not fetch postcode data. Please try again.");
+                        }
+                    });
+
+                    return false; // Extra safeguard to prevent page refresh
+                });
+            });
 
     document.addEventListener('DOMContentLoaded', function () {
     let taxCounter = 1, deductionCounter = 1; // Start counters
@@ -606,6 +660,5 @@
             </script>
 
 
-
-        </div>
+@endsection
 </x-front.layout>

@@ -23,12 +23,30 @@ use App\Models\LoginDetail;
 use App\Models\Salary;
 use Illuminate\Support\Carbon;
 use App\Models\LeaveBalance;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
         
 
 class SuperadminController extends Controller
 {
+   
+   
+
+    public function generatePDF()
+    {
+        $data = [
+            'title' => 'Staff Reports',
+             'users'     => User::with('roles', 'userdetails')->get()
+        ];
+    
+        $pdf = Pdf::loadView('pdf.staffpdf', $data);
+    
+        return $pdf->download('Staff.pdf');
+    }
+
+   
+   
     /*** Staff List ***/
     public function hs_staffindex()
     {

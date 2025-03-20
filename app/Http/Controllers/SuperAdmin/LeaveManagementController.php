@@ -106,6 +106,7 @@ class LeaveManagementController extends Controller
     }
 
 
+    ////check this code 
 
     public function hs_applyleave(Request $request)
     {
@@ -196,6 +197,41 @@ class LeaveManagementController extends Controller
          
     
         return view('superadmin.pages.leavemanagment.pendingleave', compact('leaves'));
+    }
+
+
+    public function hs_editleave($id){
+        dd($id);
+    }
+    
+    /**** Cancel leave by user****/
+    public function hs_cancelleave($id)
+    {
+      
+        $leave = ApplyUserLeave::with('leaveName', 'userName')->find($id);
+           // dd($leave);
+        if (!$leave) {
+            return back()->with('error', 'Leave request not found.');
+        }
+      
+        $start_date = Carbon::parse($leave->start_date);
+        $end_date = Carbon::parse($leave->end_date);
+        $leave_days = $start_date->diffInDays($end_date) + 1;
+        $check_leave = LeaveBalance::where('leave_id', $leave->leave_id)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if ($check_leave) {
+            $check_leave->balance += $leave_days;
+            $check_leave->used -= $leave_days;
+            $check_leave->save();
+        }
+    
+        // Update leave status to 'canceled'
+        $leave->status_of_leave = 'cancel'; 
+        $leave->save();
+    
+        return back()->with('success', 'Your leave has been canceled.');
     }
     
 
