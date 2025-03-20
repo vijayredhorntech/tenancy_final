@@ -153,6 +153,20 @@
         </div>
      @endcanany
 
+     @canany(['booking view', 'manage everything'])
+    <a href="{{route('superadmin.role')}}">
+            <div class="{{Route::currentRouteName()==='superadmin.role'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fa fa fa-calendar-days mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Booking</span>
+                </div>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+            </div>
+        </a>
+    @endcanany
+
+
+
     @canany(['role view', 'manage everything'])
     <a href="{{route('superadmin.role')}}">
             <div class="{{Route::currentRouteName()==='superadmin.role'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
@@ -164,6 +178,7 @@
             </div>
         </a>
     @endcanany
+
 
 
     @canany(['permission view', 'manage everything'])
@@ -195,7 +210,7 @@
         <a href="{{route('assignment')}}">
             <div class="{{Route::currentRouteName()==='admin_setting'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
-                    <i class="fa fa-user-lock mr-2 text-sm"></i>
+                    <i class="fas fa-tasks mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Assignment</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
@@ -228,7 +243,7 @@
         <a href="{{route('superadmin.ticket')}}">
             <div class="{{Route::currentRouteName()==='superadmin.conversation'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
-                    <i class="fa fa-user-lock mr-2 text-sm"></i>
+                    <i class="fas fa-comments mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Conversation</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
@@ -241,7 +256,7 @@
         <a href="{{route('superadmin.inventory')}}">
             <div class="{{Route::currentRouteName()==='admin_setting'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
-                    <i class="fa fa-user-lock mr-2 text-sm"></i>
+                    <i class="fas fa-boxes-stacked mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Inventory</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
@@ -253,7 +268,7 @@
         <a href="">
             <div class="{{Route::currentRouteName()==='admin_setting'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
-                    <i class="fa fa-user-lock mr-2 text-sm"></i>
+                    <i class="fas fa-money-bill-wave mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Expensive</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
@@ -265,7 +280,7 @@
         <a href="{{route('transaction_approvals')}}">
             <div class="{{Route::currentRouteName()==='transaction_approvals'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
-                    <i class="fa fa-user-lock mr-2 text-sm"></i>
+                    <i class="fas fa-file-invoice-dollar mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Transaction Approvals</span>
                 </div>
                 <div class="absolute -top-2 -right-0 h-6 w-6 z-10 rounded-tl-full rounded-tr-full rounded-br-full bg-secondary text-white flex justify-center items-center font-bold text-xs">
@@ -278,9 +293,9 @@
 
         @canany(['terms', 'manage everything'])
         <a href="{{route('superadmin.terms')}}">
-            <div class="{{Route::currentRouteName()==='transaction_approvals'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+            <div class="{{Route::currentRouteName()==='superadmin.terms'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
-                    <i class="fa fa-user-lock mr-2 text-sm"></i>
+                    <i class="fas fa-file-contract mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Terms and conditions</span>
                 </div>
                

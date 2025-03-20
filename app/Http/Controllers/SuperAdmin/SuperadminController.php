@@ -29,20 +29,27 @@ use App\Traits\Student\StudentPdfTrait;
 class SuperadminController extends Controller
 {
 
-
+    use StudentPdfTrait; 
 
     public function generatePDF()
     {
-        $data = [
-            'title' => 'Staff Reports',
-            'users'     => User::with('roles', 'userdetails')->get()
-        ];
 
-        $pdf = Pdf::loadView('pdf.staffpdf', $data);
+        $users =  User::with('roles', 'userdetails')->get();
+        $title = "Staff Reports";
 
-        return $pdf->download('Staff.pdf');
+        return $this->generateStudentPDF($title, $users);
+       
     }
 
+
+    /******Generate Excel file ******/
+    public function exportStudent()
+    {
+        $student = User::with('roles', 'userdetails');
+        return $this->generateStudentExcel($student);
+        
+    }
+    
 
 
     /*** Staff List ***/
