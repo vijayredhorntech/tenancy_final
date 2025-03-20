@@ -284,9 +284,11 @@
                     <i class="fas fa-file-invoice-dollar mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Transaction Approvals</span>
                 </div>
+                @if ($transaction_approvals_count > 0)
                 <div class="absolute -top-2 -right-0 h-6 w-6 z-10 rounded-tl-full rounded-tr-full rounded-br-full bg-secondary text-white flex justify-center items-center font-bold text-xs">
-                    0
+                    {{ $transaction_approvals_count }}
                 </div>
+                @endif
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>
         </a>
