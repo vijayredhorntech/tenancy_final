@@ -194,9 +194,10 @@ public function him_flightprice(Request $request)
     $formattedData = [
         "flight" => json_encode(json_decode($data, true), JSON_UNESCAPED_SLASHES) 
     ];
-   
+
 
     $baseUrl = env('APP_BASE_URL'); 
+
     $token = 'JSDkdhf73hdkHFKjdsf7Hkdsf83hskfd7HsdjfKJHdf738dhskfjhS'; // API Token
 
     $curl = curl_init();
@@ -219,6 +220,8 @@ public function him_flightprice(Request $request)
     
     $response = curl_exec($curl);
     $responseData = json_decode($response, true);
+
+   
 
     $userData = session('user_data');
 
@@ -372,6 +375,7 @@ public function payment(Request $request)
     if (!$agency) {
         return response()->json(['error' => 'Agency not found'], 404);
     }
+
 
     try {
         // Generate unique booking & invoice numbers

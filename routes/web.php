@@ -114,6 +114,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                       });
 
 
+
                         /***Route for Assignment Management  ***/
                         /***Route for Assignment Management  ***/
                         Route::controller(AssignmentManagementController::class)->group(function () {
@@ -171,9 +172,14 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
 
 
-                        /*** Route for permissions ***/
+                        /*** Route for Booking and inventory ***/
                     Route::controller(InventoryController::class)->group(function () {
                             Route::get('/inventory', 'hs_inventory')->name('superadmin.inventory');
+                            Route::get('/booking','hs_bookingManagment')->name('superadmin.booking');
+                            Route::get('/exportbooking','exportBookingsExcel')->name('superadmin.exportexcel');
+                            Route::get('/generate-pdf',  'exportBookingsPDF')->name('superadmin.exportpdf');
+                            Route::get('/serach','searchFilter')->name('bookings.filter');
+
                         });
 
 
@@ -204,11 +210,11 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                     });
 
-                Route::controller(InventoryController::class)->group(function () {
-                    Route::get('inventory', 'hs_inventory')->name('superadmin.inventory');  // Unique path
+                // Route::controller(InventoryController::class)->group(function () {
+                //     Route::get('inventory', 'hs_inventory')->name('superadmin.inventory');  // Unique path
 
 
-                });
+                // });
              Route::controller(TermsConditionController::class)->group(function () {
                     Route::get('terms', 'hs_index')->name('superadmin.terms');
                     Route::post('storeterms','hs_store')->name('superadmin.termsstore');  
