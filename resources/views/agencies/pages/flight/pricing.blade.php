@@ -10,6 +10,7 @@
         </div>
     @endif
 
+
     <section class=" w-full mx-auto grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-8 py-6 px-4">
         <div class="w-full h-max bg-white lg:col-span-3 md:col-span-2 col-span-1 ">
             <div class="p-2 font-semibold  text-black text-lg ">
@@ -26,6 +27,7 @@
                     <br />
                 @endforeach
             </div>
+        
             <div class="mt-4">
                 @foreach ($details[0]['journey'] as $journey)
                     <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-3 grid-cols-1 bg-white border-[1px] border-ternary/20">

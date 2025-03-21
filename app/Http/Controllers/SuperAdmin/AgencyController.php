@@ -386,6 +386,7 @@ class AgencyController extends Controller
     public function him_agencylogin($domain)
     {
 
+    
         $domin = session('user_data');
         if (isset($domin)) {
             return redirect()->route('agency_dashboard');

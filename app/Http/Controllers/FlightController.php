@@ -233,6 +233,7 @@ class FlightController extends Controller
    
         if (\Route::current()->methods()[0] == "POST") {
      
+       
             // $travelport = app(Travelport::class);
             $travelport = new Travelport(config('travelport'));
             //        $segmets = collect();
@@ -240,6 +241,7 @@ class FlightController extends Controller
             $details = $travelport->airPriceRequest(json_decode($request->flight, true));
        
             $details = $this->AirPrice($this->XMlToJSON($details));
+        
              $airports = Airport::all();
              
             //  feach balance
@@ -257,11 +259,11 @@ class FlightController extends Controller
                 $agency_record=Agency::where('email',$user->email)->first(); 
                 $agency = Agency::with('userAssignments.service')->find($agency_record->id);
             }
-
+          
 
             $balance = Balance::where('agency_id', $agency->id)->first();
             //        dd($details[3]);
-
+        
             // dd($details);agencies.pages.flight.pricing
             return view('agencies.pages.flight.pricing')
             ->with('details', $details)

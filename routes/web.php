@@ -18,6 +18,7 @@ use App\Http\Controllers\Agencies\SupportController;
 use App\Http\Controllers\SuperAdmin\TermsConditionController;
 use App\Http\Controllers\SuperAdmin\LeaveManagementController;
 use App\Http\Controllers\SuperAdmin\AssignmentManagementController;
+use App\Http\Controllers\SuperAdmin\VisaController;
 use App\Http\Controllers\GloballyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,13 +48,14 @@ Route::get('/test',function (){
        }
 });
 
+
 Route::post('/search',[GloballyController::class,'hs_globalserach'])->name('search');
 Route::get('/login',[AuthController::class,'login_form'])->name('login');
 Route::post('/login',[AuthController::class,'superadmin_login'])->name("superadmin_login");
 Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
 Route::get('/agencylogout',[AuthController::class,'agency_logout'])->name("agency_logout");
 Route::get('/getflight',[ServiceController::class,'getflight']);
-
+Route::get('/{d}', [AgencyController::class, 'him_agencylogin']);
 // Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
 Route::middleware([LogUserActivity::class])->group(function () {
 
@@ -141,15 +143,9 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/staffdelete/{id}', 'hs_staffdelete')->middleware('can:staff delete')->name('superadmin_staffdelete'); // Fixed incorrect controller method
                         Route::get('/staffDetails/{id}', 'hs_staffDetails')->middleware('can:view staffdetails')->name('superadmin_staffDetails');
                         Route::get('/staff/{id}','hs_staff_hisoty')->name('staff.history');
-
-                    
                         Route::get('/attandance','hs_attendance')->name('attendance');
                         Route::get('/profile','hs_profile')->name('profile');
                         Route::get('/generate','hs_generatesaleryslip')->name('generate.saleryslip');
-
-                        
-
-                      
                     });
 
 
@@ -217,19 +213,24 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
 
                 // });
-             Route::controller(TermsConditionController::class)->group(function () {
-                    Route::get('terms', 'hs_index')->name('superadmin.terms');
-                    Route::post('storeterms','hs_store')->name('superadmin.termsstore');  
-                    Route::get('term/{id}','hs_edit')->name('superadmin.termedit');  
-                    Route::post('editstoreterms','hs_store')->name('superadmin.uptermsstore'); 
+                        Route::controller(TermsConditionController::class)->group(function () {
+                                Route::get('terms', 'hs_index')->name('superadmin.terms');
+                                Route::post('storeterms','hs_store')->name('superadmin.termsstore');  
+                                Route::get('term/{id}','hs_edit')->name('superadmin.termedit');  
+                                Route::post('editstoreterms','hs_store')->name('superadmin.uptermsstore'); 
                     
-                    
-                    // Unique path
+                            });
 
-
-                });
+                        Route::controller(VisaController::class)->group(function () {
+                                 Route::get('coutnry','hsCountry')->name('visa.country');
+                                 Route::get('visa','hsVisa')->name('visa.view');
+                                 Route::post('visastore','hsStore')->name('visa.store');
+                
+                        });
 
     });
+
+    
 
 
 
@@ -394,7 +395,6 @@ Route::group([
 
 // });
 
-Route::get('/{d}', [AgencyController::class, 'him_agencylogin']);
 
 
 Route::middleware('auth')->group(function () {

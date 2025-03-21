@@ -6,23 +6,19 @@ use Illuminate\Support\ServiceProvider;
 use App\Repositories\VisaRepository;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
 
-class AppServiceProvider extends ServiceProvider
+class RepositoryServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      */
     public function register(): void
     {
         //
-        $this->app->bind(Travelport::class, function ($app) {
-            return new Travelport(config('services.travelport'));
-        });
-
-        
+        $this->app->bind(VisaRepositoryInterface::class, VisaRepository::class);
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      */
     public function boot(): void
     {
