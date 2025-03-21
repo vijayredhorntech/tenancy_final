@@ -25,9 +25,9 @@ class VisaController extends Controller
     }
 
 
+    /***View All Visa *****/
     public function hsVisa()
     {
-        
         $allvisa = $this->visaRepository->getAllVisas();
         return view('superadmin.pages.visa.visaindex', compact('allvisa'));
     }
@@ -40,16 +40,19 @@ class VisaController extends Controller
         return response()->json($visa);
     }
 
+
+      /***Store Visa Data *****/
     public function hsStore(Request $request)
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
-       dd($data);
+     
 
         $visa = $this->visaRepository->createVisa($data);
-        return response()->json($visa, 201);
+
+        return redirect()->route('visa.view')->with('success', 'Visa created successfully');
     }
 
     public function update(Request $request, $id)

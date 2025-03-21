@@ -91,19 +91,22 @@
                                 <div class="flex gap-2 items-center">
                                     <a href="" title="Remind for funds">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-bell"></i>
+                                            <i class="fa fa-pencil"></i>
                                         </div>
                                     </a>
-                                    <a href="" title="View Invoices">
-                                        <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-file"></i>
+                             
+                                    <a href="{{ route('visa.assign', ['id' => $visaRequest->id]) }}" title="Assign to Visa Request">
+                                        <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
+                                            <i class="fa fa-clipboard-check"></i> <!-- FontAwesome icon -->
                                         </div>
                                     </a>
-                                    <a href="" title="View Dashboard">
+
+
+                                    <!-- <a href="" title="View Dashboard">
                                         <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-computer"></i>
                                         </div>
-                                    </a>
+                                    </a> -->
 
 
                                 </div>
