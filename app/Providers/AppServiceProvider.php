@@ -12,6 +12,9 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+        $this->app->bind(Travelport::class, function ($app) {
+            return new Travelport(config('services.travelport'));
+        });
     }
 
     /**

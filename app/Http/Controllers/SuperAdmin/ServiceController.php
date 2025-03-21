@@ -84,7 +84,7 @@ class ServiceController extends Controller
 
  public function him_flightsearch(FlightSearchRequest $request){
 
-
+dd("heelo");
     // http://127.0.0.1:8002/
 
     $origin = $request->origin;

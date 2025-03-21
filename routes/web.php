@@ -29,6 +29,7 @@ use App\Http\Controllers\AgencyAdmin\AgencyAdminController;
 use App\Http\Controllers\AgencyAdmin\AgencyRoleController;
 use App\Http\Controllers\AgencyAdmin\AgencyPermissionController;
 use App\Http\Middleware\CheckUserSession;
+use App\Http\Controllers\FlightController;
 
 
 
@@ -255,8 +256,8 @@ Route::group([
         Route::get('flight', 'him_flight')->name('Flight');
         Route::get('hotel', 'him_hotel')->name('Hotel');
         Route::get('visa', 'him_visa')->name('Visa');
-        Route::post('flight_search','him_flightsearch')->name('flight.search');
-        Route::post('flight_price','him_flightprice')->name('flight.pricing');
+        // Route::post('flight_search','him_flightsearch')->name('flight.search');
+        // Route::post('flight_price','him_flightprice')->name('flight.pricing');
         Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
         Route::post('/payment',  'payment')->name('flight.payment');
         Route::get('/invoice/{invoice_number}','hs_generateinvocie')->name('generateInvoice');
@@ -293,6 +294,32 @@ Route::group([
         Route::post('/permissionstore', 'hs_permissionstore')->name('agency_permissionstore');
         Route::get('/permissiondelete/{id}', 'hs_permissiondelete')->middleware('can:permission delete')->name('agency_permissiondelete');
     });
+
+
+    Route::group(['prefix' => 'flight', 'controller' => FlightController::class], function () {
+        Route::group(['prefix' => 'modal'], function () {
+            Route::get('/details', 'detailModal')->name('flight.detail-modal');
+        });
+    
+        Route::get('/details', 'detailModal')->name('flight.detail-modal');
+        Route::post('/search', 'search')->name('flight.search');
+        Route::get('/search/results', 'results')->name('flight.results');
+        Route::post('/pricing', 'pricing')->name('flight.pricing');
+    
+        Route::get('/pricing', 'pricing')->name('flight.pricing'); // Added name for consistency
+        // Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
+        // Route::get('/flight-passenger-details', 'passengerDetailsView')->name('flight.passenger-details.view');
+        // Route::post('/payment', 'payment')->name('flight.payment');
+    });
+
+
+    // Route::controller(FlightController::class)->group(function () {
+    //     Route::get('/permission', 'hs_permissionindex')->name('agency.permission');
+    //     Route::post('/permissionstore', 'hs_permissionstore')->name('agency_permissionstore');
+    //     Route::get('/permissiondelete/{id}', 'hs_permissiondelete')->middleware('can:permission delete')->name('agency_permissiondelete');
+    // });
+
+
 });
 
 // Route::group(['prefix' => 'agencies'], function () {
