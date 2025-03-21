@@ -29,7 +29,7 @@ use App\Traits\Student\StudentPdfTrait;
 class SuperadminController extends Controller
 {
 
-    use StudentPdfTrait; 
+    use StudentPdfTrait;
 
     public function generatePDF()
     {
@@ -38,7 +38,6 @@ class SuperadminController extends Controller
         $title = "Staff Reports";
 
         return $this->generateStudentPDF($title, $users);
-       
     }
 
 
@@ -47,9 +46,8 @@ class SuperadminController extends Controller
     {
         $student = User::with('roles', 'userdetails');
         return $this->generateStudentExcel($student);
-        
     }
-    
+
 
 
     /*** Staff List ***/
@@ -87,6 +85,12 @@ class SuperadminController extends Controller
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'country' => 'required|string|max:255',
+            'accommandation' => 'nullable|numeric',
+            'cab' => 'nullable|numeric',
+            'food' => 'nullable|numeric',
+            'deductionvalue1' => 'nullable|numeric',
+            'taxvalue1' => 'nullable|numeric',
+            'wage' => 'nullable|numeric',
         ]);
 
         // Collect dynamic tax and deduction values

@@ -108,9 +108,10 @@ class AgencyController extends Controller
             'database_name' => [
                 'required',
                 'string',
-                'regex:/^[a-zA-Z0-9_-](?!.*[\/\\.\\\])(?=.*\S$).{0,63}$/',
-                'max:64'
-            ], // Ensures a valid database name format. Source: https://stackoverflow.com/questions/9537771/mysql-database-name-restrictions
+                'max:64',
+                'min:1',
+                'regex:/^[a-zA-Z][a-zA-Z_]*[a-zA-Z]$|^[a-zA-Z]$/',
+            ], // Ensures a valid database name format. Allowed: database, my_database, Database_Name, and a.
             'contact_name' => 'nullable|string',
             'contact_phone' => 'nullable|string',
             'zip_code' => 'required|regex:/^([A-Z]{1,2}[0-9][0-9A-Z]?) ?([0-9][A-Z]{2})$/i', // Ensures the zip code follows the UK postcode pattern.
@@ -128,7 +129,7 @@ class AgencyController extends Controller
             'database_name.required' => 'The database name is required.',
             'database_name.string' => 'The database name must be a valid string.',
             'database_name.unique' => 'This database name is already in use.',
-            'database_name.regex' => 'The database name can only contain letters, numbers, and underscores.',
+            'database_name.regex' => 'The database name can only contain lowercase, uppercase, and underscore characters',
             'database_name.max' => 'The database name must not exceed 64 characters.',
         ]);
 
