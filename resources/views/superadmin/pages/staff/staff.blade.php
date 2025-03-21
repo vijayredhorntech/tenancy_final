@@ -20,12 +20,14 @@
             <div class="w-full overflow-x-auto p-4">
                 <div class="w-full flex justify-between gap-2 items-center">
                      <div class="flex gap-2">
-                     <a href="{{ route('studentgenerate.excel') }}">
+                 
+                        <a href="{{ route('studentgenerate.excel') }}">
                          <button title="Export to excel" class="bg-success/20 text-success h-8 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white  cursor-pointer transition ease-in duration-2000">
                              <i class="fa fa-file-excel"></i>
                          </button>
                      </a>
-                        <a href="{{ route('studentgenerate.pdf') }}">
+                     <a href="{{ route('studentgenerate.pdf') }}">
+                     
                          <button title="Export to pdf" class="bg-danger/20 text-danger h-8 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white  cursor-pointer transition ease-in duration-2000">
                                <i class="fa fa-file-pdf"></i>
                          </button>

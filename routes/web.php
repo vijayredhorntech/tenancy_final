@@ -131,7 +131,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     /*** Route for staff ***/
                     Route::controller(SuperadminController::class)->group(function () {
                         Route::get('/generate-pdf','generatePDF')->name('studentgenerate.pdf');
-                        Route::get('/generate-excel','exportStudent')->name('studentgenerate.excel');
+                        Route::get('/studentgenerate-pdf', 'generatePDF')->name('studentgenerate.pdf');
+                        Route::get('/studnetgenerate-excel','exportStudent')->name('studentgenerate.excel');
                         Route::get('/staffindex', 'hs_staffindex')->name('staff');
                         Route::get('/staffcreate', 'hs_staffcreate')->name('superadmin_staffcreate');
                         Route::post('/staffstore', 'hs_staffstore')->name('superadmin_staffstore');
