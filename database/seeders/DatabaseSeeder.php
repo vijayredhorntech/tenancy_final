@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             AirportSeeder::class,
-            // FlightSettingSeeder::class,
+            FlightSettingSeeder::class,
             AirlineSeeder::class,
             RoleSeeder::class,
             SuperAdminSeeder::class,
