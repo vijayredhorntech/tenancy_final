@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\Flight\FlightSetting;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class FlightSettingSeeder extends Seeder
 {
@@ -13,17 +15,15 @@ class FlightSettingSeeder extends Seeder
      */
     public function run(): void
     {
-        $settings = [
-            [
-                'markupType' => 'percentage',
-                'markupValue' => '2',
-                'fareType' => 'public',
-                'type' => 'default',
-            ],
-        ];
-
-        foreach ($settings as $setting) {
-            FlightSetting::create($setting);
-        }
+        DB::table('flight_settings')->insert([
+            'markupType' => 'percentage',
+            'markupValue' => '2',
+            'fareType' => 'public',
+            'type' => 'default',
+            'validFrom' => null,
+            'validTill' => null,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
     }
 }

@@ -108,7 +108,8 @@
                                 <div class="flex items-center gap-2">
                                     <input type="checkbox" id="service_{{ $service->id }}" name="services[]"
                                         value="{{ $service->id }}"
-                                        class="appearance-none w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
+                                        class="appearance-none w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px] checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0"
+                                        {{ in_array($service->id, old('services', [])) ? 'checked' : '' }}>
                                     <label for="service_{{ $service->id }}"
                                         class="font-semibold text-ternary/90 text-sm flex items-center gap-2">{{ $service->name }}</label>
                                 </div>

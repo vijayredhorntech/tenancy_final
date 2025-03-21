@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('visa_service_type_entries', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('visa_service_type_id')->unsigned();
-            $table->foreign('visa_service_type_id')->references('id')->on('visa_service_types');
+            $table->foreign('visa_service_type_id')->references('id')->on('visa_types');
             $table->enum('entry_type', ['single', 'multiple']);
             $table->string('duration');
             $table->string('processing_time');
