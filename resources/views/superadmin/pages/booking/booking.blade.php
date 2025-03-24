@@ -170,6 +170,7 @@
                     @forelse($bookings as $booking)
 
                             @php 
+                            if($booking->service==2){
                             $flight_name=json_decode($booking->flightBooking['details'], true);
                             // Decode the JSON
                             // First decode
@@ -180,7 +181,7 @@
                             $flight_code=$flight_name[0]['journey'][0]['Carrier'];
                             $carrier = \App\Models\Airline::where('iata', $flight_code)->first();
                             $carrierName = $carrier ? $carrier->name : 'Unknown Carrier';
-                            
+                            }
                             @endphp
                        
                         <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
@@ -188,7 +189,7 @@
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking->agency['name']}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['amount']}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}<br> 
-                                <span> ({{$carrierName}}) </span>
+                                <span> {{$carrierName}} </span>
                             </td>
 
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"> {{$totalPassengers}}
@@ -220,7 +221,10 @@
                             </td> -->
                         </tr>
 
-
+                        @php 
+                        $totalPassengers="0";
+                        $carrierName="";
+                        @endphp
                     @empty
                         <tr>
                             <td colspan="8" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>

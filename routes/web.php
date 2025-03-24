@@ -49,6 +49,10 @@ Route::get('/test',function (){
 });
 
 
+Route::get('/viewtest',function (){
+
+return view('viewtest');
+}); 
 Route::post('/search',[GloballyController::class,'hs_globalserach'])->name('search');
 Route::get('/login',[AuthController::class,'login_form'])->name('login');
 Route::post('/login',[AuthController::class,'superadmin_login'])->name("superadmin_login");
@@ -224,8 +228,28 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::controller(VisaController::class)->group(function () {
                                  Route::get('coutnry','hsCountry')->name('visa.country');
                                  Route::get('visa','hsVisa')->name('visa.view');
+                                 Route::get('visacreate','hsVisacreate')->name('visa.create');
                                  Route::post('visastore','hsStore')->name('visa.store');
-                
+                                 Route::get('/visa/assign/{id?}','hsassignVisa')->name('visa.assign');
+                                 Route::post('/visa/assignstore','hsassignStore')->name('assignstore');
+                                
+                                 Route::get('/editvisa/{id}','hseditvisa')->name('visa.edit');
+                                 Route::post('/editvisastore','hsestorevisa')->name('visa.editstore');
+                                 Route::get('/visacoutnry','hsvisacoutnry')->name('visa.country');
+                                 Route::get('/editcoutnry/{id}','hseditvisacoutnry')->name('visa.editcountry');
+                                 Route::get('/viewvisacoutnry/{id}','hseditvisacoutnry')->name('visa.assigncountry');
+                              
+
+                                 
+                                 
+                             
+
+                                 
+                                 
+
+                                 
+                                 
+
                         });
 
     });
@@ -279,15 +303,18 @@ Route::group([
         Route::get('/staff/{id}','hs_staff_hisoty')->name('agencystaff.history');
         Route::get('/attandance','hs_attendance')->name('agency.attendance');
         Route::get('/profile','hs_profile')->name('agency.profile');
+
     });
 
-    // Roles
-    Route::controller(AgencyRoleController::class)->group(function () {
-        Route::get('/roleindex', 'hs_roleindex')->name('agency.role');
-        Route::post('/rolestore', 'hs_rolestore')->name('agency_rolestore');
-        Route::get('/roledelete/{id}', 'hs_roledelete')->name('agency_roledelete');
-        Route::get('/permissionassign/{id}', 'hs_permissionassign')->name('agency_permissionassign');
-        Route::post('/permissionassign', 'hs_permissioned')->name('agency_assignpermission');
+
+    // Visa
+    Route::controller(VisaController::class)->group(function () {
+        Route::get('/allapplication', 'hs_visaApplication')->name('agency.application');
+        Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
+        Route::get('/payment/{id}','him_payment')->name('visa.payment');
+        Route::get('/get-visa-services','him_getService' )->name('get.visa.services');
+        Route::post('/visabook','hsVisaBook')->name('visa.book');
+     
     });
 
     // Permissions
@@ -313,6 +340,15 @@ Route::group([
         // Route::get('/flight-passenger-details', 'passengerDetailsView')->name('flight.passenger-details.view');
         // Route::post('/payment', 'payment')->name('flight.payment');
     });
+
+        // Roles
+        Route::controller(AgencyRoleController::class)->group(function () {
+            Route::get('/roleindex', 'hs_roleindex')->name('agency.role');
+            Route::post('/rolestore', 'hs_rolestore')->name('agency_rolestore');
+            Route::get('/roledelete/{id}', 'hs_roledelete')->name('agency_roledelete');
+            Route::get('/permissionassign/{id}', 'hs_permissionassign')->name('agency_permissionassign');
+            Route::post('/permissionassign', 'hs_permissioned')->name('agency_assignpermission');
+        });
 
 
     // Route::controller(FlightController::class)->group(function () {

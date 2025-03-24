@@ -7,6 +7,11 @@
 
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet"/>
+    
+    <!-- Include Quill CSS and JS (Latest Version) -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.min.js"></script>
+
 
     <!-- Styles / Scripts -->
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -105,6 +110,46 @@
     </div>
 </div>
 @yield('scripts')
+
+<script>
+    // Initialize Quill Editor
+    document.addEventListener("DOMContentLoaded", function () {
+    var editorElement = document.getElementById("editor");
+
+    // Check if editor exists before initializing Quill
+    if (editorElement) {
+        var quill = new Quill("#editor", {
+            theme: "snow",
+            placeholder: "Type your description here...",
+            modules: {
+                toolbar: [
+                    ["bold", "italic", "underline"], // Bold, italic, underline
+                    [{ list: "ordered" }, { list: "bullet" }], // Lists
+                    [{ align: [] }], // Text alignment
+                    ["link"], // Insert links
+                ],
+            },
+        });
+
+        // Function to sync Quill content with hidden input field
+        function syncContent() {
+            var descriptionInput = document.getElementById("description");
+            if (descriptionInput) {
+                descriptionInput.value = quill.root.innerHTML;
+            }
+        }
+
+        // Use MutationObserver Instead of Deprecated Events
+        const config = { childList: true, subtree: true };
+        const observer = new MutationObserver(syncContent);
+        observer.observe(editorElement, config);
+
+        // Ensure content syncs when Quill content changes
+        quill.on("text-change", syncContent);
+    }
+});
+
+</script>
 
 <script>
         let counter = 1; // Initial counter for unique field names

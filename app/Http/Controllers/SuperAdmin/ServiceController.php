@@ -20,6 +20,7 @@ use App\Models\AgencyDetail;
 use App\Models\TermsCondition;
 use App\Mail\BookingConfirmationMail;
 use Illuminate\Support\Facades\Mail;
+use App\Models\Country;
 
 
 use App\Helpers\DatabaseHelper;
@@ -630,9 +631,13 @@ public function airport($input){
  }
 
  public function him_visa(){
-
-    return view('agencies.pages.hotel');
+  
+    $countries=Country::get();
+    return view('superadmin.pages.visa.searchvisa',compact('countries'));
  }
+
+
+
  
 
 }

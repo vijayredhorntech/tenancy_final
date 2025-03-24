@@ -239,9 +239,10 @@ class FlightController extends Controller
             //        $segmets = collect();
 //        dd(json_decode($request->flight, true));
             $details = $travelport->airPriceRequest(json_decode($request->flight, true));
-       
+         
             $details = $this->AirPrice($this->XMlToJSON($details));
         
+            // dd($details);
              $airports = Airport::all();
              
             //  feach balance
@@ -272,7 +273,7 @@ class FlightController extends Controller
             ->with('balance', $balance);
             // return view('agencies.pages.flight.pricing')->with('details', $details)->with('flightSearch', $request->flightSearch)->with('airports', $airports);
         } else {
-            return redirect()->route('home');
+            return redirect()->route('agency_dashboard');
         }
     }
 

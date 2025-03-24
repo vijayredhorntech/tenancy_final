@@ -10,4 +10,9 @@ interface VisaRepositoryInterface
     public function updateVisa($id, array $data);
     public function deleteVisa($id);
     public function getAllCountry(); 
+    public function assignVisaToCountry(array $data);
+    public function getVisabySearch($orgin,$destination); 
+    public function allVisacoutnry(); 
+    public function getVisabySearchcoutnry($id); 
+    public function saveBooking(array $data); 
 }
