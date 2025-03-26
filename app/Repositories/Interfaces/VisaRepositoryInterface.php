@@ -15,4 +15,8 @@ interface VisaRepositoryInterface
     public function allVisacoutnry(); 
     public function getVisabySearchcoutnry($id); 
     public function saveBooking(array $data); 
+    public function getBookingByid($id,$type); 
+    public function allForms();
+    public function storeForms(array $data);
+    public function bookingDataById($id);
 }

@@ -12,6 +12,7 @@ class VisaBooking extends Model
 
     protected $table = 'visabookings';
     // Define relationships
+    
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -19,16 +20,24 @@ class VisaBooking extends Model
 
     public function visa()
     {
-        return $this->belongsTo(Visa::class, 'visaid');
+        return $this->hasOne(VisaServices::class, 'id', 'visa_id');
     }
 
     public function origin()
     {
-        return $this->belongsTo(Location::class, 'originid');
+        return $this->hasOne(Country::class, 'id','origin_id');
     }
+
 
     public function destination()
     {
-        return $this->belongsTo(Location::class, 'destinationid');
+        return $this->hasOne(Country::class, 'id','destination_id');
+    }
+
+    public function visasubtype(){
+        return $this->hasOne(VisaSubtype::class, 'id','subtype_id');
+    }
+    public function clint(){
+        return $this->hasOne(ClientDetails::class, 'id','client_id');
     }
 }

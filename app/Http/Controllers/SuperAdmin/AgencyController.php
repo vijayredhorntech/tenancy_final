@@ -512,29 +512,57 @@ class AgencyController extends Controller
                 ->take(5)
                 ->get();
 
-            $recent_booking = Deduction::with(['service_name', 'agency'])
-                ->where('agency_id', $agency_record->id)
-                ->orderBy('created_at', 'desc')
-                ->take(5)
-                ->get();
+            // $recent_booking = Deduction::with(['service_name', 'agency'])
+            //     ->where('agency_id', $agency_record->id)
+            //     ->orderBy('created_at', 'desc')
+            //     ->take(5)
+            //     ->get();
+
+
+            $flight_recent_booking = Deduction::with(['service_name', 'agency','flightBooking'])
+            ->where('agency_id', $agency_record->id)
+            ->orderBy('created_at', 'desc') // Orders by latest records
+            ->where('service','2')
+            ->take(5)
+            ->get();
+
+            $visa_recent_booking = Deduction::with([
+                'service_name', 
+                'agency',
+                'visaBooking', // Ensure this relationship is defined correctly
+                'visaBooking.visa',
+                'visaBooking.origin',
+                'visaBooking.destination',
+                'visaBooking.visasubtype',
+                'visaBooking.clint',
+                'visaApplicant' // Ensure the correct spelling: 'clint' → 'client' (if it's a typo)
+            ])
+            ->where('agency_id', $agency_record->id)
+            ->where('service', 3) // No need for quotes around integer
+            ->orderBy('created_at', 'desc') // Order by latest records
+            ->take(5)
+            ->get();
 
             return view('agencies.pages.welcome', [
                 'agency' => $agency,
                 'services' => $services,
                 'total' => $total,
                 'bookings' => $bookings,
-                'recent_booking' => $recent_booking,
+                'flight_recent_booking' => $flight_recent_booking,
+                'visa_recent_booking' => $visa_recent_booking,
                 'credits' => $credits
             ]);
         } else {
 
-            $recent_booking = array();
+            $flight_recent_booking = array();
+            $visa_recent_booking=array();
             $credits = array();
             $bookings = array();
 
             return view('agencies.pages.welcome', [
-                'recent_booking' => $recent_booking,
                 'credits' => $credits,
+                'flight_recent_booking' => $flight_recent_booking,
+                'visa_recent_booking' => $visa_recent_booking,
                 'bookings' => $bookings
             ]);
         }

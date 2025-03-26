@@ -12,6 +12,7 @@ use App\Models\Deduction;
 use App\Models\Balance;
 use App\Models\Agency;
 use App\Models\User;
+use App\Models\AuthervisaApplication;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
 use App\Services\FileUploadService;
@@ -19,15 +20,20 @@ use Auth;
 use Illuminate\Support\Str;
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
+use App\Models\Document;
+use App\Models\VisaServiceTypeDocument;
+use App\Services\AgencyService;
 
 
 class VisaRepository implements VisaRepositoryInterface
 {
     
     protected $fileUploadService;
-    public function __construct(FileUploadService $fileUploadService)
+    protected $agencyService;
+    public function __construct(FileUploadService $fileUploadService,AgencyService $agencyService)
     {
         $this->fileUploadService = $fileUploadService;
+        $this->agencyService = $agencyService;
     }
 
     public function getAllCountry(){
@@ -158,40 +164,46 @@ public function updateVisa($id, array $data)
 
   public function saveBooking(array $data)
   {
+     
       $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
       $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
     //   $application = Str::uuid();
     $application = 'VISA-' . now()->format('YmdHisv') . '-' . strtoupper(Str::random(4));
 
+    $agency = $this->agencyService->getAgencyData();
+    $user=$this->agencyService->getCurrentLoginUser();
+
   
-      $booking = new VisaBooking();
+    if(isset($data['passengerfirstname'])){
+      
+        $passengerCount = count($data['passengerfirstname']);
+        $totalAmount=$totalAmount*$passengerCount; 
+    }
+  
+    $booking = new VisaBooking();
       $booking->origin_id = $data['origin'];
       $booking->destination_id = $data['destination'];
       $booking->visa_id = $data['typeof'];
       $booking->subtype_id = $data['category'];
-  
-      $booking->user_id = Auth::id(); // Current logged-in user
-      $booking->client_id = Auth::id(); // Assuming same as user
+      $booking->agency_id=$agency->id; 
+      $booking->user_id = $user->id; // Current logged-in user
+      $booking->client_id = $data['clientId']; // Assuming same as user
       $booking->application_number = $application;
       $booking->total_amount = $totalAmount;
       $booking->dateofentry = $data['dateofentry'];
       $booking->save(); // Save booking first
-
-      $userData = session('user_data');
-
-      DatabaseHelper::setDatabaseConnection($userData['database']);
-      
-      // $user = User::on('user_database')->where('id', $id)->first();
-      $user = User::on('user_database')->where('email', $userData['email'])->first();
+   
+      if (isset($data['passengerfirstname'])) {
+        foreach ($data['passengerfirstname'] as $index => $firstname) {
+            $authapplication = new AuthervisaApplication();
+            $authapplication->booking_id = $booking->id;
+            $authapplication->clint_id = $data['clientId']; // Change this if clint_id is different
+            $authapplication->name = $firstname; // Assign first name dynamically
+            $authapplication->lastname = $data['passengerfirstname'][$index]; // Assign last name dynamically
+            $authapplication->save();
+        }
+    }
     
-      if($user->type=="staff"){
-          $agency_record=Agency::where('database_name',$userData['database'])->first(); 
-          $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-      }else{
-          $agency_record=Agency::where('email',$user->email)->first(); 
-          $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-      }
-  
   
 
       // Fetch agency based on the current user
@@ -228,7 +240,103 @@ public function updateVisa($id, array $data)
   
       return $booking; // Return the saved booking object
   }
-  
+
+
+  public function getBookingByid($id,$type){
+    
+    if($type=="all"){
+
+    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint'])
+    ->where('agency_id', $id)
+    ->orderBy('created_at', 'desc') // Orders by latest created_at first
+    ->paginate(10);
+  }else if($type=="documentpending"){
+    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint'])
+    ->where('agency_id', $id)
+    ->where('document_status','Pending')
+    ->orderBy('created_at', 'desc') // Orders by latest created_at first
+    ->paginate(10);
+  }elseif($type=="feepending")
+    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint'])
+    ->where('agency_id', $id)
+    ->where('payment_status','Pending')
+    ->orderBy('created_at', 'desc') // Orders by latest created_at first
+    ->paginate(10);
+    //  return VisaBooking::get('visa')->get();
+  }
+
+
+
+  /*****Form function ******/
+
+    public function allForms(){
+        //the name of table is form document
+    return Document::paginate(10);
+    }
+
+    /***Store From *****/
+    public function storeForms(array $data)
+    {
+    
+        DB::beginTransaction(); // Start the transaction
+    
+        try {
+            // Debugging (optional, can be removed)
+            // dd($data);
+    
+            if (isset($data['form_uploade'])) {
+                $authUserId = auth()->id();
+                
+                // Upload the file
+                $uploadedFilePath = $this->fileUploadService->uploadFile(
+                    $data['form_uploade'], 
+                    'images/visa/forms/', 
+                    $authUserId
+                );
+                $path = "images/visa/forms/" . $uploadedFilePath;
+    
+                // Save document
+                $new = new Document();
+                $new->form_name = $data['name'];
+                $new->form_description = $data['description'] ?? null; // Handle null case
+                $new->document = $path;
+                $new->save();
+    
+                // Save visa service type document
+                $service = new VisaServiceTypeDocument();
+                $service->visa_id  = '1';
+                $service->form_id  = $new->id;
+                $service->origin_id  = $data['origincoutnry'];
+                $service->destination_id   = $data['destination'];
+                $service->description  = $data['description'];
+                $service->fee = '0' ?? null; // Handle null case
+
+                $service->save();
+    
+                DB::commit(); // Commit transaction if everything is successful
+    
+                return response()->json(['message' => 'Form saved successfully'], 200);
+            }
+    
+            return response()->json(['error' => 'No file uploaded'], 400);
+            
+        } catch (\Exception $e) {
+            dd($e);
+            DB::rollBack(); // Rollback transaction on error
+    
+            return response()->json(['error' => 'Something went wrong', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function bookingDataById($id){
+       $viewbooking=VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint'])
+        ->where('id', $id)
+       ->first(); 
+       return $viewbooking;
+      
+    }
+
+
     public function deleteVisa($id)
     {
         return Visa::destroy($id);

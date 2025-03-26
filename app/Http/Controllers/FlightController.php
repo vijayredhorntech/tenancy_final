@@ -22,10 +22,20 @@ use App\Models\TermsCondition;
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
 use Auth;
+use App\Services\AgencyService;
 
 class FlightController extends Controller
 {
+    protected $agencyService;
     use FlightDataTrait;
+
+    public function __construct(AgencyService $agencyService)
+    {
+        $this->agencyService = $agencyService;
+       
+    }
+
+ 
 
     public function search(FlightSearchRequest $request)
     {

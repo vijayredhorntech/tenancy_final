@@ -127,18 +127,36 @@ class AuthController extends Controller
 
 
 
-     $funds = AddBalance::with('agency')
-    ->orderBy('created_at', 'desc') // Orders by latest records
-    ->take(5)
-    ->get();
+            $funds = AddBalance::with('agency')
+            ->orderBy('created_at', 'desc') // Orders by latest records
+            ->take(5)
+            ->get();
 
- 
+        
 
-    $recent_booking = Deduction::with(['service_name', 'agency','flightBooking'])
-    ->orderBy('created_at', 'desc') // Orders by latest records
-    ->take(5)
-    ->get();
+            $flight_recent_booking = Deduction::with(['service_name', 'agency','flightBooking'])
+            ->orderBy('created_at', 'desc') // Orders by latest records
+            ->where('service','2')
+            ->take(5)
+            ->get();
 
+            $visa_recent_booking = Deduction::with([
+                'service_name', 
+                'agency',
+                'visaBooking', // Ensure this relationship is defined correctly
+                'visaBooking.visa',
+                'visaBooking.origin',
+                'visaBooking.destination',
+                'visaBooking.visasubtype',
+                'visaBooking.clint',
+                'visaApplicant' // Ensure the correct spelling: 'clint' → 'client' (if it's a typo)
+            ])
+            ->where('service', 3) // No need for quotes around integer
+            ->orderBy('created_at', 'desc') // Order by latest records
+            ->take(5)
+            ->get();
+
+   
 
 // dd($airlineBookings);
 
@@ -150,8 +168,8 @@ class AuthController extends Controller
     // dd("hyyy this"); 
         
         return view('superadmin.pages.welcome',compact(
-            'roles', 'service', 'agency', 'total_balance', 'bookings','users','recent_booking','funds',
-            'airlineBookings','airlinePassengerTotals','total_deduction'));
+            'roles', 'service', 'agency', 'total_balance', 'bookings','users','flight_recent_booking','funds',
+            'airlineBookings','airlinePassengerTotals','total_deduction','visa_recent_booking'));
         //  return view('auth.admin.pages.index', ['user_data' => $user,'services' => $service]);
     }
 

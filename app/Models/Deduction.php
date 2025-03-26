@@ -25,4 +25,12 @@ class Deduction extends Model
         return $this->belongsTo(FlightBooking::class, 'flight_booking_id');
     }
     
+    public function visaBooking()
+    {
+        return $this->hasOne(VisaBooking::class, 'id','flight_booking_id');
+    }
+    public function visaApplicant()
+    {
+        return $this->hasMany(AuthervisaApplication::class, 'booking_id','flight_booking_id');
+    }
 }

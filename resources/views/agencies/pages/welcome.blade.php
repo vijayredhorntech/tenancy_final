@@ -709,65 +709,195 @@
                 <div class="bg-warning/10 px-4 py-2 border-b-[2px] border-b-warning/20">
                     <span class="font-semibold text-ternary text-xl">Recent Bookings</span>
                 </div>
+                <div class="flex space-x-2">
+                    <button class="px-4 py-2 text-white bg-danger rounded-md border border-danger shadow  service active" data-id="flight">Flight Booking</button>
+                    <button class="px-4 py-2  border border-danger rounded-md service" data-id="visa" >Visa Application</button>
+                    <button class="px-4 py-2  border border-danger rounded-md service"  data-id="hotel" >Hotel Booking</button>
+                 </div>
+
 
                 <div class="w-full overflow-x-auto p-4">
-                    <table class="w-full border-[1px] border-secondary/30 border-collapse">
+                <table class="w-full border-[1px] border-secondary/30 border-collapse recentbooking" id="flight" >
+                    <tr>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency Name</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>                       
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>                 
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Supplier Name</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
+                    </tr>
+
+                    
+                    @forelse($flight_recent_booking as $booking)
+
+                    @php 
+                    if($booking->service==2){
+                    $flight_name=json_decode($booking->flightBooking['details'], true);
+                    $flight_code=$flight_name[0]['journey'][0]['Carrier'];
+                    $carrier = \App\Models\Airline::where('iata', $flight_code)->first();
+                    $carrierName = $carrier ? $carrier->name : 'Unknown Carrier';
+                    }
+                    @endphp
+     
                         <tr>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Services</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Supplier Name</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->agency['name']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                            <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}">{{$booking['invoice_number']}} </a> </td> 
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$booking['amount']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{ isset($carrierName) ? $carrierName : '' }}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$booking['date']}}</td>
+                           
+                    
+
+
+                           
+                          
+                            
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                <div class="flex gap-2 items-center">
+                                                <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
+                                        <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
+                                            <i class="fa fa-file-pdf"></i>
+                                        </div>
+                                    </a>
+
+                                </div>
+                            </td>
                         </tr>
 
 
-                        @forelse($recent_booking as $booking)
-                        @php               
-                        if($booking->service==2){      
-                        $flight_name=json_decode($booking->flightBooking['details'], true);   
-                        $flight_code=$flight_name[0]['journey'][0]['Carrier'];
-                        $carrier = \App\Models\Airline::where('iata', $flight_code)->first();
-                        $carrierName = $carrier ? $carrier->name : 'Unknown Carrier';
-                        }
-                        @endphp
-     
-                        
-                            <tr>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                    <a href="{{ route('agency_booking', ['booking_number' => $booking['invoice_number'] ?? '']) }}">{{$booking['invoice_number']}}
-                                     </a> 
-                                    </td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{ isset($carrierName) ? $carrierName : '' }}</td>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking['amount']}}</td>
-                               
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking['date']}}</td>
-                               
-                            
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                    <div class="flex gap-2 items-center">
-                                        <a href="{{ route('agency_booking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
-                                            <div class=" bg-danger/10 text-damger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
-                                                <i class="fa fa-file-pdf"></i>
-                                            </div>
-                                        </a>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
+                        </tr>
+                    @endforelse
 
-                                    </div>
+
+                </table>
+
+                <table class="w-full border-[1px] border-secondary/30 border-collapse recentbooking" id="visa"  style="display:none">
+                    <tr>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency Name</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Client</td>   
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>                       
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">No of Applicant</td>  
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Destination</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>  
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
+                    </tr>
+
+                    
+                    @forelse($visa_recent_booking as $booking)
+
+                         <tr>
+                                <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    {{ $loop->iteration }}
                                 </td>
-                            </tr>
+
+                                <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    {{ isset($booking->agency['name']) ? $booking->agency['name'] : '' }}
+                                </td>
+
+                                <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    <a href="{{ route('superadminbooking', ['booking_number' => isset($booking['invoice_number']) ? $booking['invoice_number'] : '']) }}">
+                                        {{ isset($booking['invoice_number']) ? $booking['invoice_number'] : '' }}
+                                    </a>
+                                </td>
+
+                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                    @php
+                                        $fullName = isset($booking->visaBooking) && isset($booking->visaBooking->clint) && isset($booking->visaBooking->clint->name) 
+                                                    ? $booking->visaBooking->clint->name 
+                                                    : '';
+                                        $cleanName = str_replace(',', '', $fullName);
+
+                                        $email = isset($booking->visaBooking) && isset($booking->visaBooking->clint) && isset($booking->visaBooking->clint->email) 
+                                                ? $booking->visaBooking->clint->email 
+                                                : '';
+
+                                        $phone = isset($booking->visaBooking) && isset($booking->visaBooking->clint) && isset($booking->visaBooking->clint->phone_number) 
+                                                ? $booking->visaBooking->clint->phone_number 
+                                                : '';
+                                    @endphp
+
+                                    <span>{{ $cleanName }}</span><br>
+                                    <span class="font-medium text-xs">{{ $email }}</span><br>
+                                    <span class="font-medium text-xs">{{ $phone }}</span>
+                                </td>
+
+                                <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    {{ isset($booking->service_name['name']) ? $booking->service_name['name'] : '' }}
+                                </td>
+
+                                <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    {{ isset($booking->visaApplicant) && is_countable($booking->visaApplicant) ? count($booking->visaApplicant) + 1 : 1 }}
+                                </td>
+
+                                <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    {{ isset($booking->visaBooking) && isset($booking->visaBooking->origin) && isset($booking->visaBooking->origin->name) ? $booking->visaBooking->origin->name : '' }} 
+                                    To 
+                                    {{ isset($booking->visaBooking) && isset($booking->visaBooking->destination) && isset($booking->visaBooking->destination->name) ? $booking->visaBooking->destination->name : '' }}
+                                </td>
+
+                                <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    £ {{ isset($booking['amount']) ? $booking['amount'] : '0.00' }}
+                                </td>
+
+                                <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                    {{ isset($booking['date']) ? $booking['date'] : '' }}
+                                </td>
+                       
 
 
-                        @empty
-                            <tr>
-                                <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
-                            </tr>
-                        @endforelse
+                            
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                <div class="flex gap-2 items-center">
+                                                <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
+                                        <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
+                                            <i class="fa fa-file-pdf"></i>
+                                        </div>
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
 
 
-                    </table>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
+                        </tr>
+                    @endforelse
+
+
+                </table>
+
+                <table class="w-full border-[1px] border-secondary/30 border-collapse recentbooking" id="hotel"  style="display:none">
+                    <tr>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency Name</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Client</td>   
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>                       
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">No of Applicant</td>  
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Destination</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>  
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
+                    </tr>
+
+                        <tr>
+                            <td colspan="6" class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
+                        </tr>
+    
+                </table>
                 </div>
             </div>
           <!-- end of recent bookig -->
@@ -837,6 +967,16 @@
     @section('scripts')
     <script>
 
+         jQuery(document).ready(function (){
+                jQuery(document).on("click", ".service", function () {
+                    jQuery(".service").removeClass('active text-white bg-danger'); 
+                    jQuery(this).addClass('active text-white bg-danger'); // Add active class to clicked button
+                    jQuery(".recentbooking").hide(); 
+
+                    var id = jQuery(this).data('id'); // Store the data-id value
+                    jQuery("#" + id).show(); // Show the corresponding section
+                });
+            });
     var bookings = <?php echo json_encode($bookings); ?>;
 
 
