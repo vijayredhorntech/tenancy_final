@@ -36,11 +36,10 @@ class ClientController extends Controller
     /*** Pdf Generate *****/
     public function generatePDF()
     {
-        
-        $clients = $this->clintRepository->getAllClint();
+        $agency = $this->agencyService->getAgencyData();
+        $clients = ClientDetails::where('agency_id',$agency->id)->get();
         $title = "Clint Reports";
-
-        return $this->generateAgenciesPDF($title, $clients);
+        return $this->generateClintPDF($title, $clients);
     }
 
 
@@ -50,10 +49,10 @@ class ClientController extends Controller
     /******Generate Excel file ******/
     public function exportAgency()
     {
-        $agencies = Agency::with('domains', 'userAssignments.service', 'balance')
-            ->get()
-            ->sortByDesc(fn($agency) => $agency->details->status == '0' ? 0 : 1);
-        return $this->generateAgenciesExcel($agencies);
+        // $clients = $this->clintRepository->getAllClint();
+        $agency = $this->agencyService->getAgencyData();
+        $clients = ClientDetails::where('agency_id',$agency->id);
+        return $this->generateClintsExcel($clients);
     }
 
 
@@ -68,7 +67,8 @@ class ClientController extends Controller
     public function hs_index()
     {
         $clients = $this->clintRepository->getAllClint();
-        return view('agencies.pages.clients.index', compact('clients'));
+        $searchback=false; 
+        return view('agencies.pages.clients.index', compact('clients','searchback'));
     }
 
 
@@ -94,6 +94,7 @@ class ClientController extends Controller
         ]);
         
         $clients = $this->clintRepository->getStoreclint($request->all());
+       
         return redirect()->route('client.index')->with('success', 'Client added successfully.');
     }
 

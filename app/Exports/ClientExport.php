@@ -26,6 +26,7 @@ class ClientExport implements FromQuery, WithHeadings, WithMapping, WithStyles
 
     public function headings(): array
     {
+    
         return [
             'Client ID',
             'Full Name',
@@ -46,7 +47,7 @@ class ClientExport implements FromQuery, WithHeadings, WithMapping, WithStyles
             $client->id,
             $client->name,
             $client->email,
-            $client->clientinfo->phone_number ?? '',
+            $client->phone_number ?? '',
             $client->clientinfo->gender ?? '',
             $client->clientinfo->marital_status ?? '',
             $client->clientinfo->nationality ?? '',

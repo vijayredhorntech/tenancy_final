@@ -19,4 +19,8 @@ interface VisaRepositoryInterface
     public function allForms();
     public function storeForms(array $data);
     public function bookingDataById($id);
+    public function findFormById($id);
+    public function assignCountrytoForms($id, $data);
+    public function assignUpdateBooking($id,$data);
+    
 }

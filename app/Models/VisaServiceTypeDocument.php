@@ -22,6 +22,7 @@ class VisaServiceTypeDocument extends Model
     {
         return $this->belongsTo(VisaServiceType::class);
     }
+    
     public function from(){
         return $this->hasOne(Document::class, 'id','form_id');
     }

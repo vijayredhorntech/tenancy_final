@@ -271,7 +271,7 @@ public function updateVisa($id, array $data)
 
     public function allForms(){
         //the name of table is form document
-    return Document::paginate(10);
+    return Document::with('countries')->paginate(10);
     }
 
     /***Store From *****/
@@ -328,17 +328,68 @@ public function updateVisa($id, array $data)
         }
     }
 
+    
+    /*****Find By Id *****/
+    public function findFormById($id){
+        return Document::with('countries')->where('id',$id)->first();
+    }
+
+   /****** Delete Form ******/
+        public function deleteForm($id)
+        {
+            $form = Document::find($id);
+
+            if (!$form) {
+                return response()->json(['error' => 'Form not found'], 404);
+            }
+
+            // If there is a relationship that needs detachment before deletion, do it
+            // $form->countries()->detach(); // If using a Many-to-Many relationship
+
+            $form->delete();
+            return true; 
+            // return response()->json(['success' => 'Form deleted successfully'], 200);
+        }
+
+
+        /******Assign Country to Form ******/
+        public function assignCountrytoForms($id, $data){
+
+            $service = new VisaServiceTypeDocument();
+            $service->visa_id  = '1';
+            $service->form_id  = $id;
+            $service->origin_id  = $data['origincoutnry'];
+            $service->destination_id   = $data['destination'];
+            $service->fee = '0' ?? null; // Handle null case
+            $service->save();
+        }
+
+
+
+
     public function bookingDataById($id){
-       $viewbooking=VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint'])
+       $viewbooking=VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint',])
         ->where('id', $id)
        ->first(); 
        return $viewbooking;
       
     }
 
-
     public function deleteVisa($id)
     {
-        return Visa::destroy($id);
+        $visa=$this->getVisaById($id);
+        $visa->delete(); 
+    }
+
+    public function assignUpdateBooking($id,$data){
+   
+        $visabooking=VisaBooking::where('id',$id)->first(); 
+
+        $visabooking->document_status=$data['document_status']; 
+        $visabooking->applicationworkin_status=$data['application_status']; 
+        $visabooking->payment_status=$data['paymentstatus']; 
+        $visabooking->save(); 
+        return $visabooking;
+   
     }
 }

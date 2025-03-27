@@ -119,8 +119,6 @@ class ClintRepository implements ClintRepositoryInterface
         $client->save();
 
         $clientdetails = ClientMoreInfo::where('clientid',$id)->first();
-        // $clientdetails=new ClientMoreInfo(); 
-        // $clientdetails->clientid=$client->id;
         $clientdetails->last_name=$data['last'] ?? '';
         $clientdetails->dob=$data['dob'] ?? '';
         $clientdetails->gender=$data['gender'] ?? '';
@@ -134,8 +132,6 @@ class ClintRepository implements ClintRepositoryInterface
         $clientdetails->spouse_name=$data['spouse_name'] ?? '';
         $clientdetails->children_count = isset($data['children_count']) && is_numeric($data['children_count']) ? (int)$data['children_count'] : null;
         $clientdetails->save(); 
-
-
         return $client;
     }
 

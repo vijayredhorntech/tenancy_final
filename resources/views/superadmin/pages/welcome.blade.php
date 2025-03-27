@@ -805,6 +805,7 @@
                     
                     @forelse($visa_recent_booking as $booking)
 
+                 
               
                   
                         <tr>
@@ -814,24 +815,34 @@
                             <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}">{{$booking['invoice_number']}} </a> </td> 
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">
                             @php
-                                $fullName = isset($booking->visaBooking) && isset($booking->visaBooking->clint) 
-                                            ? $booking->visaBooking->clint->name 
-                                            : '';
-                                $cleanName = str_replace(',', '', $fullName);
-                            @endphp
+                                        $fullName = isset($booking->visaBooking) && isset($booking->visaBooking->clint) && isset($booking->visaBooking->clint->name) 
+                                                    ? $booking->visaBooking->clint->name 
+                                                    : '';
+                                        $cleanName = str_replace(',', '', $fullName);
 
+                                        $email = isset($booking->visaBooking) && isset($booking->visaBooking->clint) && isset($booking->visaBooking->clint->email) 
+                                                ? $booking->visaBooking->clint->email 
+                                                : '';
 
-                                <span>{{$cleanName}}</span><br>
-                                <span class="font-medium text-xs">{{$booking->visaBooking->clint->email}}</span><br>
-                                <span class="font-medium text-xs">{{$booking->visaBooking->clint->phone_number}}</span>
-                            </td>
-                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
+                                        $phone = isset($booking->visaBooking) && isset($booking->visaBooking->clint) && isset($booking->visaBooking->clint->phone_number) 
+                                                ? $booking->visaBooking->clint->phone_number 
+                                                : '';
+                                    @endphp
+
+                                    <span>{{ $cleanName }}</span><br>
+                                    <span class="font-medium text-xs">{{ $email }}</span><br>
+                                    <span class="font-medium text-xs">{{ $phone }}</span>
+
+                           
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">  {{ isset($booking->service_name['name']) ? $booking->service_name['name'] : '' }}</td>
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{ isset($booking->visaApplicant) ? $booking->visaApplicant->count() + 1 : 0 + 1 }}
                             </td>
-                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->visaBooking->origin->name }} To {{$booking->visaBooking->destination->name }}</td>
-                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$booking['amount']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">    {{ isset($booking->visaBooking) && isset($booking->visaBooking->origin) && isset($booking->visaBooking->origin->name) ? $booking->visaBooking->origin->name : '' }} 
+                                    To 
+                                    {{ isset($booking->visaBooking) && isset($booking->visaBooking->destination) && isset($booking->visaBooking->destination->name) ? $booking->visaBooking->destination->name : '' }}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm"> £ {{ isset($booking['amount']) ? $booking['amount'] : '0.00' }}</td>
                            
-                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$booking['date']}}</td>
+                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm">  {{ isset($booking['date']) ? $booking['date'] : '' }}</td>
                            
                     
 

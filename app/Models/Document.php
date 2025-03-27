@@ -12,4 +12,9 @@ class Document extends Model
     protected $table = 'fromdocuments'; // Set custom table name
 
     protected $fillable = ['form_name', 'form_description', 'form_html', 'document'];
+
+
+    public function countries(){
+        return $this->hasMany(VisaServiceTypeDocument::class, 'form_id','id');
+    }
 }

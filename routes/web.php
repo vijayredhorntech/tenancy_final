@@ -54,7 +54,7 @@ Route::get('/viewtest',function (){
 
 return view('viewtest');
 }); 
-Route::post('/search',[GloballyController::class,'hs_globalserach'])->name('search');
+Route::post('/search',[GloballyController::class,'hs_globalSearch'])->name('search');
 Route::get('/login',[AuthController::class,'login_form'])->name('login');
 Route::post('/login',[AuthController::class,'superadmin_login'])->name("superadmin_login");
 Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
@@ -233,6 +233,10 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                  Route::post('visastore','hsStore')->name('visa.store');
                                  Route::get('/visa/assign/{id?}','hsassignVisa')->name('visa.assign');
                                  Route::post('/visa/assignstore','hsassignStore')->name('assignstore');
+                                 Route::get('/viewsubtype/{id}','hsViewSubtype')->name('visa.viewsubtype');
+                                 Route::get('/viewdelete/{id}','hsViewdelete')->name('visa.delete');
+                                 Route::get('/subtypedelete/{id}','hsVisasutypdelete')->name('visasubtype.delete');
+
                                 
                                  Route::get('/editvisa/{id}','hseditvisa')->name('visa.edit');
                                  Route::post('/editvisastore','hsestorevisa')->name('visa.editstore');
@@ -241,6 +245,9 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                  Route::get('/viewvisacoutnry/{id}','hseditvisacoutnry')->name('visa.assigncountry');
                                  Route::get('/allform','hsFromindex')->name('visa.forms');
                                  Route::post('/formstore','hsFromStore')->name('visaform.store');
+                                 Route::get('/deleteform/{id}','hsFormDelete')->name('form.delete');
+                                 Route::get('/assigncoutnry/{id}','hsAssignCountry')->name('form.assigncountry');
+                                 Route::post('/assigncoutnrystore','hsAssignCountrystore')->name('visaform.assigncountry');
                         });
 
     });
@@ -324,14 +331,9 @@ Route::group([
         Route::get('/viewclient/{id}','hs_viewAgencyClient')->name('agencyview.client');
         Route::post('/storeclint','hs_storeUpdateAgencyClient')->name('updateclient.store');
         Route::get('/clientgeneratepdf','generatePDF')->name('generateclint.pdf');
+        Route::get('/clintgenerateexcel','exportAgency')->name('exportclint');
 
 
-        
-
-
-       
-        
-          
 
      
     });

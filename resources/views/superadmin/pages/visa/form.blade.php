@@ -114,20 +114,45 @@
                                <i class="fa fa-file-pdf"></i>
                          </button> -->
                      </div>
-                    <div class="flex items-center gap-2">
+
+                    <!-- <div class="flex items-center gap-2">
                            <input type="text" placeholder="Form name....." class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000" >
                            <button class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
                                 <i class="fa fa-search mr-1"></i> Search
                            </button>
-                    </div>
+                    </div> -->
+                    <div class="flex items-center gap-2">
+                    
+               <form action="{{ route('search') }}" method="POST" enctype="multipart/form-data">
+                 @csrf
+                 <input type="hidden" name="type" value="form">
+                    <input type="text" placeholder="Form name....." name="search"
+
+                           class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000">
+                    <button type="submit"
+                        class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
+                        <i class="fa fa-search mr-1"></i> Search
+                    </button>
+                </form>
+               @if(isset($searchback))
+                <a href="{{route('visa.forms')}}">   <button type="button" 
+                    class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">
+                Back
+                    </button>
+                </a> 
+
+                @endif
+                </div>
                 </div>
                 <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                     <tr>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Form Name</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">From Description</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">View Form </td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
+                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Form Name</td>
+                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Form Description</td>
+                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Total Assign Country</td>
+                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">View Form</td>
+                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
+
                     </tr>
                    
 
@@ -137,6 +162,9 @@
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$form['form_name']}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$form['form_description']}}</td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                {{ $form->countries ? $form->countries->count() : 0 }}
+                            </td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                             <a href="{{asset($form['document'])}}" target="_blank">  
                                View form
@@ -147,19 +175,25 @@
                     
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
-                                    <a href="" title="Remind for funds">
+                                    <!-- <a href="" title="View All Form">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-bell"></i>
+                                            <i class="fa fa-eye"></i>
                                         </div>
-                                    </a>
-                                    <a href="" title="View Invoices">
+                                    </a> -->
+                                    <!-- <a href="" title="View Edit">
                                         <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-file"></i>
+                                            <i class="fa fa-edit"></i>
+                                        </div>
+                                    </a> -->
+
+                                    <a href="{{route('form.assigncountry',['id' => $form->id])}}" title="AssignCountry From">
+                                        <div class=" bg-warning/10 text-warning h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-warning hover:text-white transition ease-in duration-2000">
+                                        <i class="fa fa-globe"></i>
                                         </div>
                                     </a>
-                                    <a href="" title="View Dashboard">
+                                    <a href="{{route('form.delete',['id' => $form->id])}}" title="Delete From">
                                         <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-computer"></i>
+                                            <i class="fa fa-trash"></i>
                                         </div>
                                     </a>
 

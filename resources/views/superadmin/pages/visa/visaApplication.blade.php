@@ -33,12 +33,30 @@
                                <i class="fa fa-file-pdf"></i>
                          </button>
                      </div>
-                    <div class="flex items-center gap-2">
-                           <input type="text" placeholder="Visa name....." class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000" >
+                    <!-- <div class="flex items-center gap-2">
+                           <input type="text" placeholder="Application name....." class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000" >
                            <button class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
                                 <i class="fa fa-search mr-1"></i> Search
                            </button>
-                    </div>
+                    </div> -->
+                    <form action="{{ route('search') }}" method="POST" enctype="multipart/form-data">
+                 @csrf
+                 <input type="hidden" name="type" value="application_all">
+                    <input type="text" placeholder="Application ....." name="search"
+
+                           class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000">
+                    <button type="submit"
+                        class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
+                        <i class="fa fa-search mr-1"></i> Search
+                    </button>
+                </form>
+               @if(isset($searchback))
+                    <a href="{{ route('agency.application', ['type' => 'all']) }}">   <button type="button" 
+                        class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">
+                    Back
+                      </button>
+                 </a> 
+               @endif
                 </div>
                 <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                     <tr>
@@ -51,7 +69,7 @@
                    
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Total</th> 
                       
-                        <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</th>
+                        <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date  </th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Passport Submit</th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application status</th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</th>
@@ -103,26 +121,50 @@
                                         </span>
                                     </td>
 
-                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                            {{--        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
                                         <span class="bg-{{ $booking->applicationworkin_status === 'Pending' ? 'danger' : 'success' }}/10 
                                                     text-{{ $booking->applicationworkin_status === 'Pending' ? 'danger' : 'success' }} 
                                                     px-2 py-1 rounded-[3px] font-medium">
                                             {{ $booking->applicationworkin_status }}
                                         </span>
+                                    </td> --}}
+
+                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                        @php
+                                            $status = $booking->applicationworkin_status;
+                                            $statusColors = [
+                                                'Pending' => ['bg' => 'bg-red-200', 'text' => 'text-red-700'],
+                                                'Complete' => ['bg' => 'bg-green-200', 'text' => 'text-green-700'],
+                                                'Under Process' => ['bg' => 'bg-blue-200', 'text' => 'text-blue-700'],
+                                                'Rejected' => ['bg' => 'bg-red-200', 'text' => 'text-red-700']
+                                            ];
+                                            $colors = $statusColors[$status] ?? ['bg' => 'bg-gray-200', 'text' => 'text-gray-700'];
+                                        @endphp
+
+                                        <span class="{{ $colors['bg'] }} {{ $colors['text'] }} px-2 py-1 rounded-[3px] font-medium">
+                                            {{ $status }}
+                                        </span>
                                     </td>
+
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
-                                    <a href="{{ route('visaedit.application', ['id' => $booking->id]) }}" title="Remind for funds">
-                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-pencil"></i>
-                                        </div>
-                                    </a>
-                             
-                                    <a href="{{ route('visa.assign', ['id' => $booking->id]) }}" title="Assign to Visa Request">
+                                    @if($booking->applicationworkin_status == "Complete")              
+                                        <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
+                                            <i class="fa fa-check"></i> <!-- FontAwesome icon -->
+                                        </div> 
+                                    @else
+                                        <a href="{{ route('visaedit.application', ['id' => $booking->id]) }}" title="Remind for funds">
+                                            <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
+                                                <i class="fa fa-pencil"></i>
+                                            </div>
+                                        </a>
+                                    @endif
+
+                                    <!-- <a href="{{ route('visa.assign', ['id' => $booking->id]) }}" title="Assign to Visa Request">
                                         <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
-                                            <i class="fa fa-clipboard-check"></i> <!-- FontAwesome icon -->
+                                            <i class="fa fa-clipboard-check"></i> 
                                         </div>
-                                    </a>
+                                    </a> -->
 
                                     <a href="{{ route('visa.applicationview', ['id' => $booking->id]) }}" title="Assign to Visa Request">
                                         <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
