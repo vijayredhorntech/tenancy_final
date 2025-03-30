@@ -11,6 +11,7 @@ use App\Models\ClientDetails;
 use App\Models\Document;
 use App\Models\Country;
 use App\Models\VisaServices;
+use App\Models\VisaBooking;
 
 use App\Services\AgencyService;
 
@@ -127,6 +128,43 @@ class GloballyController extends Controller
         return view('superadmin.pages.visa.visaindex', compact('allvisa', 'searchback'));
     }
     
+
+    
+    /*******Application Search ********/
+
+    Public function applicationSearch($search){
+
+    
+        $agency = $this->agencyService->getAgencyData();
+    // Query VisaBooking with relationships
+    $allbookings = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'clint'])
+        ->where('agency_id', $agency->id)
+        ->where(function ($query) use ($search) {
+            $query->whereHas('visa', function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%$search%");
+            })
+            ->orWhereHas('origin', function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%$search%");
+            })
+            ->orWhereHas('destination', function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%$search%");
+            })
+            ->orWhereHas('visasubtype', function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%$search%");
+            })
+            ->orWhereHas('clint', function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%$search%")
+                  ->orWhere('email', 'LIKE', "%$search%")
+                  ->orWhere('phone_number', 'LIKE', "%$search%");
+            });
+        })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+            $searchback = true;
+
+            return view('superadmin.pages.visa.visaApplication', compact('allbookings','searchback'));
+
+    }
     
     
     

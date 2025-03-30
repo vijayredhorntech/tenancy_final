@@ -11,6 +11,7 @@
     </div>
 
     <div class="w-full flex flex-col mt-12 gap-3 ">
+    @canany(['view dashboard', 'manage everything'])
         <a href="{{route('dashboard')}}">
             <div class="{{Route::currentRouteName()==='dashboard'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
@@ -20,6 +21,7 @@
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>
         </a>
+        @endcanany
 
         @canany(['service view', 'manage everything'])
         <div class="">
@@ -262,6 +264,18 @@
             </div>
         </a>
         @endif
+
+        @canany(['team managment', 'manage everything'])
+        <a href="{{route('teammanagment')}}">
+            <div class="{{Route::currentRouteName()==='teammanagment'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fas fa-user mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Team Managment</span>
+                </div>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+            </div>
+        </a>
+        @endcanany
 
 
         <a href="{{route('assignment')}}">

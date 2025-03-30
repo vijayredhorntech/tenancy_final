@@ -12,4 +12,6 @@ class ClientDetails extends Model
     {
         return $this->hasOne(ClientMoreInfo::class, 'clientid', 'id');
     }
+
+    
 }

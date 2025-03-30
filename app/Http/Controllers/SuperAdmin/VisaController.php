@@ -16,6 +16,7 @@ use App\Models\Agency;
 use App\Models\VisaServiceTypeDocument;
 use App\Services\AgencyService;
 use App\Models\Balance;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class VisaController extends Controller
@@ -29,6 +30,35 @@ class VisaController extends Controller
         $this->agencyService = $agencyService;
        
     }
+
+
+    /***Export Method *****/
+
+    
+    /*** Pdf Generate *****/
+    public function hsexportPdf()
+    {
+        $agency = $this->agencyService->getAgencyData();  
+        $allbookings = $this->visaRepository->getBookingByid($agency->id,$type);
+
+        $title = "Visa Booking Reports";
+
+        return $this->generateAgenciesPDF($title, $allbookings);
+    }
+
+
+
+
+
+    /******Generate Excel file ******/
+    public function exportAgency()
+    {
+        $agencies = Agency::with('domains', 'userAssignments.service', 'balance')
+            ->get()
+            ->sortByDesc(fn($agency) => $agency->details->status == '0' ? 0 : 1);
+        return $this->generateAgenciesExcel($agencies);
+    }
+
 
 
     /**** Get the coutnry record*** */
@@ -297,22 +327,53 @@ class VisaController extends Controller
 
       /*****Visa View *****/
       public function hsVisaVisa($id){
+        $agency = $this->agencyService->getAgencyData();
+        $checkuser = $this->visaRepository->bookingDataById($id);
 
+        if (isset($checkuser) && $checkuser->agency_id == $agency->id) {
         $clientData = $this->visaRepository->bookingDataById($id);
+        // dd($clientData);
         $origin_id=$clientData->origin_id;
         $destination_id=$clientData->destination_id;
         $forms=VisaServiceTypeDocument::with('from')->
         where('origin_id',$origin_id)->where('destination_id',$destination_id)->get();
 
         return view('superadmin.pages.visa.viewvisaapplication',compact('clientData','forms'));
+        }
+        return redirect()->route('agency.application', ['type' => 'all']);   
            
     }
 
+    public function viewForm($formname,$id)
+    {
+        $agency = $this->agencyService->getAgencyData();
+        $checkuser = $this->visaRepository->bookingDataById($id);
+
+        if (isset($checkuser) && $checkuser->agency_id == $agency->id) {
+        $clientData = $this->visaRepository->bookingDataById($id);
+        // dd($clientData);
+        $origin_id=$clientData->origin_id;
+        $destination_id=$clientData->destination_id;
+        $forms=VisaServiceTypeDocument::with('from')->
+        where('origin_id',$origin_id)->where('destination_id',$destination_id)->get();
+      
+        // dd($clientData);
+        // dd($formname); // Debugging (remove in production)
+
+      
+        $pdf = Pdf::loadView("forms.$formname", compact('clientData', 'forms'));
+
+    return $pdf->download("$formname.pdf");
+    
+        // return view("forms.$formname",compact('clientData','forms')); // Use double quotes or concatenation
+    }
+    return redirect()->route('agency.application', ['type' => 'all']); 
+    }
     /****Edit Visa application *****/
     public function hsEditVisaApplication($id){
         $agency = $this->agencyService->getAgencyData();
         $clientData = $this->visaRepository->bookingDataById($id);
-
+       
         if (isset($clientData) && $clientData->agency_id == $agency->id) {
             $origin_id=$clientData->origin_id;
             $destination_id=$clientData->destination_id;
@@ -336,6 +397,8 @@ class VisaController extends Controller
         // $forms=Document::allForms(); 
         return view('superadmin.pages.visa.form',compact('countries','forms'));
     }
+
+
 
     /*****Form Store ******/
 

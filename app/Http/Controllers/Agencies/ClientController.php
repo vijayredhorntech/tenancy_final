@@ -102,7 +102,7 @@ class ClientController extends Controller
     public function hs_getExistingUsers(){
    
           $agency = $this->agencyService->getAgencyData();
-          $clients = ClientDetails::where('agency_id',$agency->id)->get();
+          $clients = ClientDetails::with('clientinfo')->where('agency_id',$agency->id)->get();
 
         return response()->json($clients);
     }

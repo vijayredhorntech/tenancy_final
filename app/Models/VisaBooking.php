@@ -40,4 +40,11 @@ class VisaBooking extends Model
     public function clint(){
         return $this->hasOne(ClientDetails::class, 'id','client_id');
     }
+
+    public function otherclients(){
+        return $this->hasMany(AuthervisaApplication::class, 'booking_id','id');
+    }
+
+
+   
 }

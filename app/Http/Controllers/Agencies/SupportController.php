@@ -50,10 +50,12 @@ class SupportController extends Controller
             'document' => 'required|file|mimes:png,jpg,jpeg|max:10240', 
         ]);
 
+  
         $support = new Support();
     
         // Generate a unique ticket_id
         $support->ticket_id = 'TICKET-' . strtoupper(Str::random(6)) . '-' . time(); 
+       
     
         // Store the uploaded image with a unique name
         if ($request->hasFile('document') && $request->file('document')->isValid()) {
@@ -81,8 +83,10 @@ class SupportController extends Controller
     
         // Save the ticket to the database
         $support->save();
+        // dd('here');
         return redirect()->route('agency_support')->with('success', 'Support ticket created successfully!');
     }
+
 
     public function hs_conversation($id){
 
@@ -97,6 +101,8 @@ class SupportController extends Controller
            'current_user'=>$currentUser,
       ]);
     }
+
+  
     
 
 

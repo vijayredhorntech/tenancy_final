@@ -7,6 +7,12 @@ use App\Repositories\VisaRepository;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
 use App\Repositories\ClintRepository;
 use App\Repositories\Interfaces\ClintRepositoryInterface;
+use App\Repositories\StaffRepositoryInterface;
+use App\Repositories\StaffRepository;
+use App\Repositories\Interfaces\TeamManagementRepositoryInterface;
+use App\Repositories\TeamManagementRepository;
+
+
 
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -19,6 +25,8 @@ class RepositoryServiceProvider extends ServiceProvider
         //
         $this->app->bind(VisaRepositoryInterface::class, VisaRepository::class);
         $this->app->bind(ClintRepositoryInterface::class, ClintRepository::class);
+        $this->app->bind(StaffRepositoryInterface::class, StaffRepository::class);
+        $this->app->bind(TeamManagementRepositoryInterface::class, TeamManagementRepository::class);
     }
 
     /**

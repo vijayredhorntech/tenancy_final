@@ -4,11 +4,12 @@
     @endsection
 
 
+
     <div class="w-full grid xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-2">
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
                        <span class="font-semibold text-ternary/70 text-md">Total Agency</span>
-                       <span class="font-bold text-2xl text-ternary">{{ $agency->count() > 0 ? $agency->count() : '0' }}</span>
+                       <span class="font-bold text-2xl text-ternary">{{ $totalagency->count() > 0 ? $totalagency->count() : '0' }}</span>
             </div>
 
             <div>

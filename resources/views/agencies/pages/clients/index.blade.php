@@ -193,7 +193,7 @@
                                 <i class="fa fa-search mr-1"></i> Search
                            </button>
                     </div> -->
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center w-max gap-2">
                     <form action="{{ route('search') }}" method="POST" enctype="multipart/form-data">
                      @csrf
                     <input type="hidden" name="type" value="client">
@@ -205,14 +205,15 @@
                         <i class="fa fa-search mr-1"></i> Search
                       </button>
                   </form>
-                  @if($searchback)
-                <a href="{{route('client.index')}}">   <button type="button" 
-                    class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">
-                        Back
-                    </button>
-                </a> 
+                  
+                        @if($searchback)
+                        <a href="{{route('client.index')}}">   <button type="button" 
+                            class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">
+                             Clear Filter
+                            </button>
+                        </a> 
 
-                @endif
+                        @endif
                 </div>
                 </div>
                 <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">

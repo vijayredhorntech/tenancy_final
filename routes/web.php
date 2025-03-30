@@ -19,10 +19,12 @@ use App\Http\Controllers\SuperAdmin\TermsConditionController;
 use App\Http\Controllers\SuperAdmin\LeaveManagementController;
 use App\Http\Controllers\SuperAdmin\AssignmentManagementController;
 use App\Http\Controllers\SuperAdmin\VisaController;
+use App\Http\Controllers\SuperAdmin\TeamController;
 use App\Http\Controllers\GloballyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\LogUserActivity;
+
 
 
 /******Controler for agencies ***** */
@@ -32,6 +34,7 @@ use App\Http\Controllers\AgencyAdmin\AgencyPermissionController;
 use App\Http\Middleware\CheckUserSession;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\Agencies\ClientController;
+
 
 
 
@@ -54,6 +57,7 @@ Route::get('/viewtest',function (){
 
 return view('viewtest');
 }); 
+Route::get('/dummy-agencies', [AgencyController::class, 'dummyCreateAgency']);
 Route::post('/search',[GloballyController::class,'hs_globalSearch'])->name('search');
 Route::get('/login',[AuthController::class,'login_form'])->name('login');
 Route::post('/login',[AuthController::class,'superadmin_login'])->name("superadmin_login");
@@ -104,17 +108,37 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     });
 
 
+
+                    Route::controller(TeamController::class)->group(function(){
+                      Route::get('/team','hs_teamManagment')->name('teammanagment'); 
+                      Route::post('/teamstore','hs_teamStore')->name('superadmin.teamstore'); 
+                      Route::get('/addmember/{id}','hs_teamMember')->name('superadmin.teamuser');
+                      Route::post('/storemember','hs_teamMemberStore')->name('superadmin.teamstoreupdate');
+                      Route::get('/viewmember/{id}','hs_teamMemberView')->name('superadmin.teamuserview');
+                    //   Route::get('/delete/{id}','hs_teamMemberDelete')->name('superadmin.teamuserdelete');
+                    Route::get('/teamuserdelete/{id}/{teamid}','hs_teamMemberDelete')->name('superadmin.teamuserdelete');
+
+
+                      
+
+                      
+                    });
+
+
                       /***Route for Leave Managment  ***/
                       Route::controller(LeaveManagementController::class)->group(function () {
                         Route::get('/addleave','hs_addleave')->name('add.leave');
                         Route::post('/leave','hs_leavestore')->name('leavestore');
                         Route::get('/leave/{id}','hs_update')->name('update.leave');
-                        Route::post('/updateleave','hs_updatestore')->name('update.leavestore');
+                        Route::get('/updateleave/{id}','hs_actionUpdateLeave')->name('update.leavesuperadmin');
 
+                        Route::post('/updateleave','hs_updatestore')->name('update.leavestore');
                         Route::get('/leaves','hs_leaves')->name('leaves');
                         Route::post('/applyleave_store','hs_applyleave')->name('application_leave');
                         Route::get('/pending_leave','hs_pendingleave')->name('pending.leave');
+                        Route::post('/leavestore','hs_LeaveUpdateStore')->name('updateleave');
 
+                     
                         Route::get('/edit_leave/{leaveid}','hs_editleave')->name('leave.edit');
                         Route::get('/cancel_leave/{leaveid}','hs_cancelleave')->name('leave.cancel');
 
@@ -124,12 +148,16 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
 
                         /***Route for Assignment Management  ***/
-                        /***Route for Assignment Management  ***/
                         Route::controller(AssignmentManagementController::class)->group(function () {
                             Route::get('/index','hs_index')->name('assignment');
                             Route::post('/assignmentstore','hs_assignment_store')->name('assignment.store');
                             Route::get('/assignedit/{id}','hs_assignment_edit')->name('assign.edit');
                             Route::post('/assigneditstore','hs_assignment_editstore')->name('assign.editstore');
+                            Route::get('/staffindex','hs_staffAssigment')->name('admin.staff.assignment');
+                            Route::get('/assigneview/{id}','hs_staffAssignmentView')->name('assign.view');
+
+
+                            
          
                           });
                       
@@ -191,8 +219,12 @@ Route::middleware([LogUserActivity::class])->group(function () {
                             Route::get('/ticket','hs_viewticket')->name('superadmin.ticket');
                             Route::get('/conversation/{id}', 'hs_conversation')->name('superadmin.conversation');
                             Route::post('/message', 'hs_storeconversation')->name('send_message');
+                            Route::get('/editticket/{id}', 'hs_editConversation')->name('superadmin.editticket'); 
+                            Route::post('/updatestore','hs_editStore')->name('uperadmin.ticket'); 
 
                         });
+
+
 
 
                     // Fund Management
@@ -316,10 +348,14 @@ Route::group([
         Route::get('/visaview/{id}','hsVisaVisa')->name('visa.applicationview');
         Route::get('/editapplication/{id}','hsEditVisaApplication')->name('visaedit.application');    
         Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
-        
-        
+        Route::get('/exportpdf', 'hsexportPdf')->name('exportpdf.application');
+        Route::get('/exportexcel', 'hsexportExcel')->name('exportexcel.application');
 
-     
+        Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
+
+
+
+        
     });
 
     Route::controller(ClientController::class)->group(function () {

@@ -3,8 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Repositories\VisaRepository;
-use App\Repositories\Interfaces\VisaRepositoryInterface;
+
 
 class AppServiceProvider extends ServiceProvider
 {

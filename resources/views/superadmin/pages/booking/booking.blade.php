@@ -63,7 +63,7 @@
                       </div>
                         
 
-                      <div class="flex flex-col gap-2 ">
+                      <!-- <div class="flex flex-col gap-2 ">
                          <div>
                                  <span class="font-semibold ">Export Displayed</span>
                          </div>
@@ -80,10 +80,10 @@
                             </button>
                             </a>
                             </div>
-                      </div>
+                      </div> -->
                      </div>
                      <div class="flex items-center gap-2">
-                     <div class="w-full relative group flex flex-col gap-1">
+                     <!-- <div class="w-full relative group flex flex-col gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Search By Service</label>
                              <div class="w-full relative">
                                  <select  name="searchbyservice" id="searchbyservice"
@@ -97,11 +97,11 @@
                                  </select>
                                  <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
                              </div>
-                         </div>
+                         </div> -->
                     </div>
 
                     <div class="flex items-center gap-2">
-                    <div class="w-full relative group flex flex-col gap-1">
+                    <!-- <div class="w-full relative group flex flex-col gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Search By Service supplier</label>
                              <div class="w-full relative">
                              <select  name="supplier" id="searchbysupplier"
@@ -116,7 +116,7 @@
                    
                                  <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
                              </div>
-                         </div>
+                         </div> -->
                     </div>
 
                     <!-- <div class="flex items-center gap-2">

@@ -226,6 +226,8 @@ document.getElementById('addMoreBtn').addEventListener('click', function () {
 
     /****Ajax for get type of****** */
 $(document).ready(function () {
+    // alert('heelo');
+    jQuery('.submitbutton').hide(); 
     function fetchCategories() {
         var visa_type_id = $("#typeof").val();
         if (visa_type_id) {
@@ -307,10 +309,10 @@ $("#existingUserBtn").on("click", function () {
             url: "{{ route('get.existing.users') }}", // Update with correct route
             type: "GET",
             success: function (data) {
-                
+                console.log(data[0]);
                 let html = '<option value="">Select User</option>';
                 data.forEach(user => {
-                    html += `<option value="${user.id}" data-address="${user.address}" data-name="${user.name}"  data-phone_number="${user.phone_number} " data-email="${user.email}" data-passport="${user.passport_number}">${user.name}</option>`;
+                    html += `<option value="${user.id}"  data-nationality="${user.clientinfo?.nationality ?? 'N/A'}" data-name="${user.name}"  data-phone_number="${user.phone_number} " data-email="${user.email}" data-passport="${user.passport_number}">${user.name}</option>`;
                 });
                 $("#existingUserDropdown").html(html);
             }
@@ -329,11 +331,8 @@ $("#existingUserBtn").on("click", function () {
                 });
         var firstName = nameParts[0] || ""; 
         var lastName = nameParts[1] || ""; 
-        var fullAddress=selectedUser.data("address");
-        var addressParts = fullAddress.split(",").map(function(item) {
-                    return item.trim();
-                });
-        var country = addressParts[3] || "";
+        var country=selectedUser.data("nationality");
+      
         $(".addresspart").show();
         $("#lastName").val(lastName || "");
         $("#firstName").val(firstName || "");

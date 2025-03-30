@@ -42,7 +42,7 @@
         <div class="w-full overflow-x-auto p-4">
                 <div class="w-full flex flex-wrap ">
 
-                <div data-tid ="leaveDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px]  border-secondary/60 border-ternary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
+                <div data-tid ="leaveDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px]   bg-secondary/40 border-[2px] border-secondary/60 border-secondary/60 border-ternary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
                       Leave List
                     </div>
 
@@ -51,7 +51,7 @@
                        
                     </div> -->
 
-                    <div data-tid ="addleaveapplication" class="agency_tab w-max font-semibold text-ternary border-b-[2px]  bg-secondary/40 border-[2px] border-ternary/60 border-secondary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
+                    <div data-tid ="addleaveapplication" class="agency_tab w-max font-semibold text-ternary border-b-[2px]   border-ternary/60 border-secondary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
                       Add Leave Application
                     </div>
 
@@ -62,7 +62,7 @@
                     <!-- icard -->
                  
                       <!-- attendance -->
-                      <div id="leaveDiv" class="tab hidden">
+                      <div id="leaveDiv" class="tab">
                       
                       <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">              
                             <tr>
@@ -86,7 +86,10 @@
                                     <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $leave->reason ?? '0:00:00' }}</td>
                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
-                                    <a href="{{route('leave.edit',['leaveid'=>$leave->id])}}" title="Remind for funds">
+                                  
+                                 @if($leave->status_of_leave=='pending')
+                                          
+                                 <a href="{{route('leave.edit',['leaveid'=>$leave->id])}}" title="Remind for funds">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-pencil"></i>
                                         </div>
@@ -96,7 +99,15 @@
                                             <i class="fa fa-cancel"></i>
                                         </div>
                                     </a>
-                                
+                                 @elseif($leave->status_of_leave=='cancel')      
+                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                            <i class="fa fa-times-circle text-danger"></i>
+                                        </div>  
+                                @else
+                                <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                            <i class="fa fa-check"></i>
+                                        </div>        
+                                @endif
 
 
                                 </div>
@@ -114,7 +125,7 @@
                       </div>
 
 
-                    <div id="addleaveapplication" class="tab ">
+                    <div id="addleaveapplication" class="tab hidden">
 
                     <!-- start table -->
 
@@ -122,7 +133,7 @@
                             <div class="w-full ">
                                 <div class="  border-[2px] border-primary/70 ">
                                     <div class="flex justify-center bg-primary/40 px-4 py-0.5">
-                                        <span class="font-semibold text-ternary text-xl">Credit</span>
+                                        <span class="font-semibold text-ternary text-xl">Apply Leave</span>
                                     </div>
                                     <div class="mt-2 overflow-x-auto px-4 py-0.5">
                                     <!-- add form    -->

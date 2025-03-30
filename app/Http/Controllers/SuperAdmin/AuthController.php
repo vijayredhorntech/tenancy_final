@@ -21,12 +21,25 @@ use App\Models\Attendance;
 use Illuminate\Support\Facades\Session;
 use DB; 
 use App\Models\Domain;
+use App\Services\AgencyService;
 
 class AuthController extends Controller
 {
 
+    protected $agencyService;
+ 
+
+    public function __construct(AgencyService $agencyService)
+    {
+        
+        $this->agencyService = $agencyService;
+       
+    }
+
+
     public function login_form(){
 
+      
 //   $id = "/superadmin/dashboard";
         // AuthocheckHelper::logincheck();
         return view('auth.login');
@@ -34,8 +47,10 @@ class AuthController extends Controller
     // function for loginm
     public function superadmin_login(Request $request)
     {
+    
         // Validate input
         // dd($request->all());
+       
         $validated = $request->validate([
             'email' => 'required|email|exists:users,email',
             'password' => 'required',
@@ -53,9 +68,18 @@ class AuthController extends Controller
     public function hs_dashbord(){
 
    
+        $agency = $this->agencyService->getAgencyData();
+        if ($agency) {
+            return redirect()->route('agency_dashboard');
+        }
+       
         $id = Auth::user()->id;
   
         $user = User::find($id);
+      
+        if($user->type=="staff"){
+            return redirect()->route('profile');
+        }
         $roles = $user->roles->pluck('name')->implode(', ');
         $service = Service::all(); // Use all() instead of get() (optional)
      
@@ -64,6 +88,7 @@ class AuthController extends Controller
     ->take(5) // Limits the result to 5 records
     ->get();
     
+    $totalagency=Agency::get(); 
     $total_balance = Balance::sum('balance'); // Add quotes around balance
     $total_deduction = Deduction::sum('amount');
  
@@ -168,7 +193,7 @@ class AuthController extends Controller
     // dd("hyyy this"); 
         
         return view('superadmin.pages.welcome',compact(
-            'roles', 'service', 'agency', 'total_balance', 'bookings','users','flight_recent_booking','funds',
+            'roles', 'service', 'agency', 'total_balance', 'bookings','users','flight_recent_booking','funds','totalagency',
             'airlineBookings','airlinePassengerTotals','total_deduction','visa_recent_booking'));
         //  return view('auth.admin.pages.index', ['user_data' => $user,'services' => $service]);
     }

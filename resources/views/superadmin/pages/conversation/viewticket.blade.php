@@ -8,7 +8,7 @@
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
                 <span class="font-semibold text-ternary text-xl">Ticket List </span>
-                <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">Generate Ticket</button>
+                <!-- <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">Generate Ticket</button> -->
             </div>
 
 
@@ -16,12 +16,12 @@
             <div class="w-full overflow-x-auto p-4">
                 <div class="w-full flex justify-between gap-2 items-center">
                      <div class="flex gap-2">
-                         <button title="Export to excel" class="bg-success/20 text-success h-8 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white  cursor-pointer transition ease-in duration-2000">
+                         <!-- <button title="Export to excel" class="bg-success/20 text-success h-8 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white  cursor-pointer transition ease-in duration-2000">
                              <i class="fa fa-file-excel"></i>
                          </button>
                          <button title="Export to pdf" class="bg-danger/20 text-danger h-8 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white  cursor-pointer transition ease-in duration-2000">
                                <i class="fa fa-file-pdf"></i>
-                         </button>
+                         </button> -->
                      </div>
                     <div class="flex items-center gap-2">
                            <input type="text" placeholder="Conversation name....." class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000" >
@@ -60,12 +60,12 @@
                             </td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
-                                    <a href="" title="Remind for funds">
+                                    <a href="{{route('superadmin.editticket',['id'=>$ticket->id])}}" title="Edit ticket">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-bell"></i>
+                                            <i class="fa fa-pencil"></i>
                                         </div>
                                     </a>
-                                    <a href="" title="View Invoices">
+                                    <!-- <a href="" title="View Invoices">
                                         <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-file"></i>
                                         </div>
@@ -74,7 +74,7 @@
                                         <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-computer"></i>
                                         </div>
-                                    </a>
+                                    </a> -->
 
                                     <a href="{{route('superadmin.conversation',['id'=>$ticket->id])}}" title="Remind for funds">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">

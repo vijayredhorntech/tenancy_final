@@ -67,6 +67,38 @@ class ConversationController extends Controller
                             ->with('status', 'Message sent successfully!');
         }
 
+
+        public function hs_editConversation($id){
+
+            $details=Support::with('agency')->where('id',$id)->first(); 
+           
+            return view('superadmin.pages.conversation.editticket',[
+                'ticketinformation'=>$details,
+            ]);
+    
+          
+        }
+
+
+        public function hs_editStore(Request $request){
+            $request->validate([
+                'ticketid' => 'required|integer|exists:supports,id', 
+                'status' => 'required|string|in:closed,in-progress,resolved',
+                'view_status' => 'required|string|in:seen',
+            ],[
+                'status.in' => 'The status is already open.',  
+                'view_status.in' => 'The view status is already unseen.',  
+            ]);
+
+            $details=Support::where('id',$request->ticketid)->first(); 
+            $details->status=$request->status; 
+            $details->view_status=$request->view_status;
+            $details->save(); 
+            return redirect()->route('superadmin.ticket')->with('status', 'Message sent successfully!');
+           
+
+        }
+
         
     }
 

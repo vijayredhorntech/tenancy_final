@@ -12,15 +12,54 @@ use App\Models\ApplyUserLeave;
 use App\Models\Assignment;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use App\Repositories\Interfaces\TeamManagementRepositoryInterface;
+
 
 
 class AssignmentManagementController extends Controller
 {
     
+    protected $teamRepository;
+
+    public function __construct(TeamManagementRepositoryInterface $teamRepository)
+    {
+        $this->teamRepository = $teamRepository;
+    }
+
+
     public function hs_index(){
       
-        $assignments =Assignment::with('user')->get();
-          return view('superadmin.pages.assignment.assignment',compact('assignments'));
+         $user = auth()->user(); 
+        $teams = $this->teamRepository->getAllTeams();
+        // dd($teams);
+        // dd($teams);
+        $users=User::get();
+        // $assignments =Assignment::with('user')->get();
+      
+            // Superadmin can see all records
+            $assignments = Assignment::with('user')->get();
+            $studentteams = Assignment::with('team', 'teammember')
+            ->where('assign_to', 'team')
+            ->whereNotIn('status', ['completed', 'canceled']) // Excludes both statuses
+            ->get();
+        
+            $filteredTeams = $studentteams->filter(function ($assignment) {
+                return $assignment->teammember->contains('user_id', auth()->id());
+            });
+
+            $userassignement = Assignment::with('team', 'teammember')
+            ->where('assign_to', 'user')
+            ->where('assign_id',auth()->id())
+            ->whereNotIn('status', ['completed', 'canceled']) // Excludes both statuses
+            ->get();
+        
+            $completeassignment=Assignment::with('team', 'teammember')
+                 ->where('closeuserid',auth()->id()) // Excludes both statuses
+                 ->get();
+            //  dd($completeassignment);
+         
+         
+          return view('superadmin.pages.assignment.assignment',compact('assignments','teams','users','filteredTeams','userassignement','completeassignment'));
 
     }
 
@@ -29,11 +68,15 @@ class AssignmentManagementController extends Controller
 
     public function hs_assignment_store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'duedate' => 'required|date',
-            'reason' => 'nullable|string',
+      
+
+        $validatedData = $request->validate([
+            'title'       => 'required',
+            'duedate'     => 'required|date|after_or_equal:today',
+            'description' => 'nullable|string|max:1000',
+            'sendfor'     => 'required|in:team,user',
+            'team'        => 'required_if:sendfor,team', // Required if "sendfor" is "team"
+            'user'        => 'required_if:sendfor,user', // Required if "sendfor" is "user"
         ]);
 
         $imagePaths = [];
@@ -63,9 +106,17 @@ class AssignmentManagementController extends Controller
         $assignment->close_time = $request->close_time ?? null; // Allow nullable close time
         $assignment->reason = $request->reason;
         $assignment->status = 'pending'; // Default status set to "pending"
-        $assignment->images = json_encode($imagePaths); // Store images as JSON
+        $assignment->images = json_encode($imagePaths); // Store images as JS
+        $assignment->assign_to = $request->sendfor;
+        if($request->sendfor=="team"){
+            $assignment->assign_id = $request->team;
+        }else{
+            $assignment->assign_id = $request->user;
+        }
+      
         $assignment->save();
 
+        // dd("heelo"); 
         return back()->with('success', 'Assignment created successfully!');
     }
 
@@ -81,18 +132,38 @@ class AssignmentManagementController extends Controller
    
    public function hs_assignment_editstore(Request $request)
    {
+       // Find the assignment by ID
+       $validatedData = $request->validate([
+                'id'       => 'required|exists:assignments,id',
+                'status'   => 'required|in:completed,canceled',
+                'remark'   => 'nullable|string|max:500',
+            ]);
+            // dd("heelo"); 
        $assignment = Assignment::find($request->id);
    
-       if ($assignment) {
-           $assignment->close_time = Carbon::now()->toTimeString();
-           $assignment->status = $request->status;
-           $assignment->reason = $request->remark;
-           $assignment->save();
-   
-           return redirect()->route('assignment')->with('message', 'Update successful');
+       if (!$assignment) {
+           return redirect()->route('assignment')->with('error', 'Assignment not found');
        }
    
-       return redirect()->route('assignment')->with('error', 'Assignment not found');
+       // Update assignment fields
+       $assignment->close_time = Carbon::now()->toTimeString();
+       $assignment->status = $request->status;
+       $assignment->reason = $request->remark;
+       $assignment->closeuserid = auth()->id(); // Set closing user ID
+   
+       $assignment->save(); // Save the updated assignment
+   
+       return redirect()->route('assignment')->with('message', 'Update successful');
+   }
+
+
+   public function hs_staffAssignmentView($id){
+    
+    $assignment =Assignment::with('user')->where('id',$id)->first();
+
+    return view('superadmin.pages.assignment.singleassignment',compact('assignment'));
+    // return view('assignments.show', compact('assignment'));
+    // 
    }
    
     

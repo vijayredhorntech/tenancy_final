@@ -164,7 +164,7 @@ public function updateVisa($id, array $data)
 
   public function saveBooking(array $data)
   {
-     
+
       $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
       $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
     //   $application = Str::uuid();
@@ -174,6 +174,7 @@ public function updateVisa($id, array $data)
     $user=$this->agencyService->getCurrentLoginUser();
 
   
+
     if(isset($data['passengerfirstname'])){
       
         $passengerCount = count($data['passengerfirstname']);
@@ -199,7 +200,11 @@ public function updateVisa($id, array $data)
             $authapplication->booking_id = $booking->id;
             $authapplication->clint_id = $data['clientId']; // Change this if clint_id is different
             $authapplication->name = $firstname; // Assign first name dynamically
-            $authapplication->lastname = $data['passengerfirstname'][$index]; // Assign last name dynamically
+            $authapplication->lastname = $data['passengerfirstname'][$index].$data['passengerlastname'][$index];
+            $authapplication->passport_number = $data['passengerpassportn'][$index];
+            $authapplication->passport_issue_date = $data['passportissuedate'][$index];
+            $authapplication->passport_expire_date = $data['passportexpiredate'][$index];
+            $authapplication->place_of_issue = $data['passengerplace'][$index]; // Assign last name dynamically
             $authapplication->save();
         }
     }
@@ -368,7 +373,7 @@ public function updateVisa($id, array $data)
 
 
     public function bookingDataById($id){
-       $viewbooking=VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint',])
+       $viewbooking=VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients'])
         ->where('id', $id)
        ->first(); 
        return $viewbooking;

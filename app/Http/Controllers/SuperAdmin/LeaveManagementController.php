@@ -13,10 +13,12 @@ use Auth;
 use App\Models\User;
 use App\Models\ApplyUserLeave;
 use App\Models\LeaveBalance;
+use App\Traits\Leaves\ManageLeaveTrait;
+
 
 class LeaveManagementController extends Controller
 {
-    
+    use ManageLeaveTrait;
     
     /***Add leave****/
 
@@ -32,6 +34,7 @@ class LeaveManagementController extends Controller
     /**Store the leave*** */
     public function hs_leavestore(Request $request){
        
+
   
     $validatedData = $request->validate([
         'leave_type' => 'required|string|max:255',
@@ -59,6 +62,7 @@ class LeaveManagementController extends Controller
 
 
 
+
     public function hs_updatestore(Request $request){
        
         $validatedData = $request->validate([
@@ -82,15 +86,21 @@ class LeaveManagementController extends Controller
 
     
         $id=Auth::id();
-        // $user=User::with('userdetails','passport','attendance','leaves.leave','applyleave')->where('id',$id)->first(); 
+     
         $user = User::with([
             'userdetails',
             'passport',
             'attendance',
-            'leaves.leave.Leavesbalance', // Ensure leaves relationship exists in User model
-            'applyLeaves.leave',
-            // Fetch leave name inside applyLeaves
-        ])->where('id', $id)->first();
+            'leaves.leave.Leavesbalance',
+            'applyLeaves' => function ($query) {
+                $query->orderByRaw("CASE 
+                    WHEN status_of_leave = 'pending' THEN 1 
+                    WHEN status_of_leave = 'cancel' THEN 2 
+                    WHEN status_of_leave = 'approve' THEN 3 
+                    ELSE 4 END");
+            },
+            'applyLeaves.leave', // Fetch leave name inside applyLeaves
+        ])->where('id', $id)->first();  
 
 // dd($user);
             $date = Carbon::now()->toDateString();
@@ -111,80 +121,37 @@ class LeaveManagementController extends Controller
     public function hs_applyleave(Request $request)
     {
         // Validate the request data
-  
 
-    $request->validate([
-        'leave_type' => 'required|integer',
-        'from' => 'required|date',
-        'to' => 'required|date|after_or_equal:from',
-        'reason' => 'nullable|string|max:255',
-    ]);
+        $request->validate([
+            'leave_type' => 'required|integer',
+            'from' => 'required|date',
+            'to' => 'required|date|after_or_equal:from',
+            'reason' => 'nullable|string|max:255',
+        ]);
 
     // Calculate the number of leave days
-    $start_date = Carbon::parse($request->from);
-    $end_date = Carbon::parse($request->to);
-    // $leave_days = $start_date->diffInDays($end_date) + 1;
-    $leave_days = (int) ($start_date->diffInDays($end_date) + 1);
-    $leaveType = Leave::find($request->leave_type);
-    {
-        $total_use=$leaveType->total_days-$leave_days;
-  
-     
-        if($total_use <= 0){
-      
-            return back()->with('error', 'You have already used all your leave.');
+        $start_date = Carbon::parse($request->from);
+        $end_date = Carbon::parse($request->to);
+
+        $result = $this->checkLeaves();
+        if($result==true){
+            return back()->with('error', 'You have already applied for a leave that is waiting for confirmation....');
         }
-    }
-    // Check if the user has enough leave balance
-    $check_leave = LeaveBalance::where('leave_id', $request->leave_type)
-        ->where('user_id', auth()->id())
-        ->first();
- 
-    if (!empty($check_leave)) {
-
-        $checkTotal=$check_leave->balance-$leave_days; 
-        if($checkTotal <= 0){
-      
-            return back()->with('error', 'You have already used all your leave.');
+        $leavebalance=$this->checkLeaveBalance($start_date,$end_date,$request->all());
+        if($leavebalance==false){
+            return back()->with('error', 'You do not have sufficient leave balance..');
         }
-   
-    }
-
-
-    // Create a new leave request
-    $leave = new ApplyUserLeave();
-    $leave->leave_id = $request->leave_type;
-    $leave->user_id = auth()->id();
-    $leave->start_date = $request->from;
-    $leave->end_date = $request->to;
-    $leave->type_of_leave = 'Full Day';
-    $leave->status_of_leave = 'Pending';
-    $leave->reason = $request->reason;
-    $leave->save();
-
-    // If leave balance exists, deduct used leaves
-    if (!empty($check_leave)) {
-        $check_leave->balance -= $leave_days;
-        $check_leave->used = $leave_days+$check_leave->used;
-        $check_leave->save();
-    } else {
-        // Fetch total allowed leaves from the Leave table
-        $leaveType = Leave::find($request->leave_type);
-        $total_leaves = $leaveType ? $leaveType->total_days : 0;
-
-        // Ensure balance does not go negative
-        $balance = max(0, $total_leaves - $leave_days);
-
-        // Create a new leave balance entry
-        $leave_balance = new LeaveBalance();
-        $leave_balance->leave_id = $request->leave_type;
-        $leave_balance->user_id = auth()->id();
-        $leave_balance->balance = $balance;
-        $leave_balance->used = $leave_days;
-        $leave_balance->status = 'active';
-        $leave_balance->save();
-    }
-
+    
+           // Create a new leave request
+            $leave = new ApplyUserLeave();
+            $leave->leave_id = $request->leave_type;
+            $leave->user_id = auth()->id();
+            $leave->start_date = $request->from;
+            $leave->end_date = $request->to;
+            $leave->type_of_leave = 'Full Day';
+            $leave->status_of_leave = 'Pending';
+            $leave->reason = $request->reason;
+            $leave->save();
     return back()->with('success', 'Leave request submitted successfully.');
 
     }
@@ -201,8 +168,21 @@ class LeaveManagementController extends Controller
 
 
     public function hs_editleave($id){
-        dd($id);
+        $leave=ApplyUserLeave::with('leaveName','userName')->where('status_of_leave','Pending')->where('id',$id)->first();
+        $user = User::with([
+            'userdetails',
+            'passport',
+            'attendance',
+            'leaves.leave.Leavesbalance', 
+            'applyLeaves.leave',
+        ])->where('id', $id)->first();
+
+        $leave=ApplyUserLeave::with('leaveName','userName')->where('status_of_leave','Pending')->where('id',$id)->first();
+      
+     
+        return view('superadmin.pages.leavemanagment.editleavestaff', compact('leave','user'));
     }
+
     
     /**** Cancel leave by user****/
     public function hs_cancelleave($id)
@@ -214,24 +194,46 @@ class LeaveManagementController extends Controller
             return back()->with('error', 'Leave request not found.');
         }
       
-        $start_date = Carbon::parse($leave->start_date);
-        $end_date = Carbon::parse($leave->end_date);
-        $leave_days = $start_date->diffInDays($end_date) + 1;
-        $check_leave = LeaveBalance::where('leave_id', $leave->leave_id)
-            ->where('user_id', auth()->id())
-            ->first();
-
-        if ($check_leave) {
-            $check_leave->balance += $leave_days;
-            $check_leave->used -= $leave_days;
-            $check_leave->save();
-        }
-    
+      
         // Update leave status to 'canceled'
         $leave->status_of_leave = 'cancel'; 
         $leave->save();
     
         return back()->with('success', 'Your leave has been canceled.');
+    }
+
+
+
+    public function hs_LeaveUpdateStore(Request $request){
+       
+        $request->validate([
+            'leaveid' => 'required|integer',
+            'from' => 'required|date',
+            'to' => 'required|date|after_or_equal:from',
+            'reason' => 'nullable|string|max:255',
+        ]);
+   
+        if (isset($request->usertype) && $request->usertype == "superadmin") {
+              
+            
+            $result = $this->superadminedit($request->all());
+            return redirect()->route('pending.leave')->with('message', 'Leave updated successfully.');
+        } else {
+            $result = $this->useredit($request->all());
+            return redirect()->route('leaves')->with('message', 'Your leave has been updated.');
+        }
+        }
+    
+
+
+
+      
+
+    public function hs_actionUpdateLeave($id){
+    
+        $leave=ApplyUserLeave::with('leaveName','userName')->where('status_of_leave','Pending')->where('id',$id)->first();
+        
+          return view('superadmin.pages.leavemanagment.editleavesuperadmin',compact('leave'));
     }
     
 
