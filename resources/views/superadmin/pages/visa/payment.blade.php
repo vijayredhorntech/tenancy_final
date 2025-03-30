@@ -1,136 +1,163 @@
 <x-agency.layout>
     @section('title') Visa View @endsection
+      <div class="w-full  p-4">
+          <section class="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-col sm:flex-col flex-col justify-center w-full">
+              {{--    section left div starts here--}}
+              <div class="2xl:w-3/4 xl:w-3/4 lg:w-3/4 md:w-full sm:w-full w-full bg-white drop-shadow-2xl rounded-xl p-5">
 
-    <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
-        <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-            <span class="font-semibold text-ternary text-xl">Assign Form</span>
-        </div>
-
-        <div class="carousel w-full relative"></div>
-        
-      
-        <section class="2xl:px-64 xl:px-52 lg:px-24 md:px-5 sm:px-5 px-5">
-            <div class="text-sm breadcrumbs">
-                <ul>
-                    <li class="text-info font-semibold"><a>Cloud-travel.co.uk</a></li>
-                    <li><a>India visa for Singapore passport holder living in United Kingdom</a></li>
-                </ul>
-            </div>
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+                  <div class="py-3  ">
+                      <span class="text-lg text-black font-semibold">Visa to United States of America</span>
+                  </div>
 
 
-            <!-- <div class="w-full flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-col sm:flex-col flex-col mt-10"> -->
-                <div class="container flex justify-center p-5">
 
-                    <div class="form-container bg-white p-5 rounded-lg shadow-lg w-96">
-                   
-                        <h2 class="text-xl font-bold mb-4">Visa to United States of America</h2>
-                        <label class="block mt-2 font-semibold">Visa Category</label>
-                        <form action="{{  route('visa.book') }}" method="POST" enctype="multipart/form-data">
-                          @csrf
-                       <input type="hidden" value="{{ $visas['0']->origin }}" name="origin">
-                       <input type="hidden" value="{{ $visas['0']->destination }}" name="destination">
-                        <select class="w-full p-2 border rounded"  name="typeof" id="typeof">
-                            @forelse($visas as $visaServiceType) 
-                                @if ($visaServiceType->VisaServices) 
-                                    <option value="{{ $visaServiceType->VisaServices->id }}">
-                                        {{ $visaServiceType->VisaServices->name }}
-                                    </option>
-                                @endif
-                            @empty
-                                <div class="p-2 flex 2xl:w-full xl:w-full lg:w-full md:w-1-5 sm:w-1/3 w-1/2 flex-col border-l-4 border-l-red-500">
-                                    <span class="text-black font-semibold text-xl">No Record found</span>  
-                                </div>
-                            @endforelse
-                                               
-                        </select>
-                        <label class="block mt-2 font-semibold">Visa Type</label>
-                        <select class="w-full p-2 border rounded" id="category" name="category">
-                       
-                                    <option value="">
-                                        Select 
-                                    </option>
-                           
-                                               
-                        </select>
-                        <label class="block mt-2 font-semibold">Processing Time</label>
-                        <select class="w-full p-2 border rounded">
-                            <option>15 business days</option>
-                        </select>
-                        <label class="block mt-2 font-semibold">Select User Type</label>
-                        <div class="flex gap-2">
-                            <button type="button" id="existingUserBtn" class="bg-blue-500 text-white px-3 py-2 rounded">Existing User</button>
-                           <a href="{{route('client.index')}}">  <button type="button" id="newUserBtn" class="bg-gray-500 text-white px-3 py-2 rounded">New User</button> </a>
-                        </div>
+                  <form action="{{  route('visa.book') }}" method="POST" enctype="multipart/form-data">
+                      @csrf
+                      <div class="border-2 border-gray-100 px-5 pb-10">
 
-                        <!-- Dropdown for Existing Users (Hidden Initially) -->
-                        <div id="existingUserSection" class="mt-3 hidden">
-                            <label class="block font-semibold">Select Existing User</label>
-                            <select class="w-full p-2 border rounded" id="existingUserDropdown" name="clientId">
-                                <option value="">Select User</option>
-                                <!-- Users will be added dynamically using AJAX -->
-                            </select>
-                        </div>
-                     
-                          <div class="addresspart" style="display:none"> 
-                                <label class="block mt-2 font-semibold">Last Name</label>
-                                <input type="text" name="lastname" id="lastName" class="w-full p-2 border rounded" placeholder="As shown in passport" readonly="">
-                                <label class="block mt-2 font-semibold">First Name</label>
-                                <input type="text" name="firstname"  id="firstName" class="w-full p-2 border rounded" placeholder="As shown in passport" readonly="">
-                                <label class="block mt-2 font-semibold">Citizenship</label>
-                                <!-- <select class="w-full p-2 border rounded" name="citizenship">
-                                    <option>India</option>
-                                </select> -->
-                                <input type="text" name="citizenship" value=""  id="citizenship" readonly=""> 
-                                <label class="block mt-2 font-semibold">Email</label>
-                                <input type="email" name="email"  id="email" class="w-full p-2 border rounded" placeholder="Enter your email" readonly="">
-                                <label class="block mt-2 font-semibold">Phone Number</label>
-                                <input type="text"  name="phonenumber"   id="phonenumber" class="w-full p-2 border rounded" placeholder="Enter your phone number" readonly="">
-                                <label class="block mt-2 font-semibold">Date of Entry</label>
-                                <input type="date" name="dateofentry" class="w-full p-2 border rounded">
-                                <button type="button" id="addMoreBtn" class="bg-blue-500 text-white px-3 py-2 mt-3 rounded">Add More</button>
+                          <div class="flex flex-col mt-5">
+                              <div class="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row sm:flex-row flex-col w-full justify-between mt-2 gap-">
+                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Visa Category</label>
+                                      <input type="hidden" value="{{ $visas['0']->origin }}" name="origin">
+                                      <input type="hidden" value="{{ $visas['0']->destination }}" name="destination">
+                                      <select class="w-full rounded-md text-sm text-black mt-2"  name="typeof" id="typeof">
+                                          @forelse($visas as $visaServiceType)
+                                              @if ($visaServiceType->VisaServices)
+                                                  <option value="{{ $visaServiceType->VisaServices->id }}">
+                                                      {{ $visaServiceType->VisaServices->name }}
+                                                  </option>
+                                              @endif
+                                          @empty
+                                              <div class="p-2 flex 2xl:w-full xl:w-full lg:w-full md:w-1-5 sm:w-1/3 w-1/2 flex-col border-l-4 border-l-red-500">
+                                                  <span class="text-black font-semibold text-xl">No Record found</span>
+                                              </div>
+                                          @endforelse
 
-<!-- Container for dynamically added fields -->
-                            <div id="dynamicFieldsContainer" class="mt-3"></div>
-                            </div>
-                     
-                           
-                            <button id="submit" type="submit" class="bg-green-500 text-white px-4 py-2 mt-4 rounded w-full hover:bg-green-600 button submitbutton" >Save and Continue</button>
-                       
-                        <br> <br> 
-                        <div class="insufficientbalance"> 
+                                      </select>
+                                  </div>
+
+                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col 2xl:ml-10 xl:ml-10 lg:ml-10 md:ml-10 sm:ml-10 ml-0 2xl:mt-0 xl:mt-0 lg:mt-0 md:mt-0 sm:mt-0 mt-10" >
+                                      <label for="mobile"  class=" font-semibold text-gray-800 text-sm">Visa Types</label>
+                                      <select class="w-full rounded-md text-sm text-black mt-2" id="category" name="category">
+                                          <option value="">
+                                              Select
+                                          </option>
+                                      </select>
+
+                                  </div>
+
+                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col 2xl:ml-10 xl:ml-10 lg:ml-10 md:ml-10 sm:ml-10 ml-0 2xl:mt-0 xl:mt-0 lg:mt-0 md:mt-0 sm:mt-0 mt-10" >
+                                      <label for="mobile"  class=" font-semibold text-gray-800 text-sm">Processing Time</label>
+                                      <select class="w-full rounded-md text-sm text-black mt-2">
+                                          <option>15 business days</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+
+                          <div class="flex flex-col mt-5">
+                              <label class="block mt-2 font-semibold">Select User Type</label>
+                              <div class="flex gap-2">
+                                  <button type="button" id="existingUserBtn" class="bg-secondary text-white px-3 py-0.5 text-xs rounded">Existing User</button>
+                                  <a href="{{route('client.index')}}">  <button type="button" id="newUserBtn" class="bg-gray-500 text-white px-3 py-1 text-xs rounded">New User</button> </a>
+                              </div>
+                          </div>
+
+                          <div id="existingUserSection" class="mt-3 hidden flex flex-col">
+                              <label class=" font-semibold text-gray-800 text-sm">Select Existing User</label>
+                              <select class="w-full rounded-md text-sm text-black mt-2" id="existingUserDropdown" name="clientId">
+                                  <option value="">Select User</option>
+                                  <!-- Users will be added dynamically using AJAX -->
+                              </select>
+                          </div>
+
+                          <div class="addresspart flex flex-col mt-5" style="display:none">
+                              <div class="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row sm:flex-row flex-col w-full justify-between mt-2 gap-2">
+                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Last Name</label>
+                                      <input type="text" name="lastname" id="lastName" class="w-full rounded-md text-sm text-black mt-2" placeholder="As shown in passport" readonly="">
+                                  </div>
+                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">First Name</label>
+                                      <input type="text" name="firstname"  id="firstName" class="w-full rounded-md text-sm text-black mt-2" placeholder="As shown in passport" readonly="">
+
+                                  </div>
+                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Citizenship</label>
+                                      <input type="text" name="citizenship" value="" class="w-full rounded-md text-sm text-black mt-2"  id="citizenship" readonly="">
+
+                                  </div>
+                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Email</label>
+                                      <input type="email" name="email"  id="email" class="w-full rounded-md text-sm text-black mt-2" placeholder="Enter your email" readonly="">
+
+                                  </div>
+                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Phone Number</label>
+                                      <input type="text"  name="phonenumber"   id="phonenumber" class="w-full rounded-md text-sm text-black mt-2" placeholder="Enter your phone number" readonly="">
+
+                                  </div>
+                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Date of Entry</label>
+                                      <input type="date" name="dateofentry" class="w-full rounded-md text-sm text-black mt-2">
+                                  </div>
+                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">&nbsp</label>
+                                      <button type="button" id="addMoreBtn" class="bg-blue-500 text-white px-3 py-2 mt-2 rounded">Add More</button>
+
+                                  </div>
+                              </div>
+                          </div>
+                          <div id="dynamicFieldsContainer" class="mt-3"></div>
+
+                      </div>
+
+                      <div class=" flex w-full  mt-5">
+                          <a class="bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton">Proceed to Payment </a>
+                      </div>
+
+                      <div class="insufficientbalance">
                         <span class=" mt-4 showLoader w-full font-semibold text-md bg-danger/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-danger hover:bg-danger hover:text-white transition ease-in duration-2000"
-                        label="Book Now"> Insufficient Balance </span>
-                        <div class="flex justify-center text-center mt-2 font-semibold text-danger">
-                            <p >*** Please contect administrator for funds </p>
-                        </div>
-                        </div> 
-                      
-                      
-                    </div >
-                    <div class="summary-container bg-white p-5 rounded-lg shadow-lg w-72 ml-5">
-                        <h3 class="text-lg font-bold mb-2">Basket Details</h3>
-                        <p class="flex justify-between"><span>Visa Fee:</span> <span class="visa-price">₹16,096.00</span></p>
-                        <p class="flex justify-between"><span>Service Fee:</span> <span class="visa-commision">₹5,998.00</span></p>
-                        <p class="flex justify-between"><span>Tax:</span> <span></span></p>
-                        <h3 class="text-lg font-bold mt-2" >Total: <span class="visa-total"> ₹23,173.82 </span></h3>
-                    </div>
-                </div>
-                <!-- Add More Button -->
+                              label="Book Now"> Insufficient Balance </span>
+                          <div class="flex  text-center mt-2 font-semibold text-danger">
+                              <p >*** Please contect administrator for funds </p>
+                          </div>
+                      </div>
 
-             </form>
-            <!-- </div> -->
-        </section>
-    </div>
+                  </form>
+              </div>
+              <div class="2xl:w-1/4 sticky top-0 xl:w-1/4 lg:w-1/4 md:w-full sm:w-full w-full  bg-white drop-shadow-2xl rounded-xl 2xl:mt-0 xl:mt-0 lg:mt-0 md:mt-2 sm:mt-2 mt-2 2xl:ml-5 xl:ml-5 lg:ml-5 md:ml-0 sm:ml-0 ml-0 h-min p-5">
 
+                  <div class="flex flex-col pb-5 border-b-2 border-b-gray-200">
+                      <span class="text-black font-semibold text-xl ">Basket Details</span>
+                  </div>
+                  <div class="flex justify-between mt-3">
+                      <span class="text-black text-md">Visa Fee:</span>
+                      <span class="text-black text-md font-semibold">&#8377 235.58</span>
+                  </div>
+                  <div class="flex justify-between mt-1.5">
+                      <span class="text-black text-md">Service Fee:</span>
+                      <span class="text-black text-md font-semibold">₹5,998.00</span>
+                  </div>
+                  <div class="flex justify-between mt-1.5 pb-3 border-b-2 border-b-gray-200 ">
+                      <span class="text-black text-md">Tax:</span>
+                      <span class="text-black text-md font-semibold">&#8377 235.58</span>
+                  </div>
+
+
+                  <div class="flex justify-between mt-3">
+                      <span class="text-black text-md">Total:</span>
+                      <span class="text-black text-md font-semibold">&#8377 135.58</span>
+                  </div>
+
+
+
+
+              </div>
+              {{--    section right div ends here--}}
+          </section>
+      </div>
     @section('scripts')
     <script>
 
@@ -227,7 +254,7 @@ document.getElementById('addMoreBtn').addEventListener('click', function () {
     /****Ajax for get type of****** */
 $(document).ready(function () {
     // alert('heelo');
-    jQuery('.submitbutton').hide(); 
+    jQuery('.submitbutton').hide();
     function fetchCategories() {
         var visa_type_id = $("#typeof").val();
         if (visa_type_id) {
@@ -243,7 +270,7 @@ $(document).ready(function () {
                         html += '<option value="' + category.id + '" data-price="' + category.price +'" data-balance="' + data.balance.balance + ' " data-commission="' + category.commission + '">' + category.name + "</option>";
                     });
 
-                    $("#category").empty().append(html); 
+                    $("#category").empty().append(html);
 
                     // **Trigger change event after setting new options**
                     $("#category").trigger("change");
@@ -273,16 +300,16 @@ $(document).ready(function () {
         var selectedOption = $(this).find(":selected");
         var visaPrice = parseFloat(selectedOption.data("price")) || 0;  // Convert to number, default 0
         var commission = parseFloat(selectedOption.data("commission")) || 0;  // Convert to number, default 0
-        var balance = parseFloat(selectedOption.data("balance")) || 0; 
+        var balance = parseFloat(selectedOption.data("balance")) || 0;
 
 
         var total = visaPrice + commission; // Correct addition
         if (balance < total) {  // Corrected condition
-            jQuery(".submitbutton").hide(); 
-            jQuery(".insufficientbalance").show(); 
+            jQuery(".submitbutton").hide();
+            jQuery(".insufficientbalance").show();
         } else {
-            jQuery(".submitbutton").show(); 
-            jQuery(".insufficientbalance").hide(); 
+            jQuery(".submitbutton").show();
+            jQuery(".insufficientbalance").hide();
         }
 
         $(".visa-price").text("£" + visaPrice.toFixed(2)); // Update displayed price
@@ -291,7 +318,7 @@ $(document).ready(function () {
     });
 });
 
-  
+
 /****Check user ******/
 $("#existingUserBtn").on("click", function () {
         $("#existingUserSection").removeClass("hidden"); // Show dropdown
@@ -317,7 +344,7 @@ $("#existingUserBtn").on("click", function () {
                 $("#existingUserDropdown").html(html);
             }
         });
-  
+
     }
 
     // Auto-fill address when user is selected
@@ -329,10 +356,10 @@ $("#existingUserBtn").on("click", function () {
         var nameParts = fullName.split(",").map(function(item) {
                     return item.trim();
                 });
-        var firstName = nameParts[0] || ""; 
-        var lastName = nameParts[1] || ""; 
+        var firstName = nameParts[0] || "";
+        var lastName = nameParts[1] || "";
         var country=selectedUser.data("nationality");
-      
+
         $(".addresspart").show();
         $("#lastName").val(lastName || "");
         $("#firstName").val(firstName || "");
