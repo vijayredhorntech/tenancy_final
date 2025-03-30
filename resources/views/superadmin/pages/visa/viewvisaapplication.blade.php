@@ -13,11 +13,17 @@
             @foreach ($forms as $form)
                 <div class="bg-blue-100 border border-blue-300 p-4 rounded-lg min-w-[250px] text-center shadow-md">
                     <h3 class="text-lg font-semibold text-blue-900">{{ $form->from->form_name }}</h3>
-                    <a href="{{ route('view.form', ['viewid' => $form->from->form_name, 'id' => $clientData->id]) }}" 
-       target="_blank" 
+        {{--   <a href="{{ route('view.form', ['viewid' => $form->from->form_name, 'id' => $clientData->id]) }}" 
+              target="_blank" 
        class="mt-2 inline-block bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition">
         View Form
-    </a>
+    </a>--}}
+    <a href="{{ route('view.form', ['viewid' => \Illuminate\Support\Str::slug($form->from->form_name), 'id' => $clientData->id]) }}" 
+   target="_blank" 
+   class="mt-2 inline-block bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition">
+    View Form
+</a>
+
 
                 </div>
             @endforeach
