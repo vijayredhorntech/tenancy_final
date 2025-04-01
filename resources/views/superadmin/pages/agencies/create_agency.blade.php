@@ -409,12 +409,19 @@
                                 <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                 @enderror
                             </div>
+                            <div class="w-full relative group flex flex-col gap-1 "  >
+                                <label for="attachment1" class="font-semibold text-ternary/90 text-sm">&nbsp</label>
+                                <div class="w-full relative">
+                                <button id="addDocumentBtn" class="text-sm bg-success/30 mt-2 px-4 w-max h-max py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Add File</button>
 
-                            <button id="addDocumentBtn" class="px-4 py-2 bg-blue-500 text-black rounded">Add File</button>
+                                </div>
+                            </div>
+
 
                             <!-- File Inputs Container -->
                             <div id="fileInputContainer" class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2"></div>
                         </div>
+
                     </div>
 
                 </div>
@@ -422,10 +429,10 @@
 
 
                 <div class="w-full flex justify-end px-4 pb-4 gap-2 mt-8">
-                    <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')"
+                    <!-- <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')"
                         class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">
                         Cancel
-                    </button>
+                    </button> -->
                     <button type="submit"
                         class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">
                         Create Agency

@@ -174,44 +174,23 @@ class ClientController extends Controller
     }
 
 
-   
-
-    public function show(ClientDetails $client)
+    /****Delete  Client***** */
+    public function hs_deleteAgencyClient($id)
     {
-        return view('agencies.clients.show', compact('client'));
-    }
-
-    public function edit(ClientDetails $client)
-    {
-        return view('agencies.clients.edit', compact('client'));
-    }
-
-
-    public function update(Request $request, ClientDetails $client)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:client_details,email,' . $client->id,
-            'phone_number' => 'required|string|max:20',
-            'address' => 'nullable|string',
-            'agency_id' => 'nullable|integer',
-            'passport_number' => 'required|string|unique:client_details,passport_number,' . $client->id,
-        ]);
-
-        $client->update($request->all());
-
-        return redirect()->route('clients.index')->with('success', 'Client updated successfully.');
-    }
-
-
-   
-
+        $agency = $this->agencyService->getAgencyData();
+        $client = $this->clintRepository->getClientById($id);
     
-
+        if (!$client || $client->agency_id !== $agency->id) {
+            return redirect()->route('client.index')->with('error', 'Unauthorized or client not found.');
+        }
     
-    public function destroy(ClientDetails $client)
-    {
         $client->delete();
-        return redirect()->route('clients.index')->with('success', 'Client deleted successfully.');
+        return redirect()->route('client.index')->with('success', 'Client deleted successfully.');
     }
+    
+
+
+   
+
+    
 }

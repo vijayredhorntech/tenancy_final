@@ -5,7 +5,7 @@
 
 
 
-    <div class="w-full grid xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-2">
+    <div class="w-full grid xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2">
         <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 items-center justify-between p-4">
             <div class="flex flex-col gap-2">
                        <span class="font-semibold text-ternary/70 text-md">Total Agency</span>
@@ -671,7 +671,7 @@
     </div>
 
         <div class="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 grid-cols-1 gap-2 mt-6">
-            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col xl:col-span-1 lg:col-span-2 md:col-span-2 ">
+            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col xl:col-span-2 lg:col-span-2  ">
                 <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20">
                     <span class="font-semibold text-ternary text-xl">Agency Bookings/ Service</span>
                 </div>
@@ -680,7 +680,7 @@
                     <div id="agencyBookingChart"></div>
                 </div>
             </div>
-            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-success bg-white flex gap-2 flex-col ">
+            <!-- <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-success bg-white flex gap-2 flex-col ">
                 <div class="bg-success/10 px-4 py-2 border-b-[2px] border-b-success/20">
                     <span class="font-semibold text-ternary text-xl">Agency Funds Utilisation</span>
                 </div>
@@ -688,8 +688,8 @@
                 <div class="w-full overflow-x-auto p-4">
                     <div id="agencyFundsChart"></div>
                 </div>
-            </div>
-            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 flex-col xl:col-span-2 lg:col-span-3 md:col-span-3">
+            </div> -->
+            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 flex-col xl:col-span-2 lg:col-span-2 ">
                 <div class="bg-warning/10 px-4 py-2 border-b-[2px] border-b-warning/20">
                     <span class="font-semibold text-ternary text-xl">Flight service</span>
                 </div>
@@ -699,7 +699,7 @@
                 </div>
             </div>
 
-            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 flex-col xl:col-span-2 lg:col-span-3 md:col-span-3">
+            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 flex-col xl:col-span-4 lg:col-span-3 md:col-span-2 sm:col-span-2">
                 <div class="bg-warning/10 px-4 py-2 border-b-[2px] border-b-warning/20">
                     <span class="font-semibold text-ternary text-xl">Agency Bookings/ Day</span>
                 </div>
@@ -720,13 +720,13 @@
             <div class="bg-warning/10 px-4 py-2 border-b-[2px] border-b-warning/20">
                 <span class="font-semibold text-ternary text-xl">Recent Bookings</span>
             </div>
-            <div class="flex space-x-2">
-                    <button class="px-4 py-2 text-white bg-danger rounded-md border border-danger shadow  service active" data-id="flight">Flight Booking</button>
-                    <button class="px-4 py-2  border border-danger rounded-md service" data-id="visa" >Visa Application</button>
-                    <button class="px-4 py-2  border border-danger rounded-md service"  data-id="hotel" >Hotel Booking</button>
+            <div class="flex space-x-2 flex-wrap gap-2">
+                    <button class="px-4 py-2 text-white bg-secondary rounded-md border border-secondary shadow  service active" data-id="flight">Flight Booking</button>
+                    <button class="px-4 py-2  border border-secondary rounded-md service" data-id="visa" >Visa Application</button>
+                    <button class="px-4 py-2  border border-secondary rounded-md service"  data-id="hotel" >Hotel Booking</button>
              </div>
 
-            <div class="w-full overflow-x-auto p-4">
+            <div class="w-full overflow-x-auto  p-4">
                 <table class="w-full border-[1px] border-secondary/30 border-collapse recentbooking" id="flight" >
                     <tr>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
@@ -1031,35 +1031,7 @@
 
     // pricedata
    
-                var agencyFundsOptions = {
-                    series: [44, 55, 67, 83, 70],
-                    chart: {
-                        height: 250,
-                        type: 'radialBar',
-                    },
-                    plotOptions: {
-                        radialBar: {
-                            dataLabels: {
-                                name: {
-                                    fontSize: '22px',
-                                },
-                                value: {
-                                    fontSize: '16px',
-                                },
-                                total: {
-                                    show: true,
-                                    label: 'Total',
-
-                                }
-                            }
-                        }
-                    },
-                    labels: ['Agency 1', 'Agency 2', 'Agency 3', 'Agency 4', 'Agency 5'],
-                };
-                var agencyFundsChart = new ApexCharts(document.querySelector("#agencyFundsChart"), agencyFundsOptions);
-                agencyFundsChart.render();
-
-
+          
 
 
 
@@ -1151,13 +1123,13 @@
             data: passengerCounts
         }],
         chart: {
-            height: 350,
+            height: 250,
             type: 'bar',
         },
         plotOptions: {
             bar: {
-                borderRadius: 10,
-                columnWidth: '20%',
+                borderRadius: 2,
+                columnWidth: 20,
             }
         },
         dataLabels: {

@@ -129,8 +129,8 @@
 
                     <!-- start table -->
 
-                    <div class="w-full grid xl:grid-cols-1 lg:grid-cols-1 gap-4">
-                            <div class="w-full ">
+                    <div class="w-full grid  lg:grid-cols-2 md:grid-cols-2 grid-cols-1 gap-4">
+                            <div class="w-full">
                                 <div class="  border-[2px] border-primary/70 ">
                                     <div class="flex justify-center bg-primary/40 px-4 py-0.5">
                                         <span class="font-semibold text-ternary text-xl">Apply Leave</span>
@@ -139,7 +139,7 @@
                                     <!-- add form    -->
                 <form action="{{ route('application_leave') }}" method="POST" enctype="multipart/form-data"> 
                    @csrf
-                     <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
+                     <div class="w-full grid xl:grid-cols-2 gap-2 px-4 py-6">
 
                      <div class="w-full relative group flex flex-col gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Leave Type : </label>
@@ -209,7 +209,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="w-full ">
+                            <div class="w-full">
                                 <div class="  border-[2px] border-danger/70 ">
                                     <div class="flex justify-center bg-danger/40 px-4 py-0.5">
                                         <span class="font-semibold text-ternary text-xl">Leaves</span>

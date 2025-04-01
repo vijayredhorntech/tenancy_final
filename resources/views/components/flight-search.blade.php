@@ -530,9 +530,7 @@ function displayAutocompleteResults(results, input, dropdownContainer) {
         $("#flightSearch").submit(function (e) {
             $('#loading_overlay1').show(); // Show loader when form submits
             
-            setTimeout(function () {
-                $('#loading_overlay1').hide();
-            }, 20000); // Hide after 20 seconds
+            // Hide after 20 seconds
         });
     });
 

@@ -29,4 +29,12 @@ class UserServiceAssignment extends Model
                     return $this->belongsTo(Service::class, 'service_id');
                 }
 
+
+                
+                public function agency()
+                {
+                    return $this->hasOne(Agency::class, 'id', 'agency_id');
+                }
+
+
 }

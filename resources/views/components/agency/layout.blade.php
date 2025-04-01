@@ -87,8 +87,9 @@
      <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <!-- <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <style>
 
         * {
@@ -151,39 +152,45 @@
     </div>
 </div>
 @yield('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const editors = document.querySelectorAll('.quill-editor');
-        editors.forEach(function(editorElement) {
-            const quill = new Quill(editorElement, {
-                theme: 'snow',
-                modules: {
-                    toolbar: [
-                        ['bold', 'italic', 'underline', 'strike'],
-                        ['blockquote', 'code-block'],
-                        [{ 'header': 1 }, { 'header': 2 }],
-                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                        [{ 'script': 'sub' }, { 'script': 'super' }],
-                        [{ 'indent': '-1' }, { 'indent': '+1' }],
-                        [{ 'direction': 'rtl' }],
-                        [{ 'size': ['small', false, 'large', 'huge'] }],
-                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                        [{ 'color': [] }, { 'background': [] }],
-                        [{ 'font': [] }],
-                        [{ 'align': [] }],
-                        ['clean'],
-                        ['link', 'image', 'video']
-                    ]
-                },
-                placeholder: 'Compose your content...'
-            });
 
-            // Apply custom height using CSS
-            editorElement.style.height = "200px";
-            editorElement.style.overflow = "auto";
-            editorElement.style.border="1px solid #ff421666"
+<script>
+    // Initialize Quill Editor
+    document.addEventListener("DOMContentLoaded", function () {
+    var editorElement = document.getElementById("editor");
+
+    // Check if editor exists before initializing Quill
+    if (editorElement) {
+        var quill = new Quill("#editor", {
+            theme: "snow",
+            placeholder: "Type your description here...",
+            modules: {
+                toolbar: [
+                    ["bold", "italic", "underline"], // Bold, italic, underline
+                    [{ list: "ordered" }, { list: "bullet" }], // Lists
+                    [{ align: [] }], // Text alignment
+                    ["link"], // Insert links
+                ],
+            },
         });
-    });
+
+        // Function to sync Quill content with hidden input field
+        function syncContent() {
+            var descriptionInput = document.getElementById("description");
+            if (descriptionInput) {
+                descriptionInput.value = quill.root.innerHTML;
+            }
+        }
+
+        // Use MutationObserver Instead of Deprecated Events
+        const config = { childList: true, subtree: true };
+        const observer = new MutationObserver(syncContent);
+        observer.observe(editorElement, config);
+
+        // Ensure content syncs when Quill content changes
+        quill.on("text-change", syncContent);
+    }
+});
+
 </script>
 <script>
         let counter = 1; // Initial counter for unique field names

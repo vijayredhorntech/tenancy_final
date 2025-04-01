@@ -93,7 +93,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="w-full ">
+                  {{--          <div class="w-full ">
                                 <div class="  border-[2px] border-danger/70 ">
                                     <div class="flex justify-center bg-danger/40 px-4 py-0.5">
                                         <span class="font-semibold text-ternary text-xl">Debit</span>
@@ -152,7 +152,7 @@
                                         </table>
                                     </div>
                                 </div>
-                            </div>
+                            </div>--}}
                         </div>
                     </div>
                     <div id="bookingDiv" class="tab hidden">

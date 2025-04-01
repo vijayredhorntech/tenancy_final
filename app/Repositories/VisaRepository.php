@@ -23,6 +23,11 @@ use Illuminate\Support\Facades\Config;
 use App\Models\Document;
 use App\Models\VisaServiceTypeDocument;
 use App\Services\AgencyService;
+use App\Models\UserServiceAssignment;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\NewFormNotification;
+use App\Mail\VisaApplicationMail;
+
 
 
 class VisaRepository implements VisaRepositoryInterface
@@ -164,11 +169,18 @@ public function updateVisa($id, array $data)
 
   public function saveBooking(array $data)
   {
+    
+     // Correcting function call
+            $getCode = $this->getCountryCode($data['origin'], $data['destination']);
+
+            // Access values
+            $originCode = $getCode['origin_code'];
+            $destinationCode = $getCode['destination_code'];
 
       $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
       $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
     //   $application = Str::uuid();
-    $application = 'VISA-' . now()->format('YmdHisv') . '-' . strtoupper(Str::random(4));
+    $application = strtolower($originCode . '-' . $destinationCode . '-' . now()->format('ymdHis') . '-' . Str::random(3));
 
     $agency = $this->agencyService->getAgencyData();
     $user=$this->agencyService->getCurrentLoginUser();
@@ -176,10 +188,13 @@ public function updateVisa($id, array $data)
   
 
     if(isset($data['passengerfirstname'])){
-      
-        $passengerCount = count($data['passengerfirstname']);
+    
+        $passengerCount = count($data['passengerfirstname'])+1;
+     
         $totalAmount=$totalAmount*$passengerCount; 
     }
+
+
   
     $booking = new VisaBooking();
       $booking->origin_id = $data['origin'];
@@ -276,6 +291,9 @@ public function updateVisa($id, array $data)
 
     public function allForms(){
         //the name of table is form document
+     
+        // agency
+            
     return Document::with('countries')->paginate(10);
     }
 
@@ -318,6 +336,11 @@ public function updateVisa($id, array $data)
 
                 $service->save();
     
+                 // Fetch all agencies
+                 $agencies = UserServiceAssignment::with('agency')->where('service_id','3')->get();
+                 foreach ($agencies as $agency) {
+                    Mail::to($agency->agency->email)->queue(new NewFormNotification($new));
+                }
                 DB::commit(); // Commit transaction if everything is successful
     
                 return response()->json(['message' => 'Form saved successfully'], 200);
@@ -360,6 +383,7 @@ public function updateVisa($id, array $data)
         /******Assign Country to Form ******/
         public function assignCountrytoForms($id, $data){
 
+            $new=$this->findFormById($id);
             $service = new VisaServiceTypeDocument();
             $service->visa_id  = '1';
             $service->form_id  = $id;
@@ -367,6 +391,16 @@ public function updateVisa($id, array $data)
             $service->destination_id   = $data['destination'];
             $service->fee = '0' ?? null; // Handle null case
             $service->save();
+
+             // Fetch all agencies
+             $agencies = UserServiceAssignment::with('agency')->where('service_id', '3')->get();
+
+             foreach ($agencies as $agency) {
+                 // Ensure agency exists before sending email
+                 if (!empty($agency->agency) && !empty($agency->agency->email)) {
+                     Mail::to($agency->agency->email)->queue(new NewFormNotification($new));
+                 }
+             }
         }
 
 
@@ -386,6 +420,7 @@ public function updateVisa($id, array $data)
         $visa->delete(); 
     }
 
+
     public function assignUpdateBooking($id,$data){
    
         $visabooking=VisaBooking::where('id',$id)->first(); 
@@ -397,4 +432,62 @@ public function updateVisa($id, array $data)
         return $visabooking;
    
     }
+
+    /****Get Country COde *****/
+
+    public function getCountryCode($origin, $destination)
+    {
+        $originData = Country::where('id', $origin)->first();
+        $destinationData = Country::where('id', $destination)->first();
+    
+        $originCode = $originData ? $originData->code : null;
+        $destinationCode = $destinationData ? $destinationData->code : null;
+    
+        return [
+            'origin_code' => $originCode,
+            'destination_code' => $destinationCode
+        ];
+    }
+
+
+
+    /***** View visa form *****/
+    public function viewCoutnryFormById($id){
+        return VisaServiceTypeDocument::with('visaServiceType','from','origin','destination')->where('form_id',$id)->get();
+
+    }
+
+    /******Disconnected the Country ******/
+    public function disConnectCoutnryFormById($id){
+        $visa=VisaServiceTypeDocument::where('id',$id)->first();
+        $visa->delete(); 
+        return true; 
+    }
+
+
+   
+    /****** Destroy Application ******/
+        public function deleteBooking($id)
+        {
+            $booking = $this->bookingDataById($id);
+            if (!$booking) {
+                return response()->json(['error' => 'Booking not found'], 404);
+            }
+            $bookingInvoice = $booking->application_number;
+            $deduction = Deduction::where('invoice_number', $bookingInvoice)->first();
+            // Delete deduction only if it exists
+            if ($deduction) {
+                $deduction->delete();
+            }
+            $booking->delete();
+            return true;
+        }
+
+  /*******Send Email *******/
+    public function sendEmail(array $data,$agency){
+     
+        Mail::to($data['emailid'])->queue(new VisaApplicationMail($data, $agency));
+       
+    }
+
 }

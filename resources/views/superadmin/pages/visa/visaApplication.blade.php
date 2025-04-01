@@ -96,7 +96,6 @@
     
                     @forelse($allbookings as $booking)
 
-                
                     
                         <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
@@ -104,12 +103,23 @@
 
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">
                             @php
-                                $fullName = $booking->clint->name;
-                                $cleanName = str_replace(',', '', $fullName);
-                            @endphp
-                                <span>{{$cleanName}}</span><br>
-                                <span class="font-medium text-xs">{{$booking->clint->email}}</span><br>
-                                <span class="font-medium text-xs">{{$booking->clint->phone_number}}</span>
+                                        $fullName = isset($booking->clint) && isset($booking->clint->name) && isset($booking->clint->name) 
+                                                    ? $booking->clint->name 
+                                                    : '';
+                                        $cleanName = str_replace(',', '', $fullName);
+
+                                        $email = isset($booking->clint) && isset($booking->clint) && isset($booking->clint->email) 
+                                                ? $booking->clint->email 
+                                                : '';
+
+                                        $phone = isset($booking->clint) && isset($booking->clint) && isset($booking->clint->phone_number) 
+                                                ? $booking->clint->phone_number 
+                                                : '';
+                                    @endphp
+
+                                    <span>{{ $cleanName }}</span><br>
+                                    <span class="font-medium text-xs">{{ $email }}</span><br>
+                                    <span class="font-medium text-xs">{{ $phone }}</span>
                             </td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                  <span>{{$booking->visa->name }}</span><br>
@@ -165,6 +175,12 @@
                                         <a href="{{ route('visaedit.application', ['id' => $booking->id]) }}" title="Remind for funds">
                                             <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
                                                 <i class="fa fa-pencil"></i>
+                                            </div>
+                                        </a>
+
+                                        <a href="{{ route('visasendemail.application', ['id' => $booking->id]) }}" title="Remind for funds">
+                                            <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
+                                                <i class="fa fa-envelope"></i>
                                             </div>
                                         </a>
                                     @endif

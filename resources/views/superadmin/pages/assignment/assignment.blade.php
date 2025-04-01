@@ -54,36 +54,7 @@
                          </div> -->
 
 
-                    <div class="w-full relative group flex flex-col gap-1">
-                        <label class="font-semibold text-ternary/90 text-sm"> Attachment</label>
-
-                        <!-- File Input Container -->
-                        <div id="fileInputContainer" class="w-full relative flex flex-col gap-2">
-                            <div class="flex items-center gap-2">
-                                <input type="file" name="attachment[]" class="file-input w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-
-                                <!-- Plus Button -->
-                                <button type="button" id="addFileBtn" class="p-2 bg-secondary/40 text-white rounded-full hover:bg-secondary/70 transition">
-                                    +
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- === textarea input field ===--}}
-                    <div class="w-full relative group flex flex-col gap-1">
-                        <label for="name" class="font-semibold text-ternary/90 text-sm">Description</label>
-                        <div class="w-full relative">
-                            <textarea name="description" id="description" rows="3" placeholder="Description....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"></textarea>
-                            <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
-                        </div>
-                    </div>
-     
-     
-     
-                    {{-- === Radio Input Field === --}}
-                    {{-- === Radio Input Field === --}}
-                    <div class="w-full relative group flex flex-col gap-1">
+                         <div class="w-full relative group flex flex-col gap-1">
                         <span class="font-semibold text-ternary/90 text-sm">Send To</span>
                         <div class="flex gap-4">
                             <label class="flex items-center gap-2">
@@ -121,6 +92,48 @@
                             @endforeach
                         </select>
                     </div>
+
+
+                    <div class="w-full relative group flex flex-col gap-1">
+                        <label class="font-semibold text-ternary/90 text-sm"> Attachment</label>
+
+                        <!-- File Input Container -->
+                        <div id="fileInputContainer" class="w-full relative flex flex-col gap-2">
+                            <div class="flex items-center gap-2">
+                                <input type="file" name="attachment[]" class="file-input w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+
+                                <!-- Plus Button -->
+                                <button type="button" id="addFileBtn" class="p-2 bg-secondary/40 text-white rounded-full hover:bg-secondary/70 transition">
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+           
+
+                    {{--               === textarea input field ===--}}
+  
+
+
+                         <div class="w-full relative group flex flex-col gap-1 xl:col-span-3">
+                            <label for="description" class="font-semibold text-ternary/90 text-sm">Description</label>
+                            <div class="w-full relative">
+                                <div id="editor" class="w-full pl-2 pr-8 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500" style="height: 150px;">{!! old('description',isset($visa) ? $visa->description : '') !!}</div>
+
+                                <input type="hidden" name="description" id="description" value="{{ old('description',isset($visa) ? $visa->description : '') }}">
+                                @error('description')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                 
+     
+     
+     
+                    {{-- === Radio Input Field === --}}
+                    {{-- === Radio Input Field === --}}
+             
                 </div>
                 <div class="w-full flex justify-end px-4 pb-4 gap-2">
                     <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">Cancel</button>

@@ -80,7 +80,7 @@ Support
                         </div>
 
 
-                        {{--               === textarea input field ===--}}
+                        {{--               === textarea input field ===
                          <div class="w-full relative group flex flex-col gap-1 xl:col-span-3">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Explain</label>
 
@@ -88,7 +88,19 @@ Support
                                  <textarea   name="discrubtion" id="discrubtion" rows="1" placeholder="Description....." class="quill-editor w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"></textarea>
                                  <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
                              </div>
-                         </div>
+                         </div>--}}
+
+                         <div class="w-full relative group flex flex-col xl:col-span-3 gap-1">
+                            <label for="description" class="font-semibold text-ternary/90 text-sm">Explain</label>
+                            <div class="w-full relative">
+                                <div id="editor" class="w-full pl-2 pr-8 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500" style="height: 200px;">{!! old('description',isset($visa) ? $visa->description : '') !!}</div>
+
+                                <input type="hidden" name="description" id="description" value="{{ old('description',isset($visa) ? $visa->description : '') }}">
+                                @error('description')
+                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
                    
                      </div>
                      <div class="w-full flex justify-end px-4 pb-4 gap-2">

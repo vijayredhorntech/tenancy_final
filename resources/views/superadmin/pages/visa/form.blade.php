@@ -18,7 +18,7 @@
              <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 hidden">
              <form action="{{ route('visaform.store') }}" method="POST" enctype="multipart/form-data">  
                    @csrf
-                     <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
+                     <div class="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-4  sm:grid-cols-2 gap-2 px-4 py-6">
 
                          {{--               === text type input field ===--}}
                          <div class="w-full relative group flex flex-col gap-1">
@@ -83,7 +83,7 @@
 
  
                          {{--               === textarea input field ===--}}
-                         <div class="w-full relative group flex flex-col gap-1">
+                         <div class="w-full relative group flex flex-col xl:col-span-4  lg:col-span-3 md:col-span-4 sm:col-span-2  gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Description</label>
                              <div class="w-full relative">
                                  <textarea   name="description" id="description" rows="5" placeholder="Description....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"></textarea>
@@ -163,7 +163,19 @@
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$form['form_name']}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$form['form_description']}}</td>
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
-                                {{ $form->countries ? $form->countries->count() : 0 }}
+
+                                <div class="flex items-center gap-2">
+                                        {{ $form->countries ? $form->countries->count() : 0 }} 
+                                   <a href="{{route('form.assigncountry',['id' => $form->id])}}"><button  title="Add Accessory" class="bg-success/20 text-success h-6 w-6 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white cursor-pointer transition ease-in duration-2000" fdprocessedid="sl25i6">
+                                           <i class="fa fa-plus text-xs"></i>
+                                       </button></a>
+
+                                       <a href="{{route('form.viewform',['id' => $form->id])}}"><button  title="Add Accessory" class="bg-success/20 text-success h-6 w-6 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white cursor-pointer transition ease-in duration-2000" fdprocessedid="sl25i6">
+                                           <i class="fa fa-eye text-xs"></i>
+                                       </button></a>
+
+                                    </div>
+                                
                             </td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                             <a href="{{asset($form['document'])}}" target="_blank">  
@@ -186,11 +198,7 @@
                                         </div>
                                     </a> -->
 
-                                    <a href="{{route('form.assigncountry',['id' => $form->id])}}" title="AssignCountry From">
-                                        <div class=" bg-warning/10 text-warning h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-warning hover:text-white transition ease-in duration-2000">
-                                        <i class="fa fa-globe"></i>
-                                        </div>
-                                    </a>
+                               
                                     <a href="{{route('form.delete',['id' => $form->id])}}" title="Delete From">
                                         <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-trash"></i>

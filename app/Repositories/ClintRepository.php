@@ -21,6 +21,8 @@ use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
 use App\Models\ClientMoreInfo;
 use App\Services\AgencyService;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ClientWelcomeEmail; 
 
 
 
@@ -92,7 +94,15 @@ class ClintRepository implements ClintRepositoryInterface
         $clientdetails->spouse_name=$data['spouse_name'] ?? '';
         $clientdetails->children_count = isset($data['children_count']) && is_numeric($data['children_count']) ? (int)$data['children_count'] : null;
         $clientdetails->save(); 
-
+        
+        // Send welcome email to client
+    try {
+        Mail::to($client->email)->queue(new ClientWelcomeEmail($client, $agency));
+    } catch (\Exception $e) {
+        dd($e); 
+        // Log the error if email fails, but don't stop the process
+        \Log::error('Failed to send welcome email: ' . $e->getMessage());
+    }
 
         return $client;
     }

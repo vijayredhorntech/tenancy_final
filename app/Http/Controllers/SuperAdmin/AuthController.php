@@ -67,8 +67,10 @@ class AuthController extends Controller
 
     public function hs_dashbord(){
 
+    
    
         $agency = $this->agencyService->getAgencyData();
+
         if ($agency) {
             return redirect()->route('agency_dashboard');
         }

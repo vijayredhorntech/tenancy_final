@@ -18,7 +18,7 @@
              <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 ">
              <form action="{{ route('assignstore') }}" method="POST" enctype="multipart/form-data">
                @csrf
-                     <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
+                     <div class="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-4  sm:grid-cols-2 gap-2 px-4 py-6">
 
                          {{--               === text type input field ===--}}
                          <div class="w-full relative group flex flex-col gap-1">
@@ -85,7 +85,7 @@
                          </div>
 
 
-                         <div class="w-full relative group flex flex-col gap-1">
+                         <div class="w-full relative group flex flex-col  gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Destination</label>
                              <div class="w-full relative">
                                  <select  name="destination" id="datePicker"
@@ -130,7 +130,7 @@
 
 
                          {{--               === textarea input field ===--}}
-                         <div class="w-full relative group flex flex-col gap-1">
+                         <div class="w-full relative group flex flex-col xl:col-span-4  lg:col-span-3 md:col-span-4 sm:col-span-2 gap-1 ">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Description</label>
                              <div class="w-full relative">
                              <div id="editor" class="w-full pl-2 pr-8 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500" style="height: 200px;">{!! old('description') !!}</div>

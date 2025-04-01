@@ -280,6 +280,10 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                  Route::get('/deleteform/{id}','hsFormDelete')->name('form.delete');
                                  Route::get('/assigncoutnry/{id}','hsAssignCountry')->name('form.assigncountry');
                                  Route::post('/assigncoutnrystore','hsAssignCountrystore')->name('visaform.assigncountry');
+
+                                 Route::get('/viewcoutnry/{id}','hsViewCountry')->name('form.viewform');
+                                 Route::get('/disconnectform/{id}','hsFromDisConnectCountry')->name('disconnectform.country'); 
+                                 
                         });
 
     });
@@ -350,8 +354,11 @@ Route::group([
         Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
         Route::get('/exportpdf', 'hsexportPdf')->name('exportpdf.application');
         Route::get('/exportexcel', 'hsexportExcel')->name('exportexcel.application');
-
         Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
+        Route::get('/preparedemail/{id}', 'hsPreparedEmail')->name('visasendemail.application');
+        Route::post('/sendemail','hsSendEmail')->name('sendclintemail');
+        Route::get('/deleteapplication/{id}', 'hsDeleteApllication')->name('delete.application');
+        
 
 
 
@@ -368,6 +375,8 @@ Route::group([
         Route::post('/storeclint','hs_storeUpdateAgencyClient')->name('updateclient.store');
         Route::get('/clientgeneratepdf','generatePDF')->name('generateclint.pdf');
         Route::get('/clintgenerateexcel','exportAgency')->name('exportclint');
+        Route::get('/deleteclient/{id}','hs_deleteAgencyClient')->name('agency.clientdelete');
+
 
 
 

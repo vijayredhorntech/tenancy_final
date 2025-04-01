@@ -51,7 +51,7 @@
 
 
                                 </div>
-                                <div class="w-full flex flex-col">
+                                <div class="lg:col-span-2 col-span-1 w-full flex flex-col">
                                     <label for="arriveTo" class="text-ternary font-bold text-sm">&nbsp</label>
 
                                     <input type="submit" id="searchFlightButton" value="Check Requirements" class="mt-2 showLoader font-bold text-lg bg-secondary text-white px-6 py-2 rounded-[3px]  hover:bg-secondary hover:text-white transition ease-in duration-2000">

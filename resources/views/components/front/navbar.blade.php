@@ -1,4 +1,4 @@
-<div class="w-full px-4 py-2 flex xl:justify-between lg:justify-between md:justify-between sm:justify-between justify-between items-center bg-white sticky top-0 border-b-[2px] border-b-ternary/20">
+<div class="w-full px-4 py-2 flex xl:justify-between lg:justify-between md:justify-between sm:justify-between justify-between items-center bg-white sticky z-50 top-0 border-b-[2px] border-b-ternary/20">
     <div class="flex items-center">
         <div class="rounded-full h-10 w-10 xl:hidden lg:hidden flex justify-center items-center text-secondary" onclick="document.getElementById('sideBarDiv').classList.toggle('hidden');
                          document.getElementById('sideBarOverlay').classList.toggle('w-full');"><i class="fa fa-bars text-xl" title="Search......"></i></div>

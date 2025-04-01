@@ -22,5 +22,8 @@ interface VisaRepositoryInterface
     public function findFormById($id);
     public function assignCountrytoForms($id, $data);
     public function assignUpdateBooking($id,$data);
-    
+    public function viewCoutnryFormById($id);
+    public function disConnectCoutnryFormById($id); 
+    public function deleteBooking($id); 
+    public function sendEmail(array $data, $agency);
 }

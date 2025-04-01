@@ -320,6 +320,7 @@ class VisaController extends Controller
            
     }
 
+
     public function hsVisaDocumentpending(){
         return view('superadmin.pages.visa.payment',compact('visas'));
     }
@@ -344,6 +345,9 @@ class VisaController extends Controller
            
     }
 
+
+    
+      /*****View Client Form  View *****/
     public function viewForm($formname,$id)
     {
         $agency = $this->agencyService->getAgencyData();
@@ -361,14 +365,18 @@ class VisaController extends Controller
         // dd($formname); // Debugging (remove in production)
 
       
-        $pdf = Pdf::loadView("forms.$formname", compact('clientData', 'forms'));
+    //     $pdf = Pdf::loadView("forms.$formname", compact('clientData', 'forms'));
 
-    return $pdf->download("$formname.pdf");
+    // return $pdf->download("$formname.pdf");
     
-        // return view("forms.$formname",compact('clientData','forms')); // Use double quotes or concatenation
+        return view("forms.$formname",compact('clientData','forms')); // Use double quotes or concatenation
     }
     return redirect()->route('agency.application', ['type' => 'all']); 
     }
+
+
+
+
     /****Edit Visa application *****/
     public function hsEditVisaApplication($id){
         $agency = $this->agencyService->getAgencyData();
@@ -416,18 +424,24 @@ class VisaController extends Controller
     }
 
 
-
+    /*****Form Delete ******/
     public function hsFormDelete($id){
         $form = $this->visaRepository->deleteForm($id);
         return redirect()->route('visa.forms')->with('success', 'Booking successful');
     }
 
+
+        /*****Form Assign form to coutnry ******/
     public function hsAssignCountry($id){
         $countries=Country::get();
         $form = $this->visaRepository->findFormById($id);
         return view('superadmin.pages.visa.assignfrom',compact('countries','form'));
     }
 
+
+    
+
+   /*****Form Store assign coutnry  ******/
     public function hsAssignCountrystore(Request $request){
         $data = $request->validate([
             'form_id'=>'required|integer',
@@ -441,6 +455,20 @@ class VisaController extends Controller
     }
 
   
+    /*****View Assign country which form*** */
+    public function hsViewCountry($id){
+        $forms = $this->visaRepository->viewCoutnryFormById($id);
+            //  dd($forms);
+              return view('superadmin.pages.visa.viewcoutnrynfrom',compact('forms'));
+
+    }
+
+    public function hsFromDisConnectCountry($id){
+        $forms = $this->visaRepository->disConnectCoutnryFormById($id);
+        if($forms){
+            return redirect()->route('visa.forms')->with('success', 'Booking successful');
+        }
+    }
 
     /*****Update Application ******/
     public function hsupdateapplication(Request $request){
@@ -462,5 +490,49 @@ class VisaController extends Controller
             return redirect()->route('agency.application', ['type' => 'all']);
         }
         return redirect()->route('agency.application', ['type' => 'all']);    
+   }
+
+
+   /*****Prepare Email *******/
+   public function hsPreparedEmail($id){
+    $agency = $this->agencyService->getAgencyData();
+    $clientData = $this->visaRepository->bookingDataById($id);
+
+    if (isset($clientData) && $clientData->agency_id == $agency->id) {
+        return view('superadmin.pages.visa.sendemailfrom',compact('clientData'));
+   }
+   return redirect()->route('agency.application', ['type' => 'all']);
+   }
+
+
+   /*******Send Email for Client ******/
+   public function hsSendEmail(Request $request){
+
+    $agency = $this->agencyService->getAgencyData();
+    $clientData = $this->visaRepository->bookingDataById($request->visa_id);
+
+    if (isset($clientData) && $clientData->agency_id == $agency->id) {
+    $request->validate([
+        'emailid' => 'required|email',
+        'visa_id' => 'required|integer',
+        'subject' => 'required|string|max:255',
+        'message' => 'required|string',
+        'formupload' => 'nullable|mimes:pdf|max:10240', 
+    ]);
+    
+    $clientData = $this->visaRepository->sendEmail($request->all(),$agency);
+ 
+
+     }
+    return redirect()->route('agency.application', ['type' => 'all']);  
+  
+   }
+
+   /*******Delete Application ******/
+   public function hsDeleteApllication($id){
+    $action = $this->visaRepository->deleteBooking($id);
+    if(isset($action))
+    return redirect()->route('agency.application', ['type' => 'all']);
+
    }
 }

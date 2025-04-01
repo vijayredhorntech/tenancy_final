@@ -21,7 +21,7 @@
                     @if(isset($eid))
                     <input type="hidden" name="vid" value="{{$eid}}">
                     @endif
-                    <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
+                    <div class="w-full grid  gap-2 px-4 py-6">
                         <!-- Visa Name -->
                         <div class="w-full relative group flex flex-col gap-1">
                             <label for="name" class="font-semibold text-ternary/90 text-sm">Visa Name</label>
@@ -99,34 +99,43 @@
                         @endphp
 
                         @foreach($oldSubtypes as $index => $subtype)
-                            <div class="subtypeGroup clickedit w-full p-4 border border-gray-300 rounded-lg relative" style="{{ isset($eid) ? 'display: none;' : '' }}">
-                                <div class="flex flex-col gap-1">
-                                    <label class="font-semibold text-gray-700 text-sm">Subtype Name</label>
-                                    <input type="text" name="subtype[]" value="{{ $subtype }}" placeholder="Subtype name..." class="w-full pl-2 pr-8 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500">
-                                    @error("subtype.$index")
-                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div class="flex flex-col gap-1 mt-3">
-                                    <label class="font-semibold text-gray-700 text-sm">Subtype Price</label>
-                                    <input type="number" name="subtypeprice[]" value="{{ $oldSubtypePrices[$index] }}" placeholder="Subtype price..." class="w-full pl-2 pr-8 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500">
-                                    @error("subtypeprice.$index")
-                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <div class="flex flex-col gap-1 mt-3">
-                                    <label class="font-semibold text-gray-700 text-sm">Commission</label>
-                                    <input type="number" name="commission[]" value="{{ $oldCommissions[$index] }}" placeholder="Commission..." class="w-full pl-2 pr-8 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500">
-                                    @error("commission.$index")
-                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
-                                </div>
-
-                                <!-- Remove Button (Hidden for First Element) -->
-                                <button type="button" class="removeField {{ $index == 0 ? 'hidden' : '' }} mt-3 px-3 py-1 bg-red-500 text-white text-xs rounded">Remove</button>
-                            </div>
+                            <div class="subtypeGroup clickedit w-full grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-2 px-4 py-6" style="{{ isset($eid) ? 'display: none;' : '' }}">
+                            <!-- Visa Name -->
+                                    <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="name" class="font-semibold text-ternary/90 text-sm">Subtype Name</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="subtype[]" value="{{ $subtype }}" placeholder="Subtype name..."
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
+                                                    border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                                @error('subtype.$index')
+                                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                    </div>
+                                    <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="name" class="font-semibold text-ternary/90 text-sm">Subtype Price</label>
+                                            <div class="w-full relative">
+                                                <input type="number" name="subtypeprice[]" value="{{ $oldSubtypePrices[$index] }}" placeholder="Subtype price..."
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
+                                                    border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                                @error('subtypeprice.$index')
+                                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                    </div>
+                                    <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="name" class="font-semibold text-ternary/90 text-sm">Commission</label>
+                                            <div class="w-full relative">
+                                                <input type="number" name="commission[]" value="{{ $oldCommissions[$index] }}" placeholder="Commission..."
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
+                                                    border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                                @error('commission.$index')
+                                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                    </div>
+                                    <span class="removeField {{ $index == 0 ? 'hidden' : '' }} w-max cursor-pointer mt-3 px-3 py-1 bg-red-500 text-white text-xs rounded">Remove</span>
+                           </div>
                         @endforeach
 
 
@@ -192,6 +201,7 @@
                     });
 
                     container.addEventListener("click", function (event) {
+                        console.log(event);
                         if (event.target.classList.contains("removeField")) {
                             event.target.parentElement.remove();
                         }

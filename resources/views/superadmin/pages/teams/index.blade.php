@@ -33,14 +33,6 @@
                          </div>
 
 
-                         {{--               === textarea input field ===--}}
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <label for="name" class="font-semibold text-ternary/90 text-sm">Description</label>
-                             <div class="w-full relative">
-                                 <textarea   name="description" id="description" rows="2" placeholder="Description....." class="quill-editor w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"></textarea>
-                                 <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
-                             </div>
-                         </div>
 
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Head Member</label>
@@ -56,6 +48,16 @@
 
                                  </select>
                                  <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
+                             </div>
+                         </div>
+
+                         
+                         {{--               === textarea input field ===--}}
+                         <div class="w-full relative group flex flex-col gap-1 xl:col-span-2">
+                             <label for="name" class="font-semibold text-ternary/90 text-sm">Description</label>
+                             <div class="w-full relative">
+                                 <textarea   name="description" id="description" rows="2" placeholder="Description....." class="quill-editor w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"></textarea>
+                                 <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
                              </div>
                          </div>
 

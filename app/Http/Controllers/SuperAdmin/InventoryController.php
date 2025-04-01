@@ -97,12 +97,36 @@ Public function hs_bookingManagment(){
 
     $services=Service::get(); 
    
+    $flight_recent_booking = Deduction::with(['service_name', 'agency','flightBooking'])
+    ->orderBy('created_at', 'desc') // Orders by latest records
+    ->where('service','2')
+    ->take(5)
+    ->get();
+
+    $visa_recent_booking = Deduction::with([
+        'service_name', 
+        'agency',
+        'visaBooking', // Ensure this relationship is defined correctly
+        'visaBooking.visa',
+        'visaBooking.origin',
+        'visaBooking.destination',
+        'visaBooking.visasubtype',
+        'visaBooking.clint',
+        'visaApplicant' // Ensure the correct spelling: 'clint' → 'client' (if it's a typo)
+    ])
+    ->where('service', 3) // No need for quotes around integer
+    ->orderBy('created_at', 'desc') // Order by latest records
+    ->take(5)
+    ->get();
+
   
 
     return view('superadmin.pages.booking.booking', [
         'bookings' => $bookings,
         'flights' => $flights, // Fixed: Correctly passing flights array
-        'services' => $services
+        'services' => $services,
+        'flight_recent_booking' => $flight_recent_booking,
+        'visa_recent_booking' => $visa_recent_booking
     ]);
     
 }

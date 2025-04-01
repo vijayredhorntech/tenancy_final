@@ -26,4 +26,16 @@ class VisaServiceTypeDocument extends Model
     public function from(){
         return $this->hasOne(Document::class, 'id','form_id');
     }
+
+    
+    public function origin()
+    {
+        return $this->hasOne(Country::class, 'id','origin_id');
+    }
+
+
+    public function destination()
+    {
+        return $this->hasOne(Country::class, 'id','destination_id');
+    }
 }

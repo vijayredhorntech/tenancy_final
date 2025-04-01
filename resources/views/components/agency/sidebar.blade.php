@@ -41,7 +41,9 @@
 
 
             @if(isset($services) && $services->isNotEmpty())
+     
                 @foreach($services as $icon => $service)
+                    
                     <li class="{{ Route::currentRouteName() === 'dashboard' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }}
                         w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative
                         hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">

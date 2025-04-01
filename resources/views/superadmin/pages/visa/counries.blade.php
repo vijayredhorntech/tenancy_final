@@ -17,7 +17,7 @@
 {{--        === this is code for form section ===--}}
              <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 hidden">
                  <form action="">
-                     <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
+                     <div class="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-4 sm:grid-cols-2 gap-2 px-4 py-6">
 
                          {{--               === text type input field ===--}}
                          <div class="w-full relative group flex flex-col gap-1">

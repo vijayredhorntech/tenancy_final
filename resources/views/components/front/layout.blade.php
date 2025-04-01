@@ -86,6 +86,10 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     {{--    ===font awesome link ends===--}}
 
+    <!-- swiffy sldier link and script -->
+    <script src="https://cdn.jsdelivr.net/npm/swiffy-slider@1.6.0/dist/js/swiffy-slider.min.js" crossorigin="anonymous" defer></script>
+    <link href="https://cdn.jsdelivr.net/npm/swiffy-slider@1.6.0/dist/css/swiffy-slider.min.css" rel="stylesheet" crossorigin="anonymous">
+
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
@@ -164,7 +168,7 @@
 
                 // Create a new wrapper div
                 let docWrapper = document.createElement('div');
-                docWrapper.className = "p-4 border border-gray-300 rounded-lg flex flex-col gap-2";
+                docWrapper.className = "w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2";
 
                 // Document Name Field
                 let documentField = `
@@ -173,7 +177,7 @@
                         <div class="w-full relative">
                             <input type="text" name="document${counter}" id="document${counter}" placeholder="Document name..."
                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                            <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-gray-500"></i>
+                            <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                         </div>
                     </div>`;
 
@@ -184,13 +188,18 @@
                         <div class="w-full relative">
                             <input type="file" name="file${counter}" id="file${counter}"
                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                            <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-gray-500"></i>
+                            <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                         </div>
                     </div>`;
 
                 // Remove Button
                 let removeBtn = `
-                    <button type="button" class="mt-2 px-4 py-1 bg-red-500 text-black rounded remove-btn">Remove</button>
+                  <div class="w-max flex flex-col gap-1 remove-btn">
+                        <label for="file${counter}" class="font-semibold text-gray-700 text-sm">&nbsp</label>
+                        <div class="w-full relative">
+                          <button type="button" class="w-max h-max text-sm bg-danger/30 px-4 py-1 mt-2 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-danger/90 text-ternary hover:text-white hover:bg-danger hover:border-ternary/30 transition ease-in duration-2000">Remove</button>
+                        </div>
+                    </div>
                 `;
 
                 // Append fields and button to the wrapper

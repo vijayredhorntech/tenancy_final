@@ -18,6 +18,7 @@ class Sidebar extends Component
 
      public $user;
      public $services;
+     public $visapermission;
 
 
     public function __construct()
@@ -75,6 +76,7 @@ class Sidebar extends Component
         }
 
         $agency = Agency::with('userAssignments.service')->find($agencyRecord->id);
+  
       
       
         // Extract services safely

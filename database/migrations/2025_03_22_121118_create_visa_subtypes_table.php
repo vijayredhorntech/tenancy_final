@@ -21,7 +21,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Foreign Key Constraint (Assuming visa_types table exists)
-            $table->foreign('visa_type_id')->references('id')->on('visa_types')->onDelete('cascade');
+            // $table->foreign('visa_type_id')->references('id')->on('visa_types')->onDelete('cascade');
         });
     }
 

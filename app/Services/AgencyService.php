@@ -14,7 +14,10 @@ class AgencyService
     
     public function getAgencyData()
     {
+      
         $userData = session('user_data');
+       
+
 
         if (!$userData) {
             return null; // Handle case where session data is missing

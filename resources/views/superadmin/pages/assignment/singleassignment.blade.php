@@ -23,17 +23,23 @@
                 $images = json_decode($assignment->images, true) ?? []; // Ensure it's an array
               
             @endphp
-            <div class="flex gap-6 overflow-x-auto p-2">
-                @foreach($images as $image)
-                <a href="{{ asset('images/assignment/assignmentpic/' . $image) }}" target="_blank">
-                    <div class="flex-shrink-0 w-64">
-                        <img src="{{ asset('images/assignment/assignmentpic/' . $image) }}" 
-                            alt="Assignment Image" class="w-full h-56 object-cover rounded-lg shadow-lg">
-                    </div>
-                </a>
 
-                @endforeach
+            <div class="swiffy-slider slider-nav-autoplay">
+                <ul class="slider-container">
+                    @foreach($images as $image)
+                    <li>
+                        <a href="{{ asset('images/assignment/assignmentpic/' . $image) }}" target="_blank">
+                        <img src="{{ asset('images/assignment/assignmentpic/' . $image) }}" 
+                                    alt="Assignment Image" class="w-full h-56 object-cover rounded-lg shadow-lg">
+                        </a>
+                    </li>
+                    @endforeach
+                </ul>
+
+                <button type="button" class="slider-nav"></button>
+                <button type="button" class="slider-nav slider-nav-next"></button>
             </div>
+    
 
                         </div>
 

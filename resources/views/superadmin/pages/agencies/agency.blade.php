@@ -146,10 +146,10 @@
                                 {{ $agency->userAssignments ? $agency->userAssignments->count() : 0 }}
                                 <button type="button" title="View Services"
                                         onclick="document.getElementById('viewServiceModel').classList.toggle('hidden')">
-                                    <div
+                                    <!-- <div
                                         class=" bg-primary/10 text-primary h-6 w-6 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                         <i class="fa fa-eye"></i>
-                                    </div>
+                                    </div> -->
                                 </button>
                             </div>
                         </td>

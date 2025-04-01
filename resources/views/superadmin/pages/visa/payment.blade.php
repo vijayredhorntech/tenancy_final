@@ -114,8 +114,9 @@
                       </div>
 
                       <div class=" flex w-full  mt-5">
-                          <a class="bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton">Proceed to Payment </a>
-                      </div>
+                          <!-- <a class="bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton">Proceed to Payment </a> -->
+                     <input type="submit" class="bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton" value=" Proceed To Payment"> 
+                        </div>
 
                       <div class="insufficientbalance">
                         <span class=" mt-4 showLoader w-full font-semibold text-md bg-danger/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-danger hover:bg-danger hover:text-white transition ease-in duration-2000"
@@ -134,21 +135,20 @@
                   </div>
                   <div class="flex justify-between mt-3">
                       <span class="text-black text-md">Visa Fee:</span>
-                      <span class="text-black text-md font-semibold">&#8377 235.58</span>
+                      <span class="text-black text-md font-semibold visa-price">&#8377 235.58</span>
                   </div>
                   <div class="flex justify-between mt-1.5">
                       <span class="text-black text-md">Service Fee:</span>
-                      <span class="text-black text-md font-semibold">₹5,998.00</span>
+                      <span class="text-black text-md font-semibold visa-commision">₹5,998.00</span>
                   </div>
                   <div class="flex justify-between mt-1.5 pb-3 border-b-2 border-b-gray-200 ">
-                      <span class="text-black text-md">Tax:</span>
-                      <span class="text-black text-md font-semibold">&#8377 235.58</span>
+                      <span class="text-black text-md ">Tax:</span>
+                      <span class="text-black text-md font-semibold"> </span>
                   </div>
-
 
                   <div class="flex justify-between mt-3">
                       <span class="text-black text-md">Total:</span>
-                      <span class="text-black text-md font-semibold">&#8377 135.58</span>
+                      <span class="text-black text-md font-semibold visa-total">&#8377 135.58</span>
                   </div>
 
 
@@ -263,7 +263,7 @@ $(document).ready(function () {
                 type: "GET",
                 data: { visa_type_id: visa_type_id },
                 success: function (data) {
-                    console.log(data.visa_subtypes);
+                  
                     var html = ''; // Default option
 
                     $.each(data.visa_subtypes, function (index, category) {
@@ -336,10 +336,10 @@ $("#existingUserBtn").on("click", function () {
             url: "{{ route('get.existing.users') }}", // Update with correct route
             type: "GET",
             success: function (data) {
-                console.log(data[0]);
+                console.log(data);
                 let html = '<option value="">Select User</option>';
                 data.forEach(user => {
-                    html += `<option value="${user.id}"  data-nationality="${user.clientinfo?.nationality ?? 'N/A'}" data-name="${user.name}"  data-phone_number="${user.phone_number} " data-email="${user.email}" data-passport="${user.passport_number}">${user.name}</option>`;
+                    html += `<option value="${user.id}"  data-nationality="${user.clientinfo?.nationality ?? 'N/A'}" data-name="${user.name}" data-lastname="${user.clientinfo?.last_name}"  data-phone_number="${user.phone_number} " data-email="${user.email}" data-passport="${user.passport_number}">${user.name}</option>`;
                 });
                 $("#existingUserDropdown").html(html);
             }
@@ -357,7 +357,7 @@ $("#existingUserBtn").on("click", function () {
                     return item.trim();
                 });
         var firstName = nameParts[0] || "";
-        var lastName = nameParts[1] || "";
+        var lastName = selectedUser.data("lastname");;
         var country=selectedUser.data("nationality");
 
         $(".addresspart").show();
