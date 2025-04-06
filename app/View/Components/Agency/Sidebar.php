@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Agency;
 use App\Helpers\DatabaseHelper;
+use App\Services\AgencyService;
+use App\Models\UserServiceAssignment;
 
 class Sidebar extends Component
 {
@@ -19,11 +21,14 @@ class Sidebar extends Component
      public $user;
      public $services;
      public $visapermission;
+     public $agencyService;
 
 
-    public function __construct()
+    public function __construct(AgencyService $agencyService)
     {
+        $this->agencyService = $agencyService;
         $this->initializeData();
+       
     }
 
     /**
@@ -31,18 +36,18 @@ class Sidebar extends Component
      */
     private function initializeData()
     {
-        $userData = session('user_data', []);
+        // $userData = session('user_data', []);
 
-        if (!isset($userData['database'])) {
-            return;
-        }
+        // if (!isset($userData['database'])) {
+        //     return;
+        // }
 
-        DatabaseHelper::setDatabaseConnection($userData['database']);
-        $user = User::on('user_database')->where('email', $userData['email'])->first();
+        // DatabaseHelper::setDatabaseConnection($userData['database']);
+        // $user = User::on('user_database')->where('email', $userData['email'])->first();
 
-        if (!$user) {
-            return;
-        }
+        // if (!$user) {
+        //     return;
+        // }
 
      
 
@@ -55,33 +60,47 @@ class Sidebar extends Component
 
         
         // Fetch user from the dynamic database connection
-        $this->user = User::on('user_database')->where('id', $user->id)->first();
+        // $this->user = User::on('user_database')->where('id', $user->id)->first();
 
-        if (!$this->user) {
-            return;
-        }
+        // if (!$this->user) {
+        //     return;
+        // }
 
         // Fetch agency details
-        if( $this->user->type=="staff"){
+        // if( $this->user->type=="staff"){
 
-            $agencyRecord = Agency::where('database_name', $userData['database'])->first();
+        //     $agencyRecord = Agency::where('database_name', $userData['database'])->first();
 
-        }else{
-            $agencyRecord = Agency::where('email', $this->user->email)->first();
-        }
+        // }else{
+        //     $agencyRecord = Agency::where('email', $this->user->email)->first();
+        // }
        
       
-        if (!$agencyRecord) {
-            return;
+        // if (!$agencyRecord) {
+        //     return;
+        // }
+
+        // $agency = Agency::with('userAssignments.service')->find($agencyRecord->id);
+        $agency = $this->agencyService->getAgencyData();  
+        // dd($agency); 
+        $this->user = $this->agencyService->getCurrentLoginUser();  
+
+        $visapermission=UserServiceAssignment::
+        where('agency_id',$agency->id)
+        ->where('service_id','3')->first(); 
+        if($visapermission){
+            $this->visapermission=true;  
+        }else{
+            $this->visapermission=false;  
         }
 
-        $agency = Agency::with('userAssignments.service')->find($agencyRecord->id);
   
       
       
         // Extract services safely
          $agency = Agency::with('userAssignments.service')->find($agency->id);
          $this->services = $agency->userAssignments->pluck('service.name', 'service.icon'); // Remove null values
+        
      
     }
 
@@ -96,6 +115,7 @@ class Sidebar extends Component
          return view('components.agency.sidebar',[
             'user_data' => $this->user,
             'services' => $this->services,
+            'visapermission'=>$this->visapermission,
         ]);
     }
 }

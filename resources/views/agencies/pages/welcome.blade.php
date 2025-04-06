@@ -667,7 +667,7 @@
     </div>
 
         <div class="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 grid-cols-1 gap-2 mt-6">
-            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col xl:col-span-1 lg:col-span-2 md:col-span-2 ">
+            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col xl:col-span-2 lg:col-span-2 md:col-span-2 ">
                 <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20">
                     <span class="font-semibold text-ternary text-xl">Agency Bookings/ Service</span>
                 </div>
@@ -676,7 +676,7 @@
                     <div id="agencyBookingChart"></div>
                 </div>
             </div>
-            <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-success bg-white flex gap-2 flex-col ">
+            <!-- <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-success bg-white flex gap-2 flex-col ">
                 <div class="bg-success/10 px-4 py-2 border-b-[2px] border-b-success/20">
                     <span class="font-semibold text-ternary text-xl">Agency Funds Utilisation</span>
                 </div>
@@ -684,7 +684,7 @@
                 <div class="w-full overflow-x-auto p-4">
                     <div id="agencyFundsChart"></div>
                 </div>
-            </div>
+            </div> -->
             <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-warning bg-white flex gap-2 flex-col xl:col-span-2 lg:col-span-3 md:col-span-3">
                 <div class="bg-warning/10 px-4 py-2 border-b-[2px] border-b-warning/20">
                     <span class="font-semibold text-ternary text-xl">Agency Bookings/ Day</span>
@@ -981,92 +981,229 @@
 
 
 // Step 1: Process Data
-var agencyData = {};
-var serviceCategories = ["Flight Bookings", "Hotel Bookings", "Visa Bookings"];
+// var agencyData = {};
+// var serviceCategories = ["Flight Bookings", "Hotel Bookings", "Visa Bookings"];
 
+// bookings.forEach(booking => {
+//     let agencyName = booking.agency ? booking.agency.name : "Unknown Agency";
+//     let serviceName = booking.service_name ? booking.service_name.name : "Unknown Service";
+
+//     if (!agencyData[agencyName]) {
+//         agencyData[agencyName] = { "Flight Bookings": 0, "Hotel Bookings": 0, "Visa Bookings": 0 };
+//     }
+
+//     // Increment the respective service type count
+//     if (serviceName.toLowerCase().includes("flight")) {
+//         agencyData[agencyName]["Flight Bookings"]++;
+//     } else if (serviceName.toLowerCase().includes("hotel")) {
+//         agencyData[agencyName]["Hotel Bookings"]++;
+//     } else if (serviceName.toLowerCase().includes("visa")) {
+//         agencyData[agencyName]["Visa Bookings"]++;
+//     }
+// });
+
+
+
+// // Step 2: Prepare Data for ApexCharts
+// var agencies = Object.keys(agencyData); // Extract agency names
+// var seriesData = serviceCategories.map(serviceType => {
+//     return {
+//         name: serviceType,
+//         data: agencies.map(agency => agencyData[agency][serviceType] || 0)
+//     };
+// });
+
+// // Step 3: Initialize ApexCharts
+// var options = {
+//     series: seriesData,
+//     chart: {
+//         type: 'bar',
+//         height: 250,
+//         stacked: true,
+//         stackType: '100%'
+//     },
+//     xaxis: {
+//         categories: agencies, // Dynamically generated agencies
+//     },
+//     fill: {
+//         opacity: 1
+//     },
+//     legend: {
+//         position: 'top',
+//         offsetX: 0,
+//         offsetY: 0
+//     },
+// };
+
+// var chart = new ApexCharts(document.querySelector("#agencyBookingChart2"), options);
+// chart.render();
+
+var bookings = <?php echo json_encode($bookings); ?>;
+
+// Step 1: Get last 30 days
+var endDate = new Date(); // today
+var startDate = new Date();
+startDate.setDate(endDate.getDate() - 29); // 30 days ago
+
+// Prepare date labels and zero-initialized counters
+var dateLabels = [];
+var dateMap = {}; // Map date string => index
+for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    let formatted = d.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+    dateLabels.push(formatted);
+    dateMap[formatted] = dateLabels.length - 1;
+}
+
+var dailyData = {
+    "Flight Bookings": Array(30).fill(0),
+    "Hotel Bookings": Array(30).fill(0),
+    "Visa Bookings": Array(30).fill(0)
+};
+
+// Step 2: Process bookings
 bookings.forEach(booking => {
-    let agencyName = booking.agency ? booking.agency.name : "Unknown Agency";
-    let serviceName = booking.service_name ? booking.service_name.name : "Unknown Service";
+    if (!booking.date) return;
 
-    if (!agencyData[agencyName]) {
-        agencyData[agencyName] = { "Flight Bookings": 0, "Hotel Bookings": 0, "Visa Bookings": 0 };
-    }
+    let dateStr = booking.date.split('T')[0]; // 'YYYY-MM-DD'
+    if (!(dateStr in dateMap)) return;
 
-    // Increment the respective service type count
-    if (serviceName.toLowerCase().includes("flight")) {
-        agencyData[agencyName]["Flight Bookings"]++;
-    } else if (serviceName.toLowerCase().includes("hotel")) {
-        agencyData[agencyName]["Hotel Bookings"]++;
-    } else if (serviceName.toLowerCase().includes("visa")) {
-        agencyData[agencyName]["Visa Bookings"]++;
+    let index = dateMap[dateStr];
+    let service = booking.service_name ? booking.service_name.name.toLowerCase() : "";
+
+    if (service.includes("flight")) {
+        dailyData["Flight Bookings"][index]++;
+    } else if (service.includes("hotel")) {
+        dailyData["Hotel Bookings"][index]++;
+    } else if (service.includes("visa")) {
+        dailyData["Visa Bookings"][index]++;
     }
 });
 
-
-
-// Step 2: Prepare Data for ApexCharts
-var agencies = Object.keys(agencyData); // Extract agency names
-var seriesData = serviceCategories.map(serviceType => {
-    return {
-        name: serviceType,
-        data: agencies.map(agency => agencyData[agency][serviceType] || 0)
-    };
-});
-
-// Step 3: Initialize ApexCharts
+// Step 3: Render ApexChart
 var options = {
-    series: seriesData,
+    series: [
+        {
+            name: 'Flight Bookings',
+            data: dailyData["Flight Bookings"]
+        },
+        {
+            name: 'Hotel Bookings',
+            data: dailyData["Hotel Bookings"]
+        },
+        {
+            name: 'Visa Bookings',
+            data: dailyData["Visa Bookings"]
+        }
+    ],
     chart: {
         type: 'bar',
-        height: 250,
-        stacked: true,
-        stackType: '100%'
+        height: 350
+    },
+    plotOptions: {
+        bar: {
+            horizontal: false,
+            columnWidth: '55%',
+            borderRadius: 5,
+            borderRadiusApplication: 'end'
+        }
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent']
     },
     xaxis: {
-        categories: agencies, // Dynamically generated agencies
+        categories: dateLabels.map(date => {
+            let d = new Date(date);
+            return `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`;
+        }),
+        title: {
+            text: 'Date (Last 30 Days)'
+        }
+    },
+    yaxis: {
+        title: {
+            text: 'Total Bookings'
+        }
     },
     fill: {
         opacity: 1
     },
-    legend: {
-        position: 'top',
-        offsetX: 0,
-        offsetY: 0
-    },
+    tooltip: {
+        y: {
+            formatter: function (val) {
+                return val + " bookings";
+            }
+        }
+    }
 };
 
 var chart = new ApexCharts(document.querySelector("#agencyBookingChart"), options);
 chart.render();
 
+
+
+
+
+
 // pricedata
 
-            var agencyFundsOptions = {
-                series: [44, 55, 67, 83, 70],
-                chart: {
-                    height: 250,
-                    type: 'radialBar',
-                },
-                plotOptions: {
-                    radialBar: {
-                        dataLabels: {
-                            name: {
-                                fontSize: '22px',
-                            },
-                            value: {
-                                fontSize: '16px',
-                            },
-                            total: {
-                                show: true,
-                                label: 'Total',
+var options = {
+          series: [{
+          name: 'Net Profit',
+          data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+        }, {
+          name: 'Revenue',
+          data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+        }, {
+          name: 'Free Cash Flow',
+          data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+        }],
+          chart: {
+          type: 'bar',
+          height: 350
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '55%',
+            borderRadius: 5,
+            borderRadiusApplication: 'end'
+          },
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          show: true,
+          width: 2,
+          colors: ['transparent']
+        },
+        xaxis: {
+          categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+        },
+        yaxis: {
+          title: {
+            text: '$ (thousands)'
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return "$ " + val + " thousands"
+            }
+          }
+        }
+        };
 
-                            }
-                        }
-                    }
-                },
-                labels: ['Agency 1', 'Agency 2', 'Agency 3', 'Agency 4', 'Agency 5'],
-            };
-            var agencyFundsChart = new ApexCharts(document.querySelector("#agencyFundsChart"), agencyFundsOptions);
-            agencyFundsChart.render();
+        var chart = new ApexCharts(document.querySelector("#agencyBookingChart23"), options);
+        chart.render();
 
 
 

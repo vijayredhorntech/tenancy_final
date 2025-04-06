@@ -63,7 +63,9 @@
         </div>
      @endif
 
+
      @if($user_data->getAllPermissions()->pluck('name')->intersect(['visa view', 'manage everything'])->isNotEmpty())
+     @if($visapermission)
         <div class="">
             <div onclick="document.getElementById('visaDiv').classList.toggle('hidden');document.getElementById('visaArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='service'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
@@ -115,6 +117,7 @@
 
             </ul>
         </div>
+        @endif
         @endif
   
 

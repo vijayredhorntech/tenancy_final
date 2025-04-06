@@ -11,6 +11,9 @@ trait AgenciesPdfTrait
 {
 
     
+    public function text(){
+        
+    }
     public function generateAgenciesPDF($title,$agencies)
     {
      
