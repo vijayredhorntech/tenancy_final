@@ -35,6 +35,12 @@ use App\Http\Middleware\CheckUserSession;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\Agencies\ClientController;
 
+/*******Controler for Hotel */
+
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\HotelController;
+
 
 
 
@@ -57,6 +63,12 @@ Route::get('/viewtest',function (){
 
 return view('viewtest');
 }); 
+
+
+
+
+
+
 Route::get('/dummy-agencies', [AgencyController::class, 'dummyCreateAgency']);
 Route::post('/search',[GloballyController::class,'hs_globalSearch'])->name('search');
 Route::get('/login',[AuthController::class,'login_form'])->name('login');
@@ -359,11 +371,7 @@ Route::group([
         Route::post('/sendemail','hsSendEmail')->name('sendclintemail');
         Route::get('/deleteapplication/{id}', 'hsDeleteApllication')->name('delete.application');
         
-
-
-
-        
-    });
+   });
 
     Route::controller(ClientController::class)->group(function () {
         Route::get('/client','hs_index')->name('client.index');
@@ -407,6 +415,47 @@ Route::group([
         // Route::post('/payment', 'payment')->name('flight.payment');
     });
 
+
+    
+            Route::prefix('hotel')->group(function () {
+
+                // SearchController Routes
+                Route::controller(SearchController::class)->group(function () {
+                    Route::get('/search', 'index')->name('hotel.search');
+                    Route::get('/search-results', 'results')->name('hotel.search.results');
+                    Route::get('/hotel-details', 'details')->name('hotel.details');
+                    Route::get('/holidayList', 'hotelResults')->name('hotel.holidayList');
+                    Route::get('/searchHotelByName', 'searchHotel')->name('hotel.searchHotelByName');
+                    Route::post('/morefilter', 'moreFilterHotel')->name('hotel.filterHotel');
+                    Route::post('/rating', 'HotelRatings')->name('hotel.rating');
+                    Route::post('/priceRange', 'filterByPriceRange')->name('hotel.filterHotelByPrice');
+                    Route::post('/sortby', 'sortBy')->name('hotel.sort');
+                    Route::get('/resetfilter', 'resetFilter')->name('hotel.resetFilter');
+                    Route::get('/applyfilter', 'applyFilter')->name('hotel.applyFilter');
+                    Route::get('/removefilter', 'removeFilter')->name('hotel.removeFilter');
+                    Route::get('/suggestions', 'getHotelSuggestions')->name('hotel.suggestions');
+                });
+
+                // BookingController Routes
+                Route::controller(BookingController::class)->group(function () {
+                    Route::get('/booking', 'index')->name('hotel.booking');
+                    Route::get('/bookingStage1/{bookingDetails}', 'bookingStage1')->name('hotel.bookingStage1');
+                    Route::post('/bookingStage2', 'bookingStage2')->name('hotel.bookingStage2');
+                    Route::post('/bookingStage3', 'bookingStage3')->name('hotel.bookingStage3');
+                    Route::get('/cardPayment/bookingStage4', 'bookingStage4')->name('hotel.bookingStage4');
+                    Route::get('/bookingStage5/payment', 'cardPayment')->name('hotel.cardPayment');
+                });
+
+                // HotelController Routes
+                Route::controller(HotelController::class)->group(function () {
+                    Route::get('/roomDetailsPdf/{hotelId}', 'roomDetaiPdf')->name('hotel.roomDetailsPdf');
+                    Route::get('/sharePdf/{hotelId}', 'sharePdf')->name('hotel.sharePdf');
+                });
+
+            });
+    
+   
+
         // Roles
         Route::controller(AgencyRoleController::class)->group(function () {
             Route::get('/roleindex', 'hs_roleindex')->name('agency.role');
@@ -430,6 +479,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 require __DIR__.'/auth.php';
 

@@ -256,7 +256,7 @@
                        <div class="w-full relative group flex flex-col gap-1">
                            <label for="name" class="font-semibold text-ternary/90 text-sm">Emergency Person contact</label>
                            <div class="w-full relative">
-                               <input type="text" name="emergencyperson_contact" id="emergencyperson_contact" placeholder=""
+                               <input type="number" name="emergencyperson_contact" id="emergencyperson_contact" placeholder=""
                                    value="{{ old('emergencyperson_contact') }}"
                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                    @error('emergencyperson_contact') border-red-500 @enderror">
@@ -323,10 +323,16 @@
                        <div class="w-full relative group flex flex-col gap-1">
                            <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Passport Expire Date</label>
                            <div class="w-full relative">
-                               <input type="date" name="passport_expiredate" id="passport_expiredate" min=""
+                               <input type="date" name="passport_expiredate" id="passport_expiredate" min=""  max="2099-12-31"
                                    class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
-                                   onclick="document.getElementById('passport_expiredate').showPicker();"></i>
+                                   onclick="document.getElementById('passport_expiredate').showPicker();" ></i>
+                                   <!-- <input type="date" name="passport_expiredate" id="passport_expiredate"
+                                class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"
+                        onchange="validateDate(this)">
+                    <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
+                    onclick="document.getElementById('passport_expiredate').showPicker();"></i> -->
+
                            </div>
                        </div>
 
@@ -395,7 +401,7 @@
                        <div class="w-full relative group flex flex-col gap-1">
                            <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Wage</label>
                            <div class="w-full relative">
-                               <input type="text" name="wage" id="wage" placeholder="Wages....."
+                               <input type="number" name="wage" id="wage" placeholder="Wages....."
                                    class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
 
                            </div>
@@ -497,7 +503,7 @@
                                <div class="w-full relative group flex flex-col gap-1">
                                    <label for="attachment1" class="font-semibold text-ternary/90 text-sm">Tax Value </label>
                                    <div class="w-full relative">
-                                       <input type="text" name="taxvalue1" id="taxvalue1" placeholder="Tax Value..."
+                                       <input type="number" name="taxvalue1" id="taxvalue1" placeholder="Tax Value..."
                                            value="{{ old('taxvalue1') }}"
                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                            @error('taxvalue1') border-red-500 @enderror">
@@ -574,7 +580,7 @@
                                <div class="w-full relative group flex flex-col gap-1">
                                    <label for="document1" class="font-semibold text-ternary/90 text-sm">Food</label>
                                    <div class="w-full relative">
-                                       <input type="numbber" name="food" id="food" placeholder="..."
+                                       <input type="number" name="food" id="food" placeholder="..."
                                            value="{{ old('food') }}"
                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                            @error('food') border-red-500 @enderror">

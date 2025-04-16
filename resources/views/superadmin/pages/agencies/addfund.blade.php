@@ -45,7 +45,7 @@
 
 
                          <div class="w-full relative group flex flex-col gap-1">
-                             <label for="email" class="font-semibold text-ternary/90 text-sm">Ammount Detials</label>
+                             <label for="email" class="font-semibold text-ternary/90 text-sm">Balance  Detials</label>
                              <div class="w-full relative">
                                  <input type="number" name="balance" id="balance"  readonly="" value="{{ $agency->balance ? $agency->balance->balance : 0 }}" placeholder="Total balance....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-envelope absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>

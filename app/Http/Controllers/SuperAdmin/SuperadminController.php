@@ -53,11 +53,16 @@ class SuperadminController extends Controller
     /*** Staff List ***/
     public function hs_staffindex()
     {
-
+     
+        $users = User::with('roles', 'userdetails')
+        ->whereDoesntHave('roles', function ($query) {
+            $query->where('name', 'Super Admin');
+        })
+        ->get();
         return view('superadmin.pages.staff.staff', [
             'user_data' => Auth::user(),
             'services'  => Service::all(),
-            'users'     => User::with('roles', 'userdetails')->get(),
+            'users'     => $users,
         ]);
     }
 

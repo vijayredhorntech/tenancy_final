@@ -980,64 +980,6 @@
     var bookings = <?php echo json_encode($bookings); ?>;
 
 
-// Step 1: Process Data
-// var agencyData = {};
-// var serviceCategories = ["Flight Bookings", "Hotel Bookings", "Visa Bookings"];
-
-// bookings.forEach(booking => {
-//     let agencyName = booking.agency ? booking.agency.name : "Unknown Agency";
-//     let serviceName = booking.service_name ? booking.service_name.name : "Unknown Service";
-
-//     if (!agencyData[agencyName]) {
-//         agencyData[agencyName] = { "Flight Bookings": 0, "Hotel Bookings": 0, "Visa Bookings": 0 };
-//     }
-
-//     // Increment the respective service type count
-//     if (serviceName.toLowerCase().includes("flight")) {
-//         agencyData[agencyName]["Flight Bookings"]++;
-//     } else if (serviceName.toLowerCase().includes("hotel")) {
-//         agencyData[agencyName]["Hotel Bookings"]++;
-//     } else if (serviceName.toLowerCase().includes("visa")) {
-//         agencyData[agencyName]["Visa Bookings"]++;
-//     }
-// });
-
-
-
-// // Step 2: Prepare Data for ApexCharts
-// var agencies = Object.keys(agencyData); // Extract agency names
-// var seriesData = serviceCategories.map(serviceType => {
-//     return {
-//         name: serviceType,
-//         data: agencies.map(agency => agencyData[agency][serviceType] || 0)
-//     };
-// });
-
-// // Step 3: Initialize ApexCharts
-// var options = {
-//     series: seriesData,
-//     chart: {
-//         type: 'bar',
-//         height: 250,
-//         stacked: true,
-//         stackType: '100%'
-//     },
-//     xaxis: {
-//         categories: agencies, // Dynamically generated agencies
-//     },
-//     fill: {
-//         opacity: 1
-//     },
-//     legend: {
-//         position: 'top',
-//         offsetX: 0,
-//         offsetY: 0
-//     },
-// };
-
-// var chart = new ApexCharts(document.querySelector("#agencyBookingChart2"), options);
-// chart.render();
-
 var bookings = <?php echo json_encode($bookings); ?>;
 
 // Step 1: Get last 30 days
