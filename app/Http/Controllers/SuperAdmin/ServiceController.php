@@ -627,7 +627,7 @@ public function airport($input){
 
  public function him_hotel(){
    
- return view('agencies.pages.hotel');
+ return view('agencies.pages.hotel.hotel');
  }
 
  public function him_visa(){

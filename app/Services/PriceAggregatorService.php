@@ -59,6 +59,7 @@ class PriceAggregatorService
 
         // Flatten the matched hotels array
         $flattenedMatchedHotels = collect($matchedHotels)->flatten(1)->toArray();
+        // dd($flattenedMatchedHotels);
 
         // Combine all hotels and remove duplicates
         $uniqueHotels = $this->unionHotelLists($flattenedMatchedHotels, [], []);
@@ -163,6 +164,7 @@ class PriceAggregatorService
     {
         $uniqueHotels = collect();
         $allHotels = collect($list1)->merge($list2)->merge($list3);
+        
         $allHotels->each(function ($hotel) use ($uniqueHotels) {
             $existingHotel = $uniqueHotels->first(function ($uniqueHotel) use ($hotel) {
                 $similarityValue = $this->calculateSimilarity($uniqueHotel["HotelName"], $hotel["HotelName"]);

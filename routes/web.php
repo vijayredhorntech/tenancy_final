@@ -46,6 +46,7 @@ use App\Http\Controllers\HotelController;
 
 
 
+
 Route::fallback(function() {
     return redirect('/login');
 });
@@ -60,8 +61,10 @@ Route::get('/test',function (){
 
 
 Route::get('/viewtest',function (){
+    $data = session()->all();
+    dd($data);
 
-return view('viewtest');
+// return view('viewtest');
 }); 
 
 
@@ -114,7 +117,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::post('editstore', 'him_editstore')->name('agencies.editstore');
                         Route::get('delete/{id}', 'him_delete_agency')->name('agencies.delete');
                         Route::get('/export-agency','exportAgency')->name('agencies.downloade');
-                        Route::get('/generate-pdf',  'generatePDF')->name('agencies.invoice');
+                        Route::get('/agencygenerate-pdf',  'generatePDF')->name('agencies.invoice');
                         Route::get('/agency/{id}','hs_agency_hisoty')->name('agencies.history');
 
                     });
@@ -177,7 +180,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                     /*** Route for staff ***/
                     Route::controller(SuperadminController::class)->group(function () {
-                        Route::get('/generate-pdf','generatePDF')->name('studentgenerate.pdf');
+                        // Route::get('/generate-pdf','generatePDF')->name('studentgenerate.pdf');
                         Route::get('/studentgenerate-pdf', 'generatePDF')->name('studentgenerate.pdf');
                         Route::get('/studnetgenerate-excel','exportStudent')->name('studentgenerate.excel');
                         Route::get('/staffindex', 'hs_staffindex')->name('staff');

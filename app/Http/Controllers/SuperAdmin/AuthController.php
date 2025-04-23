@@ -65,26 +65,20 @@ class AuthController extends Controller
     }
 
 
+    /****Dash bord part *** */
+
     public function hs_dashbord(){
-
-    
-   
         $agency = $this->agencyService->getAgencyData();
-
         if ($agency) {
             return redirect()->route('agency_dashboard');
         }
-       
-        $id = Auth::user()->id;
-  
-        $user = User::find($id);
-      
+         $id = Auth::user()->id;
+         $user = User::find($id); 
         if($user->type=="staff"){
             return redirect()->route('profile');
         }
         $roles = $user->roles->pluck('name')->implode(', ');
-        $service = Service::all(); // Use all() instead of get() (optional)
-     
+        $service = Service::all(); // Use all() instead of get() (optional)   
     // $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])->get(); // Array format for clarity
     $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])
     ->take(5) // Limits the result to 5 records
@@ -110,7 +104,7 @@ class AuthController extends Controller
 
             foreach ($bookings as $booking) {
                 if (!$booking->flightBooking) {
-                    continue; // Skip if no flight booking data
+                    continue; 
                 }
 
                 $flight_booking_id = $booking->flight_booking_id; // Get flight_booking_id from booking
@@ -183,22 +177,26 @@ class AuthController extends Controller
             ->take(5)
             ->get();
 
-   
 
-// dd($airlineBookings);
+            /***Get Hotel Booking *****/
+            $hotel_recent_booking = Deduction::with([
+                'service_name', 
+                'agency',
+                'hotelBooking',
+                'hotelDetails'
+            ])
+            ->where('service', 1) // No need for quotes around integer
+            ->orderBy('created_at', 'desc') // Order by latest records
+            ->take(5)
+            ->get();
 
- 
-    // dd($bookings); 
+          $users = User::get();
 
-    $users = User::get();
-
-    // dd("hyyy this"); 
-        
-        return view('superadmin.pages.welcome',compact(
-            'roles', 'service', 'agency', 'total_balance', 'bookings','users','flight_recent_booking','funds','totalagency',
-            'airlineBookings','airlinePassengerTotals','total_deduction','visa_recent_booking'));
-        //  return view('auth.admin.pages.index', ['user_data' => $user,'services' => $service]);
-    }
+            return view('superadmin.pages.welcome',compact(
+                'roles', 'service', 'agency', 'total_balance', 'bookings','users','flight_recent_booking','funds','totalagency',
+                'airlineBookings','airlinePassengerTotals','total_deduction','visa_recent_booking','hotel_recent_booking'));
+            //  return view('auth.admin.pages.index', ['user_data' => $user,'services' => $service]);
+        }
 
 
     public function superadmin_logout() {

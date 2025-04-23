@@ -720,7 +720,7 @@
                 <table class="w-full border-[1px] border-secondary/30 border-collapse recentbooking" id="flight" >
                     <tr>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency Name</td>
+                         <!-- <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency Name</td> -->
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>                       
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>                 
@@ -743,7 +743,7 @@
      
                         <tr>
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->agency['name']}}</td>
+                            <!-- <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->agency['name']}}</td> -->
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                             <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}">{{$booking['invoice_number']}} </a> </td> 
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
@@ -782,8 +782,7 @@
                 <table class="w-full border-[1px] border-secondary/30 border-collapse recentbooking" id="visa"  style="display:none">
                     <tr>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency Name</td>
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Client</td>   
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>                       
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">No of Applicant</td>  
@@ -801,9 +800,9 @@
                                     {{ $loop->iteration }}
                                 </td>
 
-                                <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                <!-- <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
                                     {{ isset($booking->agency['name']) ? $booking->agency['name'] : '' }}
-                                </td>
+                                </td> -->
 
                                 <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
                                     <a href="{{ route('superadminbooking', ['booking_number' => isset($booking['invoice_number']) ? $booking['invoice_number'] : '']) }}">
@@ -882,20 +881,75 @@
                 <table class="w-full border-[1px] border-secondary/30 border-collapse recentbooking" id="hotel"  style="display:none">
                     <tr>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency Name</td>
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Client</td>   
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>                       
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">No of Applicant</td>  
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Destination</td>
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>  
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Hotel Name</td>  
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td> 
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Vendor Name</td>  
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                     </tr>
 
-                        <tr>
-                            <td colspan="6" class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
-                        </tr>
+                    @forelse($hotel_recent_booking as $booking)
+
+                                    <tr>
+                                        <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                            {{ $loop->iteration }}
+                                        </td>
+
+       
+                                        <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                            <a href="{{ route('superadminbooking', ['booking_number' => isset($booking['invoice_number']) ? $booking['invoice_number'] : '']) }}">
+                                                {{ isset($booking['invoice_number']) ? $booking['invoice_number'] : '' }}
+                                            </a>
+                                        </td>
+
+                                   
+
+                                        <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                            {{ isset($booking->service_name['name']) ? $booking->service_name['name'] : '' }}
+                                        </td>
+
+                                        <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                        {{ isset($booking->hotelDetails->hotel_name) ? $booking->hotelDetails->hotel_name : '' }}
+                                        </td>
+
+                                      
+
+                                        <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                            £ {{ isset($booking['amount']) ? $booking['amount'] : '0.00' }}
+                                        </td>
+
+                                        <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                           {{ isset($booking->hotelDetails->vendor_name) ? $booking->hotelDetails->vendor_name : '' }}
+                                         </td>
+
+                                        <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                            {{ isset($booking['date']) ? $booking['date'] : '' }}
+                                        </td>
+
+
+
+                                    
+                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                        <div class="flex gap-2 items-center">
+                                                        <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
+                                                <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
+                                                    <i class="fa fa-file-pdf"></i>
+                                                </div>
+                                            </a>
+
+                                        </div>
+                                    </td>
+                                    </tr>
+
+
+                                    @empty
+                                    <tr>
+                                    <td colspan="6" class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
+                                    </tr>
+                                    @endforelse
+
     
                 </table>
                 </div>
@@ -977,7 +1031,6 @@
                     jQuery("#" + id).show(); // Show the corresponding section
                 });
             });
-    var bookings = <?php echo json_encode($bookings); ?>;
 
 
 var bookings = <?php echo json_encode($bookings); ?>;
@@ -985,7 +1038,7 @@ var bookings = <?php echo json_encode($bookings); ?>;
 // Step 1: Get last 30 days
 var endDate = new Date(); // today
 var startDate = new Date();
-startDate.setDate(endDate.getDate() - 29); // 30 days ago
+startDate.setDate(endDate.getDate() - 14); // 30 days ago
 
 // Prepare date labels and zero-initialized counters
 var dateLabels = [];
@@ -997,9 +1050,9 @@ for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
 }
 
 var dailyData = {
-    "Flight Bookings": Array(30).fill(0),
-    "Hotel Bookings": Array(30).fill(0),
-    "Visa Bookings": Array(30).fill(0)
+    "Flight Bookings": Array(15).fill(0),
+    "Hotel Bookings": Array(15).fill(0),
+    "Visa Bookings": Array(15).fill(0)
 };
 
 // Step 2: Process bookings
@@ -1063,7 +1116,7 @@ var options = {
             return `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`;
         }),
         title: {
-            text: 'Date (Last 30 Days)'
+            text: 'Date (Last 15 Days)'
         }
     },
     yaxis: {

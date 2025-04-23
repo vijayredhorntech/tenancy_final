@@ -30,6 +30,34 @@
         $totalNights = \Carbon\Carbon::parse($searchParams['checkOutDate'])->diffInDays(\Carbon\Carbon::parse($searchParams['checkInDate']));
     @endphp
 
+    <!-- loader part  -->
+
+    <div id="loading_overlay1" class="hidden">
+            <div class="fixed inset-0 justify-center flex h-screen w-full bg-ternary items-center z-50 opacity-90"> </div>
+
+            <div class="z-50 fixed inset-0  justify-center  flex  h-screen w-full items-center p-4">
+                <div class="w-max rounded-[10px]  bg-white gap-6 shadow-lg shadow-black/60 flex flex-col items-center px-6 py-12 ">
+                    <div class="relative flex justify-center items-center">
+                        <div class="absolute animate-spin rounded-full h-20 w-20 border-t-4 border-b-4 border-secondary"></div>
+                        <img src="https://www.svgrepo.com/show/509001/avatar-thinking-9.svg"  class="rounded-full h-16 w-16">
+                    </div>
+                    <div class="w-full mt-4 flex justify-center flex items-center flex-col">
+                    
+                    <span class="font-medium text-md text-secondary">Please wait. We are fetching data</span>
+                    <div class="flex">
+                    <div class="h-1 w-1 rounded-full bg-secondary animate-ping ml-2"></div>
+                        <div class="h-1 w-1 rounded-full bg-secondary animate-ping ml-2"></div>
+                        <div class="h-1 w-1 rounded-full bg-secondary animate-ping ml-2"></div>
+                        <div class="h-1 w-1 rounded-full bg-secondary animate-ping ml-2"></div>
+                    </div>
+                    </div>
+                    
+                </div>
+            </div>
+    </div>
+
+    <!-- end of the loader part  -->
+
     <div class="lg:w-[80%] md:w-[90%] w-full px-2 mx-auto pt-6 bg-[#f3f4f6] rounded-[3px] z-40 lg:sticky md:sticky sm:sticky static top-[70px]">
         <div class="w-full bg-primaryDarkColor rounded-[3px] grid lg:grid-cols-2">
             <!-- Search summary header -->
@@ -120,8 +148,9 @@
 
 
                                     @foreach($hotels as $hotel)
+                               
                                     <div class="w-full bg-white shadow-primaryDarkColor/30 shadow-lg mt-4 rounded-[3px] border-[1px] border-primaryColor/50">
-                                        <a href="#" class="w-full">
+                                      <a href="{{ route('hotel.details', ['hotelIdd' => $hotel['HotelId']]) }}" class="showloader w-full">
                                             <div class="w-full h-auto rounded-[3px]">
 
                                                 <div class="h-[200px] relative overflow-hidden rounded-t-[3px]">
@@ -224,6 +253,7 @@
         </div>
     </section>
     
+
       
 
         <!-- Hotel listing -->
@@ -248,4 +278,14 @@
             <div class="loader3"></div>
         </div>
     </div>
+
+    <script>
+
+        $(document).ready(function () {
+         
+            $('.showloader').on('click', function () {
+                $('#loading_overlay1').removeClass('hidden');
+            });
+        });
+   </script>
 </x-agency.layout>

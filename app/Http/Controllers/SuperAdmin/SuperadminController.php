@@ -21,20 +21,24 @@ use App\Models\LeaveAssign;
 use App\Models\Attendance;
 use App\Models\LoginDetail;
 use App\Models\Salary;
+use App\Models\TeamManagement;
 use Illuminate\Support\Carbon;
 use App\Models\LeaveBalance;
 // use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\Student\StudentPdfTrait;
+
 
 class SuperadminController extends Controller
 {
 
     use StudentPdfTrait;
 
-    public function generatePDF()
+    public function generatePDF(Request $request)
     {
 
-        $users =  User::with('roles', 'userdetails')->get();
+        // $users =  User::with('roles', 'userdetails')->get();
+         /**** Get data for student Treat function **** */
+         $users=$this->generateStudentData($request);
         $title = "Staff Reports";
 
         return $this->generateStudentPDF($title, $users);
@@ -42,27 +46,32 @@ class SuperadminController extends Controller
 
 
     /******Generate Excel file ******/
-    public function exportStudent()
+    public function exportStudent(Request $request)
     {
-        $student = User::with('roles', 'userdetails');
-        return $this->generateStudentExcel($student);
+         /**** Get data for student Treat function **** */
+             $paginated = $this->generateStudentData($request); 
+             $students = $paginated->getCollection();
+            return $this->generateStudentExcel($students);
     }
 
 
 
     /*** Staff List ***/
-    public function hs_staffindex()
+    public function hs_staffindex(Request $request)
     {
-     
-        $users = User::with('roles', 'userdetails')
-        ->whereDoesntHave('roles', function ($query) {
-            $query->where('name', 'Super Admin');
-        })
-        ->get();
+
+        /**** Get data for student Treat function **** */
+        $users=$this->generateStudentData($request);
+  
+        $teams=TeamManagement::all(); 
+        $roles=Role::all();
+        
         return view('superadmin.pages.staff.staff', [
             'user_data' => Auth::user(),
             'services'  => Service::all(),
             'users'     => $users,
+            'teams'     => $teams,
+            'roles'     => $roles,
         ]);
     }
 

@@ -8,7 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Deduction extends Model
 {
     use HasFactory;
-
+    
+    protected $fillable = [
+        'agency_id',
+        'service',
+        'invoice_number',
+        'flight_booking_id',
+        'amount',
+        'date',
+    ];
 
     public function agency()
     {
@@ -25,6 +33,8 @@ class Deduction extends Model
         return $this->belongsTo(FlightBooking::class, 'flight_booking_id');
     }
     
+    /*****Get visa booking using by  id  the name of hotel_id is flight_booking_id ***** */
+
     public function visaBooking()
     {
         return $this->hasOne(VisaBooking::class, 'id','flight_booking_id');
@@ -32,5 +42,18 @@ class Deduction extends Model
     public function visaApplicant()
     {
         return $this->hasMany(AuthervisaApplication::class, 'booking_id','flight_booking_id');
+    }
+
+
+    /*****Get Hotel booking using by  hotel_id  the name of hotel_id is flight_booking_id ***** */
+
+    public function hotelBooking()
+    {
+        return $this->hasOne(HotelBooking::class, 'id','flight_booking_id');
+    }
+    
+    public function hotelDetails()
+    {
+        return $this->hasOne(HotelBookingDetail::class, 'hotel_booking_id','flight_booking_id');
     }
 }

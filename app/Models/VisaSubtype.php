@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class VisaSubtype extends Model
 {
     //
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $fillable = ['visa_type_id', 'name', 'price', 'commission', 'status'];
 

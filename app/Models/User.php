@@ -9,10 +9,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles,SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -88,6 +90,10 @@ class User extends Authenticatable
     public function salaryshilp()
     {
         return $this->hasMany(Salary::class, 'user_id', 'id'); 
+    }
+
+    public function teams(){
+        return $this->hasMany(TeamUser::class, 'user_id', 'id'); 
     }
     
 

@@ -1,6 +1,6 @@
 
 
-<x-navigation-front/>
+<x-agency.layout>
 
 <div class="flex justify-center items-center h-screen">
     <div class="w-[50%] mx-auto p-2">
@@ -14,4 +14,4 @@
     </div>
 </div>
 
-<x-footer/>
+</x-agency.layout>

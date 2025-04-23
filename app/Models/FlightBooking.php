@@ -3,10 +3,11 @@
 namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FlightBooking extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     // Relationship: A flight booking can have multiple passengers
     public function passengers() {
         return $this->hasMany(PassengerInformation::class, 'flight_booking_id');

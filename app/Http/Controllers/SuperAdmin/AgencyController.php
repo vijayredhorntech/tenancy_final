@@ -25,19 +25,25 @@ use App\Models\AgencyDetail;
 use App\Mail\UserRegisteredMail;
 use Illuminate\Support\Facades\Mail;
 use App\Traits\Agency\AgenciesPdfTrait;
+use App\Services\AgencyService;
 
 class AgencyController extends Controller
 {
 
     use AgenciesPdfTrait;
+    protected $agencyService;
 
+    public function __construct(AgencyService $agencyService)
+    {
+         $this->agencyService = $agencyService;
+    }
 
 
     /*** Pdf Generate *****/
-    public function generatePDF()
+    public function generatePDF(Request $request)
     {
-        $agencies = Agency::with('domains', 'userAssignments.service', 'balance')
-            ->get()
+       
+        $agencies= $this->getAgencyData($request)
             ->sortByDesc(fn($agency) => $agency->details->status == '0' ? 0 : 1);
         $title = "Agency Reports";
 
@@ -49,10 +55,10 @@ class AgencyController extends Controller
 
 
     /******Generate Excel file ******/
-    public function exportAgency()
+    public function exportAgency(Request $request)
     {
-        $agencies = Agency::with('domains', 'userAssignments.service', 'balance')
-            ->get()
+       
+        $agencies= $this->getAgencyData($request)
             ->sortByDesc(fn($agency) => $agency->details->status == '0' ? 0 : 1);
         return $this->generateAgenciesExcel($agencies);
     }
@@ -61,16 +67,12 @@ class AgencyController extends Controller
 
 
     // code for all superadmin to contenncted with agency
-    public function him_agency_index()
+    public function him_agency_index(Request $request)
     {
-
 
         $id = Auth::user()->id;
         $user = User::find($id);
-        // $agency=Agency::with('domains','userAssignments.service','balance','details')->get();   
-        $agency = Agency::with('domains', 'userAssignments.service', 'balance')
-            ->get()
-            ->sortByDesc(function ($agency) {
+        $agency= $this->getAgencyData($request)->sortByDesc(function ($agency) {
                 return $agency->details->status == '0' ? 0 : 1;
             });
         $service = Service::get();
@@ -94,6 +96,7 @@ class AgencyController extends Controller
 
     public function him_store_agency(Request $request)
     {
+       
         // Validate the incoming data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -116,8 +119,9 @@ class AgencyController extends Controller
             'contact_phone' => 'nullable|string',
             'zip_code' => 'required|regex:/^([A-Z]{1,2}[0-9][0-9A-Z]?) ?([0-9][A-Z]{2})$/i', // Ensures the zip code follows the UK postcode pattern.
             'address' => 'required|string|max:255',
+            'street'=>'required|string|max:255',
             'city' => 'required|string|max:255',
-            'state' => 'required|string|max:255',
+            'county' => 'required|string|max:255',
             'country' => 'required|string|max:255',
         ], [
             // Custom Error Messages
@@ -218,7 +222,7 @@ class AgencyController extends Controller
             $agency_details->country = $request->country;
             $agency_details->telephone = $request->telephone;
             $agency_details->agency_phone = $request->agency_phone;
-            $agency_details->state  = $request->state;
+            $agency_details->state  = $request->street;
             $agency_details->city = $request->city;
             $agency_details->zipcode  = $request->zip_code;
             $agency_details->vat_number = $request->agency_phone;
@@ -387,7 +391,7 @@ class AgencyController extends Controller
     public function him_agencylogin($domain)
     {
 
-    
+    // dd('heelo');    
         $domin = session('user_data');
         if (isset($domin)) {
             return redirect()->route('agency_dashboard');
@@ -468,35 +472,19 @@ class AgencyController extends Controller
     public function him_agenciesdashboard()
     {
 
-        // session()->flush();
-
-        // Print specific session value
-
-
-        //    $user = User::on('user_database')->where('email', $validatedData['email'])->first();
-
-        // $id = Auth::user()->id;
-        // dd($id); 
-        $userData = \session('user_data');
-        DatabaseHelper::setDatabaseConnection($userData['database']);
-        $email = \session('user_data.email');
-        $user = User::on('user_database')->where('email', $email)->first();
-
+     
+       
+        // dd($agency);
+        $user = $this->agencyService->getCurrentLoginUser();
         $id = $user->id;
-
-
         if (!$user->type == "staff") {
 
-            $agency_record = Agency::where('email', $user->email)->first();
-            // if(dd($agency_record))
+            $agency_record = $this->agencyService->getAgencyData();  
             $user->assignRole('super admin');
 
             $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])->find($agency_record->id);
             $services = $agency->userAssignments->pluck('service.name', 'service.icon');
-
-
             $total = Balance::where('agency_id', $agency_record->id)->sum('balance');
-
             $balance = Deduction::with(['service_name', 'agency'])
                 ->where('agency_id', $agency_record->id)
                 ->get();
@@ -543,6 +531,21 @@ class AgencyController extends Controller
             ->take(5)
             ->get();
 
+
+            $hotel_recent_booking = Deduction::with([
+                'service_name', 
+                'agency',
+                'hotelBooking',
+                'hotelDetails'
+            ])
+            ->where('agency_id', $agency_record->id)
+            ->where('service', 1) // No need for quotes around integer
+            ->orderBy('created_at', 'desc') // Order by latest records
+            ->take(5)
+            ->get();
+
+         
+
             return view('agencies.pages.welcome', [
                 'agency' => $agency,
                 'services' => $services,
@@ -550,6 +553,7 @@ class AgencyController extends Controller
                 'bookings' => $bookings,
                 'flight_recent_booking' => $flight_recent_booking,
                 'visa_recent_booking' => $visa_recent_booking,
+                'hotel_recent_booking'=> $hotel_recent_booking,
                 'credits' => $credits
             ]);
         } else {

@@ -7,16 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('countries', function (Blueprint $table) {
+        Schema::create('cities', function (Blueprint $table) {
             $table->id();
-            $table->string('countryCode');
-            $table->string('countryName');
+            $table->string('CityId');
+            $table->string('CityName');
+            $table->foreignId('countryId')->constrained('countries')->onDelete('cascade');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('countries');
+        Schema::dropIfExists('cities');
     }
 };

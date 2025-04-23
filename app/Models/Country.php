@@ -12,12 +12,27 @@ class Country extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'code',
-        'flag',
+        'countryCode',
+        'countryName',
     ];
     public function visaServices() : HasManyThrough
     {
         return $this->HasManyThrough(Country::class, VisaServices::class,'origin','id','id','destination');
+    }
+
+    
+    public static function data()
+    {
+        return self::all()->map(function ($country){
+            return [
+                'code' => $country->countryCode,
+                'name' => $country->countryName,
+            ];
+        });
+    }
+
+    public function cities()
+    {
+        return $this->hasMany(City::class,'countryId','id');
     }
 }

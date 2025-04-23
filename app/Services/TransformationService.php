@@ -209,6 +209,7 @@ if(!isset($hotelBooking[0])){
 
     public function transFormRateHawkHotel($allHotel){
         $hotels=$allHotel;
+     
         $newFormat = [];
 
         foreach (  $hotels as $hotel) {
@@ -307,7 +308,7 @@ if(!isset($hotelBooking[0])){
 
         $amenities = [];
 if(!isset($data['data'])){
-    dd($data);
+    // dd($data);
     return 'HotelDetails Not Found';
 }
 

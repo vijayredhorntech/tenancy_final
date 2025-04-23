@@ -222,28 +222,25 @@
                             <button id="searchAddress" type="button" class="mt-2 w-full px-4 py-2 bg-secondary text-white font-semibold rounded-md shadow-md hover:bg-secondary/80 transition duration-200 flex items-center justify-center gap-2">
                                 <i class="fa fa-search"></i> Search
                             </button>
-
-
                         </div>
                         <div class="w-full relative group flex flex-col gap-1">
                             <!-- <div class="address"> </div>  -->
                             <label for="name" class="font-semibold text-ternary/90 text-sm">Address</label>
                             <div class="w-full relative">
-                                <input type="text" name="address" id="address" placeholder="Address....."
-                                    value="{{ old('address') }}"
-                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
-                                    @error('address') border-red-500 @enderror">
-                                <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
+                                <select id="address-select" name="address"
+                                    class="w-full p-2 border border-secondary/40 rounded-[3px] text-sm font-semibold text-ternary/90 focus:outline-none focus:ring-2 focus:ring-secondary/50">
+                                    <option value="">Select an address</option>
+                                </select>
+                         </div>
 
                             @error('address')
                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">City</label>
+                            <label for="name" class="font-semibold text-ternary/90 text-sm">Street</label>
                             <div class="w-full relative">
-                                <input type="text" name="city" id="city" placeholder="Phone....."
+                                <input type="text" name="street" id="street" placeholder="Street....."
                                     value="{{ old('city') }}"
                                     class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                     @error('city') border-red-500 @enderror">
@@ -255,9 +252,23 @@
                             @enderror
                         </div>
                         <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">State</label>
+                            <label for="name" class="font-semibold text-ternary/90 text-sm">City</label>
                             <div class="w-full relative">
-                                <input type="text" name="state" id="state" placeholder="State....."
+                                <input type="text" name="city" id="city" placeholder="City....."
+                                    value="{{ old('city') }}"
+                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
+                                    @error('city') border-red-500 @enderror">
+                                <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                            </div>
+
+                            @error('city')
+                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        <div class="w-full relative group flex flex-col gap-1">
+                            <label for="name" class="font-semibold text-ternary/90 text-sm">County</label>
+                            <div class="w-full relative">
+                                <input type="text" name="county" id="county" placeholder="County....."
                                     value="{{ old('state') }}"
                                     class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                     @error('state') border-red-500 @enderror">
@@ -325,47 +336,6 @@
                     </div>
                 </div>
 
-                <!-- 
-                <div class="w-full flex flex-col gap-2 px-4 mt-8">
-                    <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
-                        <span class="text-lg font-bold text-ternary">Document Information</span>
-                    </div>
-                    <div class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2">
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Document name</label>
-                            <div class="w-full relative">
-                                <input type="text" name="document1" id="document1" placeholder="Document name....."
-                                    value="{{ old('document1') }}"
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
-                                       @error('') border-red-500 @enderror">
-                                <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-
-                            @error('document1')
-                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Attachment</label>
-                            <div class="w-full relative">
-                                <input type="file" name="attachment1" id="attachment1" placeholder="attachment....."
-                                    value="{{ old('attachment1') }}"
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
-                                       @error('') border-red-500 @enderror">
-                                <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-
-                            @error('attachment1')
-                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                            @enderror
-                        </div>
-
-                        
-
-                    </div>
-                </div> -->
 
 
 
@@ -459,30 +429,34 @@
                 }
 
                 $.ajax({
-                    url: `https://api.postcodes.io/postcodes/${postcode}`,
+                    url: `https://api.getaddress.io/find/${postcode}?api-key=uz1Ks6ukRke3TO_XZBrjeA22850&expand=true&sort=true`,
                     method: "GET",
                     dataType: "json",
                     success: function(response) {
-                        if (response.status === 200) {
-                            let data = response.result;
-                            let address = `${data.nuts}, ${data.admin_ward}`;
+                        if (response && response.addresses && response.addresses.length > 0) {
+                                const select = $('#address-select');
+                                select.empty(); // Clear existing options
 
-                            console.log("API Response:", data);
+                                // Default option
+                                select.append(`<option value="">Select an address</option>`);
 
-                            let country = data.country;
-                            let state = data.region;
-                            let city = data.admin_district || data.parish;
-
-
-                            // Fill the input fields
-                            $("#address").val(address);
-                            $("#country").val(country);
-                            $("#state").val(state);
-                            $("#city").val(city);
-
-                        } else {
-                            alert("Invalid postcode. Please try again.");
-                        }
+                                response.addresses.forEach((address, index) => {
+                                    const labelText = address.formatted_address.filter(Boolean).join(', ');
+                                    const option = $(`
+                                        <option value="${labelText}"
+                                                data-street="${address.line_1 || address.line_2 ? `${address.line_1 ? address.line_1 : ''}${address.line_1 && address.line_2 ? ', ' : ''}${address.line_2 ? address.line_2 : ''}` : ''}"
+                                                data-county="${address.county || ''}"
+                                                data-city="${address.town_or_city || ''}" 
+                                                data-country="${address.country || ''}">
+                                            ${labelText}
+                                        </option>
+                                    `);
+                                    select.append(option);
+                                });
+                            } else {
+                                alert("Invalid postcode or no addresses found.");
+                            }
+                      
                     },
                     error: function(xhr, status, error) {
                         console.error("Error fetching postcode data:", error);
@@ -492,7 +466,22 @@
 
                 return false; // Extra safeguard to prevent page refresh
             });
+            //Change address on change
+            $("#address-select").on("change", function () {
+                    const selected = $(this).find(":selected");
+
+                    const street = selected.data("street") || "";
+                    const city = selected.data("city") || "";
+                    const county = selected.data("county") || "";
+                    const country = selected.data("country") || "";
+
+                    $("#street").val(street);
+                    $("#city").val(city);
+                    $("#county").val(county);
+                    $("#country").val(country);
+                });
         });
+
     </script>
     @endsection
 

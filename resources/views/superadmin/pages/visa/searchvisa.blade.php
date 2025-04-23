@@ -24,7 +24,7 @@
                                         <select name="origincountry" id="origincountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                             <option value="">---Select Country---</option>
                                             @forelse($countries as $country)
-                                                <option value="{{$country->id}}">{{$country->name}}</option>
+                                                <option value="{{$country->id}}">{{$country->countryName}}</option>
                                             @empty
                                                 <option value="">No record found</option>
                                             @endforelse
@@ -39,7 +39,7 @@
                                         <select name="destinationcountry" id="destinationcountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                             <option value="">---Select Country---</option>
                                             @forelse($countries as $country)
-                                                <option value="{{$country->id}}">{{$country->name}}</option>
+                                                <option value="{{$country->id}}">{{$country->countryName}}</option>
                                             @empty
                                                 <option value="">No record found</option>
                                             @endforelse

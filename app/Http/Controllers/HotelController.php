@@ -28,7 +28,7 @@ public function roomDetaiPdf( $hotelId ){
   $bookingDetails=$sessionData['bookingDetails'];
 
 
-    $pdf = PDF::loadView('hotel.roomDetailPdf', ['selectedHotelDetails' => $selectedHotelDetails,'selectedHotelMoreDetails'=>$selectedHotelMoreDetails,'searchParams'=>$searchParams]);
+    $pdf = PDF::loadView('agencies.pages.hotel.roomDetailPdf', ['selectedHotelDetails' => $selectedHotelDetails,'selectedHotelMoreDetails'=>$selectedHotelMoreDetails,'searchParams'=>$searchParams]);
 
     return $pdf->download('HotelOffer_' . $selectedHotelDetails['HotelId'] . '_' . uniqid() . '.pdf');
 
@@ -50,7 +50,7 @@ public function roomDetaiPdf( $hotelId ){
         $bookingDetails=$sessionData['bookingDetails'];
 
 
-        $pdf = PDF::loadView('hotel.roomDetailPdf', ['selectedHotelDetails' => $selectedHotelDetails,'selectedHotelMoreDetails'=>$selectedHotelMoreDetails,'searchParams'=>$searchParams]);
+        $pdf = PDF::loadView('agencies.pages.hotel.roomDetailPdf', ['selectedHotelDetails' => $selectedHotelDetails,'selectedHotelMoreDetails'=>$selectedHotelMoreDetails,'searchParams'=>$searchParams]);
 
         $pdf->save($tempPdfPath);
 

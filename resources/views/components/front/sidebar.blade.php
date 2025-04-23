@@ -23,6 +23,7 @@
         </a>
         @endcanany
 
+        <!-- Services Part -->
         @canany(['service view', 'manage everything'])
         <div class="">
             <div onclick="document.getElementById('servicesDiv').classList.toggle('hidden');document.getElementById('servicesArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='service'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
@@ -132,12 +133,13 @@
         @endcanany
 
 
+        <!-- Client Agency Part -->
         @canany(['agency view', 'manage everything'])
         <a href="{{route('agency')}}">
             <div class="{{Route::currentRouteName()==='agency'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
                     <i class="fa-regular fa-building mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Agency</span>
+                    <span class="text-lg font-medium"> Client Agency </span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>
@@ -157,6 +159,8 @@
         </a>
     @endcanany -->
 
+
+        <!-- Staff Part -->
         @canany(['staff view', 'manage everything'])
         <div class="">
             <div onclick="document.getElementById('staffDiv').classList.toggle('hidden');document.getElementById('staffArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='service'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
@@ -178,17 +182,42 @@
                     </li>
                 </a>
 
-                <a href="{{route('generate.saleryslip')}}">
+                <a href="#">
                     <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                         <div class="flex items-center">
                             <i class="fa fa-hotel mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Generate Salery Slip</span>
+                            <span class="text-lg font-medium">Staff Attendance Status</span>
                         </div>
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                     </li>
                 </a>
 
+                <a href="#">
+                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fa fa-hotel mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Staff Wage Management</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
 
+            </ul>
+        </div>
+        @endcanany
+
+        @canany(['staff view', 'manage everything'])
+        <div class="">
+            <div onclick="document.getElementById('leaveDiv').classList.toggle('hidden');document.getElementById('staffArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='service'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-umbrella-beach mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Leave Managment</span>
+                </div>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="staffArrow"> </i>
+            </div>
+            <ul id="leaveDiv" class="pl-10 mt-2 flex flex-col hidden">
+     
                 <a href="{{route('add.leave')}}">
                     <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                         <div class="flex items-center">
@@ -203,7 +232,7 @@
                     <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                         <div class="flex items-center">
                             <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Leave Approvals </span>
+                            <span class="text-lg font-medium">Leave Application </span>
                         </div>
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                     </li>
@@ -213,7 +242,7 @@
         @endcanany
 
      @canany(['booking view', 'manage everything'])
-    <a href="{{route('superadmin.booking')}}">
+         <a href="{{route('superadmin.booking')}}">
             <div class="{{Route::currentRouteName()==='superadmin.booking'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
                     <i class="fa fa fa-calendar-days mr-2 text-sm"></i>
@@ -226,30 +255,151 @@
 
 
 
-        @canany(['role view', 'manage everything'])
-        <a href="{{route('superadmin.role')}}">
-            <div class="{{Route::currentRouteName()==='superadmin.role'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+        <!-- Account part Part -->
+        @canany(['account','inventory','expensive', 'manage everything'])
+        <div class="">
+            <div onclick="document.getElementById('accountDiv').classList.toggle('hidden');document.getElementById('visaArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='visa'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
-                    <i class="fa fa-shield-halved mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Roles</span>
+                    <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Accounts</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="visaArrow"> </i>
             </div>
-        </a>
+            <ul id="accountDiv" class="pl-10 mt-2 flex flex-col hidden">
+                            <a href="">
+                                <li class="{{Route::currentRouteName()==='view.country'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                                    <div class="flex items-center">
+                                    <i class="fa-solid fa-flag mr-2 text-sm" ></i>
+                                        <span class="text-lg font-medium">Supplier Account</span>
+                                    </div>
+                                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                                </li>
+                            </a>
+                            <a href="">
+                                <li class="{{Route::currentRouteName()==='visa.view'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                                    <div class="flex items-center">
+                                        <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
+                                        <span class="text-lg font-medium">Client Account </span>
+                                    </div>
+                                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                                </li>
+                            </a>
+
+                        @canany(['inventory', 'manage everything'])
+                            <a href="{{route('superadmin.inventory')}}">
+                                <div class="{{Route::currentRouteName()==='admin_setting'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-boxes-stacked mr-2 text-sm"></i>
+                                        <span class="text-lg font-medium">Inventory</span>
+                                    </div>
+                                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                                </div>
+                            </a>
+                    @endcanany
+
+                    @canany(['expensive', 'manage everything'])
+                            <a href="">
+                                <div class="{{Route::currentRouteName()==='admin_setting'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-money-bill-wave mr-2 text-sm"></i>
+                                        <span class="text-lg font-medium">Expensive</span>
+                                    </div>
+                                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                                </div>
+                            </a>
+                    @endcanany
+              </ul>
+        </div>
+        @endcanany
+
+          <!-- License &  Insurance part Part -->
+        @canany(['license', 'manage everything'])
+        <div class="">
+            <div onclick="document.getElementById('licenseDiv').classList.toggle('hidden');document.getElementById('visaArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='visa'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">License &  Insurance</span>
+                </div>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="visaArrow"> </i>
+            </div>
+            <ul id="licenseDiv" class="pl-10 mt-2 flex flex-col hidden">
+                <a href="{{route('view.country')}}">
+                    <li class="{{Route::currentRouteName()==='view.country'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                          <i class="fa-solid fa-flag mr-2 text-sm" ></i>
+                            <span class="text-lg font-medium">License</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+                <a href="{{route('visa.view')}}">
+                    <li class="{{Route::currentRouteName()==='visa.view'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Insurance </span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+
+              </ul>
+        </div>
         @endcanany
 
 
-
-        @canany(['permission view', 'manage everything'])
-        <a href="{{route('superadmin.permission')}}">
-            <div class="{{Route::currentRouteName()==='superadmin.permission'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+     <!-- Operational -->
+        @canany(['permission view','role view','manage everything'])
+        <div class="">
+            <div onclick="document.getElementById('operationalDiv').classList.toggle('hidden');document.getElementById('staffArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='service'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
-                    <i class="fa fa-lock-open mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Permissions</span>
+                    <i class="fa-solid fa-bolt mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Operational</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="staffArrow"> </i>
             </div>
-        </a>
+            <ul id="operationalDiv" class="pl-10 mt-2 flex flex-col hidden">
+            
+               @canany(['permission view', 'manage everything'])
+                    <a href="{{route('superadmin.permission')}}">
+                            <li class="{{Route::currentRouteName()==='superadmin.permission'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                                    <div class="flex items-center">
+                                        <i class="fa fa-lock-open mr-2 text-sm"></i>
+                                        <span class="text-lg font-medium">Permissions</span>
+                                    </div>
+                                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                            </li>
+                        </a>
+                @endcanany
+
+                @canany(['role view', 'manage everything'])
+                    <a href="{{route('superadmin.role')}}">
+                        <li class="{{Route::currentRouteName()==='superadmin.role'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                                <div class="flex items-center">
+                                    <i class="fa fa-shield-halved mr-2 text-sm"></i>
+                                    <span class="text-lg font-medium">Roles</span>
+                                </div>
+                            <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                        </li>
+                    </a>
+               @endcanany
+
+               @canany(['team managment', 'manage everything'])
+                    <a href="{{route('teammanagment')}}">
+                        <div class="{{Route::currentRouteName()==='teammanagment'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                            <div class="flex items-center">
+                                <i class="fas fa-user mr-2 text-sm"></i>
+                                <span class="text-lg font-medium">Team Managment</span>
+                            </div>
+                            <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                        </div>
+                    </a>
+             @endcanany
+      
+            </ul>
+        </div>
         @endcanany
 
 
@@ -265,17 +415,7 @@
         </a>
         @endif
 
-        @canany(['team managment', 'manage everything'])
-        <a href="{{route('teammanagment')}}">
-            <div class="{{Route::currentRouteName()==='teammanagment'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                <div class="flex items-center">
-                    <i class="fas fa-user mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Team Managment</span>
-                </div>
-                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-            </div>
-        </a>
-        @endcanany
+      
 
 
         <a href="{{route('assignment')}}">
@@ -324,29 +464,7 @@
         @endcanany
 
 
-        @canany(['inventory', 'manage everything'])
-        <a href="{{route('superadmin.inventory')}}">
-            <div class="{{Route::currentRouteName()==='admin_setting'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                <div class="flex items-center">
-                    <i class="fas fa-boxes-stacked mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Inventory</span>
-                </div>
-                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-            </div>
-        </a>
-        @endcanany
-
-        @canany(['expensive', 'manage everything'])
-        <a href="">
-            <div class="{{Route::currentRouteName()==='admin_setting'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                <div class="flex items-center">
-                    <i class="fas fa-money-bill-wave mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Expensive</span>
-                </div>
-                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-            </div>
-        </a>
-        @endcanany
+      
 
         @canany(['transaction', 'manage everything'])
         <a href="{{route('transaction_approvals')}}">

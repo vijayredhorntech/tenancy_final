@@ -9,19 +9,23 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\FromCollection;
+    
 
-class StudentReportExport implements FromQuery, WithHeadings, WithMapping, WithStyles
+
+class StudentReportExport implements FromCollection, WithHeadings, WithMapping, WithStyles
 {
-    protected $query;
+    protected $students;
 
-    public function __construct(Builder $query)
+    public function __construct(Collection $students)
     {
-        $this->query = $query;
+        $this->students = $students;
     }
 
-    public function query()
+    public function collection()
     {
-        return $this->query;
+        return $this->students;
     }
 
     public function headings(): array
@@ -36,8 +40,6 @@ class StudentReportExport implements FromQuery, WithHeadings, WithMapping, WithS
         ];
     }
 
-
-
     public function map($student): array
     {
         return [
@@ -45,7 +47,7 @@ class StudentReportExport implements FromQuery, WithHeadings, WithMapping, WithS
             $student->name,
             $student->email,
             $student->userdetails->phone_number ?? '',
-            '',
+            '', // You can fill department if needed
             $student->roles->isNotEmpty() ? $student->roles->pluck('name')->implode(', ') : 'No Role'
         ];
     }
@@ -53,8 +55,8 @@ class StudentReportExport implements FromQuery, WithHeadings, WithMapping, WithS
     public function styles(Worksheet $sheet)
     {
         return [
-            // Bold headings
             1 => ['font' => ['bold' => true]],
         ];
     }
 }
+

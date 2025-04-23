@@ -210,19 +210,27 @@ $selectedVendor = session('selectedVendor');
 
             <div class=" w-full">
                 <div class="w-full ">
-                    @if (isset($hotelMoreDetails['Images']['Image']) && is_array($hotelMoreDetails['Images']['Image']))
-                        <div class="w-full">
-                            <div class="hotelPhotos">
-                                @foreach ($hotelMoreDetails['Images']['Image'] as $image)
-                                    <div>
-                                        <a href="{{ $image }}" target="_blank" class=" ">
-                                            <img src="{{ $image }}" class="w-full h-32  object-cover" alt="Image 1">
-                                        </a>
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
+                @if (isset($hotelMoreDetails['Images']['Image']) && is_array($hotelMoreDetails['Images']['Image']))
+                    <div class="swiffy-slider slider-item-ratio slider-item-ratio-16x9 slider-nav-animation slider-nav-animation-fadein">
+                        <ul class="slider-container">
+                            @foreach (array_slice($hotelMoreDetails['Images']['Image'], 0, 5) as $image)
+                                <li>
+                                    <img src="{{ $image }}" alt="Hotel Image" loading="lazy" class="object-cover w-full h-40 rounded-md">
+                                </li>
+                            @endforeach
+                        </ul>
+
+                        <button type="button" class="slider-nav" aria-label="Go to previous"></button>
+                        <button type="button" class="slider-nav slider-nav-next" aria-label="Go to next"></button>
+
+                        <!-- Optional indicators -->
+                        <!-- <div class="slider-indicators">
+                            @foreach (array_slice($hotelMoreDetails['Images']['Image'], 0, 5) as $key => $image)
+                                <button aria-label="Go to slide {{ $key+1 }}" class="{{ $loop->first ? 'active' : '' }}"></button>
+                            @endforeach
+                        </div> -->
+                    </div>
+                @endif
                     <div class="flex flex-col w-full bg-white p-2 rounded-b-[3px] border-[1px] border-primaryColor/30 border-t-[0px]]">
                             <span class="text-primaryDarkColor font-bold text-md mt-2 w-42"><i class="fa fa-hotel mr-1"></i> {{ $hotelMoreDetails['HotelName'] ?? 'Hotel Name not available' }}</span>
                             <span class="text-redColor font-semibold text-sm mt-1"><i class="fa fa-location-dot mr-1"></i>
@@ -271,6 +279,8 @@ $selectedVendor = session('selectedVendor');
 
                                 <div class="w-full p-2 border-r-[1px] border-r-primaryColor/30 col-span-2 ">
                                     @php
+                                   
+                                    $booked="";   
                                         if(array_key_exists('RoomName',$roomTypeList['Rooms']['Room'])){
                                             $roomTypeList['Rooms']['Room']=[$roomTypeList['Rooms']['Room']];
                                         }
@@ -318,7 +328,7 @@ $selectedVendor = session('selectedVendor');
                                                <span class="cursor-pointer text-[#16a34a] z-30 "><i class="fa fa-eye" aria-hidden="true"></i></span>
                                                 <div class=" flex flex-row invisible absolute top-100 left-[50%] translate-x-[-50%] rounded-md bg-white p-1 text-white opacity-0 shadow-md transition-opacity duration-300 ease-in-out group-hover:visible group-hover:opacity-100">
                                                     @php
-
+                                                       $booked=true;
                                                         $checkInDate = \Carbon\Carbon::parse($searchParams['checkInDate']);
                                                         $checkOutDate = \Carbon\Carbon::parse($searchParams['checkOutDate']);
                                                         $dateArray = [];
@@ -356,7 +366,10 @@ $selectedVendor = session('selectedVendor');
                                             </div>
                                         </div>
                                     @else
-                                        <span class=" text-redColor font-semibold text-sm">N/A</span>
+                                         @php 
+                                         $booked=false;
+                                         @endphp
+                                        <span class=" text-redColor font-semibold text-sm">Not Available</span>
                                     @endif
                                 </div>
                                 @php
@@ -369,9 +382,12 @@ $selectedVendor = session('selectedVendor');
 
                                 <div class="w-full p-2 col-span-2 flex lg:flex-row md:flex-row sm:flex-row flex-col lg:justify-between md:justify-between sm:justify-between justify-center gap-2 items-center">
                                       <span class="text-black font-semibold text-sm">£ {{ $roomTypeList['TotalPrice'] }}</span>
-                                    <a href="{{ route('hotel.bookingStage1', ['bookingDetails' => urlencode(json_encode(['selectedHotelID' => $selectedHotelID['HotelId'],'selectedOption' => $roomTypeList['OptionId'], ]), ), ]) }}"
+                                    @if($booked)
+                                      <a href="{{ route('hotel.bookingStage1', ['bookingDetails' => urlencode(json_encode(['selectedHotelID' => $selectedHotelID['HotelId'],'selectedOption' => $roomTypeList['OptionId'], ]), ), ]) }}"
                                        class="w-max text-center showLoader font-semibold text-md bg-primaryDarkColor/80 text-white/90 px-4 py-0.5 rounded-[3px] border-[1px] border-primaryDarkColor hover:bg-primaryDarkColor hover:text-white transition ease-in duration-2000">Book</a>
-
+                                    @else
+                                    <span class="text-redColor font-semibold text-sm">Not Available</span>
+                                    @endif
                                 </div>
                             </div>
                             @php

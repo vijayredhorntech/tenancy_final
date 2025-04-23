@@ -39,7 +39,7 @@
                                           class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                      <option value="">---Select---</option>
                                      @forelse($countries as $country)
-                                     <option value="{{$country->id}}">{{$country->name}}</option>
+                                     <option value="{{$country->id}}">{{$country->countryName}}</option>
                                      @empty
                                      <option value="">NO record found</option>
                                      @endforelse
@@ -60,7 +60,7 @@
                                           class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                      <option value="">---Select---</option>
                                      @forelse($countries as $country)
-                                     <option value="{{$country->id}}">{{$country->name}}</option>
+                                     <option value="{{$country->id}}">{{$country->countryName}}</option>
                                      @empty
                                      <option value="">NO record found</option>
                                      @endforelse

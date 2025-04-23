@@ -28,12 +28,13 @@ class RatehawkProvider
      
         $decodeResult = json_decode($result,true);
         $hotels=$decodeResult['data']['hotels'];
-        // dd($hotels);
+     
 //        dd($hotels[0]['rates'][0]);
         if($hotels==null){
             dd('hoels not found');
         }
         $formatedHotel=$this->transformationService->transFormRateHawkHotel($hotels);
+     
     //    dd("hh",$formatedHotel);
         return $formatedHotel;
 //        dd('ssseseasfcxce',$formatedHotel,$this->moreDetailsOfRatehawkHotel($formatedHotel['Hotel'][0]['HotelId']));

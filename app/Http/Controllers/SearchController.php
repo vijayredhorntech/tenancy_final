@@ -23,7 +23,31 @@ class SearchController extends Controller
 
     public function index(Request $request)
     {
-        return redirect()->route('hotel.search.results', $request->all());
+        // dd($request->all());
+        $input=$request->all(); 
+        $output = [
+            "checkInDate" => $input["checkInDate"],
+            "checkOutDate" => $input["checkOutDate"],
+            "country" => $input["country"],
+            "city" => $input["city"],
+            "rooms" => $input["rooms"],
+            "roomDetails" => json_encode(
+                array_map(function ($index) use ($input) {
+                    return [
+                        "roomID" => $index + 1,
+                        "numberofAdults" => $input["numberofAdults"][$index],
+                        "numberOfChildren" => $input["numberOfChildren"][$index],
+                        "childAges" => isset($input["child_ages"][$index])
+                        ? $input["child_ages"][$index]
+                        : [0],
+                    ];
+                }, array_keys($input["numberofAdults"]))
+            ),
+        ];
+    
+        // return redirect()->route('hotel.search.results', $request->all());
+        return redirect()->route('hotel.holidayList', $output);
+        
     }
 
 // new one
@@ -55,7 +79,9 @@ function customPagination($arrayData) {
 
 public function details(Request $request )
 {
+   
     $hotelDetails = [];
+ 
     $vCode = $request->input('vCode');
 //    dd($vCode);
     if($vCode ==='ST'){
@@ -70,15 +96,17 @@ public function details(Request $request )
 //        dd($hotelDetails);
     }
     if(!$request->input('vCode')) {
-//        dd('tr');
+    //    dd('tr');
         session()->put('selectedVendor','Travellanda');
         $hotelDetails = session()->get('availableHotels');
     }
 //     dd($hotelDetails);
     if(!$hotelDetails) {
+  
         return 'No Hotels Found, Please Search Again';
     }
      $hotelsList = $hotelDetails['Response']['Body']['Hotels']['Hotel'];
+
 //      dd($hotelsList);
     $collectDatas = collect($hotelsList)->lazy();
 
@@ -203,6 +231,7 @@ public function details15jan(Request $request )
 public function results(Request $request)
     {
 
+    //    dd($request->all());
         session()->put('searchParams', $request->all());
         $encodedObject = $request->query('roomDetails');
         $requestParams = $request->all();
@@ -216,7 +245,7 @@ public function results(Request $request)
         // dd($hotels);
 
         if($hotels['Response']['Body']['HotelsReturned'] > 0) {
-
+         
 
         $totalHotels = count($hotels['Response']['Body']['Hotels']['Hotel']);
 
@@ -240,28 +269,6 @@ public function results(Request $request)
         $hotels['Response']['Body']['Hotels']['Hotel'] = $hotelsOnPage;
         $hotels['Response']['Body']['HotelsReturned'] = $totalHotels;
 
-        // Return the results to the client
-        // dd($hotels);
-        // return response()->json(['Response' => ['Body' => ['Hotels' => ['Hotel' => $hotelsOnPage, 'HotelsReturned' => $totalHotels]]]]);
-
-// Return the results to the client
-// return response()->json(['hotels' => $hotelsOnPage, 'total' => $totalHotels]);
-
-        // if (isset($hotels['Response']['Body']['Hotels']['Hotel'])) {
-
-        //     $fetchedHotels = $hotels['Response']['Body']['Hotels']['Hotel'];
-
-        // } else {
-
-        //     $fetchedHotels = [];
-        // }
-        // foreach($fetchedHotels as $index => $fetchedHotel) {
-        //     $varHotelID = $fetchedHotel['HotelId'];
-        //     $hotelDetails = $this->priceAggregatorService->fetchHotelDetails($varHotelID);
-        //     $hotelData= $hotelDetails['Response']['Body']['Hotels']['Hotel'];
-
-        //     $hotels['Response']['Body']['Hotels']['Hotel'][$index]['MoreDetails'] = $hotelData;
-        // }
 
 
         session(['availableHotels'=> $hotelsOnPage]);
@@ -282,61 +289,13 @@ public function results(Request $request)
     }
 
 
-//     public function hotelResults(Request $request)
-//             {
-//                 $requestParams = $request->all();
-//                 $decodedObject = json_decode(urldecode($request->query('roomDetails')), true);
-//                 $requestParams['roomDetails'] = $decodedObject;
-//                 $requestParams['adults'] = 0;
-//                 $requestParams['children'] = 0;
-
-//                 foreach ($decodedObject as $room) {
-//                     $requestParams['adults'] += (int) $room['numberofAdults'];
-//                     $requestParams['children'] += (int) $room['numberOfChildren'];
-//                 }
-
-//                 // Get city & country name
-//                 $city = City::with('country')->find($requestParams['city']);
-//                 $cityName = $city->CityName ?? 'Unknown';
-//                 $countryName = $city->country->countryName ?? 'Unknown';
-
-//                 // Fetch hotels once
-//                 $hotelsData = $this->priceAggregatorService->fetchHotels($requestParams);
-//                 $hotels = $hotelsData['Response']['Body']['Hotels']['Hotel'] ?? [];
-
-//                 // Attach hotel details
-//                 foreach ($hotels as &$hotel) {
-//                     $vendor = $hotel['Vendor'] ?? '';
-//                     $hotelId = $hotel['HotelId'] ?? '';
-
-//                     $details = match ($vendor) {
-//                         'Stuba' => stubaHotelDetails($hotelId, $this->priceAggregatorService),
-//                         'RateHawk' => ratehawkHotelDetails($hotelId, $this->priceAggregatorService),
-//                         default => hotelDetails($hotelId, $this->priceAggregatorService),
-//                     };
-//                    $hotel['Details'] = $details['Images'];
-//                 }
-              
-//                 // Store in session if needed
-//                 session([
-//                     'searchParams' => $requestParams,
-//                     'searchParams1' => $request->all()
-//                 ]);
-
-//                 return view('agencies.pages.hotel.holidayList', [
-//                     'hotels' => $hotels,
-//                     'searchParams' => $requestParams,
-//                     'cityName' => $cityName,
-//                     'countryName' => $countryName,
-//                 ]);
-// }
-
 
     public function hotelResults(Request $request){
 
         
         //   dd($request->all());
         // session()->flush();
+       
         $reqAll = $request->all();
 
         session()->put('searchParams1', $reqAll);
@@ -360,7 +319,15 @@ public function results(Request $request)
 
         // Fetch hotels once
         $hotelsData = $this->priceAggregatorService->fetchHotels($requestParams);
-        $hotels = $hotelsData['Response']['Body']['Hotels']['Hotel'] ?? [];
+         $hotels = $hotelsData['Response']['Body']['Hotels']['Hotel'] ?? [];
+
+        //  this is set for hotel detials page 
+        if (isset($hotelsData['Response']['Body']['HotelsReturned']) && $hotelsData['Response']['Body']['HotelsReturned'] > 0) {
+            if (count($hotelsData) > 0) {
+                session()->put('availableHotels', $hotelsData);
+            }
+        } 
+
 
         // Attach hotel details
         foreach ($hotels as &$hotel) {

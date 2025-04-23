@@ -77,6 +77,7 @@ class RatehawkService
             dd("Curl error: " . $error);
         }
         curl_close($curl);
+        // dd($response);
         return $response;
 
 

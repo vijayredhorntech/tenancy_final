@@ -35,7 +35,7 @@
     $checkOut = Carbon::parse($sessionData['checkOutDate']);
     $durationInDays = $checkOut->diffInDays($checkIn);
 @endphp
-<x-layout>
+<x-agency.layout>
 
     <section class="lg:w-[80%] md:w-[90%] w-full px-2 mx-auto pt-6 bg-[#f3f4f6] rounded-[3px] " style="position: relative">
         <div class="w-full grid lg:grid-cols-4 md:grid-cols-3  grid-cols-1 gap-2">
@@ -380,7 +380,7 @@
                                     Load More Information</Link>
                             </div>
 
-                        <x-splade-modal name="importantInformation" class="rounded-lg px-2 py-8" position="center" max-width="5xl">
+                 {{--     <x-splade-modal name="importantInformation" class="rounded-lg px-2 py-8" position="center" max-width="5xl">
                             @if (session('imporatnatNote'))
                                 <div class="bg-primaryDarkColor p-2 rounded-t-[3px] text-white font-semibold text-md mt-4">
                                     Information
@@ -395,7 +395,7 @@
 
                                 @endforeach
                             @endif
-                        </x-splade-modal>
+                        </x-splade-modal>--}}  
                     @endif
 
                 </div>
@@ -414,9 +414,7 @@
         </div>
     </section>
 
-
-
-</x-layout>
+</x-agency.layout>
 
 <script>
     let currentImageIndex = 0;
@@ -573,6 +571,7 @@
         const citySelect = $('#citySelect'); // Use jQuery selector
         const callingCode = $('#callingCode');
         const countryFlag = $('#countryFlag');
+    //    console.log(countryFlag);
         citySelect.empty(); // Clear city dropdown options
 
         citySelect.append(new Option("--Select City--", "")); // Add placeholder option
