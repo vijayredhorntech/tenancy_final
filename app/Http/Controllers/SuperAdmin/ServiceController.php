@@ -292,10 +292,7 @@ public function payment(Request $request)
     // Retrieve session data
     $userData = session('user_data');
 
-    // Debugging output
-    // echo "<pre>";
-    // print_r($userData);
-    // dd($request->all());
+
     $price_data=json_decode($request->details);
     
     $userData = session('user_data');
@@ -636,8 +633,11 @@ public function airport($input){
     return view('superadmin.pages.visa.searchvisa',compact('countries'));
  }
 
+ /****Doc Sign *****/
+ public function him_docsign(){
+    return view('agencies.pages.docsign.createdoc');
 
 
- 
+ }
 
 }

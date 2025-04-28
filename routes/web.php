@@ -24,7 +24,7 @@ use App\Http\Controllers\GloballyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\LogUserActivity;
-
+use App\Http\Controllers\SuperAdmin\HotelSettingsController;
 
 
 /******Controler for agencies ***** */
@@ -34,6 +34,7 @@ use App\Http\Controllers\AgencyAdmin\AgencyPermissionController;
 use App\Http\Middleware\CheckUserSession;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\Agencies\ClientController;
+use App\Http\Controllers\Agencies\DocumentController;
 
 /*******Controler for Hotel */
 
@@ -133,10 +134,6 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     //   Route::get('/delete/{id}','hs_teamMemberDelete')->name('superadmin.teamuserdelete');
                     Route::get('/teamuserdelete/{id}/{teamid}','hs_teamMemberDelete')->name('superadmin.teamuserdelete');
 
-
-                      
-
-                      
                     });
 
 
@@ -170,10 +167,6 @@ Route::middleware([LogUserActivity::class])->group(function () {
                             Route::post('/assigneditstore','hs_assignment_editstore')->name('assign.editstore');
                             Route::get('/staffindex','hs_staffAssigment')->name('admin.staff.assignment');
                             Route::get('/assigneview/{id}','hs_staffAssignmentView')->name('assign.view');
-
-
-                            
-         
                           });
                       
 
@@ -247,9 +240,9 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('fund/{id}', 'him_addfund_agency')->name('agencies.fund');
                         Route::post('storefund', 'him_storefund')->name('agencies.fund.store');
 
-                        Route::get('test', 'him_test')->name('test');  // Unique path
-                        Route::get('flight', 'him_test2')->name('Flight'); // Unique path
-                        Route::get('hotel', 'him_test3')->name('Hotel'); // Unique path
+                        // Route::get('test', 'him_test')->name('test');  // Unique path
+                        // Route::get('flight', 'him_test2')->name('Flight'); // Unique path
+                        // Route::get('hotel', 'him_test3')->name('Hotel'); // Unique path
                         Route::post('deduction','him_deduction')->name('deduction');
 
                         Route::post('deduction', 'him_deduction')->name('deduction');
@@ -301,6 +294,12 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                  
                         });
 
+
+                        Route::controller(HotelSettingsController::class)->group(function () {
+                            Route::get('/suppliersetting', 'hs_hotelsupplier')->name('supplier.hotel');
+                        });
+                
+
     });
 
     
@@ -331,6 +330,7 @@ Route::group([
         Route::get('flight', 'him_flight')->name('Flight');
         Route::get('hotel', 'him_hotel')->name('Hotel');
         Route::get('visa', 'him_visa')->name('Visa');
+        Route::get('docsign','him_docsign')->name('Doc Sign');
         // Route::post('flight_search','him_flightsearch')->name('flight.search');
         // Route::post('flight_price','him_flightprice')->name('flight.pricing');
         Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
@@ -376,6 +376,7 @@ Route::group([
         
    });
 
+   /****Client Controller **** */
     Route::controller(ClientController::class)->group(function () {
         Route::get('/client','hs_index')->name('client.index');
         Route::post('/clientstore','hs_ClientStore')->name('client.store');
@@ -387,11 +388,12 @@ Route::group([
         Route::get('/clientgeneratepdf','generatePDF')->name('generateclint.pdf');
         Route::get('/clintgenerateexcel','exportAgency')->name('exportclint');
         Route::get('/deleteclient/{id}','hs_deleteAgencyClient')->name('agency.clientdelete');
+    });
 
-
-
-
-     
+       /****Document Controller **** */
+       Route::controller(DocumentController::class)->group(function () {
+          Route::post('/documentcreate','hs_docCreate')->name('create.document');
+      
     });
 
     // Permissions
@@ -434,10 +436,18 @@ Route::group([
                     Route::post('/priceRange', 'filterByPriceRange')->name('hotel.filterHotelByPrice');
                     Route::post('/sortby', 'sortBy')->name('hotel.sort');
                     Route::get('/resetfilter', 'resetFilter')->name('hotel.resetFilter');
-                    Route::get('/applyfilter', 'applyFilter')->name('hotel.applyFilter');
+                    Route::get('/applyfilter', 'applyFilter')->name('applyFilters');
                     Route::get('/removefilter', 'removeFilter')->name('hotel.removeFilter');
                     Route::get('/suggestions', 'getHotelSuggestions')->name('hotel.suggestions');
+                    Route::get('/hotel/details','getHotelDetails')->name('hotel.getDetails');
+                    Route::get('/hotel/reset','hsresetFliter')->name('resetFilters');
+
+                    // Route::get('/apply-filters', [FilterController::class, 'applyFilters'])->name('applyFilters');
+
+
                 });
+
+
 
                 // BookingController Routes
                 Route::controller(BookingController::class)->group(function () {

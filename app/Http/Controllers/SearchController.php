@@ -167,66 +167,6 @@ $fetchedData=array_values($fetchedData);
 
 
 
-public function details15jan(Request $request )
-{
-    //   dd($request->all());
-    // $hotelDetails = ;
-    // $recomendedhotelDetails = $request->input('hotelDetails');
-    //  dd($recomendedhotelDetails['HotelId']);
-    $searchParams = session('searchParams');
-    // dd( $searchParams);
-    $selectedHotelID=$request->input('hotelDetails');
-    $hotelDetails['hotelDetails'] = $request->input('amp;hotelDetails');
-
-
-    // if(!empty($recomendedhotelDetails['HotelId'])){
-    //     $selectedHotelID=$recomendedhotelDetails['HotelId'];
-    //     $hotelDetails['hotelDetails'] = $request->input('hotelDetails');
-    // }
-    // else{
-    //     $selectedHotelID=$request->input('hotelDetails');
-    //     $hotelDetails['hotelDetails'] = $request->input('amp;hotelDetails');
-    // }
-
-    // $hotelsDetails = $this->priceAggregatorService->fetchHotels($searchParams);
-
-    // $hotelsDetailsFiltered = $hotelsDetails['Response']['Body']['Hotels']['Hotel'];
-//         $hotelsDetailsFiltered = $hotelDetails;
-
-//         foreach($hotelsDetailsFiltered as $hotelsDetailsFilter ) {
-//             // dd($hotelsDetailsFilter,$hotelDetails['HotelId']);
-// if (is_array($hotelsDetailsFilter['HotelId']) && is_array($hotelDetails['HotelId'])) {
-
-//     $newArrayPush['hotelDetails'] = $hotelsDetailsFilter;
-
-// }
-// else {
-
-//     $moreHotelList[] = $hotelsDetailsFilter;
-// }
-//  }
-// // start here recommend section
-// foreach($moreHotelList as $index => $fetchedHotel) {
-//     $varHotelID = $fetchedHotel['HotelId'];
-//     $hotelDetails = $this->priceAggregatorService->fetchHotelDetails($varHotelID);
-//     $hotelData= $hotelDetails['Response']['Body']['Hotels']['Hotel'];
-
-//     $moreHotelList[$index]['MoreDetails'] = $hotelData;
-// }
-
-// end here recommend section
-
-// $hotelDetails = $this->priceAggregatorService->fetchHotelDetails($hotelID);
-// $hotelData = $hotelDetails['Response']['Body']['Hotels']['Hotel'];
-// $newArrayPush['hotelDetails']['MoreDetails'] = $hotelData;
-
-// dd($newArrayPush);
-    return view('hotel.hotelDetail',[
-        'hotelDetailsData' => $hotelDetails,
-        'selectedHotelID'=>$selectedHotelID,
-        'searchParams' => session()->get('searchParams1'),
-    ]);
-}
 
 public function results(Request $request)
     {
@@ -292,9 +232,14 @@ public function results(Request $request)
 
     public function hotelResults(Request $request){
 
-        
         //   dd($request->all());
         // session()->flush();
+        // $hotels = session('availableHotelsWithImage');
+        // return view('agencies.pages.hotel.holidayList',[
+        //     'hotels' => $hotels,
+        //     'searchParams' => $request->all(),
+        // ]);
+
        
         $reqAll = $request->all();
 
@@ -341,82 +286,14 @@ public function results(Request $request)
             };
            $hotel['Details'] = $details['Images'];
         }
- 
-      
+        session()->put('availableHotelsWithImage', $hotels);
+       
         return view('agencies.pages.hotel.holidayList',[
             'hotels' => $hotels,
             'searchParams' => $request->all(),
         ]);
 
     }
-
-    // public function 26hotelResults(Request $request){
-    //         session()->flush();
-    //         $reqAll = $request->all();
-
-    //                session()->put('searchParams1', $reqAll);
-    //                $encodedObject = $request->query('roomDetails');
-    //                $requestParams = $request->all();
-
-    //                $decodedObject = json_decode(urldecode($encodedObject), true);
-    //                $requestParams['roomDetails'] = $decodedObject;
-    //                $requestParams['adults'] = null;
-    //                $requestParams['children'] = null;
-
-    //                foreach($requestParams['roomDetails'] as $roomdetails) {
-    //                    $requestParams['adults'] += (int)$roomdetails['numberofAdults'];
-    //                    $requestParams['children'] += (int)$roomdetails['numberOfChildren'];
-    //                }
-
-    //                session()->put('searchParams', $requestParams);
-    //                $hotels = $this->priceAggregatorService->fetchHotels($requestParams);
-    //                session()->put('availableHotels',$hotels);
-
-    //                if(!$hotels['Response']['Body']['Hotels']){
-    //                 return 'Hotels not found';
-    //                }
-    // $outerHotelList =$hotels['Response']['Body']['Hotels']['Hotel'];
-
-    // $perPage = 12;
-    // $page = request()->get('page', 1);
-
-    // $offset = ($page - 1) * $perPage;
-
-    // $currentPageItems = array_slice($outerHotelList, $offset, $perPage);
-    // $paginator = new LengthAwarePaginator(
-    //     $currentPageItems,
-    //     count($outerHotelList),
-    //     $perPage,
-    //     $page,
-    //     [
-    //         'path' => Paginator::resolveCurrentPath(),
-    //         'pageName' => 'page',
-    //         'searchParams' => $request->all(),
-    //     ]
-    // );
-
-    // $paginator->withQueryString();
-
-
-
-    // if ($request->ajax()) {
-
-    // $view =  view('partials.hotel-list',[
-    //     'hotels' => $paginator,
-    //     'searchParams' => $request->all(),
-    // ])->render();
-    // $view = trim($view);
-
-    //     return response()->json(['html' => $view]);
-    // }
-
-    //                return view('hotel.holidayList',[
-    //                    'hotels' => $paginator,
-    //                    'searchParams' => $request->all(),
-    //                ]);
-
-    //     }
-
 
 
     public function moreFilterHotel(Request $request){
@@ -559,102 +436,9 @@ public function results(Request $request)
     // dd($request->all());
   }
 
-///////////////////////////////////////////////////filter functions///////////////////////////////////////
-public function applyFilter(Request $request)
-{
-    // dd(session()->all());
-    $queryParams = $request->all();
-//    dd($queryParams);
-    // Retrieve the existing filters from the session
-    $allFilters = session('allFilters', []);
-    // Loop through the received filters and add them to the array if they are not already present
-    foreach ($queryParams as $key => $value) {
-        if (!in_array($value, $allFilters[$key] ?? [])) {
-            $allFilters[$key][0] = $value;
-        }
-    }
-    // Store the updated array in the session
-    session(['allFilters' => $allFilters]);
-    $sessionget = session()->get('allFilters');
-    $searchParams = session('searchParams1');
-    // dd($sessionget);
-    $hotels = [];
-    $filterLists = session()->get('allFilters');
 
-    $availableHotels = session()->get('availableHotels');
-    // dd(session()->all());
-    if (!empty($filterLists)) {
-        // dd($availableHotels);
-        $availableHotels = $availableHotels['Response']['Body']['Hotels']['Hotel'];
-
-        $filteredHotels = $this->filterController->filterApply($availableHotels, $filterLists);
-//      dd($filteredHotels);
-
-$hotels = $filteredHotels;
-        // $hotels['Response']['Body']['Hotels']['Hotel'] = $filteredHotels;
-        // $hotels['Response']['Body']['HotelsReturned'] = count($filteredHotels);
-    } else {
-        $hotels = $availableHotels['Response']['Body']['Hotels']['Hotel'];
-    }
-
-
-    // dd(session()->get('searchParams1'));
-
-    $perPage = 12;
-    $page = request()->get('page', 1);
-
-    $offset = ($page - 1) * $perPage;
-
-    $currentPageItems = array_slice($hotels, $offset, $perPage);
-    $paginator = new LengthAwarePaginator(
-        $currentPageItems,
-        count($hotels),
-        $perPage,
-        $page,
-        [
-            'path' => Paginator::resolveCurrentPath(),
-            'pageName' => 'page',
-            'searchParams' => $request->all(),
-        ]
-    );
-    // $paginator->appends(['searchParams' =>$request->all()]);
-    $paginator->withQueryString();
-    // if ($request->ajax()) {
-    //     return view('partials.hotel_list', ['hotels' => $paginator])->render();
-    // }
-
-    if ($request->ajax()) {
-        // dd('ajax called');
-        // $view = view('partials.test')->render();
-    $view =  view('partials.hotel-list',[
-        'hotels' => $paginator,
-        'searchParams' => $request->all(),
-    ])->render();
-    $view = trim($view);
-    // dd($view);
-        return response()->json(['html' => $view]);
-    }
-
-    // dd($paginator);
-                //    session(['availableHotels'=> $hotels]);
-                //    session()->put('availableHotels',$hotels);
-
-                //    return view('hotel.holidayList',[
-                //        'hotels' => $paginator,
-                //        'searchParams' => $request->all(),
-                //    ]);
-
-
-
-
-    // dd($hotels);
-    return view('hotel.holidayList', [
-        'hotels' => $paginator,
-        'searchParams' => session()->get('searchParams1'),
-    ]);
-    // return back();
-}
-
+  
+  
 
 public function resetFilter(Request $request)
 {
@@ -751,6 +535,186 @@ public function searchHotel(Request $request){
 }
 
 
+/***Get Hotel Name **** */
+public function getHotelSuggestions(Request $request)
+{
+    $searchTerm = $request->input('property_name'); // you are sending 'property_name' in AJAX, not 'searchTerm'
+
+    $hotels = session('availableHotelsWithImage');
+    $hotelNames = [];
+
+    if (!empty($hotels)) {
+        foreach ($hotels as $hotel) {
+            if (isset($hotel['HotelName'])) {
+                // Check if HotelName starts with $searchTerm
+                if (stripos($hotel['HotelName'], $searchTerm) === 0) { 
+                    $hotelNames[] = [
+                        'HotelId' => $hotel['HotelId'] ?? null,
+                        'HotelName' => $hotel['HotelName']
+                    ];
+                }
+            }
+        }
+    }
+
+    return response()->json($hotelNames);
+}
+
+
+/*******Get Hotel Detilals *****/
+public function getHotelDetails(Request $request)
+{
+    // Get the hotel ID from the request
+    $hotelId = $request->input('hotel_id');
+
+    // Fetch hotel details from session or database
+    $hotels = session('availableHotelsWithImage');
+    $hotel = null;
+
+    // Loop through to find the specific hotel by ID
+    foreach ($hotels as $h) {
+        if ($h['HotelId'] == $hotelId) {
+            $hotel = $h;
+            break;
+        }
+    }
+// dd($hotel);
+    // If hotel found, return success with hotel data, else return error
+    if ($hotel) {
+        // dd($hotel);
+        $hotelDetails = [
+            'status' => 'success',
+            'hotel' => [
+                'HotelId' => $hotel['HotelId'],
+                'HotelName' => $hotel['HotelName'],
+                'HotelImage' => $hotel['Details']['Image'] ?? '/path/to/default/image.jpg',  // Default image if not available
+                'StarRating' => $hotel['StarRating'],
+                'Vendor' => 'rh',
+                'City' => '10',
+                'Country' => '10',
+                'TotalPrice' => $hotel['Options']['Option'][0]['TotalPrice'] ?? 'N/A',
+                'Images' => $hotel['Details']['Image'] ?? [],  // Assuming Images is an array
+                'TotalNights' => '10',
+            ]
+        ];
+// dd($hotelDetails);
+        // Return hotel details in JSON format with success status and hotel data
+        return response()->json($hotelDetails);
+    } else {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Hotel not found'
+        ]);
+    }
+}
+
+
+/****Fliter *** */
+
+public function applyFilter(Request $request)
+{
+    $queryParams = $request->all();
+
+    $ratings = isset($queryParams['ratings']) ? $queryParams['ratings'] : [];
+    $priceRange = isset($queryParams['priceRange']) ? $queryParams['priceRange'] : null;
+
+    $hotels = session('availableHotelsWithImage');
+    $matchingHotels = [];
+
+    if (!empty($ratings)) {
+        // Filter first by ratings
+        foreach ($hotels as $h) {
+            if (in_array($h['StarRating'], $ratings)) {
+                $matchingHotels[] = $h;
+            }
+        }
+
+        // Now if price range is set, apply price filter on matched ratings
+        if ($priceRange) {
+            $priceRangeArray = explode('-', $priceRange);
+            $minPrice = isset($priceRangeArray[0]) ? (float)$priceRangeArray[0] : 0;
+            $maxPrice = isset($priceRangeArray[1]) ? (float)$priceRangeArray[1] : INF;
+
+            $matchingHotels = array_filter($matchingHotels, function ($hotel) use ($minPrice, $maxPrice) {
+                $totalPrice = isset($hotel['Options']['Option'][0]['TotalPrice']) ? (float)$hotel['Options']['Option'][0]['TotalPrice'] : 0;
+                return $totalPrice >= $minPrice && $totalPrice <= $maxPrice;
+            });
+        }
+    } elseif ($priceRange) {
+        // If only price filter is set, no ratings filter
+        $priceRangeArray = explode('-', $priceRange);
+        $minPrice = isset($priceRangeArray[0]) ? (float)$priceRangeArray[0] : 0;
+        $maxPrice = isset($priceRangeArray[1]) ? (float)$priceRangeArray[1] : INF;
+
+        foreach ($hotels as $h) {
+            $totalPrice = isset($h['Options']['Option'][0]['TotalPrice']) ? (float)$h['Options']['Option'][0]['TotalPrice'] : 0;
+            if ($totalPrice >= $minPrice && $totalPrice <= $maxPrice) {
+                $matchingHotels[] = $h;
+            }
+        }
+    }
+
+    // Prepare hotel data
+    $finalHotels = [];
+    foreach ($matchingHotels as $h) {
+        $finalHotels[] = [
+            'HotelId' => $h['HotelId'],
+            'HotelName' => $h['HotelName'],
+            'HotelImage' => $h['Details']['Image'] ?? '/path/to/default/image.jpg',
+            'StarRating' => $h['StarRating'],
+            'Vendor' => 'rh',
+            'City' => '10',
+            'Country' => '10',
+            'TotalPrice' => $h['Options']['Option'][0]['TotalPrice'] ?? 'N/A',
+            'Images' => $h['Details']['Image'] ?? [],
+            'TotalNights' => '10',
+        ];
+    }
+
+    if (count($finalHotels) > 0) {
+        $hotelDetails = [
+            'status' => 'success',
+            'hotels' => $finalHotels,
+        ];
+    } else {
+        $hotelDetails = [
+            'status' => 'error',
+            'message' => 'No hotels found matching the selected filters.',
+        ];
+    }
+
+    return response()->json($hotelDetails);
+}
+
+/****Reset Filter **** */
+
+public function hsresetFliter(Request $request)
+{
+    // Get all hotels from session
+    $hotels = session('availableHotelsWithImage');
+    $finalHotels = [];
+
+    // Loop through all hotels to prepare the response
+    foreach ($hotels as $h) {
+        $finalHotels[] = [
+            'HotelId' => $h['HotelId'],
+            'HotelName' => $h['HotelName'],
+            'HotelImage' => $h['Details']['Image'] ?? '/path/to/default/image.jpg',
+            'StarRating' => $h['StarRating'],
+            'Vendor' => 'rh',
+            'City' => '10',
+            'Country' => '10',
+            'TotalPrice' => $h['Options']['Option'][0]['TotalPrice'] ?? 'N/A',
+            'Images' => $h['Details']['Image'] ?? [],
+            'TotalNights' => '10',
+        ];
+    }
+
+    return response()->json([
+        'status' => 'success',
+        'hotels' => $finalHotels,
+    ]);
+}
 
 
 

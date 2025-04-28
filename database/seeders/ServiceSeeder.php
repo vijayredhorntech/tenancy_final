@@ -17,6 +17,7 @@ class ServiceSeeder extends Seeder
             ['name' => 'Hotel', 'icon' =>'<i class="fa fa-hotel mr-2 text-sm"></i>','created_at' => now(),'price'=>'0','updated_at' => now()],
             ['name' => 'Flight','icon' =>'<i class="fa fa-plane-departure mr-2 text-sm"></i>', 'created_at' => now(), 'price'=>'0','updated_at' => now()],
             ['name' => 'Visa','icon' =>'<i class="fa-brands fa-cc-visa mr-2 text-sm"></i>', 'created_at' => now(), 'price'=>'0','updated_at' => now()],
+            ['name' => 'Doc Sign', 'icon' => '<i class="fa fa-file-signature mr-2 text-sm"></i>', 'created_at' => now(), 'price' => '0', 'updated_at' => now()],
         ]);
     }
 }

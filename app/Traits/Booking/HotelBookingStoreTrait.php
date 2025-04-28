@@ -136,7 +136,8 @@ trait HotelBookingStoreTrait
                     'filterRatings',
                     'selectedHotelMoreDetails',
                     'selectedHotelDetails',
-                    'totalPrice'
+                    'totalPrice',
+                    'availableHotelsWithImage'
                 ]);
             
                 return $booking;

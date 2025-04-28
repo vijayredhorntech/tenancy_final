@@ -19,7 +19,8 @@
                     <div class="swiffy-slider" data-swiffy-slider>
                         @foreach($sliderImages as $image)
                             <div class="swiffy-slide">
-                                <img src="{{ $image }}" class="w-full lg:h-[500px] md:h-[400px] sm:h-[250px] h-[150px] object-cover" alt="Slider Image">
+                             <img src="{{ $image }}" class="w-full lg:h-[500px] md:h-[400px] sm:h-[250px] h-[150px] object-cover" alt="Slider Image">
+
                             </div>
                         @endforeach
                     </div>
