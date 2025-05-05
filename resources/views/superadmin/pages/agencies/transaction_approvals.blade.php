@@ -45,268 +45,165 @@
 
 
 
-        {{--        === this is code for form section ===--}}
-        <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 hidden">
-            <form action="{{ route('agencies.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-
-                @if(session('error'))
-
-                    <div class="alert alert-danger">
-                        {{ session('error') }}
-                    </div>
-                @endif
-                <div class="w-full flex flex-col gap-2 px-4 mt-4">
-                    <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
-                        <span class="text-lg font-bold text-ternary">Basic Information</span>
-                    </div>
-                    <div class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2">
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Agency Logo</label>
-                            <div class="w-full relative">
-                                <input type="file" name="logo" id="name" placeholder="Agency name....."
-                                       class="w-full pl-2 pr-8 py-0.5 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-image absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Agency Name</label>
-                            <div class="w-full relative">
-                                <input type="text" name="name" id="name" placeholder="Agency name....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Vat Number</label>
-                            <div class="w-full relative">
-                                <input type="text" name="vat_number" id="vat_number" placeholder="Vat ....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-file-invoice absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                        <div class="w-full relative group flex flex-col gap-2">
-                            <label class="font-semibold text-ternary/90 text-sm">Select Services</label>
-                            <div class="flex gap-2 flex-wrap">
-                     
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="w-full flex flex-col gap-2 px-4 mt-8">
-                    <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
-                        <span class="text-lg font-bold text-ternary">Contact Information</span>
-                    </div>
-                    <div class="w-full grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2">
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="email" class="font-semibold text-ternary/90 text-sm">Email</label>
-                            <div class="w-full relative">
-                                <input type="email" name="email" id="email" placeholder="Email....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-envelope absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Telephone</label>
-                            <div class="w-full relative">
-                                <input type="number" name="telephone" id="telephone" placeholder="telephone....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-phone absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Phone</label>
-                            <div class="w-full relative">
-                                <input type="number" name="agency_phone" id="agency_phone" placeholder="Phone....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-phone absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Contact Person</label>
-                            <div class="w-full relative">
-                                <input type="text" name="contact_name" id="contact_name"
-                                       placeholder="Contact Person Name....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Contact person Phone</label>
-                            <div class="w-full relative">
-                                <input type="number" name="contact_phone" id="contact_phone"
-                                       placeholder="Contact Phone....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-phone absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="w-full flex flex-col gap-2 px-4 mt-8">
-                    <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
-                        <span class="text-lg font-bold text-ternary">Address Information</span>
-                    </div>
-                    <div class="w-full grid xl:grid-cols-5 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2">
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Zip Code</label>
-                            <div class="w-full relative">
-                                <input type="text" name="zip_code" id="zip_code" placeholder="zip code....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <!-- <div class="address"> </div>  -->
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Address</label>
-                            <div class="w-full relative">
-                                <input type="text" name="address" id="address" placeholder="Address....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">City</label>
-                            <div class="w-full relative">
-                                <input type="text" name="city" id="city" placeholder="Phone....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">State</label>
-                            <div class="w-full relative">
-                                <input type="text" name="state" id="state" placeholder="State....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-flag absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Country</label>
-                            <div class="w-full relative">
-                                <input type="test" name="country" id="country" placeholder="Country....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="w-full flex flex-col gap-2 px-4 mt-8">
-                    <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
-                        <span class="text-lg font-bold text-ternary">Database Information</span>
-                    </div>
-                    <div class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2">
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Domain Name</label>
-                            <div class="w-full relative">
-                                <input type="text" name="domain_name" id="domain_name" placeholder="Domain....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-
-
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Database Name</label>
-                            <div class="w-full relative">
-                                <input type="text" name="database_name" id="database_name" placeholder="Phone....."
-                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="w-full flex justify-end px-4 pb-4 gap-2 mt-8">
-                    <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')"
-                            class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">
-                        Cancel
-                    </button>
-                    <button type="submit"
-                            class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">
-                        Create Agency
-                    </button>
-                </div>
-            </form>
-        </div>
-        {{--        === form section code ends here===--}}
-
-
-        {{--        === this is code for table section ===--}}
+        
         <div class="w-full overflow-x-auto p-4">
-            <div class="w-full flex justify-between gap-2 items-center">
-                <div class="flex gap-2">
-                    <a href="{{route('agencies.downloade')}}">
-                        <button title="Export to excel"
-                                class="bg-success/20 text-success h-8 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white  cursor-pointer transition ease-in duration-2000">
-                            <i class="fa fa-file-excel"></i>
-                        </button>
-                    </a>
-                    <button title="Export to pdf"
-                            class="bg-danger/20 text-danger h-8 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white  cursor-pointer transition ease-in duration-2000">
-                        <i class="fa fa-file-pdf"></i>
-                    </button>
-                </div>
-                <div class="flex items-center gap-2">
-                    <input type="text" placeholder="Approvel name....."
-                           class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000">
-                    <button
-                        class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
-                        <i class="fa fa-search mr-1"></i> Search
-                    </button>
-                </div>
-            </div>
+        <form id="filter-form" method="GET" action="{{ route('transaction_approvals') }}" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <!-- Search -->
+                                <div>
+                                    <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
+                                    <input type="text" name="search" id="search" value="{{ request('search') }}" 
+                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm"
+                                        placeholder="Agency, Invoice, Payment Number">
+                                </div>
+
+                            
+
+                                <!-- Date Range -->
+                                <div>
+                                    <label for="date_from" class="block text-sm font-medium text-gray-700">Date Range</label>
+                                    <div class="flex gap-2">
+                                        <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}"
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                        <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}"
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                    </div>
+                                </div>
+
+                                <!-- Status Filter -->
+                                <div>
+                                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                                    <select name="status" id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                        <option value="">All Status</option>
+                                        
+                                        <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Complete</option>
+                                        <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Under Process</option>
+                                        <option value="3" {{ request('status') == '3' ? 'selected' : '' }}>Rejected</option>
+
+                                    </select>
+                                </div>
+
+                                <!-- Payment Method Filter -->
+                                <div>
+                                    <label for="payment_method" class="block text-sm font-medium text-gray-700">Payment Type</label>
+                                    <select name="paymenttype" id="paymenttype" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                        <option value="">All</option>
+      
+                                        <option value="creditcard" {{ request('paymenttype') == 'creditcard' ? 'selected' : '' }}>Credit Card</option>
+                                        <option value="debitcard" {{ request('paymenttype') == 'debitcard' ? 'selected' : '' }}>Debit Card</option>
+                                        <option value="netbanking" {{ request('paymenttype') == 'netbanking' ? 'selected' : '' }}>Netbanking</option>
+                                        <option value="upi" {{ request('paymenttype') == 'upi' ? 'selected' : '' }}>UPI</option>
+                                        <option value="cash" {{ request('paymenttype') == 'cash' ? 'selected' : '' }}>Cash</option>
+                                        <option value="banktransfer" {{ request('paymenttype') == 'banktransfer' ? 'selected' : '' }}>Bank Transfer</option>
+                                        <option value="creditnote" {{ request('paymenttype') == 'creditnote' ? 'selected' : '' }}>Credit Note</option>
+                                    </select>
+
+                                </div>
+
+
+                             
+
+                            
+                            </div>
+
+                            <!-- Filter Actions -->
+                            <div class="flex justify-between items-center mt-4">
+                                <div class="flex gap-2">
+                                    <button type="submit" class="bg-success text-white px-4 py-2 rounded-md hover:bg-success/90">
+                                        Apply Filters
+                                    </button>
+                                    <a href="{{ route('transaction_approvals') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                                        Clear Filters
+                                    </a>
+                                </div>
+                                <div class="flex gap-2 items-center">
+                                    <label for="per_page" class="text-sm font-medium text-gray-700">Show:</label>
+                                    <select name="per_page" id="per_page" class="rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm"
+                                            onchange="this.form.submit()">
+                                        @foreach([10, 25, 50, 100] as $perPage)
+                                            <option value="{{ $perPage }}" {{ request('per_page', 10) == $perPage ? 'selected' : '' }}>
+                                                {{ $perPage }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <a href="{{ route('agencies.funddownloade') }}?{{ http_build_query(request()->all()) }}" 
+                                    class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+                                        Export CSV
+                                    </a>
+                                    <a href="{{ route('agencies.exportfundpdf') }}?{{ http_build_query(request()->all()) }}"
+                                        class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                                            Export PDF
+                                        </a>
+                                </div>
+                            </div>
+        </form>   
+
+            
             <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                 <tr>
-                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">
-                        Sr. No.
-                    </td>
-                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">
-                        Agency Name
-                    </td>
-                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">
-                        Created At
-                    </td>
-                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">
-                        Ammount
-                    </td>
-                   
-                  
-                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">
-                        Action
-                    </td>
+                <tr>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency</td>
+                        
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Added Date</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Number</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Method</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Status</td>                  
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                 </tr>
 
-                @forelse($credits as $credit)
+                @forelse($credits as $request)
                     <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000">
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$credit->agency->name}}</td>
-                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$credit['created_at']}}</td>
-                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$credit['amount']}}
-                  
-                        </td>
+                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$request->agency->name}}</td>
+                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$request->invoice_number}}</td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$request->amount}}</td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$request->added_date}}</td>
+                            
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$request->payment_number}}</td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$request->payment_type}}</td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                        @php
+                                            $status = $request['status'];
+                                            $statusText = $status == '0' ? 'Complete' : ($status == '1' ? 'Under Process' : 'Rejected');
+                                            $statusColor = $status == '0' ? 'success' : ($status == '1' ? 'warning' : 'danger');
+                                        @endphp
+
+                                        <span class="bg-{{ $statusColor }}/10 text-{{ $statusColor }} px-2 py-1 rounded-[3px] font-bold">
+                                            {{ $statusText }}
+                                        </span>
+                                        @if($request->receiptcopy)
+                                            <a href="{{ asset('storage/' . $request->receiptcopy) }}" target="_blank">
+                                                (View file)
+                                            </a>
+                                        @endif
+                                    </td>
               
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                             <div class="flex gap-2 items-center">
-
-                                <a href="{{route('transaction_update',['id' => $credit->id])}}" title="Edit">
+                            
+                            @if($request->status == 1)
+                                <a href="{{route('transaction_update',['id' => $request->id])}}" title="Edit">
                                     <div
                                         class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                         <i class="fa fa-pen"></i>
                                     </div>
                                 </a>
-
-                                <a href="{{route('transaction_delete',['id' => $credit->id])}}" title="Delete">
+                            @else
                                     <div
-                                        class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                        class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
+                                        <i class="fa fa-check"></i>
+                                    </div>                       
+                            @endif
+
+                                <!-- <a href="{{route('transaction_delete',['id' => $request->id])}}" title="Delete" onclick="return confirm('Are you sure you want to delete this transaction?')">
+                                    <div
+                                        class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                         <i class="fa fa-trash"></i>
                                     </div>
-                                </a>
+                                </a> -->
 <!-- 
                                 <a href="" title="Remind for funds">
                                     <div

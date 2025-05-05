@@ -17,12 +17,24 @@ use App\Models\Deduction;
 
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
+use App\Services\AgencyService;
+use App\Exports\FundExport;
+use Maatwebsite\Excel\Facades\Excel;
+use PDF; 
 
 
 
 class FundManagementController extends Controller
 {
     
+ 
+    protected $agencyService;
+    public function __construct(AgencyService $agencyService)
+    {
+       
+        $this->agencyService = $agencyService;
+    }
+
     /**** Add function for Fund ****/
 
  public function him_addfund_agency($fid){
@@ -152,15 +164,125 @@ class FundManagementController extends Controller
 
 /***Approvel ***/
 
-public function him_transaction_approvals(){
+public function him_transaction_approvals(Request $request){
 
-    $credits = AddBalance::with('agency')->where('status',1)->get();
- 
+    // $credits = AddBalance::with('agency')->where('status',1)->get();
+    $query = AddBalance::with('agency');
+
+    // Search by keyword (e.g. name, email, or other fields)
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->whereHas('agency', function ($q2) use ($search) {
+                $q2->where('name', 'like', "%{$search}%");
+            })
+            ->orWhere('invoice_number', 'like', "%{$search}%")
+            ->orWhere('payment_number', 'like', "%{$search}%");
+        });
+    }
+
+    // Filter by date range
+    if ($request->filled('date_from')) {
+        $query->whereDate('created_at', '>=', $request->date_from);
+    }
+
+    if ($request->filled('date_to')) {
+        $query->whereDate('created_at', '<=', $request->date_to);
+    }
+
+    // Filter by status
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    // Filter by payment type
+    if ($request->filled('paymenttype')) {
+        $query->where('payment_type', $request->paymenttype);
+    }
+
+    // Pagination (default 10 per page)
+    $perPage = $request->get('per_page', 10);
+    $credits = $query->paginate($perPage)->appends($request->all());
+
+    // $credits = AddBalance::with('agency')->get();
     return view('superadmin.pages.agencies.transaction_approvals',[
         'credits'=>$credits
        ]);
 }
+/*****Export Excel **** */
+public function hsexportFund(Request $request){
+    $query = AddBalance::with('agency');
 
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->whereHas('agency', function ($q2) use ($search) {
+                $q2->where('name', 'like', "%{$search}%");
+            })
+            ->orWhere('invoice_number', 'like', "%{$search}%")
+            ->orWhere('payment_number', 'like', "%{$search}%");
+        });
+    }
+
+    if ($request->filled('date_from')) {
+        $query->whereDate('created_at', '>=', $request->date_from);
+    }
+
+    if ($request->filled('date_to')) {
+        $query->whereDate('created_at', '<=', $request->date_to);
+    }
+
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    if ($request->filled('paymenttype')) {
+        $query->where('payment_type', $request->paymenttype);
+    }
+
+    // Use get() here to pass the collection
+    $records = $query->get();
+
+    return Excel::download(new FundExport($records), 'funds_report.xlsx');
+    
+}
+/***pdf export *** */
+public function hsGeneratePDF(Request $request)
+{
+    $query = AddBalance::with('agency');
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->whereHas('agency', function ($q2) use ($search) {
+                $q2->where('name', 'like', "%{$search}%");
+            })
+            ->orWhere('invoice_number', 'like', "%{$search}%")
+            ->orWhere('payment_number', 'like', "%{$search}%");
+        });
+    }
+
+    if ($request->filled('date_from')) {
+        $query->whereDate('created_at', '>=', $request->date_from);
+    }
+
+    if ($request->filled('date_to')) {
+        $query->whereDate('created_at', '<=', $request->date_to);
+    }
+
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    if ($request->filled('paymenttype')) {
+        $query->where('payment_type', $request->paymenttype);
+    }
+
+    $records = $query->get();
+
+    $pdf = PDF::loadView('pdf.funds_report', compact('records'));
+    return $pdf->download('funds_report.pdf');
+}
 
 /** View transaction ***/
 public function him_transaction_update($uid)
@@ -222,6 +344,69 @@ public function him_transaction_store(Request $request)
     return redirect()->route('transaction_approvals')->with('message', 'Transaction updated successfully.');
 }
 
+public function him_transaction_delete($id){
+    dd($id);
+}
+
+/****fund Managment *** */
+
+    /*****AGency Fund Add *****/
+    public function hsrequestFund(){
+        $agency=$this->agencyService->getAgencyData(); 
+        $requests=AddBalance::where('agency_id',$agency->id)->get(); 
+     //    dd($request);
+         return view('agencies.pages.fund.fund',compact('requests','agency'));
+     }
+     
+     /****Request Fund Applly  */
+     public function hsrequestFundApply(){
+         return view('agencies.pages.fund.applyfund');
+     }
+ 
+     /*****Fund request store *** */
+ 
+     public function hsFundApplyStore(Request $request){
+ 
+         $rules = [
+             'modepayment' => 'required|string',
+             'add_ammount' => 'required|numeric',
+         ];
+     
+         if ($request->modepayment !== 'creditnote') {
+             $rules = array_merge($rules, [
+                 'add_ammount' => 'required|numeric',
+                 'payment_number' => 'required|string',
+                 'remark' => 'string',
+                 'receiptcopy' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+             ]);
+         }
+         $validatedData = $request->validate($rules);
+
+         /***Store File *** */
+         if ($request->hasFile('receiptcopy')) {
+            $filePath = $request->file('receiptcopy')->store('receipts', 'public');
+            $validatedData['receiptcopy'] = $filePath;
+        }
+
+        $agency=$this->agencyService->getAgencyData(); 
+        $invoice_number = 'INV-' . now()->format('Ymd') . '-' . str_pad(mt_rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+        $addbalance = new AddBalance();
+        $addbalance->agency_id = $agency->id;
+        $addbalance->amount = $validatedData['add_ammount'];
+        $addbalance->added_date = now();
+        $addbalance->receiptcopy = $validatedData['receiptcopy'];
+        $addbalance->invoice_number = $invoice_number;
+
+        $addbalance->payment_number = $request->payment_number;
+        $addbalance->payment_number = $request->payment_number;
+
+        $addbalance->status = '1';
+        $addbalance->payment_type = $request->modepayment;
+        $addbalance->save();
+        return redirect()->route('agency.addfund')->with('success', 'Fund request submitted successfully.');
+         // Save the AddBalance record and other details her
+         
+     }
 
 
  

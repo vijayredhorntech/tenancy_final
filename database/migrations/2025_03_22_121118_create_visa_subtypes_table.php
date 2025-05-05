@@ -22,14 +22,24 @@ return new class extends Migration
 
             // Foreign Key Constraint (Assuming visa_types table exists)
             // $table->foreign('visa_type_id')->references('id')->on('visa_types')->onDelete('cascade');
+            $table->foreign('visa_type_id')
+            ->references('id')
+            ->on('visa_types')
+            ->onDelete('cascade');
         });
     }
 
     /**
      * Reverse the migrations.
      */
+    // public function down(): void
+    // {
+    //     Schema::dropIfExists('visa_subtypes');
+    // }
     public function down(): void
-    {
-        Schema::dropIfExists('visa_subtypes');
-    }
+{
+    Schema::disableForeignKeyConstraints();
+    Schema::dropIfExists('visa_subtypes');
+    Schema::enableForeignKeyConstraints();
+}
 };

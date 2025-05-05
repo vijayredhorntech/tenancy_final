@@ -125,7 +125,7 @@
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-            <span class="font-semibold text-ternary text-xl">{{ $client->name ?? 'N/A' }} {{$client->clientinfo->last_name ?? ''}}</span>
+            <span class="font-semibold text-ternary text-xl">{{ $client->client_name ?? 'N/A' }}</span>
             <span class="font-semibold text-ternary text-xl">
            
 
@@ -166,21 +166,21 @@
                                         </div>
                                         <div class="flex ">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Client name: </span>
-                                            <span class="text-ternary text-medium italic">   {{$client->name ?? 'N/A'}} {{$client->clientinfo->last_name ?? ''}}</span>
+                                            <span class="text-ternary text-medium italic">   {{$client->first_name ?? 'N/A'}} {{$client->last_name ?? ''}}</span>
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Gender</span>
-                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->gender ?? ''}}</span>
+                                            <span class="text-ternary text-medium italic">{{$client->gender ?? ''}}</span>
                                         </div>
 
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Date Of Birth</span>
-                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->dob ?? ''}}</span>
+                                            <span class="text-ternary text-medium italic">{{$client->date_of_birth ?? ''}}</span>
                                         </div>
 
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Marital Status</span>
-                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->marital_status ?? ''}}</span>
+                                            <span class="text-ternary text-medium italic">{{$client->marital_status ?? ''}}</span>
                                         </div>
 
 
@@ -224,11 +224,22 @@
                                     <div class="flex flex-col mt-4">
                                         <div class="flex ">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Address:</span>
-                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->residential_address ?? ''}}</span>
+                                            <span class="text-ternary text-medium italic">{{$client->permanent_address ?? ''}}</span>
                                         </div>
+
+                                        <div class="flex ">
+                                            <span class="w-[150px] font-semibold text-md text-ternary">Zip Code:</span>
+                                            <span class="text-ternary text-medium italic">{{$client->zip_code ?? ''}}</span>
+                                        </div>
+
+                                        <div class="flex ">
+                                            <span class="w-[150px] font-semibold text-md text-ternary">Religion:</span>
+                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->religion ?? ''}}</span>
+                                        </div>
+
                                         <div class="flex ">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Nationality:</span>
-                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->nationality ?? ''}}</span>
+                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->past_nationality ?? ''}}</span>
                                         </div>
                                      
                                      
@@ -246,11 +257,11 @@
                                     <div class="flex flex-col mt-4">
                                         <div class="flex ">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Passport Number</span>
-                                            <span class="text-ternary text-medium italic">{{$client->passport_number ?? ''}}</span>
+                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->passport_ic_number ?? ''}}</span>
                                         </div>
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Place of  Issue</span>
-                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->place ?? ''}} </span>
+                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->passport_issue_place ?? ''}} </span>
                                         </div>
 
                                         <div class="flex mt-2">
@@ -274,15 +285,19 @@
                                     <div class="flex flex-col mt-4">
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Father Name</span>
-                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->father_name ?? ''}}</span>
+                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->father_details ?? ''}}</span>
                                         </div>
 
                                         <div class="flex mt-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Mother Name</span>
-                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->mother_name ?? ''}}</span>
+                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->mother_details ?? ''}}</span>
                                         </div>
-                                        
-                                                                              
+
+                                        <div class="flex mt-2">
+                                            <span class="w-[150px] font-semibold text-md text-ternary">Spouse Name</span>
+                                            <span class="text-ternary text-medium italic">{{$client->clientinfo->spouse_details ?? ''}}</span>
+                                        </div>
+                                         
                                     </div>
                                 </div>
 

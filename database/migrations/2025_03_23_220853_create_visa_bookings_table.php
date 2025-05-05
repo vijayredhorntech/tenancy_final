@@ -11,6 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints(); 
+
         Schema::create('visabookings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('origin_id');
@@ -36,13 +38,15 @@ return new class extends Migration
             $table->foreign('visa_id')->references('id')->on('visa_types')->onDelete('cascade');
             $table->foreign('subtype_id')->references('id')->on('visa_subtypes')->onDelete('cascade');
         });
+
+        Schema::enableForeignKeyConstraints(); // Re-enable foreign key checks
     }
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
-    {
-        Schema::dropIfExists('visa_bookings');
+    {   
+        Schema::dropIfExists('visabookings'); 
     }
 };

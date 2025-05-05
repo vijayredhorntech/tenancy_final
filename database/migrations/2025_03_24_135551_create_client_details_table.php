@@ -13,14 +13,28 @@ return new class extends Migration
     {
         Schema::create('client_details', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('clientid');
-            $table->string('phone_number');
-            $table->text('address')->nullable();
-            $table->unsignedBigInteger('agency_id')->nullable();
-            $table->string('passport_number')->nullable()->unique();
-            $table->timestamps();
+        
+            $table->foreignId('agency_id')->nullable()->constrained('agencies')->onDelete('set null');
+            $table->string('client_name')->nullable();
+            $table->string('clientuid')->unique();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->enum('gender', ['MALE', 'FEMALE', 'OTHER'])->nullable();
+            $table->string('marital_status')->nullable();
+            $table->date('date_of_birth')->nullable();
+            $table->string('phone_number')->nullable()->index();
+            $table->string('email')->nullable();
+           
+            // Address fields
+            
+            $table->string('zip_code')->nullable();
+            $table->string('address')->nullable();
+            $table->string('street')->nullable();
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
+            $table->text('permanent_address')->nullable(); // For full permanent address
+                        $table->timestamps();
+            $table->softDeletes(); // Enable soft deletes
         });
     }
 
@@ -29,6 +43,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('client_details');
+        Schema::enableForeignKeyConstraints();
     }
 };

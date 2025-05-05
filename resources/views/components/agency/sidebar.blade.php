@@ -14,7 +14,9 @@
 
 
     <div class="w-full flex flex-col mt-12 gap-3 ">
-        <a href="{{route('agency_dashboard')}}">
+  
+    @if($user_data->type != 'staff')
+      <a href="{{route('agency_dashboard')}}">
             <div class="{{Route::currentRouteName()==='agency_dashboard'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
                     <i class="fa fa-tv mr-2 text-sm"></i>
@@ -23,6 +25,7 @@
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>
         </a>
+        @endif
 
         @if($user_data->getAllPermissions()->pluck('name')->intersect(['service view', 'manage everything'])->isNotEmpty())
 
@@ -178,7 +181,7 @@
             <div class="{{Route::currentRouteName()==='client.index'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
                     <i class="fa fa-users mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Client</span>
+                    <span class="text-lg font-medium">Client / (B2C)</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>

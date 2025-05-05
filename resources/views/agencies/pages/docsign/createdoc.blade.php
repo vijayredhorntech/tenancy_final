@@ -45,13 +45,13 @@
                             <div class="w-full relative group flex flex-col gap-1">
                                 <label for="name" class="font-semibold text-ternary/90 text-sm">Document Title</label>
                                 <div class="w-full relative">
-                                    <input type="text" name="doctitle" id="doctitle" placeholder="Enter Document title"
-                                           value="{{ old('doctitle') }}"
+                                    <input type="text" name="title" id="title" placeholder="Enter Document title"
+                                           value="{{ old('title') }}"
                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                 @error('name') border-red-500 @enderror">
                                     <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                 </div>
-                                @error('doctitle')
+                                @error('title')
                                 <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -61,13 +61,13 @@
                            <div class="w-full relative group flex flex-col gap-1 col-span-2">
                                 <label for="residential_address" class="font-semibold text-ternary/90 text-sm">Document Description</label>
                                 <div class="w-full relative">
-                                   <textarea name="documentdescription" id="documentdescription"
+                                   <textarea name="description" id="description"
                                       class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                 @error('residential_address') border-red-500 @enderror"
-                                      placeholder="Enter Document Description">{{ old('documentdescription') }}</textarea>
+                                      placeholder="Enter Document Description">{{ old('description') }}</textarea>
                                     <i class="fa fa-file-alt absolute right-3 top-4 text-sm text-secondary/80"></i>
                                 </div>
-                                @error('documentdescription')
+                                @error('description')
                                 <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                 @enderror
                            </div>

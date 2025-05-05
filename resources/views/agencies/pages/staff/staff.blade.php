@@ -3,7 +3,7 @@
 
     <div class="w-full grid xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 mb-4">
        
-       <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 items-center justify-between p-4">
+       <!-- <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 items-center justify-between p-4">
            <div class="flex flex-col gap-2">
                    <span class="font-semibold text-ternary/70 text-md">Total Staff </span>
                    <span class="font-bold text-2xl text-ternary"> </span>
@@ -498,7 +498,7 @@
                        transform="translate(-180.86417 -106.46046)" fill="#a0616a"/>
                </svg>
            </div>
-       </div>
+       </div> -->
 
 
     </div>
@@ -751,7 +751,7 @@
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
 
-                                <a href="{{route('superadmin_staffupdate',['id' => $user->id])}}" title="Edit">
+                                <a href="{{route('agency_staffupdate',['id' => $user->id])}}" title="Edit">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-pen"></i>
                                         </div>

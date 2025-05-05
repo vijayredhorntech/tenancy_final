@@ -17,7 +17,6 @@ use App\Models\Service;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use App\Models\UserServiceAssignment;
-
 use App\Models\AddBalance;
 use App\Models\Balance;
 use App\Models\Deduction;
@@ -204,6 +203,7 @@ class AgencyController extends Controller
 
             $agency = new Agency();
             $agency->name = $request->name;
+            $agency->agencytoken = Str::random(64);
             $agency->email = $request->email;
             $agency->phone = $request->agency_phone;
             $agency->database_name = $request->database_name;
@@ -558,16 +558,20 @@ class AgencyController extends Controller
             ]);
         } else {
 
+    
+            return redirect()->route('agency.profile');
             $flight_recent_booking = array();
             $visa_recent_booking=array();
             $credits = array();
             $bookings = array();
+            $hotel_recent_booking=array();
 
             return view('agencies.pages.welcome', [
                 'credits' => $credits,
                 'flight_recent_booking' => $flight_recent_booking,
                 'visa_recent_booking' => $visa_recent_booking,
-                'bookings' => $bookings
+                'bookings' => $bookings,
+                'hotel_recent_booking'=> $hotel_recent_booking
             ]);
         }
     }

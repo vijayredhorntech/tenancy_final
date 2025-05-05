@@ -5,6 +5,7 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TermsCondition;
+use App\Repositories\Interfaces\TermConditionRepositoryInterface;
 use Auth; 
 
 
@@ -12,48 +13,65 @@ class TermsConditionController extends Controller
 {
 
 
+    protected $termConditionRepo;
+
+    public function __construct(TermConditionRepositoryInterface $termConditionRepo)
+    {
+        $this->termConditionRepo = $termConditionRepo;
+    }
+
   /**
      * Display a listing of terms and conditions.
      */
-    public function hs_index()
+    public function hs_termtypeindex()
     {
-        $terms = TermsCondition::all();
-    
-        return view('superadmin.pages.terms.terms', ['terms' => $terms]);
-
+        $termtypes = $this->termConditionRepo->allTeamTypes();
+        return view('superadmin.pages.terms.termstype', ['termtypes' => $termtypes]);
     }
 
+  /**
+     * Flight Details View
+     */
+    public function hs_termtype_store(Request $request)
+    {  
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:term_types,type',
+            'description' => 'required|string',
+        ]);
+        $termsAndConditions = $this->termConditionRepo->termTypeCreate($request->all());
+        return redirect()->route('superadmin.termtype')->with('success', 'Terms and conditions created successfully');
+    }
+
+    /****Term create *** */
+
+    public function hs_TermsCreate($id){
+        $termtype = $this->termConditionRepo->termTypeGetById($id);
+        return view('superadmin.pages.terms.termcreate',compact('termtype'));
+    }
     /**
      * Store a newly created terms and conditions in storage.
      */
     public function hs_store(Request $request)
     {
-        $request->validate([
-            'description' => 'required|string',
-            'assign_for' => 'nullable|string',
+       
+        $validated = $request->validate([
+            'termid'         => 'required|exists:term_types,id',
+            'name'           => 'required|string|max:255',
+            'termheading'    => 'required|string|max:255',
+            'description'    => 'string',
+            'displayinvoice' => 'required|in:0,1', // Accepts only 0 or 1
         ]);
-    
-        $id = Auth::user()->id;
-    
-        // Deactivate existing active terms
-        $existingTerms = TermsCondition::where('status', 1)->first();
-        if ($existingTerms) {
-            $existingTerms->status = 0;
-            $existingTerms->save();
-        }
-    
-        // Create new terms
-        $terms = new TermsCondition();
-        $terms->name = "super admin";
-        $terms->description = $request->description;
-        $terms->create_user = $id;
-        $terms->assign_for = "agency";
-        $terms->status = 1;
-        $terms->save();
-    
-        return redirect()->route('superadmin.terms')->with('success', 'Terms and conditions assigned successfully');
+     
+
+        $termtype = $this->termConditionRepo->create($request->all());
+           
+        return redirect()->route('superadmin.termtype')->with('success', 'Terms and conditions assigned successfully');
     }
 
+    public function hs_viewTerms($id){
+        $terms = $this->termConditionRepo->termsConditions($id);
+        return view('superadmin.pages.terms.terms',compact('terms'));
+    }
     /**
      * Display the specified terms and conditions.
      */

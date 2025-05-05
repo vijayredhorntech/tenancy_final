@@ -11,26 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('visa_types', function (Blueprint $table) {
+        Schema::create('term_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->unique();
-            $table->text('description')->nullable();
+            $table->string('type');
+            $table->text('description')->nullable(); // Added description column
+            $table->boolean('status')->default(true);
             $table->timestamps();
+            $table->softDeletes(); // Adds deleted_at column
         });
     }
 
     /**
      * Reverse the migrations.
      */
-    // public function down(): void
-    // {
-    //     Schema::dropIfExists('visa_types');
-    // }
     public function down(): void
-{
-    Schema::disableForeignKeyConstraints();
-    Schema::dropIfExists('visa_types');
-    Schema::enableForeignKeyConstraints();
-}
-
+    {
+        Schema::dropIfExists('term_types');
+    }
 };

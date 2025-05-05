@@ -43,11 +43,6 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HotelController;
 
 
-
-
-
-
-
 Route::fallback(function() {
     return redirect('/login');
 });
@@ -67,7 +62,6 @@ Route::get('/viewtest',function (){
 
 // return view('viewtest');
 }); 
-
 
 
 
@@ -118,9 +112,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::post('editstore', 'him_editstore')->name('agencies.editstore');
                         Route::get('delete/{id}', 'him_delete_agency')->name('agencies.delete');
                         Route::get('/export-agency','exportAgency')->name('agencies.downloade');
-                        Route::get('/agencygenerate-pdf',  'generatePDF')->name('agencies.invoice');
+                        Route::get('/agencygeneratenew-pdf',  'generatePDF')->name('agencies.invoice');
                         Route::get('/agency/{id}','hs_agency_hisoty')->name('agencies.history');
-
                     });
 
 
@@ -239,10 +232,10 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     Route::controller(FundManagementController::class)->group(function () {
                         Route::get('fund/{id}', 'him_addfund_agency')->name('agencies.fund');
                         Route::post('storefund', 'him_storefund')->name('agencies.fund.store');
-
-                        // Route::get('test', 'him_test')->name('test');  // Unique path
-                        // Route::get('flight', 'him_test2')->name('Flight'); // Unique path
-                        // Route::get('hotel', 'him_test3')->name('Hotel'); // Unique path
+                        Route::get('/export-fund','hsexportFund')->name('agencies.funddownloade');
+                        Route::get('/agencygenerate-pdf',  'hsGeneratePDF')->name('agencies.exportfundpdf');
+                        
+                
                         Route::post('deduction','him_deduction')->name('deduction');
 
                         Route::post('deduction', 'him_deduction')->name('deduction');
@@ -259,11 +252,17 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                 // });
                         Route::controller(TermsConditionController::class)->group(function () {
+                               Route::get('termtype', 'hs_termtypeindex')->name('superadmin.termtype');
                                 Route::get('terms', 'hs_index')->name('superadmin.terms');
+                                Route::get('termscreate/{id}','hs_termscreate')->name('superadmin.addterms');
+                                Route::get('viewterm/{id}','hs_viewTerms')->name('superadmin.viewterms');
+                    
+
+                                Route::post('storetermtype','hs_termtype_store')->name('superadmin.storetermtype');
                                 Route::post('storeterms','hs_store')->name('superadmin.termsstore');  
                                 Route::get('term/{id}','hs_edit')->name('superadmin.termedit');  
                                 Route::post('editstoreterms','hs_store')->name('superadmin.uptermsstore'); 
-                    
+                              
                             });
 
                         Route::controller(VisaController::class)->group(function () {
@@ -323,6 +322,7 @@ Route::group([
     Route::get('/support',[SupportController::class, 'him_agenciesupport'])->name('agency_support');
     Route::post('/storeticket',[SupportController::class, 'him_storeticket'])->name('store_ticket');
     Route::get('/conversation/{id}', [SupportController::class, 'hs_conversation'])->name('agency.conversation');
+ 
 
     // Service Management
     Route::controller(ServiceController::class)->group(function () {
@@ -330,7 +330,7 @@ Route::group([
         Route::get('flight', 'him_flight')->name('Flight');
         Route::get('hotel', 'him_hotel')->name('Hotel');
         Route::get('visa', 'him_visa')->name('Visa');
-        Route::get('docsign','him_docsign')->name('Doc Sign');
+       
         // Route::post('flight_search','him_flightsearch')->name('flight.search');
         // Route::post('flight_price','him_flightprice')->name('flight.pricing');
         Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
@@ -339,10 +339,16 @@ Route::group([
         Route::get('/booking/{booking_number}','hs_invoice')->name('agency_booking');
         Route::get('/airport/{input}', 'airport')->name('search.airport');
     });
+/*****Fund Managment *** */
 
+      Route::controller(FundManagementController::class)->group(function () {
+            Route::get('/requestfund','hsrequestFund')->name('agency.addfund');
+            Route::get('/requestfundapply','hsrequestFundApply')->name('agency.requestfund');
+            Route::post('/fundappystore','hsFundApplyStore')->name('agencies.fund.request');
+      });
     // Staff Management
     Route::controller(AgencyadminController::class)->group(function () {
-        Route::get('/staffindex', 'hs_staffindex')->name('agency.staff');
+         Route::get('/staffindex', 'hs_staffindex')->name('agency.staff');
         Route::get('/staffcreate', 'hs_staffcreate')->name('agency_staffcreate');
         Route::post('/staffstore', 'hs_staffstore')->name('agency_staffstore');
         Route::get('/staffupdate/{id}', 'hs_staffupdate')->name('agency_staffupdate');
@@ -379,7 +385,7 @@ Route::group([
    /****Client Controller **** */
     Route::controller(ClientController::class)->group(function () {
         Route::get('/client','hs_index')->name('client.index');
-        Route::post('/clientstore','hs_ClientStore')->name('client.store');
+        // Route::post('/clientstore','hs_ClientStore')->name('client.store');
         Route::get('/get-existing-users','hs_getExistingUsers')->name('get.existing.users'); 
         Route::get('/clientcreate','hs_getClientView')->name('client.create');
         Route::get('/updatecreate/{id}','hs_agencyUpdateClient')->name('agencyupdate.client');
@@ -392,7 +398,11 @@ Route::group([
 
        /****Document Controller **** */
        Route::controller(DocumentController::class)->group(function () {
-          Route::post('/documentcreate','hs_docCreate')->name('create.document');
+           Route::get('docsign','him_docsign')->name('document.create');
+           Route::get('/document','hs_docIndex')->name('Doc Sign');
+           Route::post('/documentcreate','hs_docCreate')->name('create.document');
+           Route::get('/senddocument.email/{id}','hs_sendDocumentEmail')->name('senddocument.email');
+          
       
     });
 
@@ -479,11 +489,19 @@ Route::group([
         });
 
 
-  
-
-
 });
 
+/****Agency Client Create Form **** */
+
+
+
+ /****Client Controller **** */
+ Route::controller(ClientController::class)->group(function () {
+
+    Route::get('/agencies/clientcreate/{token}','hsClientCreate');
+    Route::post('/agencies/clientstore','hs_ClientStore')->name('client.store');
+  
+});
 
 
 

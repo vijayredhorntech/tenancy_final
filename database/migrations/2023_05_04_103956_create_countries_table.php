@@ -15,8 +15,15 @@ return new class extends Migration {
         });
     }
 
-    public function down()
-    {
-        Schema::dropIfExists('countries');
-    }
+    // public function down()
+    // {
+    //     Schema::dropIfExists('countries');
+    // }
+    public function down(): void
+{
+    Schema::disableForeignKeyConstraints();
+    Schema::dropIfExists('countries');
+    Schema::enableForeignKeyConstraints();
+}
+
 };

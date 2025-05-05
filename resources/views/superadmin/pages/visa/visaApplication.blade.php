@@ -126,7 +126,7 @@
                                 <span class="font-medium text-xs">{{$booking->visasubtype->name }}</span><br>
                          
                        
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->origin->name }} To {{$booking->destination->name }}</td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->origin->countryName }} To {{$booking->destination->countryName }}</td>
                           
                        
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->total_amount}}</td>

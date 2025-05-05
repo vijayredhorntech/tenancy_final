@@ -473,13 +473,15 @@ public function hs_generateinvocie($invoice){
     // $invoice_number ="INV-20250220-080104-9ZMZ";
 
    $agency_data=AddBalance::with('agency')->where('invoice_number',$invoice)->first(); 
-   $termcondition=TermsCondition::where('name','super admin')->where('status',1)->first(); 
 
- 
+//    $termcondition=TermsCondition::where('name','super admin')->where('status',1)->first(); 
+     $termcondition=TermsCondition::where('status',1)->first(); 
+
     // $flight=FlightBooking::where('invoice_number',$invoice_number)->first(); 
     // $flight_serach=json_decode($flight->flightSearch);
     // $details=json_decode($flight->details);
     $segment = request()->segment(1); // Gets the first segment
+    
     if($segment=='agencies'){
         return view('agencies.pages.invoices.paymentInvoice',['agency_data'=>$agency_data,'termcondition'=>$termcondition]);
     }else{
@@ -500,7 +502,8 @@ public function hs_invoice($invoice_number){
     $booking=Deduction::with('agency')->where('invoice_number',$price_data)->first(); 
     $agency_id=$booking->agency->id;
     $agency_address=AgencyDetail::where('agency_id',$agency_id)->first();
-    $termcondition=TermsCondition::where('name','agency')->where('status',1)->first(); 
+    // $termcondition=TermsCondition::where('name','agency')->where('status',1)->first(); 
+    $termcondition=TermsCondition::where('status',1)->first(); 
     $passenger_deatils=PassengerInformation::where('invoice_number',$invoice_number)->first(); 
 
     $adults=json_decode($passenger_deatils->adult, true);
@@ -633,11 +636,6 @@ public function airport($input){
     return view('superadmin.pages.visa.searchvisa',compact('countries'));
  }
 
- /****Doc Sign *****/
- public function him_docsign(){
-    return view('agencies.pages.docsign.createdoc');
 
-
- }
 
 }

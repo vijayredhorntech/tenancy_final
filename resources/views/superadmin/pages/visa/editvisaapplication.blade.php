@@ -71,7 +71,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Origin</label>
                              <div class="w-full relative">
-                                 <input type="text" name="origin" id="origin" value="{{$clientData->origin->name}}" readonly="" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="text" name="origin" id="origin" value="{{$clientData->origin->countryName}}" readonly="" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <!-- <i class="fa fa-phone absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i> -->
                              </div>
                          </div>
@@ -81,7 +81,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Destination:</label>
                              <div class="w-full relative">
-                                 <input type="text" name="destination" id="destination" value="{{$clientData->destination->name}}" readonly="" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="text" name="destination" id="destination" value="{{$clientData->destination->countryName}}" readonly="" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <!-- <i class="fa fa-phone absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i> -->
                              </div>
                          </div>

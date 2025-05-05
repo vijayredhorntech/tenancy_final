@@ -759,7 +759,7 @@
                             
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
-                                                <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
+                                                <a href="{{ route('agency_booking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
                                         <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-file-pdf"></i>
                                         </div>
@@ -840,9 +840,9 @@
                                 </td>
 
                                 <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                    {{ isset($booking->visaBooking) && isset($booking->visaBooking->origin) && isset($booking->visaBooking->origin->name) ? $booking->visaBooking->origin->name : '' }} 
+                                    {{ isset($booking->visaBooking) && isset($booking->visaBooking->origin) && isset($booking->visaBooking->origin->countryName) ? $booking->visaBooking->origin->countryName : '' }} 
                                     To 
-                                    {{ isset($booking->visaBooking) && isset($booking->visaBooking->destination) && isset($booking->visaBooking->destination->name) ? $booking->visaBooking->destination->name : '' }}
+                                    {{ isset($booking->visaBooking) && isset($booking->visaBooking->destination) && isset($booking->visaBooking->destination->countryName) ? $booking->visaBooking->destination->countryName : '' }}
                                 </td>
 
                                 <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
@@ -858,7 +858,7 @@
                             
                             <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
-                                                <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
+                                                <a href="#" title="View Invoice">
                                         <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-file-pdf"></i>
                                         </div>
@@ -933,7 +933,7 @@
                                     
                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                         <div class="flex gap-2 items-center">
-                                                        <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
+                                                        <a href="{{ route('agency_booking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
                                                 <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                                     <i class="fa fa-file-pdf"></i>
                                                 </div>

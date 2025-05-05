@@ -90,4 +90,9 @@ class AgencyService
          return  $user ; 
  
      }
+
+     public function getAgencyDataWithToken($token){
+        $agency = Agency::where('agencytoken',$token)->first();
+        return $agency;
+     }
 }

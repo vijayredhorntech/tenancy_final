@@ -24,9 +24,19 @@ use App\Models\Attendance;
 use App\Models\LoginDetail;
 use Illuminate\Support\Carbon;
 use App\Models\Agency;
+use App\Services\AgencyService;
+use App\Models\AddBalance;
+
 
 class AgencyAdminController extends Controller
 {
+
+    protected $agencyService;
+    public function __construct(AgencyService $agencyService)
+    {
+       
+        $this->agencyService = $agencyService;
+    }
     
     /*** Staff List ***/
     public function hs_staffindex()
@@ -172,24 +182,24 @@ class AgencyAdminController extends Controller
     {
         if ($user = User::find($id)) {
             $user->delete();
-            return redirect()->route('superadmin.staff')->with('success', 'Staff deleted successfully.');
+            return redirect()->route('agencies.staff')->with('success', 'Staff deleted successfully.');
         }
 
-        return redirect()->route('superadmin.staff')->with('error', 'User not found.');
+        return redirect()->route('agencies.staff')->with('error', 'User not found.');
     }
 
     /*** Edit Staff Form ***/
     public function hs_staffupdate($eid)
     {
-
-        // dd(User::with('userdetails','leaves')->findOrFail($eid));
-        return view('superadmin.pages.staff.staff_eform', [
+        $userData = session('user_data');
+        DatabaseHelper::setDatabaseConnection($userData['database']);
+   
+         return view('agencies.pages.staff.staff_eform',[
+            'allleaves'  => array(),
             'user_data'  => Auth::user(),
-            'services'   => Service::all(),
-            'edit_user'  => User::with('userdetails','leaves')->findOrFail($eid),
-            'roles'      => Role::all(),
-            'allleaves'     => Leave::all(),
-        ]);
+            'edit_user'  => User::on('user_database')->with('userdetails','leaves')->findOrFail($eid),
+            'roles'      => Role::on('user_database')->get(),
+         ]);
     }
 
 
@@ -434,7 +444,5 @@ class AgencyAdminController extends Controller
         ]);
 
     }
-    
-    
 
 }

@@ -34,9 +34,9 @@
                             'Email' => $clientData->clint->email ?? 'N/A',
                             'Phone Number' => $clientData->clint->phone_number ?? 'N/A',
                             'Visa Type' => $clientData->visa->name ?? 'N/A',
-                            'Origin' => $clientData->origin->name ?? 'N/A',
-                            'Destination' => $clientData->destination->name ?? 'N/A',
-                            'Fee (USD)' => '$' . number_format($clientData->total_amount ?? 0, 2),
+                            'Origin' => $clientData->origin->countryName ?? 'N/A',
+                            'Destination' => $clientData->destination->countryName ?? 'N/A',
+                            'Fee (USD)' => '£' . number_format($clientData->total_amount ?? 0, 2),
                             'Application Date' => $clientData->created_at ? $clientData->created_at->format('d M Y') : 'N/A'
                         ];
                     @endphp

@@ -118,6 +118,16 @@
                 <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="visaArrow"> </i>
             </div>
             <ul id="visasDiv" class="pl-10 mt-2 flex flex-col hidden">
+                 <a href="{{route('view.country')}}">
+                    <li class="{{Route::currentRouteName()==='view.country'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                          <i class="fa-solid fa-flag mr-2 text-sm" ></i>
+                            <span class="text-lg font-medium">Visa Application </span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+
                 <a href="{{route('view.country')}}">
                     <li class="{{Route::currentRouteName()==='view.country'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                         <div class="flex items-center">
@@ -168,7 +178,7 @@
             <div class="{{Route::currentRouteName()==='agency'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
                     <i class="fa-regular fa-building mr-2 text-sm"></i>
-                    <span class="text-lg font-medium"> Client Agency </span>
+                    <span class="text-lg font-medium"> Client Agency / (B2B)</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>
@@ -513,8 +523,8 @@
         @endcanany
 
         @canany(['terms', 'manage everything'])
-        <a href="{{route('superadmin.terms')}}">
-            <div class="{{Route::currentRouteName()==='superadmin.terms'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+        <a href="{{route('superadmin.termtype')}}">
+            <div class="{{Route::currentRouteName()==='superadmin.termtype'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
                     <i class="fas fa-file-contract mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Terms and conditions</span>
