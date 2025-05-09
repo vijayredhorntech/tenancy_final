@@ -36,51 +36,7 @@ class Sidebar extends Component
      */
     private function initializeData()
     {
-        // $userData = session('user_data', []);
-
-        // if (!isset($userData['database'])) {
-        //     return;
-        // }
-
-        // DatabaseHelper::setDatabaseConnection($userData['database']);
-        // $user = User::on('user_database')->where('email', $userData['email'])->first();
-
-        // if (!$user) {
-        //     return;
-        // }
-
-     
-
-
-        // Get session data safely
-      
-
-        // Set the dynamic database connection
-        // DatabaseHelper::setDatabaseConnection($userData['database']);
-
         
-        // Fetch user from the dynamic database connection
-        // $this->user = User::on('user_database')->where('id', $user->id)->first();
-
-        // if (!$this->user) {
-        //     return;
-        // }
-
-        // Fetch agency details
-        // if( $this->user->type=="staff"){
-
-        //     $agencyRecord = Agency::where('database_name', $userData['database'])->first();
-
-        // }else{
-        //     $agencyRecord = Agency::where('email', $this->user->email)->first();
-        // }
-       
-      
-        // if (!$agencyRecord) {
-        //     return;
-        // }
-
-        // $agency = Agency::with('userAssignments.service')->find($agencyRecord->id);
         $agency = $this->agencyService->getAgencyData();  
         // dd($agency); 
         $this->user = $this->agencyService->getCurrentLoginUser();  

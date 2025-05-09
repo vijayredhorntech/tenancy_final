@@ -6,9 +6,21 @@ use App\Models\Support;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Auth; 
+use App\Repositories\Interfaces\ClintRepositoryInterface;
+use App\Traits\ChatTrait;
+use App\Models\Agency;
+use Illuminate\Support\Str;
 
 class ConversationController extends Controller
 {
+
+    use ChatTrait;
+
+    protected $clintRepository;
+
+    public function __construct( ClintRepositoryInterface $clintRepository) {
+          $this->clintRepository = $clintRepository;
+    }
 
     public function hs_viewticket(){
    
@@ -98,6 +110,54 @@ class ConversationController extends Controller
            
 
         }
+
+          /****Chat process **** */
+    public function hs_chatSAApplication($id){
+        $client = $this->clintRepository->getClientById($id);
+        $agency = Agency::where('id',$client->agency_id)->first();
+        return view('superadmin.pages.conversation.chat',compact('client','agency'));
+       }
+
+    public function hs_sendMessageSAApplication(Request $request){
+      
+        $request->validate([
+            'message' => 'required_without:attachment|string|max:1000',
+            'type' => 'required|string|max:255',
+            'clientid'=>'required|integer',
+            'recevier_id' => 'required|integer',
+            'sender_id' => 'required|integer',
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // 2MB max
+        ]);
+
+        // Handle file upload
+        $filename = null;
+
+        if ($request->hasFile('attachment')) {
+            $file = $request->file('attachment');
+            $filename = $file->store('messages', 'public'); // stored in storage/app/public/messages
+        }
+      
+
+        $agency = Agency::where('id',$request->sender_id)->first();
+
+        $ticket_code = 'TICKET-' . strtoupper(Str::random(6)) . '-' . time();
+        $type = 'superadmin';
+        $clientid = $request->clientid;
+        $agencyid = $agency->id;
+        $loginuserid=Auth::user()->id;  
+
+        // Now call the function properly
+        $support = $this->getStoreClient($request, $ticket_code, $type, $filename, $agencyid, $clientid,$loginuserid);
+       
+        
+
+        return response()->json([
+            'success' => true,
+            'message' => $support
+        ]);
+
+}
+    
 
         
     }

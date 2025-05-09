@@ -27,9 +27,7 @@
 
                 <form action="{{ isset($client) ? route('updateclient.store', $client->id) : route('client.store') }}" method="POST" enctype="multipart/form-data" id="multiStepForm">
                     @csrf
-                    @if(isset($client))
-                        @method('PUT')
-                    @endif
+                 
 
                     {{-- Step 1: Personal Information --}}
                     <div class="form-step active" data-step="1">
@@ -41,6 +39,8 @@
                             <div class="w-full grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4">
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <input type="hidden" name="agency_id" id="agency_id" value="{{ $agency->id }}" readonly>
+                                    <input type="hidden" name="clint_id" id="client_id" value="{{ $client->id}}" readonly>
+                                  
                                     <label for="first_name" class="font-semibold text-ternary/90 text-sm">First Name *</label>
                                     <div class="w-full relative">
                                         <input type="text" name="first_name" id="first_name" required

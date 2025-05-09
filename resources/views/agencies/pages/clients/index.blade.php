@@ -134,6 +134,12 @@
                                             <i class="fa fa-pen"></i>
                                         </div>
                                     </a>
+
+                                   {{-- <a href="{{route('agencychat.client',['id' => $client->id])}}" title="Edit">
+                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                            <i class="fas fa-comment-dots"></i>
+                                        </div>
+                                    </a>--}}
                                     <!-- <a href="{{route('agency.clientdelete',['id' => $client->id])}}" title="Delete">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-tace"></i>

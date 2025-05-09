@@ -149,31 +149,31 @@
         <table>
             <tr>
                 <th>Full Name</th>
-                <td><input type="text" value=" {{ $clientData->clint->name ?? '' }}  {{ $clientData->clint->clientinfo->last_name ?? '' }} " > </td>
+                <td><input type="text" value=" {{ $clientData->clint->client_name ?? '' }} " > </td>
             </tr>
             <tr>
                 <th>Surname</th>
-                <td><input type="text" value=" {{ $clientData->clint->clientinfo->last_name ?? '' }} " ></td>
+                <td><input type="text" value=" {{ $clientData->clint->last_name ?? '' }} " ></td>
             </tr>
             <tr>
                 <th>Father's full name</th>
-                <td><input type="text"  value="{{ $clientData->clint->clientinfo->father_name ?? '' }} " ></td>
+                <td><input type="text"  value="{{ $clientData->clint->clientinfo->father_details ?? '' }} " ></td>
             </tr>
             <tr>
                 <th>Spouse's name</th>
-                <td><input type="text"></td>
+                <td><input type="text" value="{{ $clientData->clint->clientinfo->spouse_details ?? '' }} "></td>
             </tr>
             <tr>
                 <th>Place of birth</th>
-                <td><input type="text"  value="{{ $clientData->clint->clientinfo->birth_place ?? '' }}  "  ></td>
+                <td><input type="text"  value="{{ $clientData->clint->clientinfo->place_of_birth ?? '' }}  "  ></td>
             </tr>
             <tr>
                 <th>Date of birth</th>
-                <td><input type="text"  value="{{ $clientData->clint->clientinfo->dob ?? '' }}"></td>
+                <td><input type="text"  value="{{ $clientData->clint->date_of_birth ?? '' }}"></td>
             </tr>
             <tr>
                 <th>Sex</th>
-                <td><input type="text"></td>
+                <td><input type="text" value="{{ $clientData->clint->clientinfo->gender ?? '' }}"></td>
             </tr>
             <tr>
                 <th>Chinese Passport No:</th>
@@ -197,7 +197,7 @@
             </tr>
             <tr>
                 <th>Present occupation</th>
-                <td><input type="text"></td>
+                <td><input type="text" value="{{ $clientData->clint->clientinfo->designation ?? '' }}"></td>
             </tr>
             <tr>
                 <th>Date of last visit to India:</th>

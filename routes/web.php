@@ -41,6 +41,7 @@ use App\Http\Controllers\Agencies\DocumentController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HotelController;
+use App\Http\Controllers\ClientLoginController;
 
 
 Route::fallback(function() {
@@ -223,6 +224,9 @@ Route::middleware([LogUserActivity::class])->group(function () {
                             Route::get('/editticket/{id}', 'hs_editConversation')->name('superadmin.editticket'); 
                             Route::post('/updatestore','hs_editStore')->name('uperadmin.ticket'); 
 
+                            Route::get('/chat/{id}', 'hs_chatSAApplication')->name('superadminvisachat.client');
+                            Route::post('/send', 'hs_sendMessageSAApplication')->name('superadminchat.send_message');
+
                         });
 
 
@@ -275,6 +279,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                  Route::get('/viewsubtype/{id}','hsViewSubtype')->name('visa.viewsubtype');
                                  Route::get('/viewdelete/{id}','hsViewdelete')->name('visa.delete');
                                  Route::get('/subtypedelete/{id}','hsVisasutypdelete')->name('visasubtype.delete');
+                                 
 
                                 
                                  Route::get('/editvisa/{id}','hseditvisa')->name('visa.edit');
@@ -290,13 +295,33 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                                  Route::get('/viewcoutnry/{id}','hsViewCountry')->name('form.viewform');
                                  Route::get('/disconnectform/{id}','hsFromDisConnectCountry')->name('disconnectform.country'); 
+                                 Route::get('/allapplicatoin', 'hs_visaAllApplication')->name('superadminview.allapplication');
+                                 Route::get('/editapplicatoin/{id}', 'hs_editSAApplication')->name('superadminvisaedit.application');
+                                
+
+                                 Route::get('/sendeail/{id}', 'hs_sendSAApplication')->name('superadminvisasendemail.application');
+                                 Route::get('/viewapplication/{id}', 'hs_viewSAApplication')->name('superadminvisa.applicationview');
+
+
                                  
                         });
+                              /****Document Controller **** */
+                         Route::controller(DocumentController::class)->group(function () {
+                                /****Visa APplicaton  */
+                                Route::post('/documents/store', 'hs_storeDocument')->name('documents.store');
+                                Route::get('/adddocument/{id}', 'hs_SAAddDocuments')->name('superadminaad.document.application');
+                                Route::get('/client/document/view/{id}', 'hs_SAAViewDocuments')->name('client.document.view');
+                                Route::get('/editdocument/{id}', 'hs_editSAUploadedApplication')->name('superadminvisaeditdocument.application');
+                                Route::post('/updatedocument', 'hs_storeUpdateDocument')->name('updateclient.document');
+                            
+                            });
 
 
                         Route::controller(HotelSettingsController::class)->group(function () {
                             Route::get('/suppliersetting', 'hs_hotelsupplier')->name('supplier.hotel');
                         });
+
+                      
                 
 
     });
@@ -364,6 +389,7 @@ Route::group([
 
     // Visa
     Route::controller(VisaController::class)->group(function () {
+        
         Route::get('/viewapplication/{type}', 'hs_visaApplication')->name('agency.application');
         Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
         Route::get('/payment/{id}','him_payment')->name('visa.payment');
@@ -372,12 +398,13 @@ Route::group([
         Route::get('/documentpending','hsVisaDocumentpending')->name('visa.documentpending');
         Route::get('/visaview/{id}','hsVisaVisa')->name('visa.applicationview');
         Route::get('/editapplication/{id}','hsEditVisaApplication')->name('visaedit.application');    
-        Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
+        // Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
         Route::get('/exportpdf', 'hsexportPdf')->name('exportpdf.application');
         Route::get('/exportexcel', 'hsexportExcel')->name('exportexcel.application');
-        Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
+        // Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
         Route::get('/preparedemail/{id}', 'hsPreparedEmail')->name('visasendemail.application');
         Route::post('/sendemail','hsSendEmail')->name('sendclintemail');
+        Route::get('/sendadmin/{id}', 'hsSendAdmin')->name('visa.sendtoadmin');
         Route::get('/deleteapplication/{id}', 'hsDeleteApllication')->name('delete.application');
         
    });
@@ -389,6 +416,10 @@ Route::group([
         Route::get('/get-existing-users','hs_getExistingUsers')->name('get.existing.users'); 
         Route::get('/clientcreate','hs_getClientView')->name('client.create');
         Route::get('/updatecreate/{id}','hs_agencyUpdateClient')->name('agencyupdate.client');
+        Route::get('/message/{id}','hs_agencyChatClient')->name('agencychat.client');
+        Route::post('/store','hs_agencyChatStore')->name('agency.send_message');
+
+
         Route::get('/viewclient/{id}','hs_viewAgencyClient')->name('agencyview.client');
         Route::post('/storeclint','hs_storeUpdateAgencyClient')->name('updateclient.store');
         Route::get('/clientgeneratepdf','generatePDF')->name('generateclint.pdf');
@@ -402,6 +433,7 @@ Route::group([
            Route::get('/document','hs_docIndex')->name('Doc Sign');
            Route::post('/documentcreate','hs_docCreate')->name('create.document');
            Route::get('/senddocument.email/{id}','hs_sendDocumentEmail')->name('senddocument.email');
+
           
       
     });
@@ -492,16 +524,49 @@ Route::group([
 });
 
 /****Agency Client Create Form **** */
+/****Client Controller **** */
+Route::controller(ClientLoginController::class)->group(function () {
+      
+    Route::get('/{d}/clientlogin','hsClientLogin')->name('client.login');
+    Route::post('/clientlogin','hsClientLoginStore')->name('clientloginstore');
+    Route::get('/client/application','hsClientApplication')->name('client.application');
+    Route::get('/client/profile','hsClientProfile')->name('client.profile');
+    Route::get('/client/support','hsClientSupport')->name('client.support');
+    Route::get('/client/notification','hsClientNotification')->name('client.notification');
+    Route::post('/client/store/','hsClientStoreMessage')->name('client.send_message');
+    Route::get('/uploade/document/{id}','hsClientUploadDocument')->name('clientuplaode.document');
+    Route::post('/uploade/store}','hsClientStoreDocument')->name('client.document.upload');
+
+ 
+
+    Route::get('/client/logout','hsClientLogout')->name('client.logout');
+    Route::get('/client/visa','hsClientVisa')->name('client.visa');
+    Route::get('/client/visa/{id}','hsClientVisaDetails')->name('client.visa.details');
+    
+  
+});
 
 
 
  /****Client Controller **** */
  Route::controller(ClientController::class)->group(function () {
-
+      
+  
     Route::get('/agencies/clientcreate/{token}','hsClientCreate');
     Route::post('/agencies/clientstore','hs_ClientStore')->name('client.store');
+    
   
 });
+
+
+
+/*******Common Route **** */
+Route::controller(VisaController::class)->group(function () {
+Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
+Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
+});
+
+/*****Client  */
 
 
 

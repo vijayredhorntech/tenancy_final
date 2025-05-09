@@ -41,7 +41,7 @@
                                       <label for="mobile"  class=" font-semibold text-gray-800 text-sm">Visa Types</label>
                                       <select class="w-full rounded-md text-sm text-black mt-2" id="category" name="category">
                                           <option value="">
-                                              Select
+                                         
                                           </option>
                                       </select>
 
@@ -49,8 +49,10 @@
 
                                   <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col 2xl:ml-10 xl:ml-10 lg:ml-10 md:ml-10 sm:ml-10 ml-0 2xl:mt-0 xl:mt-0 lg:mt-0 md:mt-0 sm:mt-0 mt-10" >
                                       <label for="mobile"  class=" font-semibold text-gray-800 text-sm">Processing Time</label>
-                                      <select class="w-full rounded-md text-sm text-black mt-2">
-                                          <option>15 business days</option>
+                                      <select class="w-full rounded-md text-sm text-black mt-2" id="processing" name="processing">
+                                          <option value="">
+                                         
+                                          </option>
                                       </select>
                                   </div>
                               </div>
@@ -263,13 +265,21 @@ $(document).ready(function () {
                 type: "GET",
                 data: { visa_type_id: visa_type_id },
                 success: function (data) {
-                  
+               
                     var html = ''; // Default option
 
+                    // $.each(data.visa_subtypes, function (index, category) {
+                    //     html += '<option value="' + category.id + '"data-processing=+  category.processing data-price="' + category.price +'" data-balance="' + data.balance.balance + ' " data-commission="' + category.commission + '">' + category.name + "</option>";
+                    // });
                     $.each(data.visa_subtypes, function (index, category) {
-                        html += '<option value="' + category.id + '" data-price="' + category.price +'" data-balance="' + data.balance.balance + ' " data-commission="' + category.commission + '">' + category.name + "</option>";
-                    });
-
+                            html += '<option value="' + category.id + '" ' +
+                                    'data-processing="' + category.processing + '" ' +
+                                    'data-price="' + category.price + '" ' +
+                                    'data-balance="' + data.balance.balance + '" ' +
+                                    'data-commission="' + category.commission + '">' +
+                                    category.name + '</option>';
+                        });
+                    
                     $("#category").empty().append(html);
 
                     // **Trigger change event after setting new options**
@@ -301,6 +311,10 @@ $(document).ready(function () {
         var visaPrice = parseFloat(selectedOption.data("price")) || 0;  // Convert to number, default 0
         var commission = parseFloat(selectedOption.data("commission")) || 0;  // Convert to number, default 0
         var balance = parseFloat(selectedOption.data("balance")) || 0;
+        var processing = selectedOption.data("processing") || "";
+
+        
+
 
 
         var total = visaPrice + commission; // Correct addition
@@ -315,6 +329,8 @@ $(document).ready(function () {
         $(".visa-price").text("£" + visaPrice.toFixed(2)); // Update displayed price
         $(".visa-commision").text("£" + commission.toFixed(2)); // Update displayed commission
         $(".visa-total").text("£" + total.toFixed(2)); // Update displayed total
+        $("#processing").html(`<option value="${processing}">${processing}</option>`);
+
     });
 });
 
@@ -339,7 +355,7 @@ $("#existingUserBtn").on("click", function () {
                 console.log(data);
                 let html = '<option value="">Select User</option>';
                 data.forEach(user => {
-                    html += `<option value="${user.id}"  data-nationality="${user.clientinfo?.nationality ?? 'N/A'}" data-name="${user.name}" data-lastname="${user.clientinfo?.last_name}"  data-phone_number="${user.phone_number} " data-email="${user.email}" data-passport="${user.passport_number}">${user.name}</option>`;
+                    html += `<option value="${user.id}"  data-nationality="${user.clientinfo?.nationality ?? 'N/A'}" data-name="${user.first_name}" data-lastname="${user.last_name}"  data-phone_number="${user.phone_number} " data-email="${user.email}" data-passport="${user.passport_number}">${user.client_name}</option>`;
                 });
                 $("#existingUserDropdown").html(html);
             }

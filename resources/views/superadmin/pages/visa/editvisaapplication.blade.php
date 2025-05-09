@@ -44,7 +44,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Full Name</label>
                              <div class="w-full relative">
-                                 <input type="text" name="name" id="name" value="{{$clientData->clint->name}}" readonly="" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="text" name="name" id="name" value="{{$clientData->clint->client_name}}" readonly="" placeholder="Phone....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <!-- <i class="fa fa-phone absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i> -->
                              </div>
                          </div>
@@ -113,20 +113,7 @@
                                 </div>
                             </div>
 
-                            {{-- === Select Input for Application Status === --}}
-                            <div class="w-full relative group flex flex-col gap-1">
-                                <label for="application_status" class="font-semibold text-ternary/90 text-sm">Application Status</label>
-                                <div class="w-full relative">
-                                    <select name="application_status" id="application_status"
-                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 transition ease-in duration-200">
-                                        <option value="Pending" {{ old('application_status', $clientData->applicationworkin_status) == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                        <option value="Under Process" {{ old('application_status', $clientData->applicationworkin_status) == 'Under Process' ? 'selected' : '' }}>Under Process</option>
-                                        <option value="Complete" {{ old('application_status', $clientData->applicationworkin_status) == 'Complete' ? 'selected' : '' }}>Complete</option>
-                                        <option value="Rejected" {{ old('application_status', $clientData->applicationworkin_status) == 'Rejected' ? 'selected' : '' }}>Rejected</option>
-                                    </select>
-                                    <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
-                                </div>
-                            </div>
+                           
 
                             {{-- === Select Input for Document Status === --}}
                             <div class="w-full relative group flex flex-col gap-1">
@@ -141,6 +128,21 @@
                                 </div>
                             </div>
 
+
+                            {{-- === Select Input for Application Status === --}}
+                            <div class="w-full relative group flex flex-col gap-1">
+                                <label for="application_status" class="font-semibold text-ternary/90 text-sm">Application Status</label>
+                                <div class="w-full relative">
+                                    <select name="application_status" id="application_status" disabled
+                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 transition ease-in duration-200">
+                                        <option value="Pending" {{ old('application_status', $clientData->applicationworkin_status) == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="Under Process" {{ old('application_status', $clientData->applicationworkin_status) == 'Under Process' ? 'selected' : '' }}>Under Process</option>
+                                        <option value="Complete" {{ old('application_status', $clientData->applicationworkin_status) == 'Complete' ? 'selected' : '' }}>Complete</option>
+                                        <option value="Rejected" {{ old('application_status', $clientData->applicationworkin_status) == 'Rejected' ? 'selected' : '' }}>Rejected</option>
+                                    </select>
+                                    <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
+                                </div>
+                            </div>
 
                          {{--               === textarea input field ===--}}
                          <!-- <div class="w-full relative group flex flex-col gap-1">

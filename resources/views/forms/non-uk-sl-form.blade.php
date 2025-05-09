@@ -131,42 +131,42 @@
 
         <div class="form-group">
             <label for="surname">SURNAME:</label>
-            <input type="text" id="surname" name="surname"  value="{{ $clientData->clint->clientinfo->last_name ?? '' }} "class="dotted-input">
+            <input type="text" id="surname" name="surname"  value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->last_name ?? '' }} "class="dotted-input">
         </div>
 
         <div class="form-group">
             <label for="firstname">FIRST NAME:</label>
-            <input type="text" id="firstname" value="{{ $clientData->clint->name ?? '' }} " name="firstname" class="dotted-input">
+            <input type="text" id="firstname" value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->first_name ?? '' }} " name="firstname" class="dotted-input">
         </div>
 
         <div class="form-group">
             <label for="nationality">NATIONALITY:</label>
-            <input type="text" id="nationality" value="{{ $clientData->clint->clientinfo->nationality ?? '' }}  name="nationality" class="dotted-input">
+            <input type="text" id="nationality" value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->clientinfo->nationality ?? '' }}  name="nationality" class="dotted-input">
         </div>
 
         <div class="form-group">
             <label for="fathername">FATHER'S NAME:</label>
-            <input type="text" id="fathername"  value="{{ $clientData->clint->clientinfo->father_name ?? '' }} " name="fathername" class="dotted-input">
+            <input type="text" id="fathername"  value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->clientinfo->father_details ?? '' }} " name="fathername" class="dotted-input">
         </div>
 
         <div class="form-group">
             <label for="dob">DATE & PLACE OF BIRTH:</label>
-            <input type="text" id="dob" value=" {{ $clientData->clint->clientinfo->dob ?? '' }} &{{ $clientData->clint->clientinfo->birth_place ?? '' }} "  name="dob" class="dotted-input">
+            <input type="text" id="dob" value="&nbsp;&nbsp;&nbsp;&nbsp; {{ $clientData->clint->date_of_birth ?? '' }} &{{ $clientData->clint->clientinfo->place_of_birth ?? '' }} "  name="dob" class="dotted-input">
         </div>
 
         <div class="form-group">
             <label for="passport">PASSPORT NO:</label>
-            <input type="text" id="passport" value="{{ $clientData->clint->passport_number ?? '' }}"  name="passport" class="dotted-input">
+            <input type="text" id="passport" value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->clientinfo->passport_ic_number ?? '' }}"  name="passport" class="dotted-input">
         </div>
 
         <div class="form-group">
             <label for="issuedetails">DATE & PLACE OF ISSUE:</label>
-            <input type="text" id="issuedetails" value="{{ $clientData->clint->clientinfo->passport_issue_date ?? '' }} &{{ $clientData->clint->clientinfo->passport_issue_place ?? '' }} " name="issuedetails" class="dotted-input">
+            <input type="text" id="issuedetails" value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->clientinfo->passport_issue_date ?? '' }} &{{ $clientData->clint->clientinfo->passport_issue_place ?? '' }} " name="issuedetails" class="dotted-input">
         </div>
 
         <div class="form-group">
             <label for="ukaddress">PERMANENET ADDRESS IN<br>UNITED KINGDOM:</label>
-            <input type="text" id="ukaddress1" value="{{ $clientData->clint->clientinfo->residential_address ?? '' }} "name="ukaddress1" class="dotted-input"><br>
+            <input type="text" id="ukaddress1" value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->permanent_address ?? '' }} "name="ukaddress1" class="dotted-input"><br>
             <label></label>
             <input type="text" id="ukaddress2" name="ukaddress2" class="dotted-input"><br>
             <label></label>
@@ -175,21 +175,21 @@
         
         <div class="form-group">
             <label for="homeaddress">ADDRESS IN COUNTRY OF ORIGIN:</label>
-            <input type="text" id="homeaddress1"  value="{{ $clientData->clint->name ?? '' }} " name="homeaddress1" class="dotted-input"><br>
+            <input type="text" id="homeaddress1"  value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->client_name ?? '' }} " name="homeaddress1" class="dotted-input"><br>
             <label></label>
-            <input type="text" id="homeaddress2"  value="{{ $clientData->clint->name ?? '' }} " name="homeaddress2" class="dotted-input"><br>
+            <input type="text" id="homeaddress2"  value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->client_name ?? '' }} " name="homeaddress2" class="dotted-input"><br>
             <label></label>
             <input type="text" id="homeaddress3" name="homeaddress3" class="dotted-input">
         </div>
 
         <div class="form-group">
             <label for="profession">PROFESSION:</label>
-            <input type="text" id="profession" value="{{ $clientData->clint->profession ?? '' }} "  name="profession" class="dotted-input">
+            <input type="text" id="profession" value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->designation ?? '' }} "  name="profession" class="dotted-input">
         </div>
 
         <div class="form-group">
             <label for="visatype">TYPE OF VISA:</label>
-            <input type="text" id="visatype" value="{{ $clientData->visa->name ?? '' }} "  name="visatype" class="dotted-input">
+            <input type="text" id="visatype" value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->visa->name ?? '' }} "  name="visatype" class="dotted-input">
         </div>
 
         <div class="form-group signature">

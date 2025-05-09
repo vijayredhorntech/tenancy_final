@@ -11,7 +11,7 @@ class VisaSubtype extends Model
     //
     use HasFactory,SoftDeletes;
 
-    protected $fillable = ['visa_type_id', 'name', 'price', 'commission', 'status'];
+    protected $fillable = ['visa_type_id', 'name', 'validity', 'processing', 'price', 'commission', 'gstin','status'];
 
     // Relationship with VisaType model
     public function visaType()

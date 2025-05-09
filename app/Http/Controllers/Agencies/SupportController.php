@@ -13,20 +13,28 @@ use Auth;
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
+use App\Services\AgencyService;
 
 class SupportController extends Controller
 {
 
+    protected $agencyService;
+ 
+
+    public function __construct(AgencyService $agencyService)
+    { 
+        $this->agencyService = $agencyService;   
+    }
+
     /****Agency support view page ****/
     public function him_agenciesupport(){
-        $id = Auth::user()->id;
-        // dd($id); 
-        $userData = \session('user_data');
-        DatabaseHelper::setDatabaseConnection($userData['database']);
-        $user = User::on('user_database')->where('id', $id)->first();
+        
+       $user= $this->agencyService->getCurrentLoginUser(); 
+       $agency_data= $this->agencyService->getAgencyData(); 
+
        
-        /// Check here what is the id of this in the agency table in superadmin portel
-        $agency_data=Agency::where('email',$user->email)->first();
+ 
+
         $conversation=Support::where('agency_id',$agency_data->id)->get(); 
             
         return view('agencies.pages.supports.index',[
@@ -46,10 +54,12 @@ class SupportController extends Controller
             'agency_id' => 'required|exists:agencies,id',
             'type' => 'required',
             'priority' => 'required|string|in:low,medium,high',
-            'discrubtion' => 'required|string|max:500',
+            'description' => 'required|string|max:500',
             'document' => 'required|file|mimes:png,jpg,jpeg|max:10240', 
         ]);
 
+      
+    
   
         $support = new Support();
     
@@ -77,7 +87,7 @@ class SupportController extends Controller
         $support->agency_id = $request->agency_id;
         $support->type = $request->type;
         $support->priority = $request->priority;
-        $support->description = $request->discrubtion;
+        $support->description = $request->description;
         $support->status = "open";
         $support->view_status = "unseen";
     

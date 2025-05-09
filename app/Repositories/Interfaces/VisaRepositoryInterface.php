@@ -26,4 +26,12 @@ interface VisaRepositoryInterface
     public function disConnectCoutnryFormById($id); 
     public function deleteBooking($id); 
     public function sendEmail(array $data, $agency);
+    public function sendToAdmin($id);
+    public function getSuperadminAllApplication();
+    public function getDataByClientId($id);
+    public function getPendingDocumentByCID($clientId);
+    public function storeClientDocuemtn($data);
+   
+
+    
 }

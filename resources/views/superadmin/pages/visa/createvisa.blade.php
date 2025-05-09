@@ -72,13 +72,26 @@
                     @forelse($visa->VisavisaSubtype as $subvisa)
                         <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$subvisa->name}}</td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">up to 10 years</td>
-                           <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">15 business days</td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$subvisa->validity}}</td>
+                           <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$subvisa->processing}}</td>
                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$subvisa->price}}</td>
                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$subvisa->commission}}</td>
-                           <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">0</td>
-                           <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$subvisa->price+$subvisa->commission}}</td>
+                            @php
+                                    $price = $subvisa->price;
+                                    $commission = $subvisa->commission;
+                                    $gstPercent = 18;
 
+                                    $subtotal = $price + $commission;
+                                    $gstAmount = ($subtotal * $gstPercent) / 100;
+                                    $total = $subtotal + $gstAmount;
+                                @endphp
+                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    {{ number_format($gstAmount, 2) }} 
+                                </td>
+
+                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    {{ number_format($total, 2) }}
+                                </td>
                         </tr>
 
 
@@ -96,6 +109,7 @@
                             $oldSubtypes = old('subtype', ['']); // Default empty array if no old values
                             $oldSubtypePrices = old('subtypeprice', ['']);
                             $oldCommissions = old('commission', ['']);
+                       
                         @endphp
 
                         @foreach($oldSubtypes as $index => $subtype)
@@ -112,6 +126,34 @@
                                                 @enderror
                                             </div>
                                     </div>
+
+                        
+                                    <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="name" class="font-semibold text-ternary/90 text-sm">Validity</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="validity[]"  placeholder="Validity..."
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
+                                                    border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                                @error('validity.$index')
+                                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                    </div>
+
+                                    <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="name" class="font-semibold text-ternary/90 text-sm">Processing</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="processing[]"  placeholder="Processing..."
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
+                                                    border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                                @error('processing.$index')
+                                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                    </div>
+
+                                  
+
                                     <div class="w-full relative group flex flex-col gap-1">
                                         <label for="name" class="font-semibold text-ternary/90 text-sm">Subtype Price</label>
                                             <div class="w-full relative">
@@ -123,6 +165,7 @@
                                                 @enderror
                                             </div>
                                     </div>
+
                                     <div class="w-full relative group flex flex-col gap-1">
                                         <label for="name" class="font-semibold text-ternary/90 text-sm">Commission</label>
                                             <div class="w-full relative">
@@ -134,6 +177,19 @@
                                                 @enderror
                                             </div>
                                     </div>
+
+                                    <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="name" class="font-semibold text-ternary/90 text-sm">GSTIN(18%)</label>
+                                            <div class="w-full relative">
+                                                <input type="number" name="gstin[]" placeholder="GSTIN..."
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
+                                                    border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                                @error('gstin.$index')
+                                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                    </div>
+
                                     <span class="removeField {{ $index == 0 ? 'hidden' : '' }} w-max cursor-pointer mt-3 px-3 py-1 bg-red-500 text-white text-xs rounded">Remove</span>
                            </div>
                         @endforeach

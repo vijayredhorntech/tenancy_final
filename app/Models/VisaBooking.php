@@ -46,6 +46,10 @@ class VisaBooking extends Model
         return $this->hasMany(AuthervisaApplication::class, 'booking_id','id');
     }
 
+    public function clientapplciation(){
+        return $this->hasMany(ClientApplicationDocument::class, 'application_id','id');
+    }
+    
 
    
 }

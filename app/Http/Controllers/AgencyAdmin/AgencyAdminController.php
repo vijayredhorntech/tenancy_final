@@ -26,6 +26,7 @@ use Illuminate\Support\Carbon;
 use App\Models\Agency;
 use App\Services\AgencyService;
 use App\Models\AddBalance;
+use Illuminate\Support\Facades\Artisan;
 
 
 class AgencyAdminController extends Controller
@@ -42,6 +43,7 @@ class AgencyAdminController extends Controller
     public function hs_staffindex()
     {
 
+       
         $id = Auth::user()->id;
         $userData = \session('user_data');
         DatabaseHelper::setDatabaseConnection($userData['database']);

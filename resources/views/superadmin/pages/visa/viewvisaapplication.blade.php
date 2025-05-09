@@ -9,7 +9,7 @@
             </div>
 
             {{-- === Visa Forms Section === --}}
-            <div class="w-full p-4 bg-gray-50 border-b-[2px] border-b-ternary/10">
+            <!-- <div class="w-full p-4 bg-gray-50 border-b-[2px] border-b-ternary/10">
                 <div class="flex gap-4 overflow-x-auto">
                     @foreach ($forms as $form)
                         <div class="bg-blue-100 border-[1px] border-b-[2px] border-r-[2px] border-blue-300 p-3 rounded-[3px] rounded-tr-[8px] min-w-[200px] shadow-md">
@@ -22,7 +22,7 @@
                         </div>
                     @endforeach
                 </div>
-            </div>
+            </div> -->
 
             {{-- === Application Details Table === --}}
             <div class="w-full p-4 border-b-[2px] border-b-ternary/10">

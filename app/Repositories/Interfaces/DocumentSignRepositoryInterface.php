@@ -15,4 +15,10 @@ interface DocumentSignRepositoryInterface
     public function deleteDocument($id);
 
     public function getSignedDocumentsByAgency($agencyId);
+    
+    public function getClientApplication($id);
+
+    public function getUploadeDocumentById($id);
+    public function updateDocumentStatus($data);
+
 }

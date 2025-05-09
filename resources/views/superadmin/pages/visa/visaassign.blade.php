@@ -12,6 +12,15 @@
             </div>
 {{--        === heading section code ends here===--}}
 
+@if ($errors->any())
+    <div class="text-red-500 mb-4">
+        <ul class="list-disc list-inside">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 
 {{--        === this is code for form section ===--}}

@@ -155,31 +155,31 @@
         <table>
             <tr>
                 <th>Full Name</th>
-                <td><input type="text"   value=" {{ $clientData->clint->name ?? '' }}  {{ $clientData->clint->clientinfo->last_name ?? '' }} " ></td>
+                <td><input type="text"   value=" &nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->client_name ?? '' }} " ></td>
             </tr>
             <tr>
                 <th>Surname</th>
-                <td><input type="text"  value="{{ $clientData->clint->clientinfo->last_name ?? '' }} " ></td>
+                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->last_name ?? '' }} " ></td>
             </tr>
             <tr>
                 <th>Father's Full Name</th>
-                <td><input type="text"  value="{{ $clientData->clint->clientinfo->father_name ?? '' }} " ></td>
+                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->clientinfo->father_details ?? '' }} " ></td>
             </tr>
             <tr>
                 <th>Spouse's Name</th>
-                <td><input type="text"  value=" " ></td>
+                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;   {{ $clientData->clint->clientinfo->spouse_details ?? '' }} " ></td>
             </tr>
             <tr>
                 <th>Place of Birth</th>
-                <td><input type="text"  value="{{ $clientData->clint->clientinfo->birth_place ?? '' }}  " ></td>
+                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->clientinfo->place_of_birth ?? '' }}  " ></td>
             </tr>
             <tr>
                 <th>Date of Birth</th>
-                <td><input type="text"  value="{{ $clientData->clint->clientinfo->dob ?? '' }}" ></td>
+                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->date_of_birth ?? '' }}" ></td>
             </tr>
             <tr>
                 <th>Sex</th>
-                <td><input type="text"></td>
+                <td><input type="text" value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->gender ?? '' }}""></td>
             </tr>
             <tr>
                 <th>Sri Lankan passport no</th>
@@ -195,23 +195,23 @@
             </tr>
             <tr>
                 <th>Place of issue:</th>
-                <td><input type="text" style="width: 55%;"> <span style="float: right;">Date of Issue: <input type="text" class="date-input"  value="{{ $clientData->clint->clientinfo->passport_issue_place ?? '' }} " ></span></td>
+                <td><input type="text" style="width: 55%;"> <span style="float: right;">Date of Issue: <input type="text" class="date-input"  value="&nbsp; &nbsp; &nbsp; &nbps; {{ $clientData->clint->clientinfo->passport_issue_place ?? '' }} " ></span></td>
             </tr>
             <tr>
                 <th>Present Nationality</th>
-                <td><input type="text"  value="{{ $clientData->clint->clientinfo->nationality ?? '' }}  " ></td>
+                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->clientinfo->nationality ?? '' }}  " ></td>
             </tr>
             <tr>
                 <th>Passport Number</th>
-                <td><input type="text"  value="{{ $clientData->clint->passport_number ?? '' }}" ></td>
+                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->clientinfo->passport_ic_number ?? '' }}" ></td>
             </tr>
             <tr>
                 <th>Place of issue:</th>
-                <td><input type="text" style="width: 55%;"> <span style="float: right;">Date of Issue: <input type="text" class="date-input"  value="{{ $clientData->clint->clientinfo->passport_issue_place ?? '' }} " ></span></td>
+                <td><input type="text" style="width: 55%;" value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->clientinfo->passport_issue_date ?? '' }} " "> <span style="float: right;">Date of Issue: <input type="text" class="date-input"  value="{{ $clientData->clint->clientinfo->passport_issue_place ?? '' }} " ></span></td>
             </tr>
             <tr>
                 <th>Date of renewal</th>
-                <td><input type="text"  value="{{ $clientData->clint->clientinfo->last_name ?? '' }} " ></td>
+                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->clientinfo->passport_expiry_date ?? '' }} " ></td>
             </tr>
             <tr>
                 <th>If holding Travel Document, supply details of previous passports</th>
@@ -227,7 +227,7 @@
             </tr>
             <tr>
                 <th>Address in country of domicile</th>
-                <td><input type="text"  value="{{ $clientData->clint->clientinfo->last_name ?? '' }} " ></td>
+                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->clientinfo->last_name ?? '' }} " ></td>
             </tr>
             <tr>
                 <th>Present occupation</th>

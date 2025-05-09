@@ -27,6 +27,7 @@ use App\Models\UserServiceAssignment;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewFormNotification;
 use App\Mail\VisaApplicationMail;
+use App\Models\ClientApplicationDocument;
 
 
 
@@ -46,6 +47,26 @@ class VisaRepository implements VisaRepositoryInterface
        return Country::paginate(10);
     }
 
+    public function getSuperadminAllApplication(){
+       
+        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
+        ->where('sendtoadmin', '1')
+        ->orderBy('created_at', 'desc') // Orders by latest created_at first
+        ->paginate(10);
+    }
+
+
+    /******GET data By Client id *** */
+    public function getPendingDocumentByCID($clientId)
+    {
+        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'clint', 'clientapplciation'])
+            ->where('client_id', $clientId)
+            ->whereHas('clientapplciation', function ($query) {
+                $query->whereIn('document_status', [0, 1]); // ✔️ Matches both 0 and 1
+            })
+            ->get();
+
+    }
 
     public function getAllVisas()
     {
@@ -61,13 +82,14 @@ class VisaRepository implements VisaRepositoryInterface
     /***Create Visa name and sub type**** */
     public function createVisa(array $data)
     {
+        
         return DB::transaction(function () use ($data) {
             // Create Visa
             $visa = new VisaServices();
             $visa->name = $data['name'];
             $visa->description = $data['description'];
             $visa->save();
-    
+
             // Save Visa Subtypes in a loop
             foreach ($data['subtype'] as $key => $subtypeName) {
                 VisaSubtype::create([
@@ -75,6 +97,9 @@ class VisaRepository implements VisaRepositoryInterface
                     'name' => $subtypeName,
                     'price' => $data['subtypeprice'][$key],
                     'commission' => $data['commission'][$key],
+                    'validity' => $data['validity'][$key],
+                    'processing' => $data['processing'][$key],
+                    'gstin' => $data['gstin'][$key],
                     'status' => 1 // Default status as active
                 ]);
             }
@@ -150,6 +175,9 @@ public function updateVisa($id, array $data)
                     'name' => $subtypeName,
                     'price' => $data['subtypeprice'][$key] ?? 0,
                     'commission' => $data['commission'][$key] ?? 0,
+                    'validity' => $data['validity'][$key]?? 0,
+                    'processing' => $data['processing'][$key]?? 0,
+                    'gstin' => $data['gstin'][$key]?? 0,
                     'status' => 1, // Default status as active
                 ]
             );
@@ -177,13 +205,13 @@ public function updateVisa($id, array $data)
             $originCode = $getCode['origin_code'];
             $destinationCode = $getCode['destination_code'];
 
-      $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
-      $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
-    //   $application = Str::uuid();
-    $application = strtolower($originCode . '-' . $destinationCode . '-' . now()->format('ymdHis') . '-' . Str::random(3));
+            $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
+            $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
+            //   $application = Str::uuid();
+            $application = strtolower(now()->format('ymdHis') . '-' . Str::random(3));
 
-    $agency = $this->agencyService->getAgencyData();
-    $user=$this->agencyService->getCurrentLoginUser();
+            $agency = $this->agencyService->getAgencyData();
+            $user=$this->agencyService->getCurrentLoginUser();
 
   
 
@@ -266,18 +294,18 @@ public function updateVisa($id, array $data)
     
     if($type=="all"){
 
-    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint'])
+    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
     ->where('agency_id', $id)
     ->orderBy('created_at', 'desc') // Orders by latest created_at first
     ->paginate(10);
   }else if($type=="documentpending"){
-    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint'])
+    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
     ->where('agency_id', $id)
     ->where('document_status','Pending')
     ->orderBy('created_at', 'desc') // Orders by latest created_at first
     ->paginate(10);
   }elseif($type=="feepending")
-    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint'])
+    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
     ->where('agency_id', $id)
     ->where('payment_status','Pending')
     ->orderBy('created_at', 'desc') // Orders by latest created_at first
@@ -327,7 +355,6 @@ public function updateVisa($id, array $data)
     
                 // Save visa service type document
                 $service = new VisaServiceTypeDocument();
-                $service->visa_id  = '1';
                 $service->form_id  = $new->id;
                 $service->origin_id  = $data['origincoutnry'];
                 $service->destination_id   = $data['destination'];
@@ -407,7 +434,8 @@ public function updateVisa($id, array $data)
 
 
     public function bookingDataById($id){
-       $viewbooking=VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients'])
+ 
+       $viewbooking=VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients','clientapplciation'])
         ->where('id', $id)
        ->first(); 
        return $viewbooking;
@@ -422,12 +450,13 @@ public function updateVisa($id, array $data)
 
 
     public function assignUpdateBooking($id,$data){
-   
-        $visabooking=VisaBooking::where('id',$id)->first(); 
-
+      $visabooking=VisaBooking::where('id',$id)->first(); 
         $visabooking->document_status=$data['document_status']; 
-        $visabooking->applicationworkin_status=$data['application_status']; 
         $visabooking->payment_status=$data['paymentstatus']; 
+        if(isset($data['application_status'])){
+            $visabooking->application_status=$data['application_status'];
+            $visabooking->applicationworkin_status=$data['application_status'];
+        }
         $visabooking->save(); 
         return $visabooking;
    
@@ -487,6 +516,38 @@ public function updateVisa($id, array $data)
     public function sendEmail(array $data,$agency){
      
         Mail::to($data['emailid'])->queue(new VisaApplicationMail($data, $agency));
+       
+    }
+
+    public function sendToAdmin($id){
+        $booking=$this->bookingDataById($id);
+        $booking->sendtoadmin=1;
+        $booking->save(); 
+        return $booking;
+    }
+
+    public function getDataByClientId($id){
+        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients'])
+        ->where('client_id', $id)
+       ->orderBy('created_at', 'desc') // Orders by latest created_at first
+       ->paginate(10);
+    }
+
+    public function storeClientDocuemtn($data){
+  
+        $bookingId = $data['booking_id'];
+    //   dd($bookingId);
+       foreach ($data['documents'] as $docId => $file) {
+        $filename = $file->store('client/documents', 'public');
+
+
+        // Example: store document path in DB
+        ClientApplicationDocument::where('id', $docId)->update([
+            'document_file' => $filename,
+            'document_status' => 2, // Mark as uploaded
+        ]);
+    }
+    return true;
        
     }
 

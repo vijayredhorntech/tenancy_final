@@ -400,7 +400,10 @@ class AgencyController extends Controller
             $query->where('domain_name', $domain);
         })->with('domains')->first();
 
-
+        if (!$agency) {
+            return redirect()->route('login')->with('error', 'Domain not found.');
+        }
+ 
         if ($agency->details->status == 0) {
             return view('agencies.permission');
         }
