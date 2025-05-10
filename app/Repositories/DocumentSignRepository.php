@@ -8,14 +8,19 @@ use App\Services\AgencyService;
 use App\Models\VisaBooking;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ClientApplicationDocument;
+use App\Repositories\Interfaces\VisaRepositoryInterface;
 
 class DocumentSignRepository implements DocumentSignRepositoryInterface
 {
     protected $agencyService;
+    protected $visaRepository;
 
-    public function __construct(AgencyService $agencyService)
+
+    public function __construct(VisaRepositoryInterface $visaRepository,AgencyService $agencyService)
     {
             $this->agencyService = $agencyService;
+            $this->visaRepository = $visaRepository;
+
     }
     public function getAllDocuments()
     {  
@@ -98,6 +103,13 @@ class DocumentSignRepository implements DocumentSignRepositoryInterface
     
         return $document;
     }
+
+   /****Document Data **** */ 
+   public function uploadeDocumentById($id){
+  
+    $visa = $this->visaRepository->getBookingBySingleId($id);
+    return $visa;
+   }
     
 
 }

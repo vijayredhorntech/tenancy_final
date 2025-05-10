@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Message;
+use App\Events\MessageSent;
 
 trait ChatTrait
 {
@@ -36,6 +37,7 @@ trait ChatTrait
         $message->client_id = $clientid;
         $message->save();
     
+        event(new MessageSent($data->sender_id,$data->recevier_id,$data->type,$clientid,$data->message));
         return $message;
     }
     

@@ -43,6 +43,9 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\ClientLoginController;
 
+use App\Events\MessageSent;
+
+
 
 Route::fallback(function() {
     return redirect('/login');
@@ -313,6 +316,11 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                 Route::get('/client/document/view/{id}', 'hs_SAAViewDocuments')->name('client.document.view');
                                 Route::get('/editdocument/{id}', 'hs_editSAUploadedApplication')->name('superadminvisaeditdocument.application');
                                 Route::post('/updatedocument', 'hs_storeUpdateDocument')->name('updateclient.document');
+                               
+                                Route::get('/document/application/{id}','hsshowUploadForm')->name('superadminaad.document.upload');
+                                Route::post('/document/upload','uploadDocument')->name('document.upload');
+                                // Route::get('/document/download/{filename}', 'downloadDocument')->name('document.download');
+
                             
                             });
 

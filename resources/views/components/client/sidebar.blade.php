@@ -40,67 +40,35 @@
     <a href="{{route('client.application')}}">
             <div class="{{Route::currentRouteName()==='client.application'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
-                    <i class="fa fa-user-lock mr-2 text-sm"></i>
+                    <i class="fas fa-clipboard mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Application </span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>
         </a>
 
-  
-        <!-- <div class="">
-            <div onclick="document.getElementById('visaDiv').classList.toggle('hidden');document.getElementById('visaArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='service'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+        <a href="#">
+            <div class="{{Route::currentRouteName()===''?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
-                    <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Visa</span>
+                    <i class="fas fa-download mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Download Center </span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="visaArrow"> </i>
             </div>
-            <ul id="visaDiv" class="pl-10 mt-2 flex flex-col hidden">
-            <a href="{{ route('agency.application', ['type' => 'all']) }}">
-                    <li class="{{Route::currentRouteName()==='agency.application'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa fa-eye mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">All Application</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-                <a href="{{ route('agency.application', ['type' => 'documentpending']) }}">
-                    <li class="{{Route::currentRouteName()==='visa.documentpending'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa fa-hotel mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Document Pending</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
+        </a>
 
-                <a href="{{ route('agency.application', ['type' => 'feepending']) }}">
-                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Fee Pending </span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-
-                <a href="#">
-                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Ready For Submission </span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-
-            </ul>
-        </div> -->
-    
   
+
+
+        <a href="#">
+            <div class="{{Route::currentRouteName()===''?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fas fa-file-invoice mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Invoice</span>
+                </div>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+            </div>
+        </a>
 
    
    
@@ -108,7 +76,7 @@
         <a href="{{route('client.notification')}}">
             <div class="{{Route::currentRouteName()==='admin_setting'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
-                    <i class="fa-solid fa-headset mr-2 text-sm"></i>
+                    <i class="fas fa-bell mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Notification</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>

@@ -551,4 +551,10 @@ public function updateVisa($id, array $data)
        
     }
 
+    public function getBookingBySingleId($id){
+        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients'])
+        ->where('id', $id)
+        ->first();
+    }
+
 }

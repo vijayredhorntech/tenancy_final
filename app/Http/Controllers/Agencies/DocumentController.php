@@ -126,5 +126,10 @@ class DocumentController extends Controller
         
     }
 
+    public function hsshowUploadForm($id){
+      
+        $booking = $this->documentSignRepository->uploadeDocumentById($id);
+         return view('superadmin.pages.visa.superadminuploadedocuments', compact('booking'));
+    }
   
 }

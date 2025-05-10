@@ -198,6 +198,12 @@
                                     <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
                                         <i class="fa fa-check"></i> <!-- FontAwesome icon -->
                                     </div> 
+
+                                    <a href="{{ route('superadminaad.document.upload', ['id' => $booking->id]) }}" title="Uploade Document">
+                                    <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
+                                       <i class="fas fa-upload"></i><!-- FontAwesome icon -->
+                                        </div> 
+                                    </a>
                                 @else
                                 
                                  <a href="{{ route('superadminaad.document.application', ['id' => $booking->id]) }}" title="Remind for funds">

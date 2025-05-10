@@ -172,6 +172,9 @@
         @endcanany
 
 
+    
+
+
         <!-- Client Agency Part -->
         @canany(['agency view', 'manage everything'])
         <a href="{{route('agency')}}">
@@ -186,17 +189,7 @@
 
         @endcanany
 
-        <!-- @canany(['staff view', 'manage everything'])
-      <a href="{{route('staff')}}">
-            <div class="{{Route::currentRouteName()==='staff'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                <div class="flex items-center">
-                    <i class="fa fa-users mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Staff</span>
-                </div>
-                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-            </div>
-        </a>
-    @endcanany -->
+ 
 
 
         <!-- Staff Part -->
@@ -290,6 +283,44 @@
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>
         </a>
+        @endcanany
+
+        @canany(['supplier view', 'manage everything'])
+        <div class="">
+            <div onclick="document.getElementById('supplierDiv').classList.toggle('hidden');document.getElementById('visaArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='visa'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-handshake mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Supplier's Accounts</span>
+                </div>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="visaArrow"> </i>
+            </div>
+            <ul id="supplierDiv" class="pl-10 mt-2 flex flex-col hidden">
+          
+
+                <a href="">
+                    <li class="{{Route::currentRouteName()===''?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                          <i class="fa-solid fa-flag mr-2 text-sm" ></i>
+                            <span class="text-lg font-medium">Hotel</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+                <a href="">
+                    <li class="{{Route::currentRouteName()===''?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Flight</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+          
+
+
+            </ul>
+        </div>
         @endcanany
 
 

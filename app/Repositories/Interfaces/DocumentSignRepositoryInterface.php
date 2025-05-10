@@ -19,6 +19,9 @@ interface DocumentSignRepositoryInterface
     public function getClientApplication($id);
 
     public function getUploadeDocumentById($id);
+
     public function updateDocumentStatus($data);
+
+    public function uploadeDocumentById($id);
 
 }

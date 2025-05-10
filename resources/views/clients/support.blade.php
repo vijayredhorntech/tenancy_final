@@ -85,8 +85,8 @@
                     <input type="text" name="message" placeholder="Type a message" class="flex-grow border-none px-4 focus:outline-none focus:ring-0 text-ternary/80">
 
                     <input type="hidden" name="ticket_number" value="{{ $ticket_number ?? '' }}">
-                    <input type="hidden" name="recevier_id" value="{{ $agency->id }}">
-                    <input type="hidden" name="sender_id" value="{{ $client_data->id }}">
+                    <input type="hidden" name="recevier_id" id="recevier_id" value="{{ $agency->id }}">
+                    <input type="hidden" name="sender_id" id="sender_id" value="{{ $client_data->id }}">
                     <input type="hidden" name="type" value="client">
 
                     <button type="submit" class="px-4 py-2 bg-secondary text-white font-semibold rounded hover:bg-secondary/80 transition">
@@ -140,40 +140,40 @@
                         'Accept': 'application/json'
                     },
                     success: function (data) {
-                        if (data.success) {
-                            const messageText = data.message.message ?? '';
-                            const attachment = data.message.attachments ?? null;
+                        // if (data.success) {
+                        //     const messageText = data.message.message ?? '';
+                        //     const attachment = data.message.attachments ?? null;
 
-                            let attachmentHtml = '';
-                            if (attachment) {
-                                const fileUrl = `/storage/${attachment}`;
-                                const fileExt = attachment.split('.').pop().toLowerCase();
+                        //     let attachmentHtml = '';
+                        //     if (attachment) {
+                        //         const fileUrl = `/storage/${attachment}`;
+                        //         const fileExt = attachment.split('.').pop().toLowerCase();
 
-                                if (['png', 'jpg', 'jpeg', 'gif'].includes(fileExt)) {
-                                    attachmentHtml = `<img src="${fileUrl}" class="mt-2 max-w-[200px] rounded-lg" alt="Attachment">`;
-                                } 
-                            }
+                        //         if (['png', 'jpg', 'jpeg', 'gif'].includes(fileExt)) {
+                        //             attachmentHtml = `<img src="${fileUrl}" class="mt-2 max-w-[200px] rounded-lg" alt="Attachment">`;
+                        //         } 
+                        //     }
 
-                            const messageHtml = `
-                                <div class="flex flex-col items-end w-full gap-2 mb-4">
-                                    <div class="w-[70%] flex flex-col items-end">
-                                        <div class="w-max">
-                                            <div class="bg-blue-200 w-max px-6 py-2 rounded-tl-full rounded-br-full rounded-tr-full">
-                                                <span>${messageText}</span>
-                                                  ${attachmentHtml ? attachmentHtml : ''}
-                                            </div>
-                                            <div class="flex justify-end">
-                                                <p class="text-secondary text-xs">Just now</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
+                        //     const messageHtml = `
+                        //         <div class="flex flex-col items-end w-full gap-2 mb-4">
+                        //             <div class="w-[70%] flex flex-col items-end">
+                        //                 <div class="w-max">
+                        //                     <div class="bg-blue-200 w-max px-6 py-2 rounded-tl-full rounded-br-full rounded-tr-full">
+                        //                         <span>${messageText}</span>
+                        //                           ${attachmentHtml ? attachmentHtml : ''}
+                        //                     </div>
+                        //                     <div class="flex justify-end">
+                        //                         <p class="text-secondary text-xs">Just now</p>
+                        //                     </div>
+                        //                 </div>
+                        //             </div>
+                        //         </div>
+                        //     `;
 
-                            $chatMessages.append(messageHtml);
+                        //     $chatMessages.append(messageHtml);
                             $chatForm[0].reset();
                             $chatMessages.scrollTop($chatMessages[0].scrollHeight);
-                        }
+                        // }
                     },
                     error: function (xhr) {
                         console.error('Error:', xhr.responseText);
@@ -181,6 +181,66 @@
                 });
             });
         });
+</script>
+<script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+<script>
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('d1a84316b9cf0243536a', {
+        cluster: 'ap1',
+        forceTLS: true
+    });
+
+    var channel = pusher.subscribe('my-chanal');
+
+    channel.bind('cloudtravel', function(data) {
+        var senderId = jQuery("#sender_id").val();
+        var agencyId = jQuery("#recevier_id").val();
+
+        if (senderId == data.sender_id && agencyId == data.receiver_id) {
+            let messageHtml = '';
+
+            if (data.type == 'client') {
+                // Right side (current user)
+                messageHtml = `
+                    <div class="flex flex-col items-end w-full gap-2 mb-4">
+                        <div class="w-[70%] flex flex-col items-end">
+                            <div class="w-max">
+                                <div class="bg-blue-200 w-max px-6 py-2 rounded-tl-full rounded-br-full rounded-tr-full">
+                                    <span>${data.message}</span>
+                                </div>
+                                <div class="flex justify-end">
+                                    <p class="text-secondary text-xs">Just now</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Left side (other user)
+                messageHtml = `
+                    <div class="flex flex-col gap-2 w-full mb-4">
+                        <div class="w-[70%] flex flex-col">
+                            <div class="w-max">
+                                <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
+                                    <span>${data.message}</span>
+                                </div>
+                                <div class="flex justify-end">
+                                    <p class="text-secondary text-xs">${data.time}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Append message to chat area
+            jQuery('#chat-messages').append(messageHtml);
+
+            // Scroll to bottom
+            jQuery('#chat-messages').scrollTop(jQuery('#chat-messages')[0].scrollHeight);
+        }
+    });
 </script>
 
 </x-client.layout>
