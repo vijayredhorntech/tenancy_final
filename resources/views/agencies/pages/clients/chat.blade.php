@@ -180,12 +180,16 @@
     channel.bind('cloudtravel', function(data) {
         var senderId = jQuery("#sender_id").val();
         var clientId = jQuery("#recevier_id").val();
-
-        if (senderId == data.sender_id && clientId == data.receiver_id) {
+        
+     
+        if (
+                        (clientId === data.sender_id && senderId === data.receiver_id) ||
+                        (senderId === data.sender_id && clientId === data.receiver_id)
+                    )   {
             let messageHtml = '';
-
+       
             if (data.type !== 'client') {
-                // Right side (current user)
+                            // Right side (current user)
                 messageHtml = `
                     <div class="flex flex-col items-end w-full gap-2 mb-4">
                         <div class="w-[70%] flex flex-col items-end">
@@ -201,6 +205,7 @@
                     </div>
                 `;
             } else {
+             
                 // Left side (other user)
                 messageHtml = `
                     <div class="flex flex-col gap-2 w-full mb-4">

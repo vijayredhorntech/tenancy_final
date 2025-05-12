@@ -140,38 +140,7 @@
                         'Accept': 'application/json'
                     },
                     success: function (data) {
-                        // if (data.success) {
-                        //     const messageText = data.message.message ?? '';
-                        //     const attachment = data.message.attachments ?? null;
-
-                        //     let attachmentHtml = '';
-                        //     if (attachment) {
-                        //         const fileUrl = `/storage/${attachment}`;
-                        //         const fileExt = attachment.split('.').pop().toLowerCase();
-
-                        //         if (['png', 'jpg', 'jpeg', 'gif'].includes(fileExt)) {
-                        //             attachmentHtml = `<img src="${fileUrl}" class="mt-2 max-w-[200px] rounded-lg" alt="Attachment">`;
-                        //         } 
-                        //     }
-
-                        //     const messageHtml = `
-                        //         <div class="flex flex-col items-end w-full gap-2 mb-4">
-                        //             <div class="w-[70%] flex flex-col items-end">
-                        //                 <div class="w-max">
-                        //                     <div class="bg-blue-200 w-max px-6 py-2 rounded-tl-full rounded-br-full rounded-tr-full">
-                        //                         <span>${messageText}</span>
-                        //                           ${attachmentHtml ? attachmentHtml : ''}
-                        //                     </div>
-                        //                     <div class="flex justify-end">
-                        //                         <p class="text-secondary text-xs">Just now</p>
-                        //                     </div>
-                        //                 </div>
-                        //             </div>
-                        //         </div>
-                        //     `;
-
-                        //     $chatMessages.append(messageHtml);
-                            $chatForm[0].reset();
+                         $chatForm[0].reset();
                             $chatMessages.scrollTop($chatMessages[0].scrollHeight);
                         // }
                     },
@@ -196,11 +165,17 @@
     channel.bind('cloudtravel', function(data) {
         var senderId = jQuery("#sender_id").val();
         var agencyId = jQuery("#recevier_id").val();
-
-        if (senderId == data.sender_id && agencyId == data.receiver_id) {
+      
+        console.log(data);            // Right side (current user)
+        if (
+                        (agencyId === data.sender_id && senderId === data.receiver_id) ||
+                        (senderId === data.sender_id && agencyId === data.receiver_id)
+                    )   {
+        // if (senderId == data.sender_id && agencyId == data.receiver_id) {
             let messageHtml = '';
 
             if (data.type == 'client') {
+              
                 // Right side (current user)
                 messageHtml = `
                     <div class="flex flex-col items-end w-full gap-2 mb-4">
@@ -217,6 +192,7 @@
                     </div>
                 `;
             } else {
+             
                 // Left side (other user)
                 messageHtml = `
                     <div class="flex flex-col gap-2 w-full mb-4">
