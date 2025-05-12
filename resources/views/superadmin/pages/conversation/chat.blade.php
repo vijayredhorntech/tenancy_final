@@ -175,6 +175,7 @@
     var channel = pusher.subscribe('my-chanal');
 
     channel.bind('cloudtravel', function(data) {
+        alert(data.receiver_id);
         var senderId = jQuery("#sender_id").val();
         var clientId = jQuery("#recevier_id").val();
 
