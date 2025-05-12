@@ -9,6 +9,7 @@ use App\Models\VisaBooking;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ClientApplicationDocument;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
+use App\Models\DownloadCenter;
 
 class DocumentSignRepository implements DocumentSignRepositoryInterface
 {
@@ -110,6 +111,37 @@ class DocumentSignRepository implements DocumentSignRepositoryInterface
     $visa = $this->visaRepository->getBookingBySingleId($id);
     return $visa;
    }
+
+   /*****Document Save *** */
+   public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $clientId, $agencyId, $bookingType)
+   {
+       $merged = [];
+   
+       foreach ($documents as $index => $docName) {
+           $file = $files[$index];
+   
+           $fileName = time() . '_' . $file->getClientOriginalName();
+           $filePath = $file->storeAs('documents/clientuploadDocument', $fileName, 'public'); // Use forward slashes
+   
+           $merged[] = [
+               'name' => $docName,
+               'file' => $filePath,
+           ];
+       }
+   
+       // Insert data into your table
+       DownloadCenter::create([
+        'invoice_id' => $invoiceId,
+        'client_id' => $clientId,
+        'agency_id' => $agencyId,
+        'booking_id' => $bookingId,
+        'booking_type' => $bookingType,
+        'documents' => json_encode($merged),
+    ]);
+    
+   }
+   
+
     
 
 }

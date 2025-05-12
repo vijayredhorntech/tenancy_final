@@ -631,4 +631,12 @@ class SuperadminController extends Controller
 
         return back()->with('success', 'Salary slips generated successfully!');
     }
+
+    public function hs_staffattandance(){
+        // $users=User ::with('attendance','userdetails')->(type=!superadmin)get();
+        $users = User::with(['attendance', 'userdetails'])
+             ->where('type', '!=', 'superadmin')
+             ->get();
+        return view('superadmin.pages.staff.staffattandance',compact('users'));
+    }
 }

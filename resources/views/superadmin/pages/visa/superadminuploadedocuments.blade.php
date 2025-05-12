@@ -8,9 +8,38 @@
         <span class="font-semibold text-ternary text-base">Add Document</span>
     </div>
 
-    {{-- === form section code ends here === --}}
-    {{-- === this is code for table section === --}}
-    <form method="POST" action="{{ route('upload.document') }}">
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+ 
+  @if($booking->downloadDocument)
+  <div class="w-full overflow-x-auto p-4">
+        <div class="grid grid-cols-3 gap-4">
+                        @php
+                        $documents = json_decode($booking->downloadDocument->documents, true);         
+                        @endphp
+                        @foreach($documents as $doc)         
+                            <div class="flex flex-col gap-2">
+                                <label for="documentfile }}" class="text-sm font-semibold text-ternary">
+                                    {{ $doc['name'] }}
+                                </label>
+                                <a href="{{ route('clientupload.documentdownloadjson', ['file' => urlencode($doc['file'])]) }}"
+                                    class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">
+                                        Download
+                                    </a>
+                            </div>
+                        @endforeach
+        </div>
+ </div>
+  @else
+    <form action="{{ route('upload.document') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="w-full overflow-x-auto p-2">
@@ -28,58 +57,9 @@
             </button>
         </div>
     </form>
+  @endif
 
-
-   <!-- <script>
-            const addBtn = document.getElementById('addBtn');
-            const inputContainer = document.getElementById('inputContainer');
-            const submitBtn = document.getElementById('submitBtn');
-
-            function toggleSubmitButton() {
-                const inputs = inputContainer.querySelectorAll('input[type="text"]');
-                submitBtn.classList.toggle('hidden', inputs.length === 0);
-            }
-
-            addBtn.addEventListener('click', function () {
-                const inputDiv = document.createElement('div');
-                inputDiv.classList.add('w-full', 'md:w-1/2', 'lg:w-1/3', 'p-2');
-
-                const innerBox = document.createElement('div');
-                innerBox.classList.add('flex', 'flex-col', 'bg-white', 'rounded-lg', 'shadow-md', 'p-4', 'border', 'border-gray-200');
-
-                const boxTitle = document.createElement('h3');
-                boxTitle.textContent = '📝 Document';
-                boxTitle.classList.add('text-lg', 'font-bold', 'text-blue-600', 'mb-3');
-
-                const label = document.createElement('label');
-                label.textContent = 'Document Name:';
-                label.classList.add('text-base', 'font-semibold', 'text-gray-800', 'mb-2');
-
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.name = 'documents[]';
-                input.classList.add('border', 'p-2', 'rounded-md', 'mb-3', 'w-full', 'border-gray-300', 'focus:ring-2', 'focus:ring-blue-400');
-                input.placeholder = 'Enter document name';
-
-                const removeBtn = document.createElement('button');
-                removeBtn.textContent = 'Remove';
-                removeBtn.classList.add('bg-red-500', 'text-white', 'py-2', 'rounded-md', 'hover:bg-red-600', 'transition-all', 'text-sm');
-
-                removeBtn.addEventListener('click', function () {
-                    inputDiv.remove();
-                    toggleSubmitButton(); // 👈 Check if submit should hide again
-                });
-
-                innerBox.appendChild(boxTitle);
-                innerBox.appendChild(label);
-                innerBox.appendChild(input);
-                innerBox.appendChild(removeBtn);
-                inputDiv.appendChild(innerBox);
-                inputContainer.appendChild(inputDiv);
-
-                toggleSubmitButton(); // 👈 Show submit if this is first input
-    });
-</script> -->
+   
 
 <script>
     const addBtn = document.getElementById('addBtn');

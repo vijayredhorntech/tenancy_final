@@ -49,6 +49,10 @@ class VisaBooking extends Model
     public function clientapplciation(){
         return $this->hasMany(ClientApplicationDocument::class, 'application_id','id');
     }
+
+    public function downloadDocument(){
+        return $this->hasOne(DownloadCenter::class, 'booking_id','id');
+    }
     
 
    

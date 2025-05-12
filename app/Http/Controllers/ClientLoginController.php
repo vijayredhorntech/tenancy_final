@@ -14,6 +14,7 @@ use App\Models\Support;
 use App\Models\Message;
 use Illuminate\Support\Str;
 use App\Traits\ChatTrait;
+use Illuminate\Support\Facades\Response;
 
 
 class ClientLoginController extends Controller
@@ -168,6 +169,40 @@ class ClientLoginController extends Controller
 
     return back()->with('success', 'Documents uploaded successfully.');   
     }
+
+
+    /******Client ***** */
+    public function hsDownloadDocumentCenter(){
+        $client_data= Auth::guard('client')->user();
+
+        $allbookings=$this->visaRepository->getDataByClientId($client_data->id);
+        return view('clients.downloadcenter',compact('allbookings'));
+    }
+
+    public function hsdownloadDocument($id){
+        $booking = $this->visaRepository->bookingDataById($id);
+        if (isset($booking->client_id) && $booking->client_id == Auth::guard('client')->id()) {
+            return view('clients.download',compact('booking'));
+        }
+    }
+
+    public function downloadJsonDocument(Request $request)
+    {
+    
+        $filePath = urldecode($request->query('file')); // Now it becomes normal like "documents/clientuploadDocument/xxx.png"
+        if (!Str::startsWith($filePath, 'documents/clientuploadDocument/')) {
+            abort(403, 'Unauthorized file access.');
+        }
+        $fullPath = storage_path('app/public/' . $filePath);
+        // Check if file exists
+        if (!file_exists($fullPath)) {
+            abort(404, 'File not found.');
+        }
+    
+        // Return download response
+        return response()->download($fullPath, basename($filePath));
+    }
+    
 
       /****public function *** */
       public function hsClientLogout(){

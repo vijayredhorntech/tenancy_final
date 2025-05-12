@@ -131,5 +131,39 @@ class DocumentController extends Controller
         $booking = $this->documentSignRepository->uploadeDocumentById($id);
          return view('superadmin.pages.visa.superadminuploadedocuments', compact('booking'));
     }
+
+    public function hsuploadDocument(Request $request){
+        
+    // dd($request->all());
+        // Validate the request data
+        $request->validate([
+            'bookingid' => 'required|numeric',
+            'documents' => 'required|array',
+            'documents.*' => 'required|string',
+            'files' => 'required|array',
+            'files.*' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
+                $bookingId = $request->input('bookingid');
+                $booking = $this->documentSignRepository->uploadeDocumentById($bookingId);
+          
+                $documents = $request->input('documents');
+                $files = $request->file('files');
+                $invoiceId = $booking->application_number;
+                $clientId = $booking->client_id;
+                $agencyId = $booking->agency_id;
+                $bookingType = 'Visa';
+                
+             $booking=$this->documentSignRepository->saveDocumentData(
+                    $documents, 
+                    $files, 
+                    $bookingId, 
+                    $invoiceId, 
+                    $clientId, 
+                    $agencyId, 
+                    $bookingType
+                );
+                return redirect()->route('superadminview.allapplication')->with('success', 'Documents uploaded successfully.');  
+              
+      }
   
 }

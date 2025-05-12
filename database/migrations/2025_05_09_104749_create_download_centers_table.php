@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('download_centers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('invoice_id')->nullable();
+            $table->string('invoice_id')->nullable();
             $table->unsignedBigInteger('client_id')->nullable();
             $table->json('documents')->nullable();
             $table->unsignedBigInteger('agency_id')->nullable();

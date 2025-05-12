@@ -435,7 +435,7 @@ public function updateVisa($id, array $data)
 
     public function bookingDataById($id){
  
-       $viewbooking=VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients','clientapplciation'])
+       $viewbooking=VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients','clientapplciation','downloadDocument'])
         ->where('id', $id)
        ->first(); 
        return $viewbooking;
@@ -527,7 +527,7 @@ public function updateVisa($id, array $data)
     }
 
     public function getDataByClientId($id){
-        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients'])
+        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients','downloadDocument'])
         ->where('client_id', $id)
        ->orderBy('created_at', 'desc') // Orders by latest created_at first
        ->paginate(10);
@@ -552,7 +552,7 @@ public function updateVisa($id, array $data)
     }
 
     public function getBookingBySingleId($id){
-        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients'])
+        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients','downloadDocument'])
         ->where('id', $id)
         ->first();
     }
