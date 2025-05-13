@@ -25,6 +25,7 @@ use App\Mail\UserRegisteredMail;
 use Illuminate\Support\Facades\Mail;
 use App\Traits\Agency\AgenciesPdfTrait;
 use App\Services\AgencyService;
+use Illuminate\Support\Facades\Log;
 
 class AgencyController extends Controller
 {
@@ -263,7 +264,17 @@ class AgencyController extends Controller
 
             // Create database and run migrations         
             \DB::commit();
-            DatabaseHelper::createDatabaseForUser($request->database_name, $agency, $profile);
+            // DatabaseHelper::createDatabaseForUser($request->database_name, $agency, $profile);
+            $created =DatabaseHelper::createDatabaseForUser($request->database_name, $agency, $profile);
+            if ($created) {
+                // Database creation successful
+                return redirect()->route('agency')->with('success', 'Agency and domain created successfully.');
+            } else {
+                // Database creation failed
+                $agency->delete();
+                $agency_details->delete();
+                return redirect()->back()->with('error', 'Failed to create database.');
+            }
 
             return redirect()->route('agency')->with('success', 'Agency and domain created successfully.');
         } catch (\Exception $e) {
@@ -280,6 +291,7 @@ class AgencyController extends Controller
         }
     }
 
+    
 
     /*** Function for update****/
     public function him_edit_agency($eid)
@@ -576,6 +588,18 @@ class AgencyController extends Controller
                 'bookings' => $bookings,
                 'hotel_recent_booking'=> $hotel_recent_booking
             ]);
+        }
+    }
+
+    public function hs_agency_delete($id){
+        $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])->find($id);
+        // dd($agency->database_name);
+        $database=DatabaseHelper::deleteDatabaseByName($agency->database_name);
+        if($database){
+            $agency->delete();
+            return redirect()->route('agency')->with('success', 'Agency deleted successfully.');
+        }else{
+            return redirect()->route('agency')->with('error', 'Agency not deleted successfully.');
         }
     }
 }

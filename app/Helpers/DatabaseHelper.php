@@ -4,36 +4,75 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class DatabaseHelper
 {
+    // public static function createDatabaseForUser($databaseName, $agency, $profile)
+    // {
+    //     // Validate database name
+    //     if (empty($databaseName)) {
+    //         throw new \Exception('Database name cannot be empty.');
+    //     }
+    
+    //      $databaseName = preg_replace('/[^a-zA-Z0-9_]/', '', $databaseName);
+    
+    //     // Create database
+    //     DB::statement("CREATE DATABASE `$databaseName`");
+    
+    //     // Update config to use the new database
+    //     config(['database.connections.tenant.database' => $databaseName]);
+    
+    //     // Reconnect to apply new database settings
+    //     DB::purge('tenant');
+    //     DB::reconnect('tenant');
+    
+    //     // Run migrations for the new database
+    //     Artisan::call('migrate', ['--database' => 'tenant', '--path' => 'database/migrations']);
+
+    //     Artisan::call('db:seed', [
+    //         '--database' => 'tenant',
+    //         '--class' => 'RoleSeeder' // Change to your actual seeder class
+    //     ]);
+    
+    //     // Insert user into the new database
+    //     DB::connection('tenant')->table('users')->insert([
+    //         'name' => $agency->name,
+    //         'email' => $agency->email,
+    //         'password' => Hash::make($agency->email),
+    //         'profile' => $profile,
+    //     ]);
+    // }
+
     public static function createDatabaseForUser($databaseName, $agency, $profile)
-    {
-        // Validate database name
-        if (empty($databaseName)) {
-            throw new \Exception('Database name cannot be empty.');
-        }
-    
-         $databaseName = preg_replace('/[^a-zA-Z0-9_]/', '', $databaseName);
-    
+{
+    // Validate and sanitize database name
+    $databaseName = preg_replace('/[^a-zA-Z0-9_]/', '', $databaseName);
+    if (empty($databaseName)) {
+        Log::error('Database name cannot be empty.');
+        return false;
+    }
+
+    try {
         // Create database
         DB::statement("CREATE DATABASE `$databaseName`");
-    
+
         // Update config to use the new database
         config(['database.connections.tenant.database' => $databaseName]);
-    
-        // Reconnect to apply new database settings
+
+        // Reconnect to apply new settings
         DB::purge('tenant');
         DB::reconnect('tenant');
-    
-        // Run migrations for the new database
+
+        // Run migrations
         Artisan::call('migrate', ['--database' => 'tenant', '--path' => 'database/migrations']);
 
+        // Run seeder
         Artisan::call('db:seed', [
             '--database' => 'tenant',
-            '--class' => 'RoleSeeder' // Change to your actual seeder class
+            '--class' => 'RoleSeeder' // Customize as needed
         ]);
-    
+
         // Insert user into the new database
         DB::connection('tenant')->table('users')->insert([
             'name' => $agency->name,
@@ -41,7 +80,24 @@ class DatabaseHelper
             'password' => Hash::make($agency->email),
             'profile' => $profile,
         ]);
+
+        return true;
+
+    } catch (\Exception $e) {
+        Log::error("Failed to create tenant database '$databaseName': " . $e->getMessage());
+
+        // Attempt to drop the database if it was created
+        try {
+            DB::statement("DROP DATABASE IF EXISTS `$databaseName`");
+            Log::info("Rolled back database creation: '$databaseName'");
+        } catch (\Exception $dropError) {
+            Log::error("Failed to rollback database '$databaseName': " . $dropError->getMessage());
+        }
+
+        return false;
     }
+}
+
     
 
       /**
@@ -57,6 +113,30 @@ class DatabaseHelper
             'password' => env('DB_PASSWORD'),
         ]]);
     }
+
+    /****Drop Data base ***** */
+
+    public static function deleteDatabaseByName($databaseName)
+    {
+        // Sanitize database name to avoid injection
+        $databaseName = preg_replace('/[^a-zA-Z0-9_]/', '', $databaseName);
+    
+        if (empty($databaseName)) {
+            Log::error('Database name cannot be empty.');
+            return false;
+        }
+    
+        try {
+            // Drop the database
+            DB::statement("DROP DATABASE `$databaseName`");
+            Log::info("Database '$databaseName' has been deleted.");
+            return true;
+        } catch (\Exception $e) {
+            Log::error("Failed to delete database '$databaseName': " . $e->getMessage());
+            return false;
+        }
+    }
+    
 
   
 

@@ -22,8 +22,7 @@
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
                 <span class="font-semibold text-ternary text-xl">Staff Attandamce </span>
-                {{ \Carbon\Carbon::parse($date_from)->format('l, d F Y') }} to {{ \Carbon\Carbon::parse($date_to)->format('l, d F Y') }}
-
+             
                <!-- <a href="{{route('superadmin_staffcreate')}}" class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000" > Create New Staff </a> -->
             </div>
 {{--        === heading section code ends here===--}}
@@ -35,7 +34,7 @@
 {{--        === this is code for table section ===--}}
             <div class="w-full overflow-x-auto p-4">
                      <!-- search function  -->
-         <form id="filter-form" method="GET" action="{{ route('staff.attandance') }}" class="space-y-4">
+         <form id="filter-form" method="GET" action="{{ route('staff.wages') }}" class="space-y-4">
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <!-- Search -->
            
@@ -47,8 +46,8 @@
                         <div class="flex gap-2">
                             <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                            <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                            <!-- <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm"> -->
                         </div>
                     </div>
 
@@ -71,7 +70,7 @@
                         <button type="submit" class="bg-success text-white px-4 py-2 rounded-md hover:bg-success/90">
                             Apply Filters
                         </button>
-                        <a href="{{ route('staff.attandance') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                        <a href="{{ route('staff.wages') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
                             Clear Filters
                         </a>
                     </div>
@@ -86,64 +85,51 @@
              
             </form> 
             
-                <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
+            <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                     <tr>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Staff Name</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Employee Id</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Status</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
-                            
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Date</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Total Hours</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Hourly Wage</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Total Wage</td>
                     </tr>
 
-                     
-                    
                     @forelse($users as $user)
-                        <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$user['name']}}</td>
-                            
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">EMP-{{$user['id']}}</td>
-                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
-                            @php
-                                $presentCount = $user->countAttendanceStatus('Present', $date_from, $date_to);
-                                $absentCount = $user->countAbsent($date_from, $date_to);
-                            @endphp
+                    @php
+                            $attendance = $user->attendance->first();
+                            $time = isset($attendance->work_hours) ? $attendance->work_hours : '00:00:00';
+                            $parts = explode(':', $time);
+                            $hours = isset($parts[0]) ? (int)$parts[0] : 0;
+                            $minutes = isset($parts[1]) ? (int)$parts[1] : 0;
+                            $seconds = isset($parts[2]) ? (int)$parts[2] : 0;
 
+                            // Convert HH:MM:SS to decimal hours
+                            $decimal_hours = $hours + ($minutes / 60) + ($seconds / 3600);
 
-                                <span class="bg-green-500 text-white px-2 py-[2px] rounded text-xs font-semibold">
-                                    Present ({{ $presentCount }} Days)
-                                </span>
+                            // Wage
+                            $wage = isset($user->userdetails->wage) ? floatval($user->userdetails->wage) : 0;
 
-                                <span class="bg-red-500 text-white px-2 py-[2px] rounded text-xs font-semibold ml-2">
-                                    Absent ({{ $absentCount }} Days)
-                                </span>
-                            </td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"> 
-                                   @php
-                                        $query = http_build_query(request()->query());
-                                    @endphp
-
-                                    <a href="{{ route('staff.single.attendance', ['id' => $user->id]) }}?{{ $query }}" title="View Dashboard">
-                                        <div class="bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-eye"></i>
-                                        </div>
-                                    </a>
-                             </td>
-
-
-
-                           </tr>
-
-
+                            // Final amount
+                            $total_wage = $decimal_hours * $wage;
+                        @endphp
+                        <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100/40' : '' }} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000">
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $loop->iteration }}</td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">{{ $user->name }}</td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">EMP-{{ $user->id }}</td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ \Carbon\Carbon::parse($date)->format('d-m-Y') }}</td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $time }}</td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $wage }}</td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ number_format($total_wage, 2) }}</td>
+                        </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
+                            <td colspan="7" class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
                         </tr>
                     @endforelse
+             </table>
 
-
-                </table>
             </div>
 {{--        === table section code ends here===--}}
 <script>

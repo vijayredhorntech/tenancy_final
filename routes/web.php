@@ -118,6 +118,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/export-agency','exportAgency')->name('agencies.downloade');
                         Route::get('/agencygeneratenew-pdf',  'generatePDF')->name('agencies.invoice');
                         Route::get('/agency/{id}','hs_agency_hisoty')->name('agencies.history');
+                        Route::get('/deleteagency/{id}','hs_agency_delete')->name('agencies.delete');
                     });
 
 
@@ -187,7 +188,12 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/generate','hs_generatesaleryslip')->name('generate.saleryslip');
 
                         /****Staff attandence *** */
-                        Route::get('staffattandance','hs_staffattandance')->name('staff.attandance');
+                        Route::get('staffattendance','hs_staffattandance')->name('staff.attandance');
+                        Route::get('staffwages','hs_staffwages')->name('staff.wages');
+                        Route::get('/staffattandance/{id}','hsstaffAttendance')->name('staff.single.attendance');
+
+                        
+
                     });
 
 
@@ -219,6 +225,23 @@ Route::middleware([LogUserActivity::class])->group(function () {
                             Route::get('/exportbooking','exportBookingsExcel')->name('superadmin.exportexcel');
                             Route::get('/generate-pdf',  'exportBookingsPDF')->name('superadmin.exportpdf');
                             Route::get('/serach','searchFilter')->name('bookings.filter');
+
+
+                            /*****Booking Inventory*** */
+                            Route::get('flight/booking','hs_flightbooking')->name('flight.booking');
+                            Route::get('flight/exportbooking','exportFlightBookingsExcel')->name('superadmin.flightexportexcel');
+                            Route::get('flight/generate-pdf',  'exportFlightBookingsPDF')->name('superadmin.flightexportpdf');
+
+                            /*****Hotel Inventory *** */
+                            Route::get('hotel/booking','hs_hotelbooking')->name('superadminhotel.booking');
+                            Route::get('/exporthotelbooking','exportHotelBookingsExcel')->name('superadmin.hotelexportexcel');
+                            Route::get('/hotelgenerate-pdf',  'exportHotelBookingsPDF')->name('superadmin.hotelexportpdf');
+
+                               /*****Visa  Inventory *** */
+                               Route::get('visa/booking','hsvisaApplication')->name('superadminvisa.booking');
+                               Route::get('/exportvisabooking','exportVisaBookingsExcel')->name('superadmin.visaexportexcel');
+                               Route::get('/visagenerate-pdf',  'exportVisaBookingsPDF')->name('superadmin.visaexportpdf');
+
 
                         });
 

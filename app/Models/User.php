@@ -10,6 +10,9 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Carbon\Carbon; 
+use Illuminate\Support\Collection;
+
 
 
 class User extends Authenticatable
@@ -94,6 +97,47 @@ class User extends Authenticatable
 
     public function teams(){
         return $this->hasMany(TeamUser::class, 'user_id', 'id'); 
+    }
+
+
+    /***Count Present **** */
+
+
+    
+    public function countAttendanceStatus($status = 'Present', $date_from = null, $date_to = null)
+    {
+        $date_from = $date_from instanceof Carbon ? $date_from : now()->startOfMonth();
+        $date_to = $date_to instanceof Carbon ? $date_to : now()->endOfMonth();
+    
+        return $this->attendance->filter(function ($att) use ($status, $date_from, $date_to) {
+            $date = Carbon::parse($att->date);
+            return $att->attendance_status === $status &&
+                   $date->between($date_from, $date_to);
+        })->count();
+    }
+    
+    public function countAbsent($date_from = null, $date_to = null)
+    {
+        $date_from = $date_from instanceof Carbon ? $date_from : now()->startOfMonth();
+        $date_to = $date_to instanceof Carbon ? $date_to : now()->endOfMonth();
+    
+        // Generate all dates in range
+        $allDates = [];
+        for ($date = $date_from->copy(); $date->lte($date_to); $date->addDay()) {
+            $allDates[] = $date->toDateString();
+        }
+    
+        // Dates when present
+        $presentDates = $this->attendance->filter(function ($att) use ($date_from, $date_to) {
+            $date = Carbon::parse($att->date);
+            return $att->attendance_status === 'Present' &&
+                   $date->between($date_from, $date_to);
+        })->pluck('date')->map(fn($date) => Carbon::parse($date)->toDateString())->toArray();
+    
+        // Absent = all - present
+        $absentDates = array_diff($allDates, $presentDates);
+    
+        return count($absentDates);
     }
     
 

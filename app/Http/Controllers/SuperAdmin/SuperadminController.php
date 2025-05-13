@@ -24,14 +24,24 @@ use App\Models\Salary;
 use App\Models\TeamManagement;
 use Illuminate\Support\Carbon;
 use App\Models\LeaveBalance;
+
+use Illuminate\Pagination\LengthAwarePaginator;
 // use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\Student\StudentPdfTrait;
+use App\Repositories\Interfaces\SPStaffRepositoryInterface;
 
 
 class SuperadminController extends Controller
 {
 
     use StudentPdfTrait;
+    protected $spStaffRepo;
+
+    public function __construct(SPStaffRepositoryInterface $spStaffRepo)
+    {
+        $this->spStaffRepo = $spStaffRepo;
+    }
+
 
     public function generatePDF(Request $request)
     {
@@ -61,8 +71,7 @@ class SuperadminController extends Controller
     {
 
         /**** Get data for student Treat function **** */
-        $users=$this->generateStudentData($request);
-  
+        $users = $this->spStaffRepo->all($request);
         $teams=TeamManagement::all(); 
         $roles=Role::all();
         
@@ -632,11 +641,120 @@ class SuperadminController extends Controller
         return back()->with('success', 'Salary slips generated successfully!');
     }
 
-    public function hs_staffattandance(){
-        // $users=User ::with('attendance','userdetails')->(type=!superadmin)get();
-        $users = User::with(['attendance', 'userdetails'])
-             ->where('type', '!=', 'superadmin')
-             ->get();
-        return view('superadmin.pages.staff.staffattandance',compact('users'));
+
+    /*******staff attandance */
+    public function hs_staffattandance(Request $request)
+{
+    // Start with the base query for users
+    $query = User::with(['attendance', 'userdetails'])
+        ->where('type', '!=', 'superadmin'); // Exclude superadmin users
+
+    // Date range filter
+    if ($request->filled('date_from')) {
+        $date_from = Carbon::parse($request->date_from);
+        $query->whereHas('attendance', function ($q) use ($date_from) {
+            $q->whereDate('date', '>=', $date_from);
+        });
+    } else {
+        $date_from = now()->startOfMonth();
     }
+
+    if ($request->filled('date_to')) {
+        $date_to = Carbon::parse($request->date_to);
+        $query->whereHas('attendance', function ($q) use ($date_to) {
+            $q->whereDate('date', '<=', $date_to);
+        });
+    } else {
+        $date_to = now()->endOfMonth();
+    }
+
+    // Pagination (default to 10 per page)
+    $perPage = $request->filled('per_page') ? $request->per_page : 10;
+
+    // Get users based on the filters
+    $users = $query->paginate($perPage);
+
+    return view('superadmin.pages.staff.staffattandance', compact('users', 'date_from', 'date_to'));
+}
+
+/*******staff wages */
+public function hs_staffwages(Request $request)
+{
+    // Determine the selected date or use today's date
+    $date = $request->filled('date_from') 
+        ? Carbon::parse($request->date_from)->toDateString()
+        : now()->toDateString();
+
+    // Query users and their attendance for the selected date
+    $query = User::with(['attendance' => function ($q) use ($date) {
+        $q->whereDate('date', '=', $date);
+    }, 'userdetails'])
+    ->where('type', '!=', 'superadmin');
+
+    // Pagination: default to 10 per page
+    $perPage = $request->filled('per_page') ? $request->per_page : 10;
+    $users = $query->paginate($perPage);
+
+    // Return view with users and date
+    return view('superadmin.pages.staff.staffwages', compact('users', 'date'));
+}
+
+/****Attendance by Id *** */
+
+
+
+public function hsstaffAttendance(Request $request, $id)
+{
+    // Get the user
+    $user = User::with('attendance')->findOrFail($id);
+
+    // Parse the date range
+    $date_from = $request->filled('date_from') ? Carbon::parse($request->date_from)->startOfDay() : now()->startOfMonth();
+    $date_to = $request->filled('date_to') ? Carbon::parse($request->date_to)->endOfDay() : now()->endOfMonth();
+
+    // Create an array of all dates between date_from and date_to
+    $dateRange = [];
+    $current = $date_from->copy();
+
+    while ($current->lte($date_to)) {
+        $dateRange[] = $current->toDateString();
+        $current->addDay();
+    }
+
+    // Get attendance dates as array
+    $attendanceDates = $user->attendance
+        ->filter(function ($att) use ($date_from, $date_to) {
+            $date = Carbon::parse($att->date);
+            return $date->between($date_from, $date_to);
+        })
+        ->pluck('date')
+        ->map(fn($d) => Carbon::parse($d)->toDateString())
+        ->toArray();
+
+    // Generate attendance status for each date
+    $attendanceStatus = [];
+    foreach ($dateRange as $date) {
+        $attendanceStatus[] = [
+            'date' => $date,
+            'status' => in_array($date, $attendanceDates) ? 'P' : 'A'
+        ];
+    }
+
+    // Manual pagination
+    $perPage = $request->get('per_page', 10);
+    $page = $request->get('page', 1);
+    $offset = ($page - 1) * $perPage;
+
+    $paginatedData = new LengthAwarePaginator(
+        array_slice($attendanceStatus, $offset, $perPage),
+        count($attendanceStatus),
+        $perPage,
+        $page,
+        ['path' => $request->url(), 'query' => $request->query()]
+    );
+
+    return view('superadmin.pages.staff.single_attendance', compact('user', 'paginatedData', 'date_from', 'date_to'));
+}
+
+
 }

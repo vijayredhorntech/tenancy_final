@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\NewFormNotification;
 use App\Mail\VisaApplicationMail;
 use App\Models\ClientApplicationDocument;
-
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 class VisaRepository implements VisaRepositoryInterface
@@ -55,7 +55,120 @@ class VisaRepository implements VisaRepositoryInterface
         ->paginate(10);
     }
 
+    /******Filter Application **** */
+    // public function getSuperadminshotedapplication($request)
+    // {
+    //     $query = VisaBooking::with([
+    //         'visa', 
+    //         'origin', 
+    //         'destination', 
+    //         'visasubtype', 
+    //         'clint', 
+    //         'clientapplciation'
+    //     ])->where('sendtoadmin', '1')
+    //       ->orderBy('created_at', 'desc');
+    
+    //     if ($request->filled('search')) {
+    //         $search = $request->search;
+    //         $query->whereHas('clint', function ($q) use ($search) {
+    //             $q->where(function ($query) use ($search) {
+    //                 $query->where('client_name', 'like', "%{$search}%")
+    //                       ->orWhere('email', 'like', "%{$search}%")
+    //                       ->orWhere('phone_number', 'like', "%{$search}%");
+    //             });
+    //         });
+    //     }
+    
+    //     if ($request->filled('date_from')) {
+    //         $query->whereDate('created_at', '>=', $request->date_from);
+    //     }
+    
+    //     if ($request->filled('date_to')) {
+    //         $query->whereDate('created_at', '<=', $request->date_to);
+    //     }
+    
+    //     if ($request->filled('origin_id')) {
+    //         $query->where('origin_id', $request->origin_id);
+    //     }
+    
+    //     if ($request->filled('destination_id')) {
+    //         $query->where('destination_id', $request->destination_id);
+    //     }
+    
+    //     if ($request->filled('application_status')) {
+    //         $query->where('applicationworkin_status', $request->application_status);
+    //     }
+    
+    //     if ($request->filled('agencyid')) {
+    //         $query->where('agency_id', $request->agencyid);
+    //     }
+    
+    //     // Return paginated or full result based on per_page
+    //     if ($request->filled('per_page')) {
+    //         return $query->paginate((int)$request->per_page);
+    //     }
+    
+    //     return $query->get(); // ✅ Important fix here
+    // }
 
+    public function getSuperadminshotedapplication($request)
+{
+    $query = VisaBooking::with([
+        'visa', 
+        'origin', 
+        'destination', 
+        'visasubtype', 
+        'clint', 
+        'clientapplciation'
+    ])
+    ->where('sendtoadmin', '1')
+    ->orderBy('created_at', 'desc');
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->whereHas('clint', function ($q) use ($search) {
+            $q->where(function ($query) use ($search) {
+                $query->where('client_name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('phone_number', 'like', "%{$search}%");
+            });
+        });
+    }
+
+    if ($request->filled('date_from')) {
+        $query->whereDate('created_at', '>=', $request->date_from);
+    }
+
+    if ($request->filled('date_to')) {
+        $query->whereDate('created_at', '<=', $request->date_to);
+    }
+
+    if ($request->filled('origin_id')) {
+        $query->where('origin_id', $request->origin_id);
+    }
+
+    if ($request->filled('destination_id')) {
+        $query->where('destination_id', $request->destination_id);
+    }
+
+    if ($request->filled('application_status')) {
+        $query->where('applicationworkin_status', $request->application_status);
+    }
+
+    if ($request->filled('agencyid')) {
+        $query->where('agency_id', $request->agencyid);
+    }
+
+    // ✅ Add this check to avoid pagination during export
+    if ($request->filled('export') && $request->export == 'true') {
+        return $query->get(); // used for export
+    }
+
+    // ✅ Else return paginated result for view
+    return $query->paginate((int)($request->per_page ?? 10))->withQueryString();
+}
+
+    
     /******GET data By Client id *** */
     public function getPendingDocumentByCID($clientId)
     {

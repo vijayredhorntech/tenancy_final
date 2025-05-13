@@ -10,12 +10,16 @@ use App\Helpers\AuthocheckHelper;
 use App\Models\User;
 use App\Models\Service;
 use App\Models\Agency;
+use App\Models\Country;
 use Illuminate\Support\Facades\DB;
 use App\Models\AddBalance;
 use App\Models\Balance;
 use App\Models\Deduction;
 use App\Models\FlightBooking;
 use App\Traits\Booking\BookingExportTrait;
+use Illuminate\Pagination\LengthAwarePaginator;
+use App\Repositories\Interfaces\VisaRepositoryInterface;
+
 
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
@@ -23,21 +27,63 @@ use Illuminate\Support\Facades\Config;
 
 class InventoryController extends Controller
 {
+    protected $visaRepository;
 
     use BookingExportTrait;
 
-    public function exportBookingsPDF()
+    public function __construct( VisaRepositoryInterface $visaRepository) {
+        $this->visaRepository = $visaRepository;
+    
+      
+    }
+
+    /****Flight Export **** */
+     public function exportFlightBookingsExcel(Request $request)
         {
-            $bookings=Deduction::with('agency','service_name','flightBooking')->get();
+            $bookings = $this->getFilteredFlightBookings($request); // get all filtered results
+            return $this->generateBookingExcel($bookings);
+        }
+
+    public function exportFlightBookingsPDF(Request $request)
+        {
+            $bookings = $this->getFilteredFlightBookings($request)->get(); // get all filtered results
             $title = "Booking Reports";
             return $this->generateBookingPDF($title, $bookings);
         }
 
 
-    public function exportBookingsExcel()
+        /****Hotel BOoking Export **** */
+        
+    public function exportHotelBookingsExcel(Request $request){
+        $bookings = $this->getFilteredHotelBookings($request)->get();
+        return $this->generateHotelBookingExcel($bookings);
+    }
+
+    public function exportHotelBookingsPDF(Request $request){
+        $bookings = $this->getFilteredHotelBookings($request)->get();
+        $title = "Hotel Bookings Report";
+    
+        return $this->generateHotelBookingPDF($title, $bookings); 
+    }
+        
+
+
+    /****Visa APplication Export **** */
+
+    public function exportVisaBookingsPDF(Request $request)
         {
-            $bookings=Deduction::with('agency','service_name','flightBooking');
-            return $this->generateBookingExcel($bookings);
+            $request->merge(['export' => 'true']); // mark this request as export
+            $bookings = $this->visaRepository->getSuperadminshotedapplication($request);
+            $title = "Booking Reports";
+            return $this->generateVisaBookingPDF($title, $bookings);
+        }
+
+
+        public function exportVisaBookingsExcel(Request $request)
+        {
+            $request->merge(['export' => 'true']); // mark this request as export
+            $bookings = $this->visaRepository->getSuperadminshotedapplication($request);
+            return $this->exportVisaExcel($bookings);
         }
 
 
@@ -131,22 +177,195 @@ Public function hs_bookingManagment(){
     
 }
 
-public function searchFilter(Request $request){
-    $query = Deduction::with('agency', 'service_name', 'flightBooking');
 
-    // Filter by supplier name in flightBooking table
-    if ($request->filled('supplier_name')) {
-        $query->whereHas('flightBooking', function ($q) use ($request) {
-            $q->where('supplier_name', $request->supplier_name);
+
+/****Flight Serach ** */
+public function hs_flightbooking(Request $request)
+{
+    $filters = $request->all();
+    $perPage = $filters['per_page'] ?? 10;
+
+    // Initial query (basic filters only)
+    $bookings = Deduction::with(['service_name', 'agency','flightBooking'])
+        ->where('service', '2')
+        ->latest()
+        ->get();
+
+    // Now filter by airline from JSON
+    if (!empty($filters['supplier'])) {
+        $bookings = $bookings->filter(function ($booking) use ($filters) {
+            if (!$booking->flightBooking) return false;
+
+            $flight_details = json_decode($booking->flightBooking->details, true);
+            if (!isset($flight_details[0]['journey'])) return false;
+
+            foreach ($flight_details[0]['journey'] as $journey) {
+                if (($journey['Carrier'] ?? '') === $filters['supplier']) {
+                    return true;
+                }
+            }
+            return false;
         });
     }
 
-    $bookings = $query->get();
-    dd($bookings);
+    // Filter by agency ID
+    if (!empty($filters['agencyid'])) {
+        $bookings = $bookings->where('agency_id', $filters['agencyid']);
+    }
 
+    // Filter by date
+    if (!empty($filters['date_from'])) {
+        $bookings = $bookings->where('created_at', '>=', $filters['date_from']);
+    }
+
+    if (!empty($filters['date_to'])) {
+        $bookings = $bookings->where('created_at', '<=', $filters['date_to']);
+    }
+
+    // Paginate manually using LengthAwarePaginator
+    $page = LengthAwarePaginator::resolveCurrentPage();
+    $bookings = collect($bookings);
+    $paginated = new LengthAwarePaginator(
+        $bookings->forPage($page, $perPage),
+        $bookings->count(),
+        $perPage,
+        $page,
+        ['path' => url()->current(), 'query' => $filters]
+    );
+
+    $agencies = Agency::all();
+    $airlineData = $this->getTotalAireline(); // Optional: pass filters here if needed
+
+    return view('superadmin.pages.booking.flightbooking', [
+        'bookings' => $paginated,
+        'agencies' => $agencies,
+        'airlineBookings' => $airlineData['airlineBookings'],
+        'airlinePassengerTotals' => $airlineData['airlinePassengerTotals'],
+        'flight_recent_booking' => $paginated
+    ]);
 }
 
 
 
+private function getTotalAireline()
+{
+    $bookings = Deduction::with(['service_name', 'agency','flightBooking'])
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    $airlineBookings = []; // Bookings grouped by airline
+    $airlinePassengerTotals = []; // Total passengers per airline
+    $processedBookings = []; // Track processed flight_booking_id per airline
+
+    foreach ($bookings as $booking) {
+        if (!$booking->flightBooking) {
+            continue;
+        }
+
+        $flight_booking_id = $booking->flight_booking_id;
+        $flight_details = json_decode($booking->flightBooking->details, true);
+        $flightsearch = json_decode($booking->flightBooking->flightSearch, true);
+
+        $adult = $flightsearch['adult'] ?? 0;
+        $child = $flightsearch['child'] ?? 0;
+        $infant = $flightsearch['infant'] ?? 0;
+        $total = $adult + $child + $infant;
+
+        if (isset($flight_details[0]['journey']) && is_array($flight_details[0]['journey'])) {
+            foreach ($flight_details[0]['journey'] as $journey) {
+                $carrier = $journey['Carrier'] ?? 'Unknown';
+
+                $airlineBookings[$carrier][] = [
+                    'booking' => $booking,
+                    'total_passengers' => $total
+                ];
+
+                if (!isset($processedBookings[$carrier])) {
+                    $processedBookings[$carrier] = [];
+                }
+
+                if (!in_array($flight_booking_id, $processedBookings[$carrier])) {
+                    $processedBookings[$carrier][] = $flight_booking_id;
+
+                    if (!isset($airlinePassengerTotals[$carrier])) {
+                        $airlinePassengerTotals[$carrier] = 0;
+                    }
+                    $airlinePassengerTotals[$carrier] += $total;
+                }
+            }
+        }
+    }
+
+    return [
+        'airlineBookings' => $airlineBookings,
+        'airlinePassengerTotals' => $airlinePassengerTotals
+    ];
+}
+
+
+
+public function hs_hotelbooking(Request $request)
+{
+    $query = Deduction::with([
+        'service_name', 
+        'agency',
+        'hotelBooking',
+        'hotelDetails'
+    ])
+    ->where('service', 1) // 1 = Hotel
+    ->orderBy('created_at', 'desc');
+
+    // 🔍 Apply Filters
+    if ($request->filled('supplier')) {
+        $query->whereHas('hotelDetails', function ($q) use ($request) {
+            $q->where('vendor_name', $request->supplier);
+        });
+    }
+
+    if ($request->filled('agencyid')) {
+        $query->where('agency_id', $request->agencyid);
+    }
+
+    if ($request->filled('date_from')) {
+        $query->whereDate('created_at', '>=', $request->date_from);
+    }
+
+    if ($request->filled('date_to')) {
+        $query->whereDate('created_at', '<=', $request->date_to);
+    }
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('reference', 'like', "%$search%")
+              ->orWhereHas('agency', function ($q2) use ($search) {
+                  $q2->where('name', 'like', "%$search%");
+              });
+        });
+    }
+
+    // 🔁 Pagination
+    $perPage = $request->input('per_page', 10); // default 10
+    $hotel_recent_booking = $query->paginate($perPage);
+
+    $agencies = Agency::all();
+
+    return view('superadmin.pages.booking.hotelbooking', compact('agencies', 'hotel_recent_booking'));
+}
+
+
+public function hsvisaApplication(Request $request){
+
     
+
+    $allbookings = $this->visaRepository->getSuperadminshotedapplication($request);
+    // dd($allbookings);
+
+   
+    $agencies = Agency::all();
+   $countries=Country::get();
+
+    return view('superadmin.pages.booking.visaapplication', compact('agencies', 'allbookings','countries'));
+}
+
 }
