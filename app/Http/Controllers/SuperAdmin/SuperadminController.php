@@ -97,6 +97,7 @@ class SuperadminController extends Controller
     /*** Store Staff ***/
     public function hs_staffstore(Request $request)
     {
+       
         $validated = $request->validate([
             'name'    => 'required|string|max:255',
             'email'   => 'required|email:rfc,dns|unique:users,email',
@@ -108,7 +109,9 @@ class SuperadminController extends Controller
             'city' => 'required|string|max:255',
             'state' => 'required|string|max:255',
             'country' => 'required|string|max:255',
+            'passport_number' => 'required|string|max:255|unique:user_meta_passportdetails,passport_number',
             'accommandation' => 'nullable|numeric',
+            
             'cab' => 'nullable|numeric',
             'food' => 'nullable|numeric',
             'deductionvalue1' => 'nullable|numeric',

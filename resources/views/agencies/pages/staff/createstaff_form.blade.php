@@ -55,7 +55,7 @@
 
 
 <div class="w-full relative group flex flex-col gap-1">
-    <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
+    <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Date of Birth <span class="text-red-600">*</span></label>
     <div class="w-full relative">
         <input type="date" name="date_ofbirth" id="date_ofbirth" max=""
                class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
@@ -100,7 +100,7 @@
 
 {{--   === number type input field ===--}}
 <div class="w-full relative group flex flex-col gap-1">
-    <label for="name" class="font-semibold text-ternary/90 text-sm">Zip Code</label>
+    <label for="name" class="font-semibold text-ternary/90 text-sm">Zip Code<span class="text-red-600">*</span></label>
     <div class="w-full relative">
         <input type="text" name="zip_code" id="zip_code" placeholder="zip code....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
         <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
@@ -110,7 +110,7 @@
 
 <div class="w-full relative group flex flex-col gap-1">
   <!-- <div class="address"> </div>  -->
-  <label for="name" class="font-semibold text-ternary/90 text-sm">Address</label>
+  <label for="name" class="font-semibold text-ternary/90 text-sm">Address<span class="text-red-600">*</span></label>
     <div class="w-full relative">
         <input type="text" name="address" id="address" placeholder="Address....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
         <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
@@ -119,7 +119,7 @@
 
 
 <div class="w-full relative group flex flex-col gap-1">
-    <label for="name" class="font-semibold text-ternary/90 text-sm">City</label>
+    <label for="name" class="font-semibold text-ternary/90 text-sm">City <span class="text-red-600">*</span></label>
     <div class="w-full relative">
         <input type="text" name="city" id="city" placeholder="City....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
         <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
@@ -128,7 +128,7 @@
 
 
 <div class="w-full relative group flex flex-col gap-1">
-    <label for="name" class="font-semibold text-ternary/90 text-sm">State</label>
+    <label for="name" class="font-semibold text-ternary/90 text-sm">State <span class="text-red-600">*</span></label>
     <div class="w-full relative">
         <input type="text" name="state" id="state" placeholder="State....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
         <i class="fa fa-flag absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
@@ -137,7 +137,7 @@
 
 
 <div class="w-full relative group flex flex-col gap-1">
-    <label for="name" class="font-semibold text-ternary/90 text-sm">Country</label>
+    <label for="name" class="font-semibold text-ternary/90 text-sm">Country <span class="text-red-600">*</span> </label>
     <div class="w-full relative">
         <input type="text" name="country" id="country" placeholder="Country....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
         <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
@@ -180,7 +180,7 @@
 
 <div class="w-full relative group flex flex-col gap-1">
    
-    <label for="name" class="font-semibold text-ternary/90 text-sm">Passport Number</label>
+    <label for="name" class="font-semibold text-ternary/90 text-sm">Passport Number <span class="text-red-600">*</span></label>
     <div class="w-full relative">
         <input type="text" name="passport_number" id="passport_number" placeholder="Passport Number....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
         <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
@@ -464,7 +464,7 @@
 
 
 <div class="w-full flex justify-end px-4 pb-4 gap-2">
- <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">Cancel</button>
+ <!-- <button type="button" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">Cancel</button> -->
  <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Create Staff</button>
 </div>
 </form>

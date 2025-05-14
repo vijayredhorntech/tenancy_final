@@ -36,7 +36,7 @@
 
 
                        <div class="w-full relative group flex flex-col gap-1">
-                           <label for="name" class="font-semibold text-ternary/90 text-sm">Name</label>
+                           <label for="name" class="font-semibold text-ternary/90 text-sm">Name <span class="text-red-600">*</span></label>
                            <div class="w-full relative">
                                <input type="text" name="name" id="name" placeholder="Staff name....."
                                    value="{{ old('name') }}"
@@ -52,7 +52,7 @@
 
 
                        <div class="w-full relative group flex flex-col gap-1">
-                           <label for="email" class="font-semibold text-ternary/90 text-sm">Email</label>
+                           <label for="email" class="font-semibold text-ternary/90 text-sm">Email <span class="text-red-600">*</span> </label>
                            <div class="w-full relative">
                                <input type="email" name="email" id="email" placeholder="Email....."
                                    value="{{ old('email') }}"
@@ -149,7 +149,7 @@
 
                        {{-- === number type input field ===--}}
                        <div class="w-full relative group flex flex-col gap-1">
-                           <label for="name" class="font-semibold text-ternary/90 text-sm">Zip Code</label>
+                           <label for="name" class="font-semibold text-ternary/90 text-sm">Zip Code <span class="text-red-600">*</span> </label>
                            <div class="w-full relative">
                                <input type="text" name="zip_code" id="zip_code" placeholder="zip code....."
                                    value="{{ old('zip_code') }}"
@@ -170,7 +170,7 @@
 
                        <div class="w-full relative group flex flex-col gap-1">
 
-                           <label for="name" class="font-semibold text-ternary/90 text-sm">Address</label>
+                           <label for="name" class="font-semibold text-ternary/90 text-sm">Address <span class="text-red-600">*</span> </label>
                            <div class="w-full relative">
                                <input type="text" name="address" id="address" placeholder="Address....."
                                    value="{{ old('address') }}"
@@ -186,7 +186,7 @@
 
 
                        <div class="w-full relative group flex flex-col gap-1">
-                           <label for="name" class="font-semibold text-ternary/90 text-sm">City</label>
+                           <label for="name" class="font-semibold text-ternary/90 text-sm">City <span class="text-red-600">*</span> </label>
                            <div class="w-full relative">
                                <input type="text" name="city" id="city" placeholder="City....."
                                    value="{{ old('city') }}"
@@ -202,7 +202,7 @@
 
 
                        <div class="w-full relative group flex flex-col gap-1">
-                           <label for="name" class="font-semibold text-ternary/90 text-sm">State</label>
+                           <label for="name" class="font-semibold text-ternary/90 text-sm">State <span class="text-red-600">*</span> </label>
                            <div class="w-full relative">
                                <input type="text" name="state" id="state" placeholder="State....."
                                    value="{{ old('state') }}"
@@ -218,7 +218,7 @@
 
 
                        <div class="w-full relative group flex flex-col gap-1">
-                           <label for="name" class="font-semibold text-ternary/90 text-sm">Country</label>
+                           <label for="name" class="font-semibold text-ternary/90 text-sm">Country <span class="text-red-600">*</span></label>
                            <div class="w-full relative">
                                <input type="text" name="country" id="country" placeholder="Country....."
                                    value="{{ old('country') }}"
@@ -290,7 +290,7 @@
 
                        <div class="w-full relative group flex flex-col gap-1">
 
-                           <label for="name" class="font-semibold text-ternary/90 text-sm">Passport Number</label>
+                           <label for="name" class="font-semibold text-ternary/90 text-sm">Passport Number <span class="text-red-600">*</span> </label>
                            <div class="w-full relative">
                                <input type="text" name="passport_number" id="passport_number" placeholder="Passport Number....."
                                    value="{{ old('passport_number') }}"
@@ -697,7 +697,7 @@
 
 
                    <div class="w-full flex justify-end px-4 pb-4 gap-2">
-                       <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">Cancel</button>
+                       <!-- <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">Cancel</button> -->
                        <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Create Staff</button>
                    </div>
                </form>
@@ -872,6 +872,134 @@
 
 
            ///add functionality for document
+
+           //add education function 
+           let counter = 1; // Initial counter for unique field names
+
+            document.getElementById('addEducationBtn').addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default behavior
+
+                let container = document.getElementById('educationContainer');
+
+                if (counter < 10) { // Limit to 10 sets
+                    counter++; // Increment counter
+
+                    // Create a new wrapper div
+                    let docWrapper = document.createElement('div');
+                    docWrapper.className = "w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2";
+
+                    // Document Name Field
+                    let documentField = `
+                        <div class="w-full flex flex-col gap-1">
+                            <label for="eductionname1${counter}" class="font-semibold text-gray-700 text-sm">Education</label>
+                            <div class="w-full relative">
+                                <input type="text" name="eductionname1${counter}" id="eductionname1${counter}" placeholder="Education  name..."
+                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                            </div>
+                        </div>`;
+
+                    // File Upload Field
+                    let fileField = `
+                        <div class="w-full flex flex-col gap-1">
+                            <label for="eductionfile1${counter}" class="font-semibold text-gray-700 text-sm">Marksheet</label>
+                            <div class="w-full relative">
+                                <input type="file" name="eductionfile1${counter}" id="eductionfile1${counter}"
+                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                            </div>
+                        </div>`;
+
+                    // Remove Button
+                    let removeBtn = `
+                    <div class="w-max flex flex-col gap-1 remove-btn">
+                            <label for="file${counter}" class="font-semibold text-gray-700 text-sm">&nbsp</label>
+                            <div class="w-full relative">
+                            <button type="button" class="w-max h-max text-sm bg-danger/30 px-4 py-1 mt-2 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-danger/90 text-ternary hover:text-white hover:bg-danger hover:border-ternary/30 transition ease-in duration-2000">Remove</button>
+                            </div>
+                        </div>
+                    `;
+
+                    // Append fields and button to the wrapper
+                    docWrapper.innerHTML = documentField + fileField + removeBtn;
+
+                    // Append the wrapper to the container
+                    container.appendChild(docWrapper);
+
+                    // Add event listener to remove the section
+                    docWrapper.querySelector(".remove-btn").addEventListener('click', function() {
+                        docWrapper.remove();
+                    });
+
+                } else {
+                    alert("You can only add up to 10 documents.");
+                }
+            });
+
+
+            let counter = 1; // Initial counter for unique field names
+
+document.getElementById('addDocumentBtn').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent default behavior
+
+    let container = document.getElementById('documentContainer');
+
+    if (counter < 10) { // Limit to 10 sets
+        counter++; // Increment counter
+
+        // Create a new wrapper div
+        let docWrapper = document.createElement('div');
+        docWrapper.className = "w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2";
+
+        // Document Name Field
+        let documentField = `
+            <div class="w-full flex flex-col gap-1">
+                <label for="document${counter}" class="font-semibold text-gray-700 text-sm">Document Name</label>
+                <div class="w-full relative">
+                    <input type="text" name="document${counter}" id="document${counter}" placeholder="Document name..."
+                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                    <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                </div>
+            </div>`;
+
+        // File Upload Field
+        let fileField = `
+            <div class="w-full flex flex-col gap-1">
+                <label for="file${counter}" class="font-semibold text-gray-700 text-sm">Attachment</label>
+                <div class="w-full relative">
+                    <input type="file" name="file${counter}" id="file${counter}"
+                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                    <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                </div>
+            </div>`;
+
+        // Remove Button
+        let removeBtn = `
+          <div class="w-max flex flex-col gap-1 remove-btn">
+                <label for="file${counter}" class="font-semibold text-gray-700 text-sm">&nbsp</label>
+                <div class="w-full relative">
+                  <button type="button" class="w-max h-max text-sm bg-danger/30 px-4 py-1 mt-2 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-danger/90 text-ternary hover:text-white hover:bg-danger hover:border-ternary/30 transition ease-in duration-2000">Remove</button>
+                </div>
+            </div>
+        `;
+
+        // Append fields and button to the wrapper
+        docWrapper.innerHTML = documentField + fileField + removeBtn;
+
+        // Append the wrapper to the container
+        container.appendChild(docWrapper);
+
+        // Add event listener to remove the section
+        docWrapper.querySelector(".remove-btn").addEventListener('click', function() {
+            docWrapper.remove();
+        });
+
+    } else {
+        alert("You can only add up to 10 documents.");
+    }
+});
+
+
        </script>
 
 
