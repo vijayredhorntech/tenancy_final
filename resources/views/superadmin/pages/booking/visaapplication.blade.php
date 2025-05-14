@@ -9,7 +9,7 @@
 
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl"> Hotel  Booking </span>
+                <span class="font-semibold text-ternary text-xl"> Visa Application  </span>
             </div>
 {{--        === heading section code ends here===--}}
 

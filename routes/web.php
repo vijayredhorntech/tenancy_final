@@ -25,8 +25,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\LogUserActivity;
 use App\Http\Controllers\SuperAdmin\HotelSettingsController;
+use App\Http\Controllers\SuperAdmin\AccountController;
 
-
+use App\Http\Controllers\SuperAdmin\SupplierController;
 /******Controler for agencies ***** */
 use App\Http\Controllers\AgencyAdmin\AgencyAdminController;
 use App\Http\Controllers\AgencyAdmin\AgencyRoleController;
@@ -42,6 +43,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\ClientLoginController;
+
+
 
 use App\Events\MessageSent;
 
@@ -245,6 +248,21 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                         });
 
+                        /*****Supplier Controller *****/
+                        Route::controller(SupplierController::class)->group(function () {
+                            Route::get('supplier/flight', 'hs_flightSupplier')->name('superadmin.flight');
+                            Route::get('supplier/hotel', 'hs_hotelSupplier')->name('superadmin.hotel');
+                            Route::get('pay/supplier/{bookingid}', 'hs_paysupplier')->name('superadmin.paysupplier');
+                            Route::get('pay/viewsupplier/{bookingid}', 'hs_viewpaysupplier')->name('superadmin.viewpaysupplier');
+                            Route::post('pay/amount/store', 'hs_payamountstore')->name('pay.fund.ammount');                         
+                            Route::post('supplierstore', 'hs_supplierstore')->name('superadmin.supplierstore');
+                        });
+                        
+                        /*****AccountController *** */
+                        Route::controller(AccountController::class)->group(function () {
+                            Route::get('b2b/client', 'hsb2bClient')->name('client.account');
+                           
+                        });
 
                         /*** Route for conversations ***/
                     Route::controller(ConversationController::class)->group(function () {
@@ -273,6 +291,9 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::post('deduction', 'him_deduction')->name('deduction');
                         Route::get('transaction_approvals','him_transaction_approvals')->name('transaction_approvals');
                         Route::get('transaction_update/{id}','him_transaction_update')->name('transaction_update');
+                        Route::get('trans_paymentupdate/{id}','him_transactionPaymentUpdate')->name('transaction_paymentupdate');
+
+                        
                         Route::post('transaction_store','him_transaction_store')->name('transaction_store');
                         Route::get('transaction_delete','him_transaction_delete')->name('transaction_delete');
 

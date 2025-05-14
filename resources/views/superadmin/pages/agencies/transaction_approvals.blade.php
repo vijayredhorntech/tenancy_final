@@ -150,11 +150,14 @@
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Added Date</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Number</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Method</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Received </td>
+                        
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Status</td>                  
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                 </tr>
 
                 @forelse($credits as $request)
+            
                     <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000">
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$request->agency->name}}</td>
@@ -163,7 +166,28 @@
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$request->added_date}}</td>
                             
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$request->payment_number}}</td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$request->payment_type}}</td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$request->payment_type}}
+                                
+                            @if($request->paymentstatus == 1 && $request->payment_type == 'creditnote')
+                                    <br>
+                                    <span class="bg-danger/10 text-danger px-2 py-1 rounded-[3px] font-bold">
+                                    Last Date: {{ \Carbon\Carbon::parse($request->creditdate)->format('d-m-Y') }}
+
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">
+                                @php
+                                            $paymentstatus = $request['paymentstatus'];
+                                            $paymentstatusText = $paymentstatus == '1' ? 'Pending' : ($paymentstatus == '0' ? 'Done' : 'Rejected');
+                                            $paymentstatusColor = $paymentstatus == '0' ? 'success' : ($paymentstatus == '1' ? 'danger' : 'warning');
+                                        @endphp
+
+                                        <span class="bg-{{ $paymentstatusColor }}/10 text-{{ $paymentstatusColor }} px-2 py-1 rounded-[3px] font-bold">
+                                            {{ $paymentstatusText }}
+                                        </span>
+                            </td>
+
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
                                         @php
                                             $status = $request['status'];
@@ -191,11 +215,22 @@
                                         <i class="fa fa-pen"></i>
                                     </div>
                                 </a>
+
+                              
                             @else
                                     <div
                                         class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
                                         <i class="fa fa-check"></i>
-                                    </div>                       
+                                    </div>      
+                                  
+                            @if($request->paymentstatus == 1)    
+                                    <a href="{{route('transaction_paymentupdate',['id' => $request->id])}}" title="Edit">
+                                    <div
+                                        class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                        <i class="fa fa-pen-to-square"></i>
+                                    </div>
+                                </a>    
+                                @endif  
                             @endif
 
                                 <!-- <a href="{{route('transaction_delete',['id' => $request->id])}}" title="Delete" onclick="return confirm('Are you sure you want to delete this transaction?')">

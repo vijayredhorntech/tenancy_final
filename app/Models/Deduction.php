@@ -56,4 +56,19 @@ class Deduction extends Model
     {
         return $this->hasOne(HotelBookingDetail::class, 'hotel_booking_id','flight_booking_id');
     }
+    
+    public function supplier()
+    {
+        return $this->hasOne(SupplierPaymentDetail::class, 'booking_id', 'id')
+                    ->latestOfMany();
+    }
+
+    public function allpaydetails()
+    {
+        return $this->hasMany(SupplierPaymentDetail::class, 'booking_id', 'id');  
+    }
+    
+    
+
+  
 }

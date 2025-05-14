@@ -10,7 +10,7 @@
 
         {{--        === this is code for heading section ===--}}
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-            <span class="font-semibold text-ternary text-xl">Transaction Approval</span>
+            <span class="font-semibold text-ternary text-xl">Transaction Payment Approve</span>
           
         </div>
         {{--        === heading section code ends here===--}}
@@ -43,7 +43,7 @@
         </div>
     @endif
 
-              
+              <input type="hidden" name="paymentstaut" type="payment">
                
                 <div class="w-full flex flex-col gap-2 px-4 mt-8">
            
@@ -60,48 +60,44 @@
                         <div class="w-full relative group flex flex-col gap-1">
                             <label for="name" class="font-semibold text-ternary/90 text-sm">Ammount</label>
                             <div class="w-full relative">
-                                <input type="number" name="ammount" id="telephone" placeholder="Ammount" value="{{$credits->amount}}"
+                                <input type="number" name="ammount" id="telephone" readonly="" placeholder="Ammount" value="{{$credits->amount}}"
                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                 <i class="fa fa-phone absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                             </div>
                         </div>
 
-                        <div class="w-full relative group flex flex-col gap-1">
-                             <span class="font-semibold text-ternary/90 text-sm">Approve</span>
-                             <div class="flex gap-4">
-                                 <label class="flex items-center gap-2">
-                                     <input type="radio" name="status" value="0" class="appearance-none rounded-full text-ternary/90 w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0 " checked>
-                                    Yes
-                                 </label>
-                                 <label class="flex items-center gap-2">
-                                     <input type="radio" name="status" value="3" class="appearance-none rounded-full text-ternary/90 w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
-                                    No
-                                 </label>
-                             </div> 
-                         </div>
+                    
                      
-                         @if($credits->payment_type == 'creditnote')
-                         <div class="w-full relative group flex flex-col gap-1">
-                                <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Last date for Payment</label>
-                                <div class="w-full relative">
-                                    <input type="date" name="creditdate" id="creditdate" max=""
-                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                    <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
-                                    onclick="document.getElementById('date_ofbirth').showPicker();"></i>
-                                </div>
-                            </div>
-                            @endif
+                     
 
 
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Remark</label>
                              <div class="w-full relative">
-                                 <textarea   name="remark" id="remark" rows="1" placeholder="Remark" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"></textarea>
+                                 <textarea   name="remark" id="remark" rows="1" placeholder="Remark" disabled class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">{{$credits->remark}}</textarea>
                                  <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
                              </div>
                          </div>
 
+
+                         <div class="w-full relative group flex flex-col gap-1">
+                             <span class="font-semibold text-ternary/90 text-sm">Payment Status</span>
+                             <div class="flex gap-4">
+                                 <label class="flex items-center gap-2">
+                                     <input type="radio" name="paymentstatus" value="0" class="appearance-none rounded-full text-ternary/90 w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0 " checked>
+                                    Yes
+                                 </label>
+                                 <label class="flex items-center gap-2">
+                                     <input type="radio" name="paymentstatus" value="1" class="appearance-none rounded-full text-ternary/90 w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0" >
+                                    No
+                                 </label>
+                             </div> 
+                         </div>
+
                        </div>
+
+
+                       
                 </div>
       
         

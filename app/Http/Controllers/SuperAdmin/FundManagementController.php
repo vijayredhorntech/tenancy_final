@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Config;
 use App\Services\AgencyService;
 use App\Exports\FundExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 use PDF; 
 
 
@@ -34,6 +35,8 @@ class FundManagementController extends Controller
        
         $this->agencyService = $agencyService;
     }
+
+
 
     /**** Add function for Fund ****/
 
@@ -289,8 +292,7 @@ public function him_transaction_update($uid)
 {
  
     $credits = AddBalance::with('agency')->where('id', $uid)->where('status', 1)->first();
-
-    if ($credits) {
+       if ($credits) {
 
         return view('superadmin.pages.agencies.transaction_approvalsform', [
             'credits' => $credits,
@@ -301,31 +303,119 @@ public function him_transaction_update($uid)
     }
 }
 
+
+/****Trans payment Update **** */
+public function him_transactionPaymentUpdate($uid){
+    $credits = AddBalance::with('agency')->where('id', $uid)->first();
+    if ($credits) {
+        return view('superadmin.pages.agencies.transaction_paymentform', [
+            'credits' => $credits,
+        ]);
+    } else {
+       
+        return back()->with('message', 'Wrong selection');
+    }
+
+}
 /****Store fund *****/
 
+// public function him_transaction_store(Request $request)
+// {
+//     // Fetch the credit record based on the ID and status
+//     $rules = [];
+
+//     if ($request->filled('creditdate')) {
+//         $rules['creditdate'] = 'date|after_or_equal:today';
+//     }
+   
+
+//     $cid = Auth::id();
+//     $credits = AddBalance::with('agency')->where('id', $request->id)->where('status', 1)->first();
+
+//     if (!$credits) {
+//         return redirect()->route('transaction_approvals')->with('error', 'Transaction not found or invalid status.');
+//     }
+
+//     // Fetch the agency balance
+//     $balance = Balance::where('agency_id', $credits->agency_id)->first();
+
+//     if ($request->status == 0) {
+//         if ($balance) {
+//             $balance->balance += $request->ammount;
+//             $message = 'Balance updated successfully.';
+//         } else {
+//             $balance = new Balance();
+//             $balance->agency_id = $credits->agency_id;
+//             $balance->balance = $request->ammount;
+//             $message = 'Balance created successfully.';
+//         }
+//         $balance->created_user_id = $cid;
+//         $balance->save();
+//     }
+
+//     // Update credit details
+//     $credits->amount = $request->ammount;
+//     $credits->status = $request->status;
+//     $credits->creditdate =  $rules['creditdate']isset then show this other wise display today
+//     ;
+
+//     if (!empty($request->remark)) {
+//         $credits->remark = $request->remark;
+//     }
+
+//     $credits->save();
+
+//     return redirect()->route('transaction_approvals')->with('message', 'Transaction updated successfully.');
+// }
 public function him_transaction_store(Request $request)
 {
-    // Fetch the credit record based on the ID and status
-
+  
     $cid = Auth::id();
-    $credits = AddBalance::with('agency')->where('id', $request->id)->where('status', 1)->first();
+
+    // Fetch the credit record before validation
+    $credits = AddBalance::with('agency')
+        ->where('id', $request->id)
+        ->first();
 
     if (!$credits) {
         return redirect()->route('transaction_approvals')->with('error', 'Transaction not found or invalid status.');
     }
 
-    // Fetch the agency balance
+
+    if ($request->has('paymentstatus')) {
+        $credits->paymentstatus = $request->paymentstatus;
+        $credits->save();
+    
+        return redirect()->route('transaction_approvals')->with('message', 'Transaction updated successfully.');
+    }
+ 
+
+    // Define base rules
+    $rules = [
+        'id' => 'required|exists:add_balances,id',
+        'ammount' => 'required|numeric|min:0',
+        'status' => 'required|in:0,1',
+        'remark' => 'nullable|string',
+    ];
+
+    // Conditionally require creditdate if payment_type is creditnote
+    if ($credits->payment_type === 'creditnote') {
+        $rules['creditdate'] = 'required|date|after_or_equal:today';
+    }
+
+    // Validate the request
+    $validated = Validator::make($request->all(), $rules)->validate();
+
+    // Fetch or create agency balance
     $balance = Balance::where('agency_id', $credits->agency_id)->first();
 
     if ($request->status == 0) {
         if ($balance) {
             $balance->balance += $request->ammount;
-            $message = 'Balance updated successfully.';
         } else {
             $balance = new Balance();
             $balance->agency_id = $credits->agency_id;
             $balance->balance = $request->ammount;
-            $message = 'Balance created successfully.';
         }
         $balance->created_user_id = $cid;
         $balance->save();
@@ -334,6 +424,9 @@ public function him_transaction_store(Request $request)
     // Update credit details
     $credits->amount = $request->ammount;
     $credits->status = $request->status;
+    $credits->creditdate = $request->filled('creditdate') 
+        ? $request->creditdate 
+        : Carbon::today()->toDateString();
 
     if (!empty($request->remark)) {
         $credits->remark = $request->remark;
@@ -343,6 +436,7 @@ public function him_transaction_store(Request $request)
 
     return redirect()->route('transaction_approvals')->with('message', 'Transaction updated successfully.');
 }
+
 
 public function him_transaction_delete($id){
     dd($id);
@@ -386,6 +480,8 @@ public function him_transaction_delete($id){
          if ($request->hasFile('receiptcopy')) {
             $filePath = $request->file('receiptcopy')->store('receipts', 'public');
             $validatedData['receiptcopy'] = $filePath;
+        }else{
+            $validatedData['receiptcopy'] = null;
         }
 
         $agency=$this->agencyService->getAgencyData(); 

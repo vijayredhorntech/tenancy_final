@@ -9,14 +9,14 @@
 
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl"> Flight Booking </span>
+                <span class="font-semibold text-ternary text-xl"> Hotel  Booking </span>
             </div>
 {{--        === heading section code ends here===--}}
 
 {{--        === this is code for table section ===--}}
             <div class="w-full overflow-x-auto p-4">
                      <!-- search function  -->
-                     <form id="filter-form" method="GET" action="{{ route('superadmin.flight') }}" class="space-y-4">
+                     <form id="filter-form" method="GET" action="{{ route('superadmin.hotel') }}" class="space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <!-- Search -->
                                     <div>
@@ -43,16 +43,15 @@
 
                                     <!-- Payment Method Filter -->
                                     <div>
-                                        <label for="payment_method" class="block text-sm font-medium text-gray-700">Supplier type</label>
-                                        <select name="supplier" id="supplier" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                                            <option value="">All Supplier</option>
-                                            @foreach($airlinePassengerTotals as $airline =>$passengerCount)
-                                                <option value="{{ $airline }}" {{ request('supplier') == $airline?'selected' : '' }}>
-                                                    {{ $airline }}
-                                                </option>
-                                                @endforeach
-                                            </select>     
-                                    </div>
+                                            <label for="supplier" class="block text-sm font-medium text-gray-700">Supplier Type</label>
+                                            <select name="supplier" id="supplier" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                                <option value="">All Suppliers</option>
+                                                <option value="Travellanda" {{ request('supplier') == 'Travellanda' ? 'selected' : '' }}>Travellanda</option>
+                                                <option value="Stuba" {{ request('supplier') == 'Stuba' ? 'selected' : '' }}>Stuba</option>
+                                                <option value="RateHawk" {{ request('supplier') == 'RateHawk' ? 'selected' : '' }}>RateHawk</option>
+                                            </select>
+                                        </div>
+
 
 
                                     <div>
@@ -79,7 +78,7 @@
                                         <button type="submit" class="bg-success text-white px-4 py-2 rounded-md hover:bg-success/90">
                                             Apply Filters
                                         </button>
-                                        <a href="{{ route('superadmin.flight') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                                        <a href="{{ route('superadmin.hotel') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
                                             Clear Filters
                                         </a>
                                     </div>
@@ -93,11 +92,11 @@
                                                 </option>
                                             @endforeach
                                         </select>
-                                        <a href="{{ route('superadmin.flightexportexcel') }}?{{ http_build_query(request()->all()) }}" 
+                                        <a href="{{ route('superadmin.hotelexportexcel') }}?{{ http_build_query(request()->all()) }}" 
                                         class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
                                             Export CSV
                                         </a>
-                                        <a href="{{ route('superadmin.flightexportpdf') }}?{{ http_build_query(request()->all()) }}"
+                                        <a href="{{ route('superadmin.hotelexportpdf') }}?{{ http_build_query(request()->all()) }}"
                                             class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
                                                 Export PDF
                                             </a>
@@ -108,65 +107,88 @@
             
 
                 <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
+              
                 <tr>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency Name</td>
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>                       
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>                 
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>            
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">  Payable Amount</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Paid Amount</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md"> Balance </td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md"> Payment Status  </td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Type</td >           
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Supplier Name</td>
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Pay Date</td>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                     </tr>
+                            
 
-                    
-                    @forelse($flight_recent_booking as $booking)
-                            @php 
-                            if($booking->service==2){
-                            $flight_name=json_decode($booking->flightBooking['details'], true);
-                            $flight_code=$flight_name[0]['journey'][0]['Carrier'];
-                            $carrier = \App\Models\Airline::where('iata', $flight_code)->first();
-                            $carrierName = $carrier ? $carrier->name : 'Unknown Carrier';
-                            }
-                            @endphp
-
-                                <tr>
+                                
+                                @forelse($hotel_recent_booking as $booking)
+                                    <tr>
+                                    <tr>
                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->agency['name']}}</td>
+                                   
                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                    <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}">{{$booking['invoice_number']}} </a> </td> 
+                                   {{$booking['invoice_number']}}  </td> 
                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$booking['amount']}}</td>
-                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{ isset($carrierName) ? $carrierName : '' }}</td>
-                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$booking['date']}}</td>
-                                
+                                    <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    £ {{ number_format($booking->allpaydetails->sum('paying_amount'), 2) }}
+                                    </td>
+
+                                    <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                        {{ "£" . ($booking->supplier->balance ?? '0.00') }}
+
+                                    </td>
+
+                                        
+
+                                    <td class="border-[1px] border-secondary/50 px-4 py-1 text-sm font-medium">
+                                        <span class="{{ ($booking->supplier->payment_status ?? 0) == 1 ? 'text-success bg-success/20' : (($booking->supplier->payment_status ?? 0) == 2 ? 'text-primary bg-primary/20' : 'text-danger bg-danger/20') }} px-2 py-1 rounded text-sm font-medium">
+                                            {{ ($booking->supplier->payment_status ?? 0) == 1 ? 'Paid' : (($booking->supplier->payment_status ?? 0) == 2 ? 'Partial Paid' : 'Pending') }}
+                                        </span>
+
+                                    </td>
+
+                                    <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                            {{ $booking->supplier->payment_type ?? '' }}
+                                    </td>
 
 
+                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">  {{ isset($booking->hotelDetails->vendor_name) ? $booking->hotelDetails->vendor_name : '' }}</td>
+                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-bold text-sm"> {{$booking->supplier->payment_date ?? ''}}</td>
+                                
 
-                                
-                                
-                                    
-                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                          
+                                            <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                         <div class="flex gap-2 items-center">
-                                                        <a href="{{ route('superadminbooking', ['booking_number' => $booking['invoice_number'] ?? '']) }}" title="View Invoice">
-                                                <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
-                                                    <i class="fa fa-file-pdf"></i>
-                                                </div>
-                                            </a>
+                                        <a href="{{ route('superadmin.paysupplier', ['bookingid' => $booking['id'] ?? '']) }}" title="Pay Flight Bill">
+                                            <div class="bg-blue-100 text-blue-700 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
+                                                <i class="fa-solid fa-credit-card"></i>
+                                            </div>
+                                        </a>
+
+                                        <a href="{{ route('superadmin.viewpaysupplier', ['bookingid' => $booking['id'] ?? '']) }}" title="Pay Flight Bill">
+                                            <div class="bg-green-100 text-green-700 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </div>
+                                        </a>
+
 
                                         </div>
                                     </td>
-                                </tr>
+                                    </tr>
 
 
-                            @empty
-                                <tr>
+                                    @empty
+                                    <tr>
                                     <td colspan="6" class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
-                                </tr>
-                            @endforelse
+                                    </tr>
+                                    @endforelse
 
 
-                </table>
+                            </table>
             </div>
 {{--        === table section code ends here===--}}
 

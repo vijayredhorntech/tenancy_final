@@ -364,8 +364,10 @@ public function hsvisaApplication(Request $request){
    
     $agencies = Agency::all();
    $countries=Country::get();
+   $allvisa = $this->visaRepository->getAllVisas();
 
-    return view('superadmin.pages.booking.visaapplication', compact('agencies', 'allbookings','countries'));
+
+    return view('superadmin.pages.booking.visaapplication', compact('agencies', 'allbookings','countries','allvisa'));
 }
 
 }
