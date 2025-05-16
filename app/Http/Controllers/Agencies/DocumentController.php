@@ -9,6 +9,7 @@ use App\Repositories\Interfaces\ClintRepositoryInterface;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Services\AgencyService;
 
 
 class DocumentController extends Controller
@@ -17,15 +18,18 @@ class DocumentController extends Controller
     protected $documentSignRepository;
     protected $clintRepository;
     protected $visaRepository;
+    protected $agencyService;
 
     public function __construct(
         ClintRepositoryInterface $clintRepository,
         DocumentSignRepositoryInterface $documentSignRepository,
-        VisaRepositoryInterface $visaRepository
+        VisaRepositoryInterface $visaRepository,
+        AgencyService $agencyService
     ) {
         $this->documentSignRepository = $documentSignRepository;
         $this->clintRepository = $clintRepository;
         $this->visaRepository = $visaRepository;
+        $this->agencyService = $agencyService;
     }
     
     public function hs_SAAddDocuments($id){
@@ -165,5 +169,29 @@ class DocumentController extends Controller
                 return redirect()->route('superadminview.allapplication')->with('success', 'Documents uploaded successfully.');  
               
       }
+
+
+      /******Document Part **** */
+      public function hsClientApplication(){
+       
+            $agency=$this->agencyService->getAgencyData();
+            $type='all';
+            // $allbookings=$this->visaRepository->getDataByClientId($client_data->id);
+            $allbookings = $this->visaRepository->getPendingBookingByid($agency->id,$type);
+   
+        return view('agencies.pages.clients.pending',compact('allbookings'));
+    }
+
+
+
+    public function hsDownloadDocumentCenter(){
+        
+        
+        $agency=$this->agencyService->getAgencyData();
+        $type='all';
+
+        $allbookings=$this->visaRepository->getBookingByid($agency->id,$type);
+        return view('agencies.pages.clients.downloadcenter',compact('allbookings'));
+    }
   
 }

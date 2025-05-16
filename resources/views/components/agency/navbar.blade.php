@@ -7,27 +7,35 @@
     </div>
     <div class="w-max flex items-center">
 
-        <a href="{{route('agency.addfund')}}" class="mr-2">
-            <button type="button" class="cursor-pointer w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-black border-[1px] border-b-[3px] border-r-[3px] border-ternary relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
-                <div class="flex items-center">
-                    <i class="fa fa-money-bill mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Request Fund</span>
-                </div>
-                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-            </button>
-        </a>
+    @if ($user_data->type !== "staff")
+            <a href="{{ route('agency.addfund') }}" class="mr-2">
+                <button type="button" class="cursor-pointer w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-black border-[1px] border-b-[3px] border-r-[3px] border-ternary relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
+                    <div class="flex items-center">
+                        <i class="fa fa-money-bill mr-2 text-sm"></i>
+                        <span class="text-lg font-medium">Request Fund</span>
+                    </div>
+                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                </button>
+            </a>
+        @else
+        @if($user && $user->status == 'offline')
+            <a href="{{ route('agency.attendance') }}"> {{-- Replace with your actual route --}}
+                <button type="button" class="cursor-pointer w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-black border-[1px] border-b-[3px] border-r-[3px] border-ternary relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
+                    <div class="flex items-center">
+                        <i class="fa fa-calendar-check mr-2 text-sm"></i>
+                        <span class="text-lg font-medium">Attendance</span>
+                    </div>
+                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                </button>
+            </a>
+      @else
+        <div class="text-lg font-medium text-green-600">
+           <i class="fa fa-clock mr-2"></i> Logged in {{ \Carbon\Carbon::createFromFormat('H:i:s',  $login_time)->format('h:i:s A') }}
+         </div>
+      @endif
+           
+        @endif
 
-
-        <a href="">
-            <button type="button" class="cursor-pointer w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-black border-[1px] border-b-[3px] border-r-[3px] border-ternary relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
-                <div class="flex items-center">
-                    <i class="fa fa-calendar-check mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Attendance</span>
-                </div>
-                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-            </button>
-        </a>  
-   
         <div class="rounded-full h-10 w-10 flex justify-center items-center hover:bg-ternary/60 hover:text-white cursor-pointer"><i class="fa fa-search" title="Search......"></i></div>
         <div class="rounded-full h-10 w-10 flex justify-center items-center hover:bg-ternary/60 hover:text-white cursor-pointer relative">
             <div class="absolute top-0 right-0 text-xs text-white bg-primary font-semibol h-4 w-4 rounded-full flex justify-center items-center">5</div>

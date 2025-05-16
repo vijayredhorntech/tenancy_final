@@ -85,7 +85,7 @@
                        <div class="w-full relative group flex flex-col gap-1">
                            <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
                            <div class="w-full relative">
-                               <input type="date" name="date_ofbirth" id="date_ofbirth" max=""
+                               <input type="date" name="date_ofbirth" id="date_ofbirth" max="2099-12-31"
                                    class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
                                    onclick="document.getElementById('date_ofbirth').showPicker();"></i>
@@ -340,7 +340,7 @@
                        <div class="w-full relative group flex flex-col gap-1">
                            <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Date of Issue</label>
                            <div class="w-full relative">
-                               <input type="date" name="passport_issuedate" id="passport_issuedate" max=""
+                               <input type="date" name="passport_issuedate" id="passport_issuedate" max="2099-12-31"
                                    class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
                                    onclick="document.getElementById('passport_issuedate').showPicker();"></i>

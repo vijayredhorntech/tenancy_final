@@ -208,7 +208,7 @@
                                     </a>
 
                                     @if($booking->sendtoadmin == 0)  
-                                    <a href="{{ route('visa.sendtoadmin', ['id' => $booking->id]) }}" title="Send to Admin">
+                                    <a href="{{ route('visa.sendtoadmin', ['id' => $booking->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
                                         <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
                                             <i class="fa fa-paper-plane"></i> <!-- "Send" icon -->
                                         </div>

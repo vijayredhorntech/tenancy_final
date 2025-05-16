@@ -95,4 +95,16 @@ class AgencyService
         $agency = Agency::where('agencytoken',$token)->first();
         return $agency;
      }
+
+     public function setDatabaseConnection(){
+          $userData = \session('user_data');
+          if(isset($userData))
+          {
+            DatabaseHelper::setDatabaseConnection($userData['database']);
+             return true;  
+          }
+         
+          return false;
+        // DatabaseHelper::setDatabaseConnection($userData['database']);
+     }
 }

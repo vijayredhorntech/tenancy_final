@@ -13,7 +13,7 @@
 
 {{--        === this is code for form section ===--}}
              <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 ">
-             <form action="{{ route('hs_supdatedstore') }}" method="POST" enctype="multipart/form-data">
+             <form action="{{ route('agency.staffupdatestore') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
                     @if(session('success'))

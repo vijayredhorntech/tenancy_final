@@ -88,35 +88,32 @@
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                     </li>
                 </a>
-                <a href="{{ route('agency.application', ['type' => 'documentpending']) }}">
-                    <li class="{{Route::currentRouteName()==='visa.documentpending'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa fa-hotel mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Document Pending</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-
-                <a href="{{ route('agency.application', ['type' => 'feepending']) }}">
-                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Fee Pending </span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-
-                <a href="#">
-                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Ready For Submission </span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
+                @if($user_data->getAllPermissions()->pluck('name')->intersect(['notification', 'manage everything'])->isNotEmpty())
+             <li>  <a href="{{route('agency.notification')}}">
+                <div class="{{Route::currentRouteName()==='agency.notification'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                    <div class="flex items-center">
+                        <i class="fas fa-bell mr-2 text-sm"></i>
+                        <span class="text-lg font-medium">Notification </span>
+                    </div>
+                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                </div>
+            </a>
+         </li>
+            @endif
+            @if($user_data->getAllPermissions()->pluck('name')->intersect(['downloadcenter', 'manage everything'])->isNotEmpty())
+           
+           <li>
+             <a href="{{route('agency.document.download')}}">
+                <div class="{{Route::currentRouteName()==='agency.document.download'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                    <div class="flex items-center">
+                        <i class="fas fa-download mr-2 text-sm"></i>
+                        <span class="text-lg font-medium">Download Center </span>
+                    </div>
+                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                </div>
+            </a>
+         </li>
+            @endif
 
             </ul>
         </div>
@@ -144,8 +141,46 @@
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                     </li>
                 </a>
-                <a href="{{route('add.leave')}}">
-                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <li class="{{ Route::currentRouteName() === 'agency.staff.attandance' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }} w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-2000">
+                    <a href="{{ route('agency.staff.attandance') }}" class="w-full flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fa fa-hotel mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Staff Attendance Status</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </a>
+                </li>
+
+                <li class="{{ Route::currentRouteName() === 'agency.staff.wages' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }} w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-2000">
+                    <a href="{{ route('agency.staff.wages') }}" class="w-full flex justify-between items-center">
+                        <div class="flex items-center">
+                            <i class="fa fa-hotel mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Staff Wage Management</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </a>
+                </li>
+
+
+                
+            </ul>
+        </div>
+        @endif
+   
+        @if($user_data->getAllPermissions()->pluck('name')->intersect(['leave', 'manage everything'])->isNotEmpty())
+        <div class="">
+            <div onclick="document.getElementById('leaveDiv').classList.toggle('hidden');document.getElementById('leaveArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='service'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-umbrella-beach mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Leave Managment</span>
+                </div>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="leaveArrow"> </i>
+            </div>
+            <ul id="leaveDiv" class="pl-10 mt-2 flex flex-col hidden">
+     
+                <a href="{{ route('add.agency.leave', ['type' => 'agency']) }}">
+                    <li class="{{Route::currentRouteName()==='add.agency.leave'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                         <div class="flex items-center">
                             <i class="fa fa-hotel mr-2 text-sm"></i>
                             <span class="text-lg font-medium">Add Leave</span>
@@ -153,11 +188,12 @@
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                     </li>
                 </a>
-                <a href="{{route('pending.leave')}}">
-                    <li class="{{Route::currentRouteName()==='pending.leave'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+
+                <a href="{{ route('agency.pending.leave', ['type' => 'agency']) }}">
+                    <li class="{{Route::currentRouteName()==='agency.pending.leave'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                         <div class="flex items-center">
                             <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Leave Approvals </span>
+                            <span class="text-lg font-medium">Leave Application </span>
                         </div>
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                     </li>
@@ -165,7 +201,7 @@
             </ul>
         </div>
         @endif
-   
+
         <a href="{{route('agency.profile')}}">
             <div class="{{Route::currentRouteName()==='agency.profile'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
@@ -188,6 +224,69 @@
         </a>
 
         @endif
+
+        @if($user_data->getAllPermissions()->pluck('name')->intersect(['booking view', 'manage everything'])->isNotEmpty())
+                    @php
+                        $availableRoutes = array_values($services->toArray()); // Get route names from $services
+                      
+                        @endphp
+
+            @if(in_array('Hotel', $availableRoutes) || in_array('Hotel', $availableRoutes) || in_array('superadminvisa.booking', $availableRoutes))
+                <div>
+                    <div onclick="document.getElementById('bookingDiv').classList.toggle('hidden');document.getElementById('bookingArrow').classList.toggle('-rotate-90')" 
+                        class="{{ Route::currentRouteName() === 'service' ? 'border-gray-100/60 bg-secondary/90' : 'border-ternary' }}  
+                        w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
+                        
+                        <div class="flex items-center">
+                            <i class="fa fa-calendar-days mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Booking</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                        <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-200" id="bookingArrow"></i>
+                    </div>
+        
+                    <ul id="bookingDiv" class="pl-10 mt-2 flex flex-col hidden">
+                        @if(in_array('Flight', $availableRoutes))
+                            <a href="{{ route('flight.booking') }}">
+                                <li class="{{ Route::currentRouteName() === 'flight.booking' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }} w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
+                                    <div class="flex items-center">
+                                        <i class="fa fa-plane mr-2 text-sm"></i>
+                                        <span class="text-lg font-medium">Flight</span>
+                                    </div>
+                                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                                </li>
+                            </a>
+                        @endif
+
+                        @if(in_array('Hotel', $availableRoutes))
+                            <a href="{{ route('superadminhotel.booking') }}">
+                                <li class="{{ Route::currentRouteName() === 'superadminhotel.booking' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }} w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
+                                    <div class="flex items-center">
+                                        <i class="fa fa-hotel mr-2 text-sm"></i>
+                                        <span class="text-lg font-medium">Hotel</span>
+                                    </div>
+                                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                                </li>
+                            </a>
+                        @endif
+
+                        @if(in_array('Visa', $availableRoutes))
+                            <a href="{{ route('superadminvisa.booking') }}">
+                                <li class="{{ Route::currentRouteName() === 'superadminvisa.booking' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }} w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-passport mr-2 text-sm"></i>
+                                        <span class="text-lg font-medium">Visa Application</span>
+                                    </div>
+                                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                                </li>
+                            </a>
+                        @endif
+                    </ul>
+                </div>
+            @endif
+
+        @endif
+
       
       {{-- {{dd($user_data->getAllPermissions()->pluck('name'))}} --}}
       @if($user_data->getAllPermissions()->pluck('name')->intersect(['role view', 'manage everything'])->isNotEmpty())
@@ -203,6 +302,43 @@
         </a>
 
         @endif
+
+        @if($user_data->getAllPermissions()->pluck('name')->intersect(['role view', 'manage everything'])->isNotEmpty())
+  
+        <a href="">
+            <div class="{{Route::currentRouteName()==='superadmin.termtype'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fas fa-file-contract mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Terms and conditions</span>
+                </div>
+
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+            </div>
+        </a>
+
+        @endif
+
+         <a href="">
+            <div class="{{Route::currentRouteName()==='admin_setting'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fas fa-tasks mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Assignment</span>
+                </div>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+            </div>
+        </a>
+
+        @if($user_data->getAllPermissions()->pluck('name')->intersect(['team', 'manage everything'])->isNotEmpty())
+                   <a href="">
+                        <div class="{{Route::currentRouteName()==='teammanagment'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                            <div class="flex items-center">
+                                <i class="fas fa-user mr-2 text-sm"></i>
+                                <span class="text-lg font-medium">Team Managment</span>
+                            </div>
+                            <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                        </div>
+                    </a>
+         @endif
 
         <a href="">
             <div class="{{Route::currentRouteName()==='admin_setting'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
@@ -232,6 +368,17 @@
                 <div class="flex items-center">
                     <i class="fa fa-user-lock mr-2 text-sm"></i>
                     <span class="text-lg font-medium">Expensive</span>
+                </div>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+            </div>
+        </a>
+        @endif
+        @if($user_data->type=="staff")
+        <a href="{{ route('agecy.leaves', ['type' => 'agency']) }} ">
+            <div class="{{Route::currentRouteName()==='agecy.leaves'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fa fa-user-lock mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Leaves Application</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>

@@ -9,4 +9,7 @@ class LoginDetail extends Model
 {
     //
     use SoftDeletes;
+
+    
+    
 }

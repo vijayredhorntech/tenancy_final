@@ -83,29 +83,60 @@ Route::group([
             Route::post('/fundappystore','hsFundApplyStore')->name('agencies.fund.request');
       });
     // Staff Management
-    Route::controller(AgencyadminController::class)->group(function () {
+      Route::controller(AgencyadminController::class)->group(function () {
          Route::get('/staffindex', 'hs_staffindex')->name('agency.staff');
         Route::get('/staffcreate', 'hs_staffcreate')->name('agency_staffcreate');
         Route::post('/staffstore', 'hs_staffstore')->name('agency_staffstore');
         Route::get('/staffupdate/{id}', 'hs_staffupdate')->name('agency_staffupdate');
-        Route::post('/staffupdate', 'hs_supdatedstore')->name('hs_agencyudatedstore');
+        Route::post('/staffupdate', 'hs_supdatedstore')->name('agency.staffupdatestore');
+
         Route::get('/staffdelete/{id}', 'hs_staffdelete')->middleware('can:staff delete')->name('agency_staffdelete');
         Route::get('/staffDetails/{id}', 'hs_staffDetails')->middleware('can:view staffdetails')->name('agency_staffDetails');
         Route::get('/staff/{id}','hs_staff_hisoty')->name('agencystaff.history');
         Route::get('/attandance','hs_attendance')->name('agency.attendance');
         Route::get('/profile','hs_profile')->name('agency.profile');
 
-    });
+        /*****Staff Attendance *** */
+        Route::get('staffattendance','hs_staffattandance')->name('agency.staff.attandance');
+        Route::get('staffwages','hs_staffwages')->name('agency.staff.wages');
+        Route::get('/staffattandance/{id}','hsstaffAttendance')->name('agency.single.attendance');
+
+      });
+
+      /****Leave Manangment *** */
+      Route::controller(LeaveManagementController::class)->group(function () {
+        Route::get('{type?}/addleave','hs_addleave')->name('add.agency.leave');
+        Route::post('/leave','hs_leavestore')->name('agency.leavestore');
+        Route::get('/leave/{id}','hs_update')->name('update.leave');
+        Route::get('/updateleave/{id}','hs_actionUpdateLeave')->name('update.leavesuperadmin');
+
+        Route::post('/updateleave','hs_updatestore')->name('update.leavestore');
+        Route::get('/{type?}/leaves','hs_leaves')->name('agecy.leaves');
+        Route::post('{type?}/applyleave_store','hs_applyleave')->name('agency.application_leave');
+        Route::get('{type?}/pending_leave','hs_pendingleave')->name('agency.pending.leave');
+        Route::post('/leavestore','hs_LeaveUpdateStore')->name('updateleave');
+
+     
+        Route::get('/edit_leave/{leaveid}','hs_editleave')->name('leave.edit');
+        Route::get('/cancel_leave/{leaveid}','hs_cancelleave')->name('leave.cancel');
+
+        
+      });
+
 
 
     // Visa
-    Route::controller(VisaController::class)->group(function () {
+      Route::controller(VisaController::class)->group(function () {
         
         Route::get('/viewapplication/{type}', 'hs_visaApplication')->name('agency.application');
         Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
         Route::get('/payment/{id}','him_payment')->name('visa.payment');
         Route::get('/get-visa-services','him_getService' )->name('get.visa.services');
         Route::post('/visabook','hsVisaBook')->name('visa.book');
+        Route::get('/verifyapplication/{id}','hs_verifyapplication')->name('verify.application');
+        Route::get('visapayment/{id}','him_visaApplicationPay')->name('visaapplication.pay');
+
+
         Route::get('/documentpending','hsVisaDocumentpending')->name('visa.documentpending');
         Route::get('/visaview/{id}','hsVisaVisa')->name('visa.applicationview');
         Route::get('/editapplication/{id}','hsEditVisaApplication')->name('visaedit.application');    
@@ -118,7 +149,7 @@ Route::group([
         Route::get('/sendadmin/{id}', 'hsSendAdmin')->name('visa.sendtoadmin');
         Route::get('/deleteapplication/{id}', 'hsDeleteApllication')->name('delete.application');
         
-   });
+      });
 
    /****Client Controller **** */
     Route::controller(ClientController::class)->group(function () {
@@ -144,6 +175,10 @@ Route::group([
            Route::get('/document','hs_docIndex')->name('Doc Sign');
            Route::post('/documentcreate','hs_docCreate')->name('create.document');
            Route::get('/senddocument.email/{id}','hs_sendDocumentEmail')->name('senddocument.email');
+
+           /****Agency */
+           Route::get('/client/application','hsClientApplication')->name('agency.notification');
+           Route::get('/download/center','hsDownloadDocumentCenter')->name('agency.document.download');
 
           
       
@@ -245,10 +280,14 @@ Route::controller(ClientLoginController::class)->group(function () {
     Route::get('/client/support','hsClientSupport')->name('client.support');
     Route::get('/client/notification','hsClientNotification')->name('client.notification');
     Route::post('/client/store/','hsClientStoreMessage')->name('client.send_message');
-    Route::get('/uploade/document/{id}','hsClientUploadDocument')->name('clientuplaode.document');
+    // Route::get('{type}/uploade/document/{id}','hsClientUploadDocument')->name('clientuplaode.document');
+    Route::get('{id}/{type?}/uploade/document', 'hsClientUploadDocument')->name('clientuplaode.document');
+
     Route::post('/uploade/store}','hsClientStoreDocument')->name('client.document.upload');
     Route::get('/download/center','hsDownloadDocumentCenter')->name('client.document.download');
-    Route::get('/clientupload/document/download/{id}', 'hsdownloadDocument')->name('clientupload.documentdownload');
+    // Route::get('/{type}/document/download/{id}', 'hsdownloadDocument')->name('clientupload.documentdownload');
+    Route::get('/{type?}/document/download/{id}', 'hsdownloadDocument')->name('clientupload.documentdownload');
+
     Route::get('/clientupload/document/download', 'downloadJsonDocument')->name('clientupload.documentdownloadjson');
 
 
@@ -278,6 +317,6 @@ Route::controller(ClientLoginController::class)->group(function () {
 
 /*******Common Route **** */
 Route::controller(VisaController::class)->group(function () {
-Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
-Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
+        Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
+        Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
 });

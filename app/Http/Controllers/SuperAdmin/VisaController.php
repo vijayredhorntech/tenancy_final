@@ -346,10 +346,43 @@ class VisaController extends Controller
         ]);
         
         $visas = $this->visaRepository->saveBooking($request->all());
-    
-        return redirect()->route('agency_dashboard')->with('success', 'Booking successful');
+        return redirect()->route('verify.application', ['id' => $visas->id])
+        ->with('success', 'Booking successful');
     }
 
+
+
+
+
+    public function hs_verifyapplication($id){
+        $agency = $this->agencyService->getAgencyData();
+        $checkuser = $this->visaRepository->bookingDataById($id);
+      
+        if (isset($checkuser) && $checkuser->agency_id == $agency->id) {
+            $clientData = $this->visaRepository->bookingDataById($id);
+            
+            // $checkBalance = $this->visaRepository->checkBalance($agency->id,$clientData->id);
+            $checkBalance=$this->visaRepository->checkBalance($agency->id,$clientData->total_amount);
+            // dd($checkBalance);
+            return view('superadmin.pages.visa.verifyapplication',compact('clientData','checkBalance'));
+        }
+        return redirect()->route('agency.application', ['type' => 'all']);
+    }
+
+
+    // pay
+    
+    public function him_visaApplicationPay($id){
+        $agency = $this->agencyService->getAgencyData();
+        $clientData = $this->visaRepository->bookingDataById($id);
+        if (isset($clientData) && $clientData->agency_id == $agency->id) {
+            $pay=$this->visaRepository->payment($clientData);
+            return view('agencies.pages.invoices.visainvoice',compact('clientData'));
+        }
+        return view('agency.pages.visa.payment',compact('clientData'));
+       }
+
+       
     
        /*******Visa Application form *******/
     public function hs_visaApplication($type){
@@ -595,6 +628,7 @@ class VisaController extends Controller
     return redirect()->route('agency.application', ['type' => 'all']);
    }
 
+   
 
  
 

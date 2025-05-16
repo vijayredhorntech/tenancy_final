@@ -1,4 +1,4 @@
-<x-front.layout>
+<x-agency.layout>
     @section('title')
         Agency
     @endsection
@@ -137,7 +137,7 @@
                                     </div>
                                     <div class="mt-2 overflow-x-auto px-4 py-0.5">
                                     <!-- add form    -->
-                <form action="{{ route('application_leave') }}" method="POST" enctype="multipart/form-data"> 
+                <form action="{{ route('agency.application_leave',['type','agency']) }}" method="POST" enctype="multipart/form-data"> 
                    @csrf
                      <div class="w-full grid xl:grid-cols-2 gap-2 px-4 py-6">
 
@@ -161,7 +161,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">From : </label>
                              <div class="w-full relative">
-                                 <input type="date" name="from" id="from" max="2099-12-31"
+                                 <input type="date" name="from" max="2099-12-31" id="from"
                                         class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
                                     onclick="document.getElementById('from').showPicker();"></i>
@@ -297,4 +297,4 @@
 
         </script>
 
-</x-front.layout>
+</x-agency.layout>

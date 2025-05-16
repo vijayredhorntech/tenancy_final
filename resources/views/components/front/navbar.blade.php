@@ -25,7 +25,7 @@
         @if($user && $user->status == 'offline')
 
         <!-- Show Attendance Button if User is Offline -->
-        <a href="{{ route('attendance') }}">
+        <a href="{{ route('attendance', ['type' => 'agency']) }}">
             <button type="button" class="cursor-pointer w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-black border-[1px] border-b-[3px] border-r-[3px] border-ternary relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
                 <div class="flex items-center">
                     <i class="fa fa-calendar-check mr-2 text-sm"></i>

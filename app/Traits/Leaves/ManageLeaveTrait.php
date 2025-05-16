@@ -6,10 +6,17 @@ use Carbon\Carbon;
 use App\Models\Leave;
 use App\Models\ApplyUserLeave;
 use App\Models\LeaveBalance;
+use App\Services\AgencyService;
 use Auth; 
 
 trait ManageLeaveTrait
 {
+
+    public function agencyService(): AgencyService
+    {
+        return $this->agencyService; // This accesses the controller's property
+    }
+
     /**
      * Calculate the total number of leave days between two dates.
      *
@@ -53,11 +60,20 @@ trait ManageLeaveTrait
     }
     
     /******Check Leave ***** */
-    public function checkLeaves()
+    public function checkLeaves($type = null)
     {
-        $user = Auth::user();
+        dd($type);
+        $isAgency = isset($type) && $type === 'agency';
+
+            // Get user ID and determine database connection
+            $loginUser = $isAgency ? $this->agencyService->getCurrentLoginUser() : Auth::user();
+           dd($loginUser);
+            $userId = $loginUser->id;
+            $connection = $isAgency ? 'user_database' : null;
+
+        // $user = Auth::user();
     
-        return ApplyUserLeave::where('user_id', $user->id)
+        return ApplyUserLeave::on('user_database')->where('user_id', $user->id)
             ->where('status_of_leave', 'pending')
             ->exists(); // Returns true if a pending leave exists, otherwise false
     }

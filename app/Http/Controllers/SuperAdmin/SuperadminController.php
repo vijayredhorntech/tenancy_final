@@ -450,18 +450,12 @@ class SuperadminController extends Controller
     /**** Staf history*****/
     public function hs_staff_hisoty($id)
     {
-
         $user = User::with('userdetails', 'passport', 'log', 'attendance', 'userdeduction', 'salaryshilp')->where('id', $id)->first();
-
         $date = Carbon::now()->toDateString();
         $attendance = Attendance::where('user_id', $user->id)
             ->where('date', $date) // Corrected 'data' to 'date'
             ->first();
-
         $login_time = $attendance ? $attendance->login_time : null;
-
-
-        //    dd($user);
 
         return view('superadmin.pages.staff.staffhistory', compact('user', 'login_time'));
     }
@@ -480,9 +474,6 @@ class SuperadminController extends Controller
             $date = Carbon::now()->toDateString();  // Gets current date (YYYY-MM-DD)
             $time = Carbon::now()->toTimeString();  // Gets current time (HH:MM:SS)
             // $time = Carbon::now()->format('h:i:s A');
-
-
-
 
             // Create Login Detail Entry
             $login = new LoginDetail();

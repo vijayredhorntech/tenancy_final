@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Agency;
 use App\Helpers\DatabaseHelper;
+use App\Services\AgencyService;
+use App\Models\Attendance;
+use Illuminate\Support\Carbon;
 
 class Navbar extends Component
 {
@@ -17,11 +20,14 @@ class Navbar extends Component
      */
 
     public $user;
+    public $login_time; 
     public $services;
 
-    public function __construct()
+    public function __construct(AgencyService $agencyService)
     {
        
+  
+        $this->agencyService = $agencyService;
         $this->initializeData();
     }
 
@@ -30,43 +36,20 @@ class Navbar extends Component
      */
     private function initializeData()
     {
-        // $user = Auth::user();
+        $date = Carbon::now()->toDateString();
+        $this->user = $this->agencyService->getCurrentLoginUser();  
+        if ($this->user) {
+            $attendance = Attendance::on('user_database')->where('user_id', $this->user->id)
+                ->where('date', $date) // Corrected 'data' to 'date'
+                ->first();
 
-      
-     
-
-
-        // Get session data safely
-        $userData = session('user_data', []);
-
-        if (!isset($userData['database'])) {
-            return;
+            $this->login_time = $attendance ? $attendance->login_time : null; // Assign login time or null
+        } else {
+            $this->login_time = null;
         }
 
-        // Set the dynamic database connection
-        DatabaseHelper::setDatabaseConnection($userData['database']);
-
-        $user = User::on('user_database')->where('email', $userData['email'])->first();
-        if (!$user) {
-            return;
-        }
-
-        // Fetch user from the dynamic database connection
-        $this->user = User::on('user_database')->where('id', $user->id)->first();
-
-        if (!$this->user) {
-            return;
-        }
-
-        // Fetch agency details
-        $agencyRecord = Agency::where('email', $this->user->email)->first();
-
-        if (!$agencyRecord) {
-            return;
-        }
-
-        $agency = Agency::with('userAssignments.service')->find($agencyRecord->id);
-
+        $agency = $this->agencyService->getAgencyData();  
+    
         // Extract services safely
         $this->services = $agency->userAssignments->map(function ($assignment) {
             return [
@@ -85,6 +68,7 @@ class Navbar extends Component
         return view('components.agency.navbar',[
             'user_data' => $this->user,
             'services' => $this->services,
+            'login_time' => $this->login_time,
         ]);
     }
 }

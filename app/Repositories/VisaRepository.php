@@ -55,6 +55,15 @@ class VisaRepository implements VisaRepositoryInterface
         ->paginate(10);
     }
 
+    public function getSuperradmiNewApplication(){
+
+        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
+        ->where('sendtoadmin', '0')
+        ->where('display_notification', '1')
+        ->orderBy('created_at', 'desc') // Orders by latest created_at first
+        ->get();
+
+    }
     /******Filter Application **** */
     // public function getSuperadminshotedapplication($request)
     // {
@@ -167,6 +176,7 @@ class VisaRepository implements VisaRepositoryInterface
     // ✅ Else return paginated result for view
     return $query->paginate((int)($request->per_page ?? 10))->withQueryString();
 }
+
 
     
     /******GET data By Client id *** */
@@ -365,66 +375,134 @@ public function updateVisa($id, array $data)
         }
     }
     
-  
+  return $booking;
 
       // Fetch agency based on the current user
     //   $agency = Agency::where('id', Auth::id())->firstOrFail(); 
-      $balance = Balance::where('agency_id', $agency->id)->first();
-  
-      // If balance record does not exist, return an error
-      if (!$balance) {
-      
-          throw new \Exception('Balance record not found.'); // Exception is better than dd()
-      }
-  
-      $fundRemaining = $balance->balance;
-  
-      // Check if agency has enough balance
-      if ($totalAmount > $fundRemaining) {
-        dd('Insufficient balance.');
-          throw new \Exception('Insufficient balance.'); // Exception is better than dd()
-      }
-  
-      // Deduct amount from balance first
-      $balance->balance -= $totalAmount;
-      $balance->save();
-  
-      // Create deduction record
-      $deduction = new Deduction();
-      $deduction->agency_id = $agency->id;
-      $deduction->service = '3';
-      $deduction->invoice_number = $application;
-      $deduction->flight_booking_id = $booking->id;
-      $deduction->amount = $totalAmount;
-      $deduction->date = now();
-      $deduction->save();
-  
-      return $booking; // Return the saved booking object
+    // Return the saved booking object
   }
 
+  public function payment($data){
 
-  public function getBookingByid($id,$type){
+    $booking = VisaBooking::find($data['id']);
+ 
+    $booking->confirm_application=1;
+    $booking->save();
     
-    if($type=="all"){
+    $balance = Balance::where('agency_id', $data['agency_id'])->first();
+    $totalAmount=$data['total_amount'];
+  
+    // If balance record does not exist, return an error
+    if (!$balance) {
+    
+        throw new \Exception('Balance record not found.'); // Exception is better than dd()
+    }
 
-    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
-    ->where('agency_id', $id)
-    ->orderBy('created_at', 'desc') // Orders by latest created_at first
-    ->paginate(10);
-  }else if($type=="documentpending"){
-    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
-    ->where('agency_id', $id)
-    ->where('document_status','Pending')
-    ->orderBy('created_at', 'desc') // Orders by latest created_at first
-    ->paginate(10);
-  }elseif($type=="feepending")
-    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
-    ->where('agency_id', $id)
-    ->where('payment_status','Pending')
-    ->orderBy('created_at', 'desc') // Orders by latest created_at first
-    ->paginate(10);
-    //  return VisaBooking::get('visa')->get();
+    $fundRemaining = $balance->balance;
+
+    // Check if agency has enough balance
+    if ($totalAmount > $fundRemaining) {
+      dd('Insufficient balance.');
+        throw new \Exception('Insufficient balance.'); // Exception is better than dd()
+    }
+
+    // Deduct amount from balance first
+    $balance->balance -= $totalAmount;
+    $balance->save();
+    $deduction = new Deduction();
+    $deduction->agency_id = $data['agency_id'];
+    $deduction->service = '3';
+    $deduction->invoice_number =  $data['application_number'];
+    $deduction->flight_booking_id = $data['id'];
+    $deduction->amount = $data['total_amount'];
+    $deduction->date = now();
+    $deduction->save();
+    return $deduction;
   }
+
+public function checkBalance($id,$totalAmount){
+    $balance = Balance::where('agency_id', $id)->first();
+    if (!$balance) {
+        return false; // Exception is better than dd()
+    }
+    $fundRemaining = $balance->balance;
+    if ($totalAmount > $fundRemaining) {
+      return false;  // Exception is better than dd()
+    }
+   return true; 
+}
+
+  public function getPendingBookingByid($id){
+    return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'clint', 'clientapplciation'])
+    ->where('agency_id', $id)
+    ->whereHas('clientapplciation', function ($query) {
+        $query->whereIn('document_status', [0, 1]); // ✔️ Matches both 0 and 1
+    })
+    ->get();
+
+   
+  }
+
+//   public function getBookingByid($id,$type){
+    
+//         if($type=="all"){
+
+//         return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation','downloadDocument'])
+//         ->where('agency_id', $id)
+//         ->where('confirm_application','1')
+//         ->orderBy('created_at', 'desc') // Orders by latest created_at first
+//         ->paginate(10);
+//     }else if($type=="documentpending"){
+//         return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
+//         ->where('agency_id', $id)
+//         ->where('confirm_application','1')
+
+//         ->where('document_status','Pending')
+//         ->orderBy('created_at', 'desc') // Orders by latest created_at first
+//         ->paginate(10);
+//     }elseif($type=="feepending")
+//         return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
+//         ->where('agency_id', $id)
+//         ->where('confirm_application','1')
+
+//         ->where('payment_status','Pending')
+//         ->orderBy('created_at', 'desc') // Orders by latest created_at first
+//         ->paginate(10);
+//         //  return VisaBooking::get('visa')->get();
+//   }
+
+public function getBookingByid($id, $type)
+{
+    $query = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'clint', 'clientapplciation']);
+
+    if ($type === "all") {
+        return $query
+            ->with('downloadDocument')
+            ->where('agency_id', $id)
+            ->where('confirm_application', '1')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+    } elseif ($type === "documentpending") {
+        return $query
+            ->where('agency_id', $id)
+            ->where('confirm_application', '1')
+            ->where('document_status', 'Pending')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+    } elseif ($type === "feepending") {
+        return $query
+            ->where('agency_id', $id)
+            ->where('confirm_application', '1')
+            ->where('payment_status', 'Pending')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+    }
+
+    return collect(); // Return empty collection if no condition matched
+}
+
 
 
 
@@ -435,7 +513,7 @@ public function updateVisa($id, array $data)
      
         // agency
             
-    return Document::with('countries')->paginate(10);
+      return Document::with('countries')->paginate(10);
     }
 
     /***Store From *****/
@@ -547,10 +625,11 @@ public function updateVisa($id, array $data)
 
 
     public function bookingDataById($id){
- 
+      
        $viewbooking=VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients','clientapplciation','downloadDocument'])
         ->where('id', $id)
        ->first(); 
+       
        return $viewbooking;
       
     }

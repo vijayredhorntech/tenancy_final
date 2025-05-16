@@ -1,4 +1,4 @@
-<x-client.layout>
+<x-agency.layout>
 @section('title') Visa Application @endsection
 
 
@@ -17,7 +17,7 @@
 
 {{--        === this is code for table section ===--}}
         <div class="w-full overflow-x-auto p-4">
-       {{-- <form id="filter-form" method="GET" action="{{ route('client.index') }}" class="space-y-4">
+       <form id="filter-form" method="GET" action="{{ route('client.index') }}" class="space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <!-- Search -->
                             <div>
@@ -68,7 +68,7 @@
                                     </a>
                             </div>
                         </div>
-            </form>   --}}
+            </form>  
             <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                 <tr>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</th>
@@ -209,7 +209,7 @@
                                                     <i class="fas fa-upload"></i>
                                                 </div>
                                             </a> -->
-                                            <a href="{{ route('clientuplaode.document', ['id' => $booking->id, 'type' => 'client']) }}" title="Upload Document">
+                                            <a href="{{ route('clientuplaode.document', ['id' => $booking->id, 'type' => 'agency']) }}" title="Upload Document">
                                             <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                                 <i class="fas fa-upload"></i>
                                             </div>
@@ -254,5 +254,4 @@
 
         </div>
 
-
- </x-client.layout>
+ </x-agency.layout>

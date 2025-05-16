@@ -17,6 +17,7 @@ use App\Traits\ChatTrait;
 use Illuminate\Support\Facades\Response;
 
 
+
 class ClientLoginController extends Controller
 {
 
@@ -26,10 +27,11 @@ class ClientLoginController extends Controller
   
  
 
-    public function __construct(ClintRepositoryInterface $clintRepository ,VisaRepositoryInterface $visaRepository)
+    public function __construct(ClintRepositoryInterface $clintRepository ,VisaRepositoryInterface $visaRepository,AgencyService $agencyService)
     {
         $this->clintRepository = $clintRepository;
         $this->visaRepository = $visaRepository;
+        $this->agencyService = $agencyService;
 
        
     }
@@ -147,14 +149,29 @@ class ClientLoginController extends Controller
     }
 
     /****Upload document *** */
-    public function hsClientUploadDocument($id){
+    public function hsClientUploadDocument($id, $type)
+    {
         $booking = $this->visaRepository->bookingDataById($id);
+        // check agency data 
+        $agency = $this->agencyService->getAgencyData();
+    
+        if ($type == 'agency') {
+            // Corrected the syntax issue here by removing the extra parenthesis
+            if (isset($booking->agency_id) && $booking->agency_id == $agency->id) {
+                return view('agencies.pages.clients.uploaddocument', compact('booking'));    
+            } else {
+                return redirect()->route('agency.application')->with('error', 'You are not authorized to access this application.');
+            }
+        }
+    
+        // Check for client authorization
         if (isset($booking->client_id) && $booking->client_id == Auth::guard('client')->id()) {
-            return view('clients.uploaddocument',compact('booking'));    
+            return view('clients.uploaddocument', compact('booking'));
         } else {
             return redirect()->route('client.notification')->with('error', 'You are not authorized to access this application.');
         }
     }
+    
 
     /*** Store Function ****/
     public function hsClientStoreDocument(Request $request){
@@ -164,6 +181,11 @@ class ClientLoginController extends Controller
             'documents' => 'required|max:2048', // 2MB max    
         ]);
     $storebooking = $this->visaRepository->storeClientDocuemtn($request->all());
+   
+    if($request->type=='agency') {
+
+        return redirect()->route('agency.application')->with('success', 'Documents uploaded successfully.');
+    }
     return redirect()->route('client.notification')->with('success', 'Documents uploaded successfully.');
        
 
@@ -179,8 +201,17 @@ class ClientLoginController extends Controller
         return view('clients.downloadcenter',compact('allbookings'));
     }
 
-    public function hsdownloadDocument($id){
+    public function hsdownloadDocument($type,$id){
         $booking = $this->visaRepository->bookingDataById($id);
+
+        if($type=='agency') {
+            // check agency data
+            $agency = $this->agencyService->getAgencyData();
+            if (isset($booking->agency_id) && $booking->agency_id == $agency->id) {
+                return view('agencies.pages.clients.download',compact('booking'));
+            }
+            return redirect()->route('agency.application')->with('error', 'You are not authorized to access this application.');
+        }
         if (isset($booking->client_id) && $booking->client_id == Auth::guard('client')->id()) {
             return view('clients.download',compact('booking'));
         }
