@@ -1,11 +1,11 @@
-<div id="sideBarDiv" class="z-20 w-72 p-4 h-[100vh] bg-ternary overflow-x-hidden overflow-y-auto flex-none xl:static lg:static absolute top-0 left-0 xl:block lg:block hidden ">
+<div id="sideBarDiv" class="z-20 w-72 p-4 h-[100vh] bg-ternary overflow-x-hidden overflow-y-auto flex-none xl:static lg:static absolute top-0 left-0 z-50 xl:block lg:block hidden ">
 
 <div class="w-full flex flex-col justify-center items-center border-b-[1px] pb-2 border-b-gray-100/20 shadow-lg shadow-gray-700/10">
-      
-    {{-- <img src="{{asset($user_data->profile ? 'images/agencies/logo/' . $user_data->profile : 'assets/images/logo.png') }}" class="h-20 w-20 object-cover rounded-full" alt="Cloud Travel"> --}} 
-    <img src="{{ asset($user_data->type == 'staff' ? 'images/user/agency/profile/' . $user_data->profile : 'images/agencies/logo/' . $user_data->profile) }}" 
+
+    {{-- <img src="{{asset($user_data->profile ? 'images/agencies/logo/' . $user_data->profile : 'assets/images/logo.png') }}" class="h-20 w-20 object-cover rounded-full" alt="Cloud Travel"> --}}
+    <img src="{{ asset($user_data->type == 'staff' ? 'images/user/agency/profile/' . $user_data->profile : 'images/agencies/logo/' . $user_data->profile) }}"
      onerror="this.onerror=null; this.src='{{ asset('assets/images/logo.png') }}';"
-     class="h-20 w-20 object-cover rounded-full" 
+     class="h-20 w-20 object-cover rounded-full"
      alt="Cloud Travel">
 
         <span class="font-semibold text-white/90 mt-2 text-2xl">{{ ucwords($user_data->name ? $user_data->name : 'Login') }}</span>
@@ -14,7 +14,7 @@
 
 
     <div class="w-full flex flex-col mt-12 gap-3 ">
-  
+
     @if($user_data->type != 'staff')
       <a href="{{route('agency_dashboard')}}">
             <div class="{{Route::currentRouteName()==='agency_dashboard'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
@@ -44,9 +44,9 @@
 
 
             @if(isset($services) && $services->isNotEmpty())
-     
+
                 @foreach($services as $icon => $service)
-                    
+
                     <li class="{{ Route::currentRouteName() === 'dashboard' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }}
                         w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative
                         hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
@@ -101,7 +101,7 @@
          </li>
             @endif
             @if($user_data->getAllPermissions()->pluck('name')->intersect(['downloadcenter', 'manage everything'])->isNotEmpty())
-           
+
            <li>
              <a href="{{route('agency.document.download')}}">
                 <div class="{{Route::currentRouteName()==='agency.document.download'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
@@ -119,7 +119,7 @@
         </div>
         @endif
         @endif
-  
+
 
         @if($user_data->getAllPermissions()->pluck('name')->intersect(['staff view', 'manage everything'])->isNotEmpty())
         <div class="">
@@ -162,11 +162,11 @@
                 </li>
 
 
-                
+
             </ul>
         </div>
         @endif
-   
+
         @if($user_data->getAllPermissions()->pluck('name')->intersect(['leave', 'manage everything'])->isNotEmpty())
         <div class="">
             <div onclick="document.getElementById('leaveDiv').classList.toggle('hidden');document.getElementById('leaveArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='service'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
@@ -178,7 +178,7 @@
                 <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="leaveArrow"> </i>
             </div>
             <ul id="leaveDiv" class="pl-10 mt-2 flex flex-col hidden">
-     
+
                 <a href="{{ route('add.agency.leave', ['type' => 'agency']) }}">
                     <li class="{{Route::currentRouteName()==='add.agency.leave'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                         <div class="flex items-center">
@@ -211,7 +211,7 @@
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>
         </a>
-     
+
      @if($user_data->getAllPermissions()->pluck('name')->intersect(['clint', 'manage everything'])->isNotEmpty())
         <a href="{{route('client.index')}}">
             <div class="{{Route::currentRouteName()==='client.index'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
@@ -228,15 +228,15 @@
         @if($user_data->getAllPermissions()->pluck('name')->intersect(['booking view', 'manage everything'])->isNotEmpty())
                     @php
                         $availableRoutes = array_values($services->toArray()); // Get route names from $services
-                      
+
                         @endphp
 
             @if(in_array('Hotel', $availableRoutes) || in_array('Hotel', $availableRoutes) || in_array('superadminvisa.booking', $availableRoutes))
                 <div>
-                    <div onclick="document.getElementById('bookingDiv').classList.toggle('hidden');document.getElementById('bookingArrow').classList.toggle('-rotate-90')" 
-                        class="{{ Route::currentRouteName() === 'service' ? 'border-gray-100/60 bg-secondary/90' : 'border-ternary' }}  
+                    <div onclick="document.getElementById('bookingDiv').classList.toggle('hidden');document.getElementById('bookingArrow').classList.toggle('-rotate-90')"
+                        class="{{ Route::currentRouteName() === 'service' ? 'border-gray-100/60 bg-secondary/90' : 'border-ternary' }}
                         w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
-                        
+
                         <div class="flex items-center">
                             <i class="fa fa-calendar-days mr-2 text-sm"></i>
                             <span class="text-lg font-medium">Booking</span>
@@ -244,7 +244,7 @@
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                         <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-200" id="bookingArrow"></i>
                     </div>
-        
+
                     <ul id="bookingDiv" class="pl-10 mt-2 flex flex-col hidden">
                         @if(in_array('Flight', $availableRoutes))
                             <a href="{{ route('flight.booking') }}">
@@ -287,10 +287,10 @@
 
         @endif
 
-      
+
       {{-- {{dd($user_data->getAllPermissions()->pluck('name'))}} --}}
       @if($user_data->getAllPermissions()->pluck('name')->intersect(['role view', 'manage everything'])->isNotEmpty())
-  
+
        <a href="{{route('agency.role')}}">
             <div class="{{Route::currentRouteName()==='superadmin.role'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
@@ -304,7 +304,7 @@
         @endif
 
         @if($user_data->getAllPermissions()->pluck('name')->intersect(['role view', 'manage everything'])->isNotEmpty())
-  
+
         <a href="">
             <div class="{{Route::currentRouteName()==='superadmin.termtype'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">

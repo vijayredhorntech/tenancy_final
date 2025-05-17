@@ -69,7 +69,7 @@
     </style>
     @yield('styles')
 
-   
+
     {{--    ===google fonts link--}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,7 +84,7 @@
     {{--    ===font awesome link ends===--}}
 
 
- 
+
      <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -101,20 +101,20 @@
 
 
         .dropdown-option {
-            padding-top: 10px;
-            padding-bottom: 10px;
-            padding-left: 2.5rem;
-            padding-right: 2.5rem;
-            border-top: 1px solid #f3f4f6;
-            border-bottom: 1px solid #f3f4f6;
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
+            padding-left: 2.5rem !important;
+            padding-right: 2.5rem !important;
+            border-top: 1px solid #f3f4f6 !important;
+            border-bottom: 1px solid #f3f4f6 !important;
         }
 
         .dropdown-option:hover {
-            background-color: rgba(255, 66, 22, 0.13);
-            border-bottom:1px solid #ff4216;
-            border-top:1px solid #ff4216;
-            cursor: pointer;
-            transition: all 0.6s;
+            background-color: rgba(255, 66, 22, 0.13) !important;
+            border-bottom:1px solid #ff4216 !important;
+            border-top:1px solid #ff4216; !important;
+            cursor: pointer !important;
+            transition: all 0.6s !important;
         }
 
          input[type="date"]::-webkit-inner-spin-button,
@@ -127,6 +127,14 @@
             -moz-appearance: none !important;    /* Hides the arrow in Firefox */
             appearance: none !important;         /* Standard property */
             background: #f3f4f6 !important ;         /* Removes background if needed */
+        }
+    </style>
+
+    <style>
+        @media print {
+            body {
+                background-color: white !important;
+            }
         }
     </style>
 
