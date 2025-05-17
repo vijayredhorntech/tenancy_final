@@ -109,8 +109,8 @@ class DatabaseHelper
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'database' => $databaseName,
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
+            'username' => 'ryteagency',
+            'password' => 'W360#s2ip',
         ]]);
     }
 

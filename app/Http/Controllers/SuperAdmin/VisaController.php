@@ -345,6 +345,7 @@ class VisaController extends Controller
         ]);
 
         $visas = $this->visaRepository->saveBooking($request->all());
+        // dd($visas);
         return redirect()->route('verify.application', ['id' => $visas->id])
         ->with('success', 'Booking successful');
     }
