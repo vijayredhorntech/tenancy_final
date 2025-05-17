@@ -1,27 +1,34 @@
 <x-agency.layout>
     @section('title') Visa View @endsection
-      <div class="w-full  p-4">
-          <section class="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-col sm:flex-col flex-col justify-center w-full">
+      <div class="w-full relative">
+          <img class="absolute -top-20 left-0  w-full opacity-20" style="z-index: -1" src="{{asset('assets/images/bgImage.png')}}" alt="">
+
+
+          <span class="text-secondary lg:text-3xl md:text-2xl text-xl font-semibold">Visa to United States of America</span>
+          @if ($errors->any())
+              <div class="alert alert-danger">
+                  <ul>
+                      @foreach ($errors->all() as $error)
+                          <li>{{ $error }}</li>
+                      @endforeach
+                  </ul>
+              </div>
+          @endif
+
+          <section class="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-col sm:flex-col flex-col justify-center w-full mt-6">
               {{--    section left div starts here--}}
-              <div class="2xl:w-3/4 xl:w-3/4 lg:w-3/4 md:w-full sm:w-full w-full bg-white drop-shadow-2xl rounded-xl p-5">
-
-                  <div class="py-3  ">
-                      <span class="text-lg text-black font-semibold">Visa to United States of America</span>
-                  </div>
-
-
-
-                  <form action="{{  route('visa.book') }}" method="POST" enctype="multipart/form-data">
+              <div class="2xl:w-3/4 xl:w-3/4 lg:w-3/4 md:w-full sm:w-full w-full bg-white shadow-lg shadow-black/10 rounded-md p-4">
+                      <span class="text-lg text-secondary font-semibold">Visa Details</span>
+                  <form action="{{  route('visa.book') }}" method="POST" enctype="multipart/form-data" class="mt-4">
                       @csrf
-                      <div class="border-2 border-gray-100 px-5 pb-10">
 
-                          <div class="flex flex-col mt-5">
-                              <div class="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row sm:flex-row flex-col w-full justify-between mt-2 gap-">
-                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                          <div class="flex flex-col">
+                              <div class="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row sm:flex-row flex-col w-full justify-between mt-2 gap-2">
+                                  <div class=" lg:w-[33.3%] md:w-1/3  w-full flex flex-col relative" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Visa Category</label>
                                       <input type="hidden" value="{{ $visas['0']->origin }}" name="origin">
                                       <input type="hidden" value="{{ $visas['0']->destination }}" name="destination">
-                                      <select class="w-full rounded-md text-sm text-black mt-2"  name="typeof" id="typeof">
+                                      <select class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"  name="typeof" id="typeof">
                                           @forelse($visas as $visaServiceType)
                                               @if ($visaServiceType->VisaServices)
                                                   <option value="{{ $visaServiceType->VisaServices->id }}">
@@ -37,87 +44,86 @@
                                       </select>
                                   </div>
 
-                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col 2xl:ml-10 xl:ml-10 lg:ml-10 md:ml-10 sm:ml-10 ml-0 2xl:mt-0 xl:mt-0 lg:mt-0 md:mt-0 sm:mt-0 mt-10" >
+                                  <div class=" lg:w-[33.3%] md:w-1/3  w-full flex flex-col relative" >
                                       <label for="mobile"  class=" font-semibold text-gray-800 text-sm">Visa Types</label>
-                                      <select class="w-full rounded-md text-sm text-black mt-2" id="category" name="category">
+                                      <select class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" id="category" name="category">
                                           <option value="">
-                                         
+
                                           </option>
                                       </select>
 
                                   </div>
 
-                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col 2xl:ml-10 xl:ml-10 lg:ml-10 md:ml-10 sm:ml-10 ml-0 2xl:mt-0 xl:mt-0 lg:mt-0 md:mt-0 sm:mt-0 mt-10" >
+                                  <div class=" lg:w-[33.3%] md:w-1/3  w-full flex flex-col relative" >
                                       <label for="mobile"  class=" font-semibold text-gray-800 text-sm">Processing Time</label>
-                                      <select class="w-full rounded-md text-sm text-black mt-2" id="processing" name="processing">
+                                      <select class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" id="processing" name="processing">
                                           <option value="">
-                                         
+
                                           </option>
                                       </select>
                                   </div>
                               </div>
                           </div>
+                          <div class="flex flex-wrap gap-4 mt-5 w-full">
+                             <div class="flex flex-col">
+                                 <label class="block mt-2 font-semibold">Select User Type</label>
+                                 <div class="flex gap-2 mt-2">
+                                     <button type="button" id="existingUserBtn" class="bg-secondary text-white px-3 py-0.5 text-xs rounded">Existing User</button>
+                                     <a href="{{route('client.index')}}">  <button type="button" id="newUserBtn" class="bg-gray-500 text-white px-3 py-1 text-xs rounded">New User</button> </a>
+                                 </div>
+                             </div>
 
-                          <div class="flex flex-col mt-5">
-                              <label class="block mt-2 font-semibold">Select User Type</label>
-                              <div class="flex gap-2">
-                                  <button type="button" id="existingUserBtn" class="bg-secondary text-white px-3 py-0.5 text-xs rounded">Existing User</button>
-                                  <a href="{{route('client.index')}}">  <button type="button" id="newUserBtn" class="bg-gray-500 text-white px-3 py-1 text-xs rounded">New User</button> </a>
+                              <div id="existingUserSection" class="hidden flex flex-col ">
+                                  <label class=" font-semibold text-gray-800 text-sm">Select Existing User</label>
+                                  <select class="visa-select w-[250px] mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" id="existingUserDropdown" name="clientId">
+                                      <option value="">Select User</option>
+                                      <!-- Users will be added dynamically using AJAX -->
+                                  </select>
                               </div>
                           </div>
-
-                          <div id="existingUserSection" class="mt-3 hidden flex flex-col">
-                              <label class=" font-semibold text-gray-800 text-sm">Select Existing User</label>
-                              <select class="w-full rounded-md text-sm text-black mt-2" id="existingUserDropdown" name="clientId">
-                                  <option value="">Select User</option>
-                                  <!-- Users will be added dynamically using AJAX -->
-                              </select>
-                          </div>
-
-                          <div class="addresspart flex flex-col mt-5" style="display:none">
-                              <div class="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-row sm:flex-row flex-col w-full justify-between mt-2 gap-2">
-                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                          <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4"  style="display: none">
+                              <div class="w-full grid lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-4 grid-cols-1 gap-1">
+                                  <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Last Name</label>
-                                      <input type="text" name="lastname" id="lastName" class="w-full rounded-md text-sm text-black mt-2" placeholder="As shown in passport" readonly="">
+                                      <input type="text" name="lastname" id="lastName" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="As shown in passport" readonly="">
                                   </div>
-                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                  <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">First Name</label>
-                                      <input type="text" name="firstname"  id="firstName" class="w-full rounded-md text-sm text-black mt-2" placeholder="As shown in passport" readonly="">
+                                      <input type="text" name="firstname"  id="firstName" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="As shown in passport" readonly="">
 
                                   </div>
-                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                  <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Citizenship</label>
-                                      <input type="text" name="citizenship" value="" class="w-full rounded-md text-sm text-black mt-2"  id="citizenship" readonly="">
+                                      <input type="text" name="citizenship" value="" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"  id="citizenship" readonly="">
 
                                   </div>
-                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                  <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Email</label>
-                                      <input type="email" name="email"  id="email" class="w-full rounded-md text-sm text-black mt-2" placeholder="Enter your email" readonly="">
+                                      <input type="email" name="email"  id="email" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="Enter your email" readonly="">
 
                                   </div>
-                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                  <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Phone Number</label>
-                                      <input type="text"  name="phonenumber"   id="phonenumber" class="w-full rounded-md text-sm text-black mt-2" placeholder="Enter your phone number" readonly="">
+                                      <input type="text"  name="phonenumber"   id="phonenumber" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="Enter your phone number" readonly="">
 
                                   </div>
-                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
+                                  <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Date of Entry</label>
-                                      <input type="date" name="dateofentry" class="w-full rounded-md text-sm text-black mt-2">
+                                      <input type="date" name="dateofentry" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                   </div>
-                                  <div class=" 2xl:w-1/3 xl:w-1/3 lg:w-1/3 md:w-1/3  w-full flex flex-col relative" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">&nbsp</label>
-                                      <button type="button" id="addMoreBtn" class="bg-blue-500 text-white px-3 py-2 mt-2 rounded">Add More</button>
-
+                                  <div class=" w-full flex flex-col items-end lg:cols-span-6 md:col-span-6 sm:col-span-4 col-span-1 " >
+                                      <button type="button" id="addMoreBtn" class="px-2 py-0.5 text-xs font-semibold rounded-sm  border-[1px] border-success text-success bg-success/10 hover:bg-success hover:text-white transition ease-in duration-2000">Add More</button>
                                   </div>
                               </div>
                           </div>
-                          <div id="dynamicFieldsContainer" class="mt-3"></div>
 
-                      </div>
 
-                      <div class=" flex w-full  mt-5">
+                          <div id="dynamicFieldsContainer"></div>
+
+
+                      <div class=" flex w-full justify-end  mt-5">
                           <!-- <a class="bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton">Proceed to Payment </a> -->
-                     <input type="submit" class="bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton" value=" Proceed To Payment"> 
+                                   <input type="submit" class="cursor-pointer bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton" value=" Proceed To Payment">
                         </div>
 
                       <div class="insufficientbalance">
@@ -130,27 +136,28 @@
 
                   </form>
               </div>
-              <div class="2xl:w-1/4 sticky top-0 xl:w-1/4 lg:w-1/4 md:w-full sm:w-full w-full  bg-white drop-shadow-2xl rounded-xl 2xl:mt-0 xl:mt-0 lg:mt-0 md:mt-2 sm:mt-2 mt-2 2xl:ml-5 xl:ml-5 lg:ml-5 md:ml-0 sm:ml-0 ml-0 h-min p-5">
 
-                  <div class="flex flex-col pb-5 border-b-2 border-b-gray-200">
-                      <span class="text-black font-semibold text-xl ">Basket Details</span>
+              <div class="2xl:w-1/4 sticky top-20 xl:w-1/4 lg:w-1/4 md:w-full sm:w-full w-full  bg-white shadow-lg shadow-black/10 rounded-sm 2xl:mt-0 xl:mt-0 lg:mt-0 md:mt-2 sm:mt-2 mt-2 2xl:ml-5 xl:ml-5 lg:ml-5 md:ml-0 sm:ml-0 ml-0 h-min p-4">
+
+                  <div class="flex flex-col pb-2 border-b-2 border-b-secondary/30">
+                      <span class="text-secondary font-semibold text-xl ">Basket Details</span>
                   </div>
                   <div class="flex justify-between mt-3">
-                      <span class="text-black text-md">Visa Fee:</span>
-                      <span class="text-black text-md font-semibold visa-price">&#8377 235.58</span>
+                      <span class="text-black text-md font-normal">Visa Fee:</span>
+                      <span class="text-secondary text-md font-semibold visa-price">&#8377 235.58</span>
                   </div>
                   <div class="flex justify-between mt-1.5">
-                      <span class="text-black text-md">Service Fee:</span>
-                      <span class="text-black text-md font-semibold visa-commision">₹5,998.00</span>
+                      <span class="text-black text-md font-normal">Service Fee:</span>
+                      <span class="text-secondary text-md font-semibold visa-commision">₹5,998.00</span>
                   </div>
-                  <div class="flex justify-between mt-1.5 pb-3 border-b-2 border-b-gray-200 ">
+                  <div class="flex justify-between mt-1.5 pb-3 border-b-2 border-b-secondary/30 ">
                       <span class="text-black text-md ">Tax:</span>
-                      <span class="text-black text-md font-semibold"> </span>
+                      <span class="text-secondary text-md font-semibold"> </span>
                   </div>
 
                   <div class="flex justify-between mt-3">
-                      <span class="text-black text-md">Total:</span>
-                      <span class="text-black text-md font-semibold visa-total">&#8377 135.58</span>
+                      <span class="text-black text-md font-normal">Total:</span>
+                      <span class="text-secondary text-md font-semibold visa-total">&#8377 135.58</span>
                   </div>
 
 
@@ -174,84 +181,169 @@ function getTodayDate() {
 document.getElementById('addMoreBtn').addEventListener('click', function () {
     let container = document.getElementById('dynamicFieldsContainer');
 
-    // Create a div to wrap the inputs
+    // Create the main wrapper div with the same classes as the original
     let fieldWrapper = document.createElement('div');
-    fieldWrapper.classList.add('flex', 'gap-2', 'mt-2', 'items-center', 'flex-wrap', 'border', 'p-2', 'rounded');
+    fieldWrapper.classList.add('addresspart', 'flex', 'flex-col', 'mt-5', 'border-[1px]', 'border-secondary/30', 'p-4');
+
+    // Create the grid container div with the same grid classes
+    let gridContainer = document.createElement('div');
+    gridContainer.classList.add('w-full', 'grid', 'lg:grid-cols-6', 'md:grid-cols-6', 'sm:grid-cols-4', 'grid-cols-1', 'gap-1');
 
     // First Name Input
-    let firstName = document.createElement('input');
-    firstName.setAttribute('type', 'text');
-    firstName.setAttribute('name', 'passengerfirstname[]');
-    firstName.setAttribute('placeholder', 'First Name');
-    firstName.classList.add('w-full', 'p-2', 'border', 'rounded');
+    let firstNameDiv = document.createElement('div');
+    firstNameDiv.classList.add('w-full', 'flex', 'flex-col');
+
+    let firstNameLabel = document.createElement('label');
+    firstNameLabel.setAttribute('for', 'passengerfirstname');
+    firstNameLabel.classList.add('font-semibold', 'text-gray-800', 'text-sm');
+    firstNameLabel.textContent = 'First Name';
+
+    let firstNameInput = document.createElement('input');
+    firstNameInput.setAttribute('type', 'text');
+    firstNameInput.setAttribute('name', 'passengerfirstname[]');
+    firstNameInput.setAttribute('placeholder', 'First Name');
+    firstNameInput.classList.add('visa-select', 'w-full', 'mt-2', 'py-1.5', 'font-medium', 'text-black/80', 'text-sm', 'rounded-[3px]', 'border-[1px]', 'border-secondary/50', 'bg-[#f3f4f6]', 'focus:outline-none', 'focus:ring-0', 'placeholder-black/60');
+
+    firstNameDiv.appendChild(firstNameLabel);
+    firstNameDiv.appendChild(firstNameInput);
 
     // Last Name Input
-    let lastName = document.createElement('input');
-    lastName.setAttribute('type', 'text');
-    lastName.setAttribute('name', 'passengerlastname[]');
-    lastName.setAttribute('placeholder', 'Last Name');
-    lastName.classList.add('w-full', 'p-2', 'border', 'rounded');
+    let lastNameDiv = document.createElement('div');
+    lastNameDiv.classList.add('w-full', 'flex', 'flex-col');
+
+    let lastNameLabel = document.createElement('label');
+    lastNameLabel.setAttribute('for', 'passengerlastname');
+    lastNameLabel.classList.add('font-semibold', 'text-gray-800', 'text-sm');
+    lastNameLabel.textContent = 'Last Name';
+
+    let lastNameInput = document.createElement('input');
+    lastNameInput.setAttribute('type', 'text');
+    lastNameInput.setAttribute('name', 'passengerlastname[]');
+    lastNameInput.setAttribute('placeholder', 'Last Name');
+    lastNameInput.classList.add('visa-select', 'w-full', 'mt-2', 'py-1.5', 'font-medium', 'text-black/80', 'text-sm', 'rounded-[3px]', 'border-[1px]', 'border-secondary/50', 'bg-[#f3f4f6]', 'focus:outline-none', 'focus:ring-0', 'placeholder-black/60');
+
+    lastNameDiv.appendChild(lastNameLabel);
+    lastNameDiv.appendChild(lastNameInput);
 
     // Passport Number Input
-    let passportNumber = document.createElement('input');
-    passportNumber.setAttribute('type', 'number');
-    passportNumber.setAttribute('name', 'passengerpassportn[]');
-    passportNumber.setAttribute('placeholder', 'Passport Number');
-    passportNumber.classList.add('w-full', 'p-2', 'border', 'rounded');
+    let passportDiv = document.createElement('div');
+    passportDiv.classList.add('w-full', 'flex', 'flex-col');
 
-    // Issue Date Input (Must be before today)
-    let issueDate = document.createElement('input');
-    issueDate.setAttribute('type', 'date');
-    issueDate.setAttribute('name', 'passportissuedate[]');
-    issueDate.setAttribute('placeholder', 'Issue Date');
-    issueDate.setAttribute('max', getTodayDate()); // Ensures date is before today
-    issueDate.classList.add('w-full', 'p-2', 'border', 'rounded');
+    let passportLabel = document.createElement('label');
+    passportLabel.setAttribute('for', 'passengerpassportn');
+    passportLabel.classList.add('font-semibold', 'text-gray-800', 'text-sm');
+    passportLabel.textContent = 'Passport Number';
 
-    // Expiry Date Input (Must be after today)
-    let expireDate = document.createElement('input');
-    expireDate.setAttribute('type', 'date');
-    expireDate.setAttribute('name', 'passportexpiredate[]');
-    expireDate.setAttribute('placeholder', 'Expiry Date');
-    expireDate.setAttribute('min', getTodayDate()); // Ensures date is after today
-    expireDate.classList.add('w-full', 'p-2', 'border', 'rounded');
+    let passportInput = document.createElement('input');
+    passportInput.setAttribute('type', 'number');
+    passportInput.setAttribute('name', 'passengerpassportn[]');
+    passportInput.setAttribute('placeholder', 'Passport Number');
+    passportInput.classList.add('visa-select', 'w-full', 'mt-2', 'py-1.5', 'font-medium', 'text-black/80', 'text-sm', 'rounded-[3px]', 'border-[1px]', 'border-secondary/50', 'bg-[#f3f4f6]', 'focus:outline-none', 'focus:ring-0', 'placeholder-black/60');
 
-    // Force calendar to open on click (Fix for browsers where it doesn’t show)
-    issueDate.addEventListener('click', function() {
-        this.showPicker && this.showPicker();
-    });
+    passportDiv.appendChild(passportLabel);
+    passportDiv.appendChild(passportInput);
 
-    expireDate.addEventListener('click', function() {
-        this.showPicker && this.showPicker();
-    });
+    // Issue Date Input
+    let issueDateDiv = document.createElement('div');
+    issueDateDiv.classList.add('w-full', 'flex', 'flex-col');
+
+    let issueDateLabel = document.createElement('label');
+    issueDateLabel.setAttribute('for', 'passportissuedate');
+    issueDateLabel.classList.add('font-semibold', 'text-gray-800', 'text-sm');
+    issueDateLabel.textContent = 'Issue Date';
+
+    let issueDateInput = document.createElement('input');
+    issueDateInput.setAttribute('type', 'date');
+    issueDateInput.setAttribute('name', 'passportissuedate[]');
+    issueDateInput.setAttribute('max', getTodayDate());
+    issueDateInput.classList.add('visa-select', 'w-full', 'mt-2', 'py-1.5', 'font-medium', 'text-black/80', 'text-sm', 'rounded-[3px]', 'border-[1px]', 'border-secondary/50', 'bg-[#f3f4f6]', 'focus:outline-none', 'focus:ring-0', 'placeholder-black/60');
+
+    issueDateDiv.appendChild(issueDateLabel);
+    issueDateDiv.appendChild(issueDateInput);
+
+    // Expiry Date Input
+    let expireDateDiv = document.createElement('div');
+    expireDateDiv.classList.add('w-full', 'flex', 'flex-col');
+
+    let expireDateLabel = document.createElement('label');
+    expireDateLabel.setAttribute('for', 'passportexpiredate');
+    expireDateLabel.classList.add('font-semibold', 'text-gray-800', 'text-sm');
+    expireDateLabel.textContent = 'Expiry Date';
+
+    let expireDateInput = document.createElement('input');
+    expireDateInput.setAttribute('type', 'date');
+    expireDateInput.setAttribute('name', 'passportexpiredate[]');
+    expireDateInput.setAttribute('min', getTodayDate());
+    expireDateInput.classList.add('visa-select', 'w-full', 'mt-2', 'py-1.5', 'font-medium', 'text-black/80', 'text-sm', 'rounded-[3px]', 'border-[1px]', 'border-secondary/50', 'bg-[#f3f4f6]', 'focus:outline-none', 'focus:ring-0', 'placeholder-black/60');
+
+    expireDateDiv.appendChild(expireDateLabel);
+    expireDateDiv.appendChild(expireDateInput);
 
     // Place of Issue Input
-    let issuePlace = document.createElement('input');
-    issuePlace.setAttribute('type', 'text');
-    issuePlace.setAttribute('name', 'passengerplace[]');
-    issuePlace.setAttribute('placeholder', 'Place of Issue');
-    issuePlace.classList.add('w-full', 'p-2', 'border', 'rounded');
+    let issuePlaceDiv = document.createElement('div');
+    issuePlaceDiv.classList.add('w-full', 'flex', 'flex-col');
 
-    // Remove Button
+    let issuePlaceLabel = document.createElement('label');
+    issuePlaceLabel.setAttribute('for', 'passengerplace');
+    issuePlaceLabel.classList.add('font-semibold', 'text-gray-800', 'text-sm');
+    issuePlaceLabel.textContent = 'Place of Issue';
+
+    let issuePlaceInput = document.createElement('input');
+    issuePlaceInput.setAttribute('type', 'text');
+    issuePlaceInput.setAttribute('name', 'passengerplace[]');
+    issuePlaceInput.setAttribute('placeholder', 'Place of Issue');
+    issuePlaceInput.classList.add('visa-select', 'w-full', 'mt-2', 'py-1.5', 'font-medium', 'text-black/80', 'text-sm', 'rounded-[3px]', 'border-[1px]', 'border-secondary/50', 'bg-[#f3f4f6]', 'focus:outline-none', 'focus:ring-0', 'placeholder-black/60');
+
+    issuePlaceDiv.appendChild(issuePlaceLabel);
+    issuePlaceDiv.appendChild(issuePlaceInput);
+
+    // Remove Button Div (spanning all columns)
+    let removeBtnDiv = document.createElement('div');
+    removeBtnDiv.classList.add('w-full', 'flex', 'flex-col', 'items-end', 'lg:cols-span-6', 'md:col-span-6', 'sm:col-span-4', 'col-span-1', 'mt-2');
+
     let removeBtn = document.createElement('button');
-    removeBtn.innerText = 'Remove';
     removeBtn.setAttribute('type', 'button');
-    removeBtn.classList.add('bg-red-500', 'text-white', 'px-3', 'py-2', 'rounded');
+    removeBtn.textContent = 'Remove';
+    removeBtn.classList.add('px-2', 'py-0.5', 'text-xs', 'font-semibold', 'rounded-sm', 'border-[1px]', 'border-red-500', 'text-red-500', 'bg-red-500/10', 'hover:bg-red-500', 'hover:text-white', 'transition', 'ease-in', 'duration-200');
     removeBtn.addEventListener('click', function () {
         container.removeChild(fieldWrapper);
     });
 
-    // Append elements to wrapper
-    fieldWrapper.appendChild(firstName);
-    fieldWrapper.appendChild(lastName);
-    fieldWrapper.appendChild(passportNumber);
-    fieldWrapper.appendChild(issueDate);
-    fieldWrapper.appendChild(expireDate);
-    fieldWrapper.appendChild(issuePlace);
-    fieldWrapper.appendChild(removeBtn);
+    removeBtnDiv.appendChild(removeBtn);
 
-    // Append wrapper to container
+    // Append all input divs to the grid container
+    gridContainer.appendChild(firstNameDiv);
+    gridContainer.appendChild(lastNameDiv);
+    gridContainer.appendChild(passportDiv);
+    gridContainer.appendChild(issueDateDiv);
+    gridContainer.appendChild(expireDateDiv);
+    gridContainer.appendChild(issuePlaceDiv);
+
+    // Append the grid container and remove button to the main wrapper
+    fieldWrapper.appendChild(gridContainer);
+    fieldWrapper.appendChild(removeBtnDiv);
+
+    // Append the wrapper to the container
     container.appendChild(fieldWrapper);
+
+    // Force calendar to open on click for date inputs
+    issueDateInput.addEventListener('click', function() {
+        this.showPicker && this.showPicker();
+    });
+
+    expireDateInput.addEventListener('click', function() {
+        this.showPicker && this.showPicker();
+    });
 });
+
+// Helper function to get today's date in YYYY-MM-DD format
+function getTodayDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
 
     /****Ajax for get type of****** */
 $(document).ready(function () {
@@ -265,7 +357,7 @@ $(document).ready(function () {
                 type: "GET",
                 data: { visa_type_id: visa_type_id },
                 success: function (data) {
-               
+
                     var html = ''; // Default option
 
                     // $.each(data.visa_subtypes, function (index, category) {
@@ -279,7 +371,7 @@ $(document).ready(function () {
                                     'data-commission="' + category.commission + '">' +
                                     category.name + '</option>';
                         });
-                    
+
                     $("#category").empty().append(html);
 
                     // **Trigger change event after setting new options**
@@ -313,7 +405,7 @@ $(document).ready(function () {
         var balance = parseFloat(selectedOption.data("balance")) || 0;
         var processing = selectedOption.data("processing") || "";
 
-        
+
 
 
 
