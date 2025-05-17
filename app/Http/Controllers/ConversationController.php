@@ -112,9 +112,14 @@ class ConversationController extends Controller
         }
 
           /****Chat process **** */
-    public function hs_chatSAApplication($id){
-        $client = $this->clintRepository->getClientById($id);
-        $agency = Agency::where('id',$client->agency_id)->first();
+    public function hs_chatSAApplication($id, $token = null){
+        
+         $agency = Agency::where('agencytoken',$token)->first();
+
+        // $agency = Agency::where('id',$client->agency_id)->first();
+        // dd($id);
+        $client = $this->clintRepository->getClientById($id,$agency->database_name);
+        
         return view('superadmin.pages.conversation.chat',compact('client','agency'));
        }
 

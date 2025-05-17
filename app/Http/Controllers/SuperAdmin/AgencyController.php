@@ -76,7 +76,7 @@ class AgencyController extends Controller
                 return $agency->details->status == '0' ? 0 : 1;
             });
         // $agency=Agency::with(['domains', 'userAssignments.service', 'balance', 'details'])->get();
-     
+        // dd($agency);
         $service = Service::get();
         return  view('superadmin.pages.agencies.agency', ['user_data' => $user, 'agencies' => $agency, 'services' => $service, 'searchback' => false]);
     }

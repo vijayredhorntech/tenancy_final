@@ -54,6 +54,9 @@ class VisaBooking extends Model
         return $this->hasOne(DownloadCenter::class, 'booking_id','id');
     }
     
+    public function agency(){
+        return $this->hasOne(Agency::class, 'id','agency_id');
+    }
 
    
 }

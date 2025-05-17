@@ -49,7 +49,7 @@ class VisaRepository implements VisaRepositoryInterface
 
     public function getSuperadminAllApplication(){
        
-        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
+        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation','agency'])
         ->where('sendtoadmin', '1')
         ->orderBy('created_at', 'desc') // Orders by latest created_at first
         ->paginate(10);

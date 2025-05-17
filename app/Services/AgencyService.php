@@ -107,4 +107,10 @@ class AgencyService
           return false;
         // DatabaseHelper::setDatabaseConnection($userData['database']);
      }
+
+     public function setConnectionByDatabase($database){
+        DatabaseHelper::setDatabaseConnection($database);
+     }
+
+     
 }

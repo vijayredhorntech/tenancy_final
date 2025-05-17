@@ -144,7 +144,7 @@ class ClientController extends Controller
     public function hs_getExistingUsers(){
    
           $agency = $this->agencyService->getAgencyData();
-          $clients = ClientDetails::with('clientinfo')->where('agency_id',$agency->id)->get();
+          $clients = ClientDetails::on('user_database')->with('clientinfo')->where('agency_id',$agency->id)->get();
 
         return response()->json($clients);
     }
@@ -259,8 +259,9 @@ class ClientController extends Controller
 
     public function hs_agencyChatClient($id){
         $agency = $this->agencyService->getAgencyData();
+        
         $client = $this->clintRepository->getClientById($id);
-      
+     
         if (!$client || $client->agency_id!== $agency->id) {
             return redirect()->route('client.index')->with('error', 'Unauthorized or client not found.');
         }

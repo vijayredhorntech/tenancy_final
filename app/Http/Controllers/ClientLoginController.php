@@ -56,9 +56,27 @@ class ClientLoginController extends Controller
     ->where('clientuid', $request->password)
     ->first();
     if ($client) {
-       
-               Auth::guard('client')->login($client);
+        //    dd($client);
+               $agency=Agency::with(['domains', 'userAssignments.service', 'balance'])->where('id',$client->agency_id)->first();
+                // dd($agency);
+               $data=[
+                'domain' => $agency->domains->domain_name,
+                'database' => $agency->database_name,
+                'full_url'=>$agency->domains->full_url,
+            ];
+
                session(['type' => 'client']);
+               \session(['user_data' => $data]);
+               
+          $agency = $this->agencyService->setConnectionByDatabase($agency->database_name);
+
+               $agencydatabase=ClientDetails::on('user_database')->where('clientuid',$client->clientuid)->first();
+               $agencydatabase->setConnection('user_database');
+               Auth::guard('client')->logout();
+
+               // Login the client using guard
+               Auth::guard('client')->login($agencydatabase);
+           
              
                return redirect()->route('client.profile');
     }
@@ -71,9 +89,12 @@ class ClientLoginController extends Controller
 
     /****Profile **** */
     public function hsClientProfile(){
+// dd('heelo');
 
         $client_data= Auth::guard('client')->user();
-        $client = $this->clintRepository->getClientById($client_data->id);
+        $userData = session('user_data');
+
+        $client = $this->clintRepository->getClientById($client_data->id,$userData['database']);
         return view('clients.profile',compact('client'));
     }
 
@@ -92,9 +113,16 @@ class ClientLoginController extends Controller
         $detials=[];
         
         $client_data= Auth::guard('client')->user();
+        // dd($client_data);
+        
+        $agency=Agency::where('id',$client_data->agency_id)->first();
         $messages = Message::where('client_id', $client_data->id)
         // ->where('sender_user_type', 'client')
         ->get();
+        // dd($client_data);
+        // $userData = session('user_data');
+        // dd($userData);
+        dd($client_data);
         $agency=Agency::where('id',$client_data->agency_id)->first();
         return view('clients.support',compact('messages','client_data','agency'));
     }

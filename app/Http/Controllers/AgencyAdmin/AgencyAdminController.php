@@ -41,6 +41,18 @@ class AgencyAdminController extends Controller
         $this->agencyService = $agencyService;
     }
     
+    
+    public function migration(){
+        $user = $this->agencyService->getCurrentLoginUser();  
+        Artisan::call('migrate', [
+            '--database' => 'user_database', // ✅ Your connection name
+            '--path' => 'database/migrations', // Optional: if you want to run only specific path
+            '--force' => true, // ✅ Required if running from code, especially in production
+        ]);
+        dd("heelo");
+    }
+  
+
     /*** Staff List ***/
     public function hs_staffindex()
     {
@@ -446,7 +458,6 @@ class AgencyAdminController extends Controller
 
 
     /***attandance  */
-  
     
     public function hs_attendance(Request $request) {
         try {

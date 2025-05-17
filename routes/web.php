@@ -70,9 +70,7 @@ Route::get('/viewtest',function (){
 // return view('viewtest');
 }); 
 
-
-
-
+// Route::get('/migration',[AgencyAdminController::class,'migration']);
 
 Route::get('/dummy-agencies', [AgencyController::class, 'dummyCreateAgency']);
 Route::post('/search',[GloballyController::class,'hs_globalSearch'])->name('search');
@@ -271,7 +269,9 @@ Route::middleware([LogUserActivity::class])->group(function () {
                             Route::post('/message', 'hs_storeconversation')->name('send_message');
                             Route::get('/editticket/{id}', 'hs_editConversation')->name('superadmin.editticket'); 
                             Route::post('/updatestore','hs_editStore')->name('uperadmin.ticket'); 
-                            Route::get('/chat/{id}', 'hs_chatSAApplication')->name('superadminvisachat.client');
+                            // Route::get('/chat/{id}/{token?}', 'hs_chatSAApplication')->name('superadminvisachat.client');
+                            Route::get('/chat/{id}/{token?}', 'hs_chatSAApplication')->name('superadminvisachat.client');
+
                             Route::post('/send', 'hs_sendMessageSAApplication')->name('superadminchat.send_message');
                         });
 
@@ -390,6 +390,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
 
 /*****Client  */
+/*****Common Route ***** */
 
 
 

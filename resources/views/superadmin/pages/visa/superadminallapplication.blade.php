@@ -94,11 +94,9 @@
                   
          
                 </tr>
-               
-
-
+            
                 @forelse($allbookings as $booking)
-
+                   
                     <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking->application_number}}</td>
@@ -223,11 +221,17 @@
                                         </div>
                                     </a>
 
-                                    <a href="{{route('superadminvisachat.client',['id' => $booking->client_id])}}" title="Edit">
+                                    {{-- <a href="{{route('superadminvisachat.client',['id' => $booking->client_id,'token'->$booking->agency->agencytoken])}}" title="Edit">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fas fa-comment-dots"></i>
                                         </div>
-                                      </a>
+                                      </a> --}}
+                                      <a href="{{ route('superadminvisachat.client', ['id' => $booking->client_id, 'token' => $booking->agency->agencytoken]) }}" title="Edit">
+                                        <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                            <i class="fas fa-comment-dots"></i>
+                                        </div>
+                                    </a>
+
                                 @endif
 
                                 <!-- <a href="{{ route('visa.assign', ['id' => $booking->id]) }}" title="Assign to Visa Request">
