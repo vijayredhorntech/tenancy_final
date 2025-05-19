@@ -23,8 +23,8 @@ return new class extends Migration
             $table->timestamps(); // Created at & Updated at
 
             // Add foreign key constraints if needed
-            $table->foreign('booking_id')->references('id')->on('visabookings')->onDelete('cascade');
-            $table->foreign('clint_id')->references('id')->on('client_details')->onDelete('set null');
+            // $table->foreign('booking_id')->references('id')->on('visabookings')->onDelete('cascade');
+            // $table->foreign('clint_id')->references('id')->on('client_details')->onDelete('set null');
         });
     }
 

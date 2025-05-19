@@ -36,6 +36,11 @@ interface VisaRepositoryInterface
     public function getPendingBookingByid($id);
     public function payment($data);
     public function checkBalance($id,$totalAmount);
+    public function updateClientBooking($id,$data);
+    public function createClientBooking($id,$data);
+    public function updateVisaAssignment(array $data, int $id);
+
+
    
 
     

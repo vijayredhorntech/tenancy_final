@@ -43,6 +43,9 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\ClientLoginController;
+use App\Http\Controllers\NotificationController;
+
+
 
 
 
@@ -70,7 +73,7 @@ Route::get('/viewtest',function (){
 // return view('viewtest');
 }); 
 
-// Route::get('/migration',[AgencyAdminController::class,'migration']);
+Route::get('/migration',[AgencyAdminController::class,'migration']);
 
 Route::get('/dummy-agencies', [AgencyController::class, 'dummyCreateAgency']);
 Route::post('/search',[GloballyController::class,'hs_globalSearch'])->name('search');
@@ -325,9 +328,16 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                  Route::post('visastore','hsStore')->name('visa.store');
                                  Route::get('/visa/assign/{id?}','hsassignVisa')->name('visa.assign');
                                  Route::post('/visa/assignstore','hsassignStore')->name('assignstore');
+                                 Route::post('/visa/assignupdatestore','hsassignupdateStore')->name('assignupdatestore');
+
                                  Route::get('/viewsubtype/{id}','hsViewSubtype')->name('visa.viewsubtype');
                                  Route::get('/viewdelete/{id}','hsViewdelete')->name('visa.delete');
                                  Route::get('/subtypedelete/{id}','hsVisasutypdelete')->name('visasubtype.delete');
+                                 Route::get('/subtypeedit/{id}','hseditSubtype')->name('visaedit.subtype');
+                                 Route::post('/visa/updatesubtype','hsupdateSubTypeStore')->name('updatesubtype');
+
+                                 
+
                                  
 
                                 
@@ -375,10 +385,15 @@ Route::middleware([LogUserActivity::class])->group(function () {
                             Route::get('/suppliersetting', 'hs_hotelsupplier')->name('supplier.hotel');
                         });
 
-                      
-                
+                        Route::controller(NotificationController::class)->group(function () {
+                            Route::get('/notification', 'hs_indexNotificationAll')->name('notification.index');
+                            Route::get('/notifications/view/{id}', 'hsviewNotification')->name('notifications.view');
+                            Route::post('/notifications/assign/{id}', 'hsAssignNotification')->name('notifications.assign');
+                            Route::post('/notifications/assign/user', 'hsAssignUser')->name('assign.user');
 
-    });
+                        });
+
+   });
 
     
 

@@ -1,8 +1,3 @@
-<x-front.layout>
-@section('title') Visa Application @endsection
-
-
-
 <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
 {{--        === this is code for heading section ===--}}
@@ -67,12 +62,7 @@
 
                                 @endif
 
-                                <a href="{{ route('superadminvisa.applicationview', ['id' => $document->id]) }}" title="Assign to Visa Request">
-                                    <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                        <i class="fa fa-eye"></i> <!-- FontAwesome icon -->
-                                    </div>
-                                </a>
-
+                         
                             </div>
                         </td>  
                     </tr>
@@ -91,7 +81,3 @@
 
         </div>
   </div>
-
-
-
-</x-front.layout>

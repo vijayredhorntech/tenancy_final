@@ -134,9 +134,8 @@ class ClientController extends Controller
             'reference_address' => 'nullable|string|max:255',
         ]);
 
-     
         $clients = $this->clintRepository->getStoreclint($request->all());
-       
+        dd($clients);
         return redirect()->route('client.index')->with('success', 'Client added successfully.');
     }
 

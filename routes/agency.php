@@ -134,7 +134,7 @@ Route::group([
         Route::get('/get-visa-services','him_getService' )->name('get.visa.services');
         Route::post('/visabook','hsVisaBook')->name('visa.book');
         Route::get('/verifyapplication/{id}','hs_verifyapplication')->name('verify.application');
-        Route::get('visapayment/{id}','him_visaApplicationPay')->name('visaapplication.pay');
+        Route::post('visapayment/{id}','him_visaApplicationPay')->name('visaapplication.pay');
 
 
         Route::get('/documentpending','hsVisaDocumentpending')->name('visa.documentpending');

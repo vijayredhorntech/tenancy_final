@@ -126,13 +126,7 @@
                                    <input type="submit" class="cursor-pointer bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton" value=" Proceed To Payment">
                         </div>
 
-                      <div class="insufficientbalance">
-                        <span class=" mt-4 showLoader w-full font-semibold text-md bg-danger/80 text-white/90 px-6 py-2 rounded-[3px] border-[1px] border-danger hover:bg-danger hover:text-white transition ease-in duration-2000"
-                              label="Book Now"> Insufficient Balance </span>
-                          <div class="flex  text-center mt-2 font-semibold text-danger">
-                              <p >*** Please contect administrator for funds </p>
-                          </div>
-                      </div>
+                      
 
                   </form>
               </div>
@@ -168,8 +162,21 @@
           </section>
       </div>
     @section('scripts')
+    <!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
 
+$(document).ready(function() {
+        $('#existingUserDropdown').select2({
+            placeholder: "---Select USer---",
+            allowClear: true,
+            containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
+        });
+      
+    });
 
 // Function to get today's date in YYYY-MM-DD format
 // Function to get today's date in YYYY-MM-DD format
@@ -348,7 +355,7 @@ function getTodayDate() {
     /****Ajax for get type of****** */
 $(document).ready(function () {
     // alert('heelo');
-    jQuery('.submitbutton').hide();
+    // jQuery('.submitbutton').hide();
     function fetchCategories() {
         var visa_type_id = $("#typeof").val();
         if (visa_type_id) {
@@ -410,13 +417,7 @@ $(document).ready(function () {
 
 
         var total = visaPrice + commission; // Correct addition
-        if (balance < total) {  // Corrected condition
-            jQuery(".submitbutton").hide();
-            jQuery(".insufficientbalance").show();
-        } else {
-            jQuery(".submitbutton").show();
-            jQuery(".insufficientbalance").hide();
-        }
+       
 
         $(".visa-price").text("£" + visaPrice.toFixed(2)); // Update displayed price
         $(".visa-commision").text("£" + commission.toFixed(2)); // Update displayed commission

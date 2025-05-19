@@ -112,5 +112,10 @@ class AgencyService
         DatabaseHelper::setDatabaseConnection($database);
      }
 
+     public function getLoginClient(){
+         $userData = session('user_data');
+         return $userData;
+
+     }
      
 }

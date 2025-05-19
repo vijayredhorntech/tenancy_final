@@ -1,5 +1,32 @@
 <x-agency.layout>
+<style>
+    .select2-container
+    {
+        padding: 4px 22px !important;
+        border: 1px solid #ff4216 !important;
+        width: 100% !important;
+        border-radius: 4px!important;
+        
+
+    }
+    .select2-container--default .select2-selection--single
+    {
+        border:0px !important;
+        border-radius: 0px!important;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+   
+    display: none !important;
+    }
+</style>
+
+
     @section('title') Visa View @endsection
+    <!-- In your Blade template head section -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Before closing body tag -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
         <div class=" w-full ">
             <div class="w-full lg:h-[400px] md:h-[400px] sm:h-[300px] h-[200px] bg-black rounded-md bg-center bg-cover bg-no-repeat relative z-20" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://www.goodwind.in/static/images/world-bg.jpg');">
@@ -13,21 +40,29 @@
                         <form action="{{ route('searchvisa') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     {{--add this div if there are 4 inputs--}}
-                                    <div class=" grid grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-2 p-4">
+                                    <div class=" grid grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 p-4">
 
                                     {{--add this div if there are 2 inputs--}}
 {{--                                    <div class=" grid grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 p-4">--}}
                                        <div class="w-full flex flex-col gap-1">
                                            <label for="leavingFrom" class="text-ternary font-bold text-sm">Visa From</label>
                                            <div class="w-full relative">
-                                               <select name="origincountry" id="origincountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                           <select name="origincountry" id="origincountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                                <option value="">---Select Country---</option>
+                                                @forelse($countries as $country)
+                                                    <option value="{{ $country->id }}">{{ $country->countryName }}</option>
+                                                @empty
+                                                    <option value="">No record found</option>
+                                                @endforelse
+                                            </select>
+                                               <!-- <select name="origincountry" id="origincountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                                    <option value="">---Select Country---</option>
                                                    @forelse($countries as $country)
                                                        <option value="{{$country->id}}">{{$country->countryName}}</option>
                                                    @empty
                                                        <option value="">No record found</option>
                                                    @endforelse
-                                               </select>
+                                               </select> -->
                                                <i class="fa fa-location-dot text-secondary absolute left-3 text-xl top-[60%] translate-y-[-60%]"></i>
                                                <i class="fa-solid fa-chevron-down text-black absolute right-3 text-xl top-[60%] translate-y-[-60%]"></i>
                                            </div>
@@ -36,20 +71,29 @@
                                         <div class="w-full flex flex-col gap-1">
                                             <label for="arriveTo" class="text-ternary font-bold text-sm">Visa To</label>
                                             <div class="w-full relative">
-                                                <select name="destinationcountry" id="destinationcountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                                <!-- <select name="destinationcountry" id="destinationcountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                                     <option value="">---Select Country---</option>
                                                     @forelse($countries as $country)
                                                         <option value="{{$country->id}}">{{$country->countryName}}</option>
                                                     @empty
                                                         <option value="">No record found</option>
                                                     @endforelse
-                                                </select>
+                                                </select> -->
+                                                <select name="destinationcountry" id="destinationcountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                                <option value="">---Select Country---</option>
+                                                @forelse($countries as $country)
+                                                    <option value="{{ $country->id }}">{{ $country->countryName }}</option>
+                                                @empty
+                                                    <option value="">No record found</option>
+                                                @endforelse
+                                            </select>
+                                          
 
                                                 <i class="fa fa-location-dot text-secondary absolute left-3 text-xl top-[60%] translate-y-[-60%]"></i>
                                                 <i class="fa-solid fa-chevron-down text-black absolute right-3 text-xl top-[60%] translate-y-[-60%]"></i>
                                             </div>
                                         </div>
-                                        <div class="w-full flex flex-col gap-1">
+                                        <!-- <div class="w-full flex flex-col gap-1">
                                             <label for="arriveTo" class="text-ternary font-bold text-sm">Your Citizenship</label>
                                             <div class="w-full relative">
                                                 <select name="" id="destinationcountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
@@ -81,7 +125,7 @@
                                                 <i class="fa-solid fa-chevron-down text-black absolute right-3 text-xl top-[60%] translate-y-[-60%]"></i>
                                             </div>
                                         </div>
-                                        {{--add this div if there are 4 inputs--}}
+                                        {{--add this div if there are 4 inputs--}} -->
                                         <div class="w-full lg:col-span-4 md:col-span-4 sm:col-span-2 col-span-1 flex justify-end ">
                                             {{--add this div if there are 2 inputs--}}
 {{--                                            <div class="w-full lg:col-span-2 md:col-span-2 sm:col-span-2 col-span-1 flex justify-end ">--}}
@@ -174,4 +218,22 @@
                        </div>
                    </div>
         </div>
+
+        <script>
+    $(document).ready(function() {
+        $('#origincountry').select2({
+            placeholder: "---Select Country---",
+            allowClear: true,
+            containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
+        });
+    });
+    $(document).ready(function() {
+        $('#destinationcountry').select2({
+            placeholder: "---Select Country---",
+            allowClear: true,
+            containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
+        });
+    });
+</script>
+
 </x-agency.layout>

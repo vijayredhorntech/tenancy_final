@@ -119,13 +119,16 @@ class DocumentController extends Controller
 
     /*** Document Status** */
     public function hs_storeUpdateDocument(Request $request){
+        // dd($request->all());
         $request->validate([
             'documentid' => 'required|integer|exists:client_application_documents,id',  
             'documentname' => 'required|string|max:255',
             'document_status' => 'required|in:0,1,2',
         ]);
+        $document=$this->documentSignRepository->getUploadeDocumentById($request->documentid);
+        // dd($document);
         $storeDocument = $this->documentSignRepository->updateDocumentStatus($request->all());
-        return redirect()->route('client.document.view', ['id' => $request->documentid])
+        return redirect()->route('superadminvisa.applicationview', ['id' => $document->application_id])
         ->with('success', 'Document uploaded successfully.');
         
     }

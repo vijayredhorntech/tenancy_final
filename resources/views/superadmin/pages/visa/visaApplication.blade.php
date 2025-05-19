@@ -97,32 +97,33 @@
 
     
                     @forelse($allbookings as $booking)
-
-       
+                   
+                      
                         <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking->application_number}}</td>
 
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">
-                            @php
-                                        $fullName = isset($booking->clint) && isset($booking->clint->name) && isset($booking->clint->name) 
-                                                    ? $booking->clint->name 
-                                                    : '';
-                                        $cleanName = str_replace(',', '', $fullName);
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                    @php
+                                        if (isset($booking->otherclientid) && isset($booking->otherapplicationDetails)) {
+                                            $firstName = $booking->otherapplicationDetails?->name ?? '';
+                                            $lastName = $booking->otherapplicationDetails?->lastname ?? '';
+                                            $fullName = trim($firstName . ' ' . $lastName);
 
-                                        $email = isset($booking->clint) && isset($booking->clint) && isset($booking->clint->email) 
-                                                ? $booking->clint->email 
-                                                : '';
-
-                                        $phone = isset($booking->clint) && isset($booking->clint) && isset($booking->clint->phone_number) 
-                                                ? $booking->clint->phone_number 
-                                                : '';
+                                            $email = $booking->clint?->email ?? '';
+                                            $phone = $booking->clint?->phone_number ?? '';
+                                        } else {
+                                            $fullName = $booking->clint?->client_name ?? '';
+                                            $email = $booking->clint?->email ?? '';
+                                            $phone = $booking->clint?->phone_number ?? '';
+                                        }
                                     @endphp
 
-                                    <span>{{ $cleanName }}</span><br>
+                                    <span>{{ $fullName }}</span><br>
                                     <span class="font-medium text-xs">{{ $email }}</span><br>
                                     <span class="font-medium text-xs">{{ $phone }}</span>
-                            </td>
+                                </td>
+
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                  <span>{{$booking->visa->name }}</span><br>
                                 <span class="font-medium text-xs">{{$booking->visasubtype->name }}</span><br> 
@@ -170,13 +171,18 @@
                                     </td>
 
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                @if($booking->confirm_application==0)
+                                <a href="{{ route('verify.application', ['id' => $booking->id]) }}" title="Remind for funds">
+                                    <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
+                                        <i class="fa fa-hourglass-half"></i>
+                                    </div>
+                                </a>
+                                @else
                                 <div class="flex gap-2 items-center">
                                     @if($booking->applicationworkin_status == "Complete")              
-                                        <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                            <i class="fa fa-check"></i> <!-- FontAwesome icon -->
-                                        </div> 
+                                     
                                     @else
-                                        <a href="{{ route('visaedit.application', ['id' => $booking->id]) }}" title="Remind for funds">
+                                      {{--  <a href="{{ route('visaedit.application', ['id' => $booking->id]) }}" title="Remind for funds">
                                             <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
                                                 <i class="fa fa-pencil"></i>
                                             </div>
@@ -192,7 +198,7 @@
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fas fa-comment-dots"></i>
                                         </div>
-                                      </a>
+                                      </a>--}}
                                     @endif
 
                                     {{-- <a href="{{ route('visa.assign', ['id' => $booking->id]) }}" title="Assign to Visa Request">
@@ -208,13 +214,14 @@
                                     </a>
 
                                     @if($booking->sendtoadmin == 0)  
-                                    <a href="{{ route('visa.sendtoadmin', ['id' => $booking->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
+                                  {{--  <a href="{{ route('visa.sendtoadmin', ['id' => $booking->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
                                         <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
                                             <i class="fa fa-paper-plane"></i> <!-- "Send" icon -->
                                         </div>
-                                    </a>
+                                    </a>--}}
                                    
                                   
+                                    @endif
                                     @endif
                                     <!-- <a href="" title="View Dashboard">
                                         <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">

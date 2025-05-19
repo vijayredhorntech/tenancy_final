@@ -77,14 +77,7 @@ class VisaController extends Controller
 //    all application
     public function hs_visaAllApplication(){
         $allbookings = $this->visaRepository->getSuperadminAllApplication();
-<<<<<<< HEAD
      
-
-        
-     
-=======
-
->>>>>>> 633271dd7aeaec5f286db9acb55f22c72281e83b
         return view('superadmin.pages.visa.superadminallapplication', compact('allbookings'));
     }
 
@@ -97,7 +90,8 @@ class VisaController extends Controller
 
     public function hs_viewSAApplication($id){
 
-
+        // 
+        
         $clientData = $this->visaRepository->bookingDataById($id);
         // dd($clientData);
         $origin_id=$clientData->origin_id;
@@ -138,23 +132,23 @@ class VisaController extends Controller
         $data = $request->validate([
             'name'         => 'required|string|max:255|unique:visa_types,name',
             'description'  => 'nullable|string', // Allows HTML content (Quill Editor)
-            'subtype'      => 'required|array|min:1',
-            'subtype.*'    => 'string|max:255', // Each subtype should be a string
-            'subtypeprice' => 'required|array|min:1',
-            'subtypeprice.*' => 'numeric|min:0', // Each price must be a number and positive
-            'commission'   => 'required|array|min:1',
-            'commission.*' => 'numeric|min:0', // Each commission should be 0-100%
-            'validity'      => 'required|array|min:1',
-            'validity.*'    => 'string|max:255',
-            'processing'      => 'required|array|min:1',
-            'processing.*'    => 'string|max:255',
-            'gstin'   => 'required|array|min:1',
-            'gstin.*' => 'numeric|min:0',
+            // 'subtype'      => 'required|array|min:1',
+            // 'subtype.*'    => 'string|max:255', // Each subtype should be a string
+            // 'subtypeprice' => 'required|array|min:1',
+            // 'subtypeprice.*' => 'numeric|min:0', // Each price must be a number and positive
+            // 'commission'   => 'required|array|min:1',
+            // 'commission.*' => 'numeric|min:0', // Each commission should be 0-100%
+            // 'validity'      => 'required|array|min:1',
+            // 'validity.*'    => 'string|max:255',
+            // 'processing'      => 'required|array|min:1',
+            // 'processing.*'    => 'string|max:255',
+            // 'gstin'   => 'required|array|min:1',
+            // 'gstin.*' => 'numeric|min:0',
         ]);
 
         // Store Visa Data Using Repository
         $visa = $this->visaRepository->createVisa($data);
-
+        
         return redirect()->route('visa.view')->with('success', 'Visa created successfully');
     }
 
@@ -180,6 +174,7 @@ class VisaController extends Controller
     /****Visa Assign Store *****/
     public function hsassignStore(Request $request){
 
+        
         $data = $request->validate([
             'visa_name'     => 'string|max:255',
             'visa_id'       => 'required|integer|max:255',
@@ -188,14 +183,69 @@ class VisaController extends Controller
             'required'        => 'required|in:0,1',
             'description'   => 'nullable|string',
             'title_image'   => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+             'subtype'      => 'required|array|min:1',
+            'subtype.*'    => 'string|max:255', // Each subtype should be a string
+            'subtypeprice' => 'required|array|min:1',
+            'subtypeprice.*' => 'numeric|min:0', // Each price must be a number and positive
+            'commission'   => 'required|array|min:1',
+            'commission.*' => 'numeric|min:0', // Each commission should be 0-100%
+            'validity'      => 'required|array|min:1',
+            'validity.*'    => 'string|max:255',
+            'processing'      => 'required|array|min:1',
+            'processing.*'    => 'string|max:255',
+            'gstin'   => 'required|array|min:1',
+            'gstin.*' => 'numeric|min:0',
 
         ]);
-
+       
         $visa = $this->visaRepository->assignVisaToCountry($data);
 
         return redirect()->route('visa.view')->with('success', 'Visa created successfully');
 
     }
+
+
+    
+    public function hsassignupdateStore(Request $request){
+      
+        $data = $request->validate([
+            'visa_name'      => 'string|max:255',
+            'visa_id'        => 'required|integer|max:255',
+            'origincoutnry'  => 'required|integer|exists:countries,id',
+            'destination'    => 'required|integer|exists:countries,id',
+            'required'       => 'required|in:0,1',
+            'description'    => 'nullable|string',
+        
+            // Optional file
+            'title_image'    => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        
+            // Nullable arrays with validation if present
+            'subtype'        => 'nullable|array',
+            'subtype.*'      => 'nullable|string|max:255',
+        
+            'subtypeprice'   => 'nullable|array',
+            'subtypeprice.*' => 'nullable|numeric|min:0',
+        
+            'commission'     => 'nullable|array',
+            'commission.*'   => 'nullable|numeric|min:0',
+        
+            'validity'       => 'nullable|array',
+            'validity.*'     => 'nullable|string|max:255',
+        
+            'processing'     => 'nullable|array',
+            'processing.*'   => 'nullable|string|max:255',
+        
+            'gstin'          => 'nullable|array',
+            'gstin.*'        => 'nullable|numeric|min:0',
+        ]);
+
+        $visa = $this->visaRepository->updateVisaAssignment($data,$request->selectcoutnry);
+
+        return redirect()
+        ->route('visa.editcountry', ['id' => $request->selectcoutnry])
+        ->with('success', 'Visa updated successfully.');
+    }
+
 
 
     public function hseditvisa($id){
@@ -215,7 +265,9 @@ class VisaController extends Controller
         $orgin=$request->origincountry;
         $destination=$request->destinationcountry;
         $visas = $this->visaRepository->getVisabySearch($orgin,$destination);
-        return view('superadmin.pages.visa.viewsearchvisa',compact('visas'));
+        $countries=Country::get();
+        
+        return view('superadmin.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination'));
     }
 
 
@@ -254,8 +306,10 @@ class VisaController extends Controller
     /*******-Visa Sub type Delete******/
     public function hsVisasutypdelete($id)
     {
-        $visasubType = VisaSubtype::find($id); // Using find() for simplicity
 
+        $visasubType = VisaSubtype::find($id); // Using find() for simplicity
+ 
+         $visacoutnryid=$visasubType->country_type_id;
         if (!$visasubType) {
             return redirect()->back()->with('error', 'Visa Subtype not found!');
         }
@@ -264,9 +318,60 @@ class VisaController extends Controller
         $single_visa=VisaServices::find($visa_id);
         $visasubType->delete();
 
-        return redirect()->route('visa.viewsubtype', ['id' => $visa_id])
+        return redirect()->route('visa.editcountry', ['id' => $visacoutnryid])
             ->with('success', 'Visa subtype deleted successfully!');
     }
+
+    public function hseditSubtype($id){
+
+        $visasubType = VisaSubtype::find($id); // Using find() for simplicity
+ 
+        if (!$visasubType) {
+            return redirect()->back()->with('error', 'Visa Subtype not found!');
+        }
+  
+        return view('superadmin.pages.visa.editvisasubtype',compact('visasubType'));
+    }
+
+    /****Update sub type *** */
+    public function hsupdateSubTypeStore(Request $request)
+    {
+        // Validate incoming request
+        $validated = $request->validate([
+            'visasubtypeid' => 'required|integer|exists:visa_subtypes,id',
+            'subtypename'   => 'required|string|max:255',
+            'validity'      => 'required|string|max:100',
+            'processing'    => 'required|string|max:100',
+            'subtypeprice'  => 'required|numeric|min:0',
+            'commission'    => 'required|numeric|min:0|max:100',
+            'gstin'         => 'required|numeric|min:0|max:100',
+        ]);
+    
+        // Find the VisaSubtype record
+        $visasubtype = VisaSubtype::find($request->visasubtypeid);
+    
+        // Update if found
+        if ($visasubtype) {
+            $visasubtype->update([
+                'name'        => $request->subtypename,
+                'price'       => $request->subtypeprice,
+                'commission'  => $request->commission,
+                'validity'    => $request->validity,
+                'processing'  => $request->processing,
+                'gstin'       => $request->gstin,
+            ]);
+    
+            return redirect()
+                ->route('visa.editcountry', ['id' => $visasubtype->country_type_id])
+                ->with('success', 'Visa subtype updated successfully!');
+        }
+    
+        // If not found, redirect with error
+        return redirect()
+            ->back()
+            ->with('error', 'Visa subtype not found.');
+    }
+    
 
     /******VIsa country get *****/
     public function hsvisacoutnry(){
@@ -285,12 +390,15 @@ class VisaController extends Controller
 
 
     public function hseditvisacoutnry($id){
+       
         $eid=$id;
         $sectedvisa=$this->visaRepository->getVisabySearchcoutnry($id);
+
+  
         $countries=Country::get();
         $visa=VisaServices::get();
-
-       return view('superadmin.pages.visa.visaassign',compact('sectedvisa','eid','countries','visa'));
+    
+       return view('superadmin.pages.visa.editassignvisa',compact('sectedvisa','eid','countries','visa'));
 
     }
 
@@ -312,10 +420,10 @@ class VisaController extends Controller
     /**Featch Service using ajax*****/
     public function him_getService(Request $request)
     {
-
-        $visasub = VisaSubtype::where('visa_type_id', $request->visa_type_id)->get();
-
+        // dd($request->all());
         // $visasub = VisaSubtype::where('visa_type_id', $request->visa_type_id)->get();
+        $visasub = VisaSubtype::where('visa_type_id', $request->visa_type_id)->get();
+   
         $agency = $this->agencyService->getAgencyData();
 
         if (!$agency) {
@@ -361,13 +469,14 @@ class VisaController extends Controller
 
 
 
+
     public function hs_verifyapplication($id){
         $agency = $this->agencyService->getAgencyData();
         $checkuser = $this->visaRepository->bookingDataById($id);
 
         if (isset($checkuser) && $checkuser->agency_id == $agency->id) {
             $clientData = $this->visaRepository->bookingDataById($id);
-
+           
             // $checkBalance = $this->visaRepository->checkBalance($agency->id,$clientData->id);
             $checkBalance=$this->visaRepository->checkBalance($agency->id,$clientData->total_amount);
             // dd($checkBalance);
@@ -379,11 +488,24 @@ class VisaController extends Controller
 
     // pay
 
-    public function him_visaApplicationPay($id){
+    public function him_visaApplicationPay(Request $request, $id){
+        $request->validate([
+            'bookingid'    => 'required',
+            'selfapply'    => 'required_without:othermember',
+            'othermember'  => 'required_without:selfapply|array',
+        ]);
+   
         $agency = $this->agencyService->getAgencyData();
+         if(isset($request->selfapply)){
+            $this->visaRepository->updateClientBooking($id,$request->all());
+         }else{
+              $this->visaRepository->createClientBooking($id,$request->all());
+           
+         }
+
         $clientData = $this->visaRepository->bookingDataById($id);
         if (isset($clientData) && $clientData->agency_id == $agency->id) {
-            $pay=$this->visaRepository->payment($clientData);
+            // $pay=$this->visaRepository->payment($clientData);
             return view('agencies.pages.invoices.visainvoice',compact('clientData'));
         }
         return view('agency.pages.visa.payment',compact('clientData'));
@@ -398,6 +520,8 @@ class VisaController extends Controller
         /***Ger Agency Rerod in the Visa Application ****/
         $agency = $this->agencyService->getAgencyData();
         $allbookings = $this->visaRepository->getBookingByid($agency->id,$type);
+      
+     
         return view('superadmin.pages.visa.visaApplication', compact('allbookings'));
 
 
@@ -437,6 +561,7 @@ class VisaController extends Controller
         $checkuser = $this->visaRepository->bookingDataById($id);
 
             $clientData = $this->visaRepository->bookingDataById($id);
+            // dd($clientData);
             // dd($clientData);
             $origin_id=$clientData->origin_id;
             $destination_id=$clientData->destination_id;

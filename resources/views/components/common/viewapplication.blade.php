@@ -1,21 +1,6 @@
-<x-agency.layout>
-    @section('title') Visa Application @endsection
-
-    <div class="w-full relative">
+<div class="w-full relative">
         <img class="absolute -top-20 left-0 w-full opacity-20" style="z-index: -1" src="{{asset('assets/images/bgImage.png')}}" alt="">
-        @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
-        <form action="{{ route('visaapplication.pay', ['id' => $clientData->id]) }}" method="POST" class="w-full">
-           @csrf
-            <input type="hidden" name="bookingid" value="{{$clientData->id}}"> 
         <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {{-- Application Header --}}
             <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
@@ -35,7 +20,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                Payment Pending
+                                Payment Paid
                             </span>
                         </div>
                     </div>
@@ -43,7 +28,7 @@
 
                 {{-- Progress Steps --}}
                 <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                    <div class="flex justify-between items-center">
+                    <!-- <div class="flex justify-between items-center">
                         <div class="flex flex-col items-center">
                             <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold">1</div>
                             <span class="text-xs mt-1 text-gray-600">Application</span>
@@ -69,7 +54,7 @@
                             <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">4</div>
                             <span class="text-xs mt-1 text-gray-600">Completed</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -135,16 +120,8 @@
                                 Travel Group Members
                             </h3>
                         </div>
+                        <div class="p-6">
 
-                      
-                     <div class="p-6">
-                        {{-- Self Apply for All Checkbox --}}
-                                    <div class="mb-4 flex items-center space-x-2">
-                                        <input type="checkbox" id="selfApplyAll" value="yes" checked name="selfapply" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                        <label for="selfApplyAll" class="text-sm font-medium text-gray-700">Apply for self</label>
-                                    </div>
-
-                                 
                             @if(count($clientData->otherclients) > 0)
                                 <div class="overflow-x-auto">
                                     <table class="min-w-full divide-y divide-gray-200">
@@ -157,11 +134,8 @@
                                         </tr>
                                         </thead>
                                         <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach($clientData->otherclients as $index =>  $otherclient)
+                                        @foreach($clientData->otherclients as $otherclient)
                                             <tr>
-                                                <td class="px-4 py-3">
-                                                    <input type="checkbox" value="{{$otherclient->id}}" checked name="othermember[{{ $index }}]" class="self-apply-checkbox h-4 w-4 text-blue-600 border-gray-300 rounded">
-                                                </td>
                                                 <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{{ $otherclient->name  ?? 'N/A' }} {{ $otherclient->lastname  ?? 'N/A' }}</td>
                                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $otherclient->passport_number ?? 'N/A' }}</td>
                                                 <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $otherclient->passport_issue_date ?? 'N/A' }}</td>
@@ -233,41 +207,15 @@
                             </div>
 
                             <div class="mt-6 space-y-3">
-                                @if($checkBalance)
-                               {{--  <a href="{{route('visaapplication.pay',['id'=>$clientData->id])}}" class="block w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-200 flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                        </svg>
-                                        Pay Now
-                                    </a> --}}
-                                    <button type="submit" class="block w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-200 flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                        </svg>
-                                        Pay Now
-                                    </button>
-                                @else
-                                    <button class="w-full bg-gray-400 cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg text-center flex items-center justify-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                        Insufficient Balance
-                                    </button>
-                                    <p class="text-sm text-red-500 text-center">Please contact administrator to add funds</p>
-                                @endif
+                            
+                                
+                               
 
-                                <a href="#" class="block w-full border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg text-center transition duration-200 hover:bg-gray-50 flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
-                                    </svg>
-                                    Back to Dashboard
-                                </a>
+                                
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-</form>  
     </div>
-</x-agency.layout>

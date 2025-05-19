@@ -199,7 +199,7 @@
                                     </a> -->
 
                                
-                                    <a href="{{route('form.delete',['id' => $form->id])}}" title="Delete From">
+                                    <a href="{{route('form.delete',['id' => $form->id])}}" title="Delete From" onclick="return confirm('Are you sure you want to Delete this item?');">
                                         <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-trash"></i>
                                         </div>

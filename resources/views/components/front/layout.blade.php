@@ -156,15 +156,15 @@
 </script>
 
 <script>
-        let counter = 1; // Initial counter for unique field names
+        let documentcounter = 1; // Initial documentcounter for unique field names
 
         document.getElementById('addDocumentBtn').addEventListener('click', function(event) {
             event.preventDefault(); // Prevent default behavior
 
             let container = document.getElementById('documentContainer');
 
-            if (counter < 10) { // Limit to 10 sets
-                counter++; // Increment counter
+            if (documentcounter < 10) { // Limit to 10 sets
+                documentcounter++; // Increment documentcounter
 
                 // Create a new wrapper div
                 let docWrapper = document.createElement('div');
@@ -173,9 +173,9 @@
                 // Document Name Field
                 let documentField = `
                     <div class="w-full flex flex-col gap-1">
-                        <label for="document${counter}" class="font-semibold text-gray-700 text-sm">Document Name</label>
+                        <label for="document${documentcounter}" class="font-semibold text-gray-700 text-sm">Document Name</label>
                         <div class="w-full relative">
-                            <input type="text" name="document${counter}" id="document${counter}" placeholder="Document name..."
+                            <input type="text" name="document${documentcounter}" id="document${documentcounter}" placeholder="Document name..."
                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                             <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                         </div>
@@ -184,9 +184,9 @@
                 // File Upload Field
                 let fileField = `
                     <div class="w-full flex flex-col gap-1">
-                        <label for="file${counter}" class="font-semibold text-gray-700 text-sm">Attachment</label>
+                        <label for="file${documentcounter}" class="font-semibold text-gray-700 text-sm">Attachment</label>
                         <div class="w-full relative">
-                            <input type="file" name="file${counter}" id="file${counter}"
+                            <input type="file" name="file${documentcounter}" id="file${documentcounter}"
                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                             <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                         </div>
@@ -195,7 +195,7 @@
                 // Remove Button
                 let removeBtn = `
                   <div class="w-max flex flex-col gap-1 remove-btn">
-                        <label for="file${counter}" class="font-semibold text-gray-700 text-sm">&nbsp</label>
+                        <label for="file${documentcounter}" class="font-semibold text-gray-700 text-sm">&nbsp</label>
                         <div class="w-full relative">
                           <button type="button" class="w-max h-max text-sm bg-danger/30 px-4 py-1 mt-2 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-danger/90 text-ternary hover:text-white hover:bg-danger hover:border-ternary/30 transition ease-in duration-2000">Remove</button>
                         </div>

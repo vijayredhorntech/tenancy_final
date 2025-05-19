@@ -1,99 +1,280 @@
 <x-agency.layout>
+   
     @section('title') Visa Application @endsection
 
-        <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
-            {{-- === Heading Section === --}}
-            <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">Visa Application Details</span>
-            </div>
 
-            {{-- === Visa Forms Section === --}}
-            <!-- <div class="w-full p-4 bg-gray-50 border-b-[2px] border-b-ternary/10">
-                <div class="flex gap-4 overflow-x-auto">
-                    @foreach ($forms as $form)
-                        <div class="bg-blue-100 border-[1px] border-b-[2px] border-r-[2px] border-blue-300 p-3 rounded-[3px] rounded-tr-[8px] min-w-[200px] shadow-md">
-                            <h3 class="text-md font-semibold text-blue-900">{{ $form->from->form_name }}</h3>
-                            <a href="{{ route('view.form', ['viewid' => Str::slug($form->from->form_name), 'id' => $clientData->id]) }}" 
-                                target="_blank" 
-                                class="mt-2 inline-block bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition">
-                                    View Form
-                                </a>
-                        </div>
-                    @endforeach
+        <style> 
+        .card {
+                width: 600px;
+                background: white;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                position: relative;
+            }
+
+            .background-pattern {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: repeating-linear-gradient(45deg,
+                rgba(128,128,128,0.05) 0px,
+                rgba(128,128,128,0.05) 2px,
+                transparent 2px,
+                transparent 8px
+                );
+                z-index: 0;
+            }
+
+            .header {
+                color: white;
+                padding: 15px 0px;
+                font-size: 24px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                position: relative;
+                z-index: 1;
+            }
+            .headerTitle
+            {
+                background: #0066cc;
+                color: white;
+                padding: 15px 20px;
+                font-size: 24px;
+                border-bottom-right-radius: 50px;
+                border-top-right-radius: 50px;
+            }
+
+            .logo {
+                width: 80px;
+                height: 80px;
+                background: white;
+                border-radius: 50%;
+                padding: 5px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-right: 20px;
+            }
+
+            .logo img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+
+            .content {
+                padding: 20px;
+                display: flex;
+                gap: 20px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .photo {
+                width: 120px;
+                height: 150px;
+                background: #f0f0f0;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .photo img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .details {
+                flex: 1;
+            }
+
+            .field {
+                margin-bottom: 15px;
+            }
+
+            .field-label {
+                font-weight: bold;
+                margin-right: 10px;
+            }
+
+            .barcode {
+                margin-top: 20px;
+                text-align: center;
+            }
+
+            .barcode img {
+                height: 50px;
+                width: 80%;
+            }
+
+            .id-number {
+                color: #0066cc;
+                font-weight: bold;
+                margin-top: 10px;
+            }
+
+
+            .container { width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; }
+            .header { text-align: center; font-size: 20px; font-weight: bold; }
+            .details { margin-top: 20px; }
+            .details table { width: 100%; border-collapse: collapse; }
+            .details th, .details td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+            .footer { margin-top: 20px; text-align: center; font-size: 12px; }
+        </style>
+
+
+    <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
+
+        <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
+            <span class="font-semibold text-ternary text-xl"></span>
+            <span class="font-semibold text-ternary text-xl">
+              Application Number:=>  {{ $clientData->application_number ?? 'N/A' }} 
+                
+
+               </span>
+
+            <span class="font-semibold text-ternary text-xl"></span>
+
+            
+        </div>
+
+        
+
+
+        <div class="w-full overflow-x-auto p-4">
+                <div class="w-full flex flex-wrap ">
+
+                <div data-tid="ViewApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] bg-secondary/40 border-[2px] border-secondary/60 border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-file-alt text-ternary"></i>
+                    Application
                 </div>
-            </div> -->
 
-            {{-- === Application Details Table === --}}
-            <div class="w-full p-4 border-b-[2px] border-b-ternary/10">
-                <div class="w-full border-collapse">
-                    @php
-                        $details = [
-                            'Application ID' => $clientData->application_number ?? 'N/A',
-                            'Full Name' => $clientData->clint->name ?? 'N/A',
-                            'Email' => $clientData->clint->email ?? 'N/A',
-                            'Phone Number' => $clientData->clint->phone_number ?? 'N/A',
-                            'Visa Type' => $clientData->visa->name ?? 'N/A',
-                            'Origin' => $clientData->origin->countryName ?? 'N/A',
-                            'Destination' => $clientData->destination->countryName ?? 'N/A',
-                            'Fee (USD)' => '£' . number_format($clientData->total_amount ?? 0, 2),
-                            'Application Date' => $clientData->created_at ? $clientData->created_at->format('d M Y') : 'N/A'
-                        ];
-                    @endphp
-                    @foreach ($details as $key => $value)
-                        <div class="flex border-b-[1px] border-b-ternary/20 py-3">
-                            <div class="w-1/3 font-semibold bg-gray-100 text-gray-700 p-2 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40">
-                                {{ $key }}:
-                            </div>
-                            <div class="w-2/3 p-2 text-gray-800">
-                                {{ $value }}
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
+                <!-- <div data-tid="formsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-file-alt text-ternary"></i>
+                    Forms
+                </div> -->
 
-            {{-- === Other Members Section === --}}
-            <div class="w-full p-4">
-                <div class="border-b-[2px] border-b-secondary/50 w-max pr-20 mb-4">
-                    <span class="text-lg font-bold text-ternary">Other Members</span>
+            @if($clientData->applicationworkin_status !== "Complete")   
+              @if($clientData->sendtoadmin == 1) 
+                 <div data-tid="uploadeDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                 <i class="fas fa-arrow-up-from-bracket text-ternary"></i>
+                    Upload Document
                 </div>
 
-                <div class="overflow-x-auto">
-                    <table class="w-full border-collapse">
-                        <thead>
-                        <tr class="bg-primary/10">
-                            <th class="p-3 text-left font-semibold text-ternary border-b-[2px] border-b-primary/20">Name</th>
-                            <th class="p-3 text-left font-semibold text-ternary border-b-[2px] border-b-primary/20">Passport Number</th>
-                            <th class="p-3 text-left font-semibold text-ternary border-b-[2px] border-b-primary/20">Issue Date</th>
-                            <th class="p-3 text-left font-semibold text-ternary border-b-[2px] border-b-primary/20">Expire Date</th>
-                            <th class="p-3 text-left font-semibold text-ternary border-b-[2px] border-b-primary/20">Place of Issue</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @forelse($clientData->otherclients as $otherclient)
-                            <tr class="border-b-[1px] border-b-ternary/20 hover:bg-gray-50 transition">
-                                <td class="p-3">{{ $otherclient->lastname}}</td>
-                                <td class="p-3">{{ $otherclient->passport_number ?? '' }}</td>
-                                <td class="p-3">{{ $otherclient->passport_issue_date ?? '' }}</td>
-                                <td class="p-3">{{ $otherclient->passport_expire_date ?? '' }}</td>
-                                <td class="p-3">{{ $otherclient->place_of_issue ?? '' }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center p-4 text-gray-600">No Record Found</td>
-                            </tr>
-                        @endforelse
-                        </tbody>
-                    </table>
+                <div data-tid="visaRequestDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                <i class="fas fa-file-download text-ternary"></i>
+                     Download Document
+                </div> 
+             @endif
+
+             
+
+                <div data-tid="editApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-edit text-ternary"></i>
+                    Edit Application
                 </div>
-            </div>
+            
+             @else           
+                  <!-- <div data-tid="uploadDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                        <i class="fas fa-upload text-ternary"></i>
+                        Upload Document
+                    </div> -->
+                    <div data-tid="downaloadDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                <i class="fas fa-file-download text-ternary"></i>
+                     Download Document
+                </div>
+             
+            @endif 
+            <div data-tid="sendEmailDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-envelope text-ternary"></i>
+                    Send Email
+                </div>
 
-            {{-- === Back Button === --}}
-            <div class="w-full flex justify-end px-4 pb-4 gap-2 mt-4">
-                <a href="#" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">
-                    Back to List
-                </a>
-            </div>
+                <a href="{{ route('agencychat.client', ['id' => $clientData->client_id, 'token' => $clientData->agency->agencytoken]) }}">
+                  <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-comments text-ternary"></i>
+                    Conversation
+                </div>
+               </a>
 
-        </div></x-agency.layout>
+               @if($clientData->sendtoadmin == 0)  
+
+               <a href="{{ route('visa.sendtoadmin', ['id' => $clientData->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
+             
+                  <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fa fa-paper-plane"></i>
+                    Send to Admin 
+                </div>
+               </a>
+               @endif
+               
+
+              </div>
+
+                <div class="w-full mt-4 ">
+            <!-- start joing letter  -->
+
+                <!-- view application  -->
+                <div id="ViewApplicationDiv" class="tab  ">
+                    <x-common.viewapplication :clientData="$clientData" />
+  
+                </div>
+
+                <!-- end applicatoin  -->
+
+                <div id="uploadeDocumentDiv" class="tab hidden">
+                    <x-common.documentupload :booking="$clientData" />             
+                </div>
+
+      <!-- end joing letter  -->
+                    <div id="downaloadDocumentDiv" class="tab  hidden">
+                        <x-common.downloaddocument :booking="$clientData" /> 
+                    </div>
+
+            <!-- end joing letter  -->
+                <div id="formsDiv" class="tab  hidden">
+                     <x-common.forms :clientData="$clientData" :forms="$forms" /> 
+                 </div>
+
+                    <!-- icard -->
+                    <div id="editApplicationDiv" class="tab hidden">
+                        <x-common.editapplication :clientData="$clientData" :forms="$forms" :status="true"  /> 
+                    </div>
+
+                      <!-- attendance -->
+                      <div id="uploadDocumentDiv" class="tab hidden">
+                         <x-common.uploadclient :booking="$clientData" :forms="$forms" /> 
+                      </div>
+
+                      
+                      <div id="sendEmailDiv" class="tab hidden">
+                        <x-common.sendemail :clientData="$clientData" :forms="$forms" />  
+                    </div>       
+                </div>
+
+            </div>
+        </div>
+
+        <script>
+        jQuery(document).ready(function () {
+            jQuery(document).on("click", ".agency_tab", function () {
+                                var id = jQuery(this).data('tid');
+                                  jQuery(".agency_tab").removeClass("bg-secondary/40 border-[2px] border-secondary/60");
+                                jQuery(this).addClass("bg-secondary/40 border-[2px] border-secondary/60");
+
+                                // Hide all tabs and show the selected one
+                                jQuery(".tab").hide();
+                                jQuery("#" + id).show();
+                            });
+                });
+
+        </script>
+
+
+    
+    </x-agency.layout>

@@ -5,11 +5,11 @@
 
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">Assign Country</span>
+                <span class="font-semibold text-ternary text-xl">Visa Type</span>
                 <!-- <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">Create New Agency</button> -->
             </div>
 {{--        === heading section code ends here===--}}
-
+    
 
 
 {{--        === this is code for form section ===--}}
@@ -53,7 +53,7 @@
 
 
 
-                    <div id="subtypeContainer" class="px-4"   >
+           {{--         <div id="subtypeContainer" class="px-4"   >
 
                     @if(isset($eid))
                     <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
@@ -207,7 +207,7 @@
                         <button type="button" id="addMore" class="clickedit px-4 py-2 bg-blue-600 text-white rounded shadow"  style="{{ isset($eid) ? 'display: none;' : '' }}">+ Add More</button>
                     </div>
 
-
+           --}}
                     <!-- Add More Button -->
 
                     <!-- Submit & Cancel Buttons -->
@@ -231,7 +231,7 @@
 
         </div>
 
-        @section('scripts')
+        <!-- @section('scripts')
       <script>
 
               jQuery("#showButton").on("click",function (){
@@ -264,5 +264,5 @@
                     });
                 });
             </script>
-            @endsection
+            @endsection -->
 </x-front.layout>

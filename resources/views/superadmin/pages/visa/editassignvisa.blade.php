@@ -25,8 +25,8 @@
 
 {{--        === this is code for form section ===--}}
              <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 ">
-                
-             <form action="{{ route('assignstore') }}" method="POST" enctype="multipart/form-data">
+              
+             <form action="{{ route('assignupdatestore') }}" method="POST" enctype="multipart/form-data">
                @csrf
                      <div class="w-full grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-4  sm:grid-cols-2 gap-2 px-4 py-6">
 
@@ -39,31 +39,26 @@
                              </div>
                          </div>
 
-                         @if(isset($single_visa->name))
-
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <label for="name" class="font-semibold text-ternary/90 text-sm">Visa Type</label>
-                             <div class="w-full relative">
-                                 <input type="text" name="visa_name" id="title_image" readonly=""  value="{{$single_visa->name}}"placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                 <input type="hidden" name="visa_id" value="{{$single_visa->id}}">
-                             </div>
-                         </div>
-                         @else
-                         
+                       
+                         <input type="hidden" name="selectcoutnry" value="{{$sectedvisa->id}}">
+                      
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Visa Type</label>
                              <div class="w-full relative">
-                                 <select  name="visa_id" id="datePicker"
-                                          class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                
-                                   
-                                     <option value="">---Select---</option>
-                                     @forelse($visa as $single_visa)
-                                     <option value="{{$single_visa->id}}">{{$single_visa->name}}</option>
-                                     @empty
-                                     <option value="">NO record found</option>
-                                     @endforelse
-                                 </select>
+                             <select name="visa_id" id="datePicker"
+                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                        
+                                        <option value="">---Select---</option>
+                                        
+                                        @forelse($visa as $single_visa)
+                                            <option value="{{ $single_visa->id }}" {{ isset($sectedvisa) && $sectedvisa->visa_id == $single_visa->id ? 'selected' : '' }}>
+                                                {{ $single_visa->name }}
+                                            </option>
+                                        @empty
+                                            <option value="">NO record found</option>
+                                        @endforelse
+                                    </select>
+
                                  <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
                                  @error('visa_id')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -72,7 +67,7 @@
                          </div>
 
 
-                         @endif
+                
 
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Origin</label>
@@ -81,10 +76,12 @@
                                           class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                      <option value="">---Select---</option>
                                      @forelse($countries as $country)
-                                     <option value="{{$country->id}}">{{$country->countryName}}</option>
-                                     @empty
-                                     <option value="">NO record found</option>
-                                     @endforelse
+                                            <option value="{{ $country->id }}" {{ isset($sectedvisa) && $sectedvisa->origin == $country->id ? 'selected' : '' }}>
+                                                {{ $country->countryName }}
+                                            </option>
+                                        @empty
+                                            <option value="">NO record found</option>
+                                        @endforelse
                           
                                  </select>
                                  <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
@@ -98,15 +95,17 @@
                          <div class="w-full relative group flex flex-col  gap-1">
                              <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Destination</label>
                              <div class="w-full relative">
-                                 <select  name="destination" id="datePicker"
-                                          class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                     <option value="">---Select---</option>
-                                     @forelse($countries as $country)
-                                     <option value="{{$country->id}}">{{$country->countryName}}</option>
-                                     @empty
-                                     <option value="">NO record found</option>
-                                     @endforelse
-                                 </select>
+                             <select name="destination" id="destination"
+                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                        <option value="">---Select---</option>
+                                        @forelse($countries as $country)
+                                            <option value="{{ $country->id }}" {{ isset($sectedvisa) && $sectedvisa->destination == $country->id ? 'selected' : '' }}>
+                                                {{ $country->countryName }}
+                                            </option>
+                                        @empty
+                                            <option value="">NO record found</option>
+                                        @endforelse
+                                    </select>
                                  <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
                                  @error('destination')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -123,14 +122,19 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <span class="font-semibold text-ternary/90 text-sm">Required </span>
                              <div class="flex gap-4">
-                                 <label class="flex items-center gap-2">
-                                     <input type="radio" name="required" value="0" class="appearance-none rounded-full text-ternary/90 w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
-                                    Required
-                                 </label>
-                                 <label class="flex items-center gap-2">
-                                     <input type="radio" name="required" value="1"  checked  class="appearance-none rounded-full text-ternary/90 w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
-                                    Not Required
-                                 </label>
+                             <label class="flex items-center gap-2">
+                                        <input type="radio" name="required" value="0"
+                                            {{ old('required', isset($sectedvisa) ? $sectedvisa->required : '') == 0 ? 'checked' : '' }}
+                                            class="appearance-none rounded-full text-ternary/90 w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px] checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
+                                        Required
+                                    </label>
+
+                                    <label class="flex items-center gap-2">
+                                        <input type="radio" name="required" value="1"
+                                            {{ old('required', isset($sectedvisa) ? $sectedvisa->required : '') == 1 ? 'checked' : '' }}
+                                            class="appearance-none rounded-full text-ternary/90 w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px] checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
+                                        Not Required
+                                    </label>
                              </div>
                          </div>
                        
@@ -143,11 +147,16 @@
                          <div class="w-full relative group flex flex-col xl:col-span-4  lg:col-span-3 md:col-span-4 sm:col-span-2 gap-1 ">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Description</label>
                              <div class="w-full relative">
-                                <div id="editor" class="w-full pl-2 pr-8 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500" style="height: 200px;">{!! old('description') !!}</div>
-                                    <input type="hidden" name="description" id="description" value="{{ old('description') }}">
-                                    @error('description')
-                                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                    @enderror
+                             <div id="editor"
+                                            class="w-full pl-2 pr-8 py-1 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                                            style="height: 200px;">{!! old('description', isset($sectedvisa) ? $sectedvisa->description : '') !!}</div>
+
+                                        <input type="hidden" name="description" id="description"
+                                            value="{{ old('description', isset($sectedvisa) ? $sectedvisa->description : '') }}">
+
+                                        @error('description')
+                                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                                        @enderror
                                     <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
                                 </div>
                            </div>
@@ -155,7 +164,76 @@
 <!-- add subtype  -->
                     <div id="subtypeContainer" class="px-4"   >
 
-               
+                            @if(isset($eid))
+                            <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
+                            <tr>
+                                <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Type of visa</th>
+                                <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Validity</th>
+                                <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Processing</th>
+                                <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Embassy fee</th>
+                                <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Service fee</th>
+                                <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">GSTIN (18%)</th>
+                                <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Total cost</th>
+                                <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</th>
+                         
+
+
+                            </tr>
+
+
+
+                            @forelse($sectedvisa->Subvisas as $subvisa)
+                                <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
+                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$subvisa->name}}</td>
+                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$subvisa->validity}}</td>
+                                <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$subvisa->processing}}</td>
+                                <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$subvisa->price}}</td>
+                                <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$subvisa->commission}}</td>
+                                    @php
+                                            $price = $subvisa->price;
+                                            $commission = $subvisa->commission;
+                                            $gstPercent = 18;
+
+                                            $subtotal = $price + $commission;
+                                            $gstAmount = ($subtotal * $gstPercent) / 100;
+                                            $total = $subtotal + $gstAmount;
+                                        @endphp
+                                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                        {{ number_format($gstAmount, 2) }} 
+                                        </td>
+
+                                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                        £ {{ number_format($total, 2) }}
+                                        </td>
+                                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                        {{-- Edit Icon --}}
+                                        <div class="flex gap-2 items-center">
+                                                <a href="{{ route('visaedit.subtype', ['id' => $subvisa->id]) }}" title="Remind for funds" onclick="return confirm('Are you sure you want to edit this item?');">
+                                                    <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
+                                                        <i class="fa fa-pencil"></i>
+                                                    </div>
+                                                </a>
+
+
+                                                <a href="{{ route('visasubtype.delete', ['id' => $subvisa->id]) }}" title="Remind for funds" onclick="return confirm('Are you sure you want to Delete this item?');">
+                                                    <div class="bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-200">
+                                                        <i class="fa fa-trash"></i>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                         </td>        
+                                                 
+                                     </tr>
+
+
+                            @empty
+                                <tr>
+                                    <td colspan="9" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
+                                </tr>
+                            @endforelse
+                            </table>
+                            @endif
+
 
                             @php
 

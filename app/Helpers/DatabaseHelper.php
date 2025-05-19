@@ -111,8 +111,10 @@ class DatabaseHelper
             'database' => $databaseName,
             'username' => env('DB_USERNAME'),
             'password' => env('DB_PASSWORD'),
+            // 'username' => config('database.connections.mysql.username'),
+            // 'password' => config('database.connections.mysql.password'),
         ]]);
-    }
+    }   
 
     /****Drop Data base ***** */
 

@@ -937,7 +937,7 @@
             });
 
 
-            let counter = 1; // Initial counter for unique field names
+            // let counter = 1; // Initial counter for unique field names
 
 document.getElementById('addDocumentBtn').addEventListener('click', function(event) {
     event.preventDefault(); // Prevent default behavior

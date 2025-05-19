@@ -8,12 +8,14 @@ use Illuminate\View\Component;
 use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use App\Models\Deduction;
 
 class Navbar extends Component
 {
     public $user;
     public $login_time; // Declare login_time property
     public $isSuperAdmin; 
+    public $pendingNotification;
 
     /**
      * Create a new component instance.
@@ -26,7 +28,22 @@ class Navbar extends Component
 
         if ($this->user) {
 
-            
+            $this->pendingNotification=Deduction::with([
+                'service_name',
+                'agency',
+                'hotelBooking',
+                'hotelDetails',
+                'visaBooking.visa',
+                'visaBooking.origin',
+                'visaBooking.destination',
+                'visaBooking.visasubtype',
+                'visaBooking.clint',
+                'visaApplicant',
+                'flightBooking'
+            ])
+            ->where('displaynotification', '0')
+            ->orderBy('created_at', 'desc') // Optional: sort by recent
+            ->get();
             // dd($this->user);
             // Get the latest login time from Attendance table for today's date
             $attendance = Attendance::where('user_id', $this->user->id)
@@ -49,6 +66,7 @@ class Navbar extends Component
             'user' => $this->user,
             'login_time' => $this->login_time,
             'isSuperAdmin' => $this->isSuperAdmin,  // Pass login time to the view
+            'pendingNotifications' => $this->pendingNotification,
         ]);
     }
 }

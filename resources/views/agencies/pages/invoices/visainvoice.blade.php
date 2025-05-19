@@ -95,7 +95,7 @@
                             </div>
                             <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
                                 <p class="text-xs text-gray-500 uppercase font-medium">Status</p>
-                                <p class="font-semibold text-yellow-600">Payment Pending</p>
+                                <p class="font-semibold text-yellow-600">Paid</p>
                             </div>
                         </div>
                     </div>

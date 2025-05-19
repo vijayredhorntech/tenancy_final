@@ -52,32 +52,31 @@ class ClientLoginController extends Controller
         ]);
 
          // Find client using email and clientuid
-    $client = ClientDetails::where('email', $request->email)
-    ->where('clientuid', $request->password)
-    ->first();
-    if ($client) {
-        //    dd($client);
+            $client = ClientDetails::where('email', $request->email)
+            ->where('clientuid', $request->password)
+            ->first();
+            if ($client) {
                $agency=Agency::with(['domains', 'userAssignments.service', 'balance'])->where('id',$client->agency_id)->first();
+
+                $agencyconnnection = $this->agencyService->setConnectionByDatabase($agency->database_name);
+
+              
+                //    dd($client);
                 // dd($agency);
-               $data=[
+                $agencydatabase=ClientDetails::on('user_database')->where('clientuid',$client->clientuid)->first();
+             
+                // dd($agency);
+                $data=[
                 'domain' => $agency->domains->domain_name,
                 'database' => $agency->database_name,
                 'full_url'=>$agency->domains->full_url,
+                'agencydatabaseclient'=>$agencydatabase,
+                
             ];
 
                session(['type' => 'client']);
                \session(['user_data' => $data]);
-               
-          $agency = $this->agencyService->setConnectionByDatabase($agency->database_name);
-
-               $agencydatabase=ClientDetails::on('user_database')->where('clientuid',$client->clientuid)->first();
-               $agencydatabase->setConnection('user_database');
-               Auth::guard('client')->logout();
-
-               // Login the client using guard
-               Auth::guard('client')->login($agencydatabase);
-           
-             
+            
                return redirect()->route('client.profile');
     }
 
@@ -90,18 +89,26 @@ class ClientLoginController extends Controller
     /****Profile **** */
     public function hsClientProfile(){
 // dd('heelo');
+        // $agency=Agency::with(['domains', 'userAssignments.service', 'balance'])->where('id',$client->agency_id)->first();
+        // $agencyconnnection = $this->agencyService->setConnectionByDatabase($agency->database_name);
 
-        $client_data= Auth::guard('client')->user();
-        $userData = session('user_data');
+        // $client_data= Auth::guard('client')->user();
+        $storedata= $this->agencyService->getLoginClient(); 
+        $client_data= $storedata['agencydatabaseclient'];
+        
+        // $userData = session('user_data');
 
-        $client = $this->clintRepository->getClientById($client_data->id,$userData['database']);
+        $client = $this->clintRepository->getClientById($client_data->id,$storedata['database']);
         return view('clients.profile',compact('client'));
     }
 
     /****Application *** */
 
     public function hsClientApplication(){
-        $client_data= Auth::guard('client')->user();
+        // $client_data= Auth::guard('client')->user();
+        $storedata= $this->agencyService->getLoginClient(); 
+        $client_data= $storedata['agencydatabaseclient'];
+
        $allbookings=$this->visaRepository->getDataByClientId($client_data->id);
    
         return view('clients.allapplicatoin',compact('allbookings'));
@@ -112,7 +119,9 @@ class ClientLoginController extends Controller
       
         $detials=[];
         
-        $client_data= Auth::guard('client')->user();
+        // $client_data= Auth::guard('client')->user();
+        $storedata= $this->agencyService->getLoginClient(); 
+        $client_data= $storedata['agencydatabaseclient'];
         // dd($client_data);
         
         $agency=Agency::where('id',$client_data->agency_id)->first();
@@ -122,7 +131,7 @@ class ClientLoginController extends Controller
         // dd($client_data);
         // $userData = session('user_data');
         // dd($userData);
-        dd($client_data);
+        // dd($client_data);
         $agency=Agency::where('id',$client_data->agency_id)->first();
         return view('clients.support',compact('messages','client_data','agency'));
     }
@@ -148,7 +157,9 @@ class ClientLoginController extends Controller
             $file = $request->file('attachment');
             $filename = $file->store('messages', 'public'); // stored in storage/app/public/messages
         }
-       $client_data= Auth::guard('client')->user();
+    //    $client_data= Auth::guard('client')->user();
+        $storedata= $this->agencyService->getLoginClient(); 
+        $client_data= $storedata['agencydatabaseclient'];
         $agency=Agency::where('id',$client_data->agency_id)->first();
 
         $ticket_code = 'TICKET-' . strtoupper(Str::random(6)) . '-' . time();
@@ -170,7 +181,10 @@ class ClientLoginController extends Controller
 
      /****public function *** */
      public function hsClientNotification(){
-        $id = Auth::guard('client')->id(); 
+        // $id = Auth::guard('client')->id(); 
+        $storedata= $this->agencyService->getLoginClient(); 
+        $id= $storedata['agencydatabaseclient']->id;
+
        $allbookings  = $this->visaRepository->getPendingDocumentByCID($id); // Ensure method name is correct
         return view('clients.pendingapplication',compact('allbookings'));
       
@@ -179,11 +193,14 @@ class ClientLoginController extends Controller
     /****Upload document *** */
     public function hsClientUploadDocument($id, $type)
     {
+        // dd($id);
         $booking = $this->visaRepository->bookingDataById($id);
+        // dd($booking);
         // check agency data 
-        $agency = $this->agencyService->getAgencyData();
     
         if ($type == 'agency') {
+        $agency = $this->agencyService->getAgencyData();
+
             // Corrected the syntax issue here by removing the extra parenthesis
             if (isset($booking->agency_id) && $booking->agency_id == $agency->id) {
                 return view('agencies.pages.clients.uploaddocument', compact('booking'));    
@@ -191,9 +208,14 @@ class ClientLoginController extends Controller
                 return redirect()->route('agency.application')->with('error', 'You are not authorized to access this application.');
             }
         }
+
+        $storedata= $this->agencyService->getLoginClient(); 
+        
+        $client_data= $storedata['agencydatabaseclient'];
     
         // Check for client authorization
-        if (isset($booking->client_id) && $booking->client_id == Auth::guard('client')->id()) {
+        if (isset($booking->client_id) && $booking->client_id == $client_data->id) {
+            
             return view('clients.uploaddocument', compact('booking'));
         } else {
             return redirect()->route('client.notification')->with('error', 'You are not authorized to access this application.');
@@ -212,7 +234,7 @@ class ClientLoginController extends Controller
    
     if($request->type=='agency') {
 
-        return redirect()->route('agency.application')->with('success', 'Documents uploaded successfully.');
+        return redirect()->route('agency.application',['type' => 'all'])->with('success', 'Documents uploaded successfully.');
     }
     return redirect()->route('client.notification')->with('success', 'Documents uploaded successfully.');
        
@@ -223,7 +245,10 @@ class ClientLoginController extends Controller
 
     /******Client ***** */
     public function hsDownloadDocumentCenter(){
-        $client_data= Auth::guard('client')->user();
+        // $client_data= Auth::guard('client')->user();
+        $storedata= $this->agencyService->getLoginClient(); 
+        $client_data= $storedata['agencydatabaseclient'];
+
 
         $allbookings=$this->visaRepository->getDataByClientId($client_data->id);
         return view('clients.downloadcenter',compact('allbookings'));
@@ -231,6 +256,7 @@ class ClientLoginController extends Controller
 
     public function hsdownloadDocument($type,$id){
         $booking = $this->visaRepository->bookingDataById($id);
+
 
         if($type=='agency') {
             // check agency data
@@ -240,7 +266,12 @@ class ClientLoginController extends Controller
             }
             return redirect()->route('agency.application')->with('error', 'You are not authorized to access this application.');
         }
-        if (isset($booking->client_id) && $booking->client_id == Auth::guard('client')->id()) {
+
+
+        $storedata= $this->agencyService->getLoginClient(); 
+        $client_data= $storedata['agencydatabaseclient'];
+
+        if (isset($booking->client_id) && $booking->client_id == $client_data->id) {
             return view('clients.download',compact('booking'));
         }
     }

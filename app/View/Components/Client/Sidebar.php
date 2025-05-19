@@ -30,7 +30,10 @@ class Sidebar extends Component
 
     private function initializeData()
     {
-         $loggedInClient = Auth::guard('client')->user();
+        //  $loggedInClient = Auth::guard('client')->user();
+        $storedata= $this->agencyService->getLoginClient(); 
+        $loggedInClient= $storedata['agencydatabaseclient'];
+
          $this->user = $loggedInClient;
          $this->agency = Agency::with('userAssignments.service')->find($loggedInClient->agency_id);
    

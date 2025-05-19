@@ -192,22 +192,7 @@ class AuthController extends Controller
 
           $users = User::get();
 
-          $pending_booking = Deduction::with([
-            'service_name',
-            'agency',
-            'hotelBooking',
-            'hotelDetails',
-            'visaBooking.visa',
-            'visaBooking.origin',
-            'visaBooking.destination',
-            'visaBooking.visasubtype',
-            'visaBooking.clint',
-            'visaApplicant',
-            'flightBooking'
-        ])
-        ->where('displaynotification', '0')
-        ->orderBy('created_at', 'desc') // Optional: sort by recent
-        ->get();
+          
         
           // Pass the data to the view
             // return view('auth.admin.pages.index', ['user_data' => $user,'services' => $service]);
@@ -215,7 +200,7 @@ class AuthController extends Controller
 
             return view('superadmin.pages.welcome',compact(
                 'roles', 'service', 'agency', 'total_balance', 'bookings','users','flight_recent_booking','funds','totalagency',
-                'airlineBookings','airlinePassengerTotals','total_deduction','visa_recent_booking','hotel_recent_booking','pending_booking'));
+                'airlineBookings','airlinePassengerTotals','total_deduction','visa_recent_booking','hotel_recent_booking'));
             //  return view('auth.admin.pages.index', ['user_data' => $user,'services' => $service]);
         }
 

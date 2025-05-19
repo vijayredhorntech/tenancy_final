@@ -57,6 +57,10 @@ class VisaBooking extends Model
     public function agency(){
         return $this->hasOne(Agency::class, 'id','agency_id');
     }
+    public function clientrequestdocuments(){
+        return $this->hasMany(ClientApplicationDocument::class, 'application_id','id');
+
+    }
 
    
 }

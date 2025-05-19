@@ -29,6 +29,7 @@ use App\Mail\NewFormNotification;
 use App\Mail\VisaApplicationMail;
 use App\Models\ClientApplicationDocument;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Models\ClientDetails;
 
 
 class VisaRepository implements VisaRepositoryInterface
@@ -47,13 +48,55 @@ class VisaRepository implements VisaRepositoryInterface
        return Country::paginate(10);
     }
 
-    public function getSuperadminAllApplication(){
+    // public function getSuperadminAllApplication(){
        
-        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation','agency'])
+    //     return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation','agency'])
+    //     ->where('sendtoadmin', '1')
+    //     ->orderBy('created_at', 'desc') // Orders by latest created_at first
+    //     ->paginate(10);
+    // }
+    public function getSuperadminAllApplication()
+{
+    $bookings = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'agency'])
         ->where('sendtoadmin', '1')
-        ->orderBy('created_at', 'desc') // Orders by latest created_at first
+        ->orderBy('created_at', 'desc')
         ->paginate(10);
+
+    foreach ($bookings as $viewbooking) {
+        $database = $viewbooking->agency->database_name ?? null;
+
+        if ($database) {
+            // Set the user-specific database connection
+            $this->agencyService->setConnectionByDatabase($database);
+
+            // Load client data
+            $clientFromUserDB = ClientDetails::on('user_database')
+                ->with('clientinfo')
+                ->where('id', $viewbooking->client_id)
+                ->first();
+
+            $otherMember = AuthervisaApplication::on('user_database')
+                ->where('clint_id', $viewbooking->client_id)
+                ->where('booking_id', $viewbooking->id)
+                ->get();
+
+            $otherapplicationDetails = null;
+            if (!empty($viewbooking->otherclientid)) {
+                $otherapplicationDetails = AuthervisaApplication::on('user_database')
+                    ->where('id', $viewbooking->otherclientid)
+                    ->first();
+            }
+
+            // Override default relations with data from user DB
+            $viewbooking->setRelation('clint', $clientFromUserDB);
+            $viewbooking->setRelation('otherclients', $otherMember);
+            $viewbooking->setRelation('otherapplicationDetails', $otherapplicationDetails);
+        }
     }
+
+    return $bookings;
+}
+
 
     public function getSuperradmiNewApplication(){
 
@@ -214,18 +257,18 @@ class VisaRepository implements VisaRepositoryInterface
             $visa->save();
 
             // Save Visa Subtypes in a loop
-            foreach ($data['subtype'] as $key => $subtypeName) {
-                VisaSubtype::create([
-                    'visa_type_id' => $visa->id, // Assuming Visa Type ID is the VisaService ID
-                    'name' => $subtypeName,
-                    'price' => $data['subtypeprice'][$key],
-                    'commission' => $data['commission'][$key],
-                    'validity' => $data['validity'][$key],
-                    'processing' => $data['processing'][$key],
-                    'gstin' => $data['gstin'][$key],
-                    'status' => 1 // Default status as active
-                ]);
-            }
+            // foreach ($data['subtype'] as $key => $subtypeName) {
+            //     VisaSubtype::create([
+            //         'visa_type_id' => $visa->id, // Assuming Visa Type ID is the VisaService ID
+            //         'name' => $subtypeName,
+            //         'price' => $data['subtypeprice'][$key],
+            //         'commission' => $data['commission'][$key],
+            //         'validity' => $data['validity'][$key],
+            //         'processing' => $data['processing'][$key],
+            //         'gstin' => $data['gstin'][$key],
+            //         'status' => 1 // Default status as active
+            //     ]);
+            // }
     
             return $visa;
         });
@@ -236,6 +279,7 @@ class VisaRepository implements VisaRepositoryInterface
 public function assignVisaToCountry(array $data)
 {
  
+    // dd($data);
     return DB::transaction(function () use ($data) {
         $assign = new VisaServiceType();
         $authUserId = auth()->id();
@@ -258,19 +302,84 @@ public function assignVisaToCountry(array $data)
         $assign->description = $data['description'] ?? null;
         $assign->required = $data['required'];
         $assign->save();
+        $assignid = $assign->visa_id;
+     
+        foreach ($data['subtype'] as $key => $subtypeName) {
+                VisaSubtype::create([              
+                    'country_type_id' => $assign->id, // Assuming Visa Type ID is the VisaService ID
+                    'visa_type_id'=>$assignid,
+                    'name' => $subtypeName,
+                    'price' => $data['subtypeprice'][$key],
+                    'commission' => $data['commission'][$key],
+                    'validity' => $data['validity'][$key],
+                    'processing' => $data['processing'][$key],
+                    'gstin' => $data['gstin'][$key],
+                    'status' => 1 // Default status as active
+                ]);
+            }
+
+        return $assign;
+    });
+}
+
+/****update assign country *** */
+public function updateVisaAssignment(array $data, int $id)
+{
+   
+    return DB::transaction(function () use ($data, $id) {
+        $assign = VisaServiceType::findOrFail($id);
+        $authUserId = auth()->id();
+
+        // Handle file upload if provided
+        if (isset($data['title_image'])) {
+            $uploadedFilePath = $this->fileUploadService->uploadFile(
+                $data['title_image'],
+                'images/visa/titleimages/',
+                $authUserId
+            );
+            $assign->title_image = $uploadedFilePath;
+        }
+
+        // Update basic info
+        $assign->origin = $data['origincoutnry'];
+        $assign->destination = $data['destination'];
+        $assign->visa_id = $data['visa_id'];
+        $assign->description = $data['description'] ?? null;
+        $assign->required = $data['required'];
+        $assign->save();
+
+        // Add new subtypes only
+        foreach ($data['subtype'] as $key => $subtypeName) {
+            VisaSubtype::create([
+                'country_type_id' => $assign->id,
+                'visa_type_id' => $assign->visa_id,
+                'name' => $subtypeName,
+                'price' => $data['subtypeprice'][$key],
+                'commission' => $data['commission'][$key],
+                'validity' => $data['validity'][$key],
+                'processing' => $data['processing'][$key],
+                'gstin' => $data['gstin'][$key],
+                'status' => 1
+            ]);
+        }
 
         return $assign;
     });
 }
 
 
+
 public function getVisabySearch($origin,$destination){
     return VisaServiceType::with('VisaServices','Subvisas')->where('origin',$origin)->where('destination',$destination)->get();
+    // $value= VisaServiceType::with('VisaServices','Subvisas')->where('origin',$origin)->where('destination',$destination)->get();
+    // dd($value);
+
+
 }
 
 
 public function getVisabySearchcoutnry($id){
-    return VisaServiceType::where('id',$id)->first();
+    return VisaServiceType::with('Subvisas')->where('id',$id)->first();
 }
 
 
@@ -321,6 +430,7 @@ public function updateVisa($id, array $data)
   public function saveBooking(array $data)
   {
     
+    
      // Correcting function call
             $getCode = $this->getCountryCode($data['origin'], $data['destination']);
 
@@ -360,13 +470,19 @@ public function updateVisa($id, array $data)
       $booking->dateofentry = $data['dateofentry'];
       $booking->save(); // Save booking first
    
+  
       if (isset($data['passengerfirstname'])) {
+        $user = $this->agencyService->getCurrentLoginUser();  
+       
         foreach ($data['passengerfirstname'] as $index => $firstname) {
             $authapplication = new AuthervisaApplication();
+            $authapplication->setConnection('user_database');
+        
+
             $authapplication->booking_id = $booking->id;
             $authapplication->clint_id = $data['clientId']; // Change this if clint_id is different
             $authapplication->name = $firstname; // Assign first name dynamically
-            $authapplication->lastname = $data['passengerfirstname'][$index].$data['passengerlastname'][$index];
+            $authapplication->lastname = $data['passengerlastname'][$index];
             $authapplication->passport_number = $data['passengerpassportn'][$index];
             $authapplication->passport_issue_date = $data['passportissuedate'][$index];
             $authapplication->passport_expire_date = $data['passportexpiredate'][$index];
@@ -384,11 +500,7 @@ public function updateVisa($id, array $data)
 
   public function payment($data){
 
-    $booking = VisaBooking::find($data['id']);
- 
-    $booking->confirm_application=1;
-    $booking->save();
-    
+
     $balance = Balance::where('agency_id', $data['agency_id'])->first();
     $totalAmount=$data['total_amount'];
   
@@ -415,6 +527,7 @@ public function updateVisa($id, array $data)
     $deduction->invoice_number =  $data['application_number'];
     $deduction->flight_booking_id = $data['id'];
     $deduction->amount = $data['total_amount'];
+    $deduction->displaynotification = 3;
     $deduction->date = now();
     $deduction->save();
     return $deduction;
@@ -473,36 +586,61 @@ public function checkBalance($id,$totalAmount){
 
 public function getBookingByid($id, $type)
 {
-    $query = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'clint', 'clientapplciation']);
+    $query = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'agency']);
 
     if ($type === "all") {
-        return $query
+        $query = $query
             ->with('downloadDocument')
             ->where('agency_id', $id)
             ->where('confirm_application', '1')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-    } elseif ($type === "documentpending") {
-        return $query
+            ->orderBy('created_at', 'desc');
+    } elseif ($type === "pending") {
+        $query = $query
             ->where('agency_id', $id)
-            ->where('confirm_application', '1')
+            ->where('confirm_application', '0')
             ->where('document_status', 'Pending')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-    } elseif ($type === "feepending") {
-        return $query
-            ->where('agency_id', $id)
-            ->where('confirm_application', '1')
-            ->where('payment_status', 'Pending')
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->orderBy('created_at', 'desc');
+    } else {
+        return response()->json(['message' => 'Invalid type provided.'], 400);
     }
 
-    return collect(); // Return empty collection if no condition matched
-}
+    $bookings = $query->paginate(10);
 
+    foreach ($bookings as $viewbooking) {
+        $database = $viewbooking->agency->database_name ?? null;
+
+        if ($database) {
+            // Set connection to user-specific database
+            $this->agencyService->setConnectionByDatabase($database);
+
+            // Load client and other members from user DB
+            $clientFromUserDB = ClientDetails::on('user_database')
+                ->with('clientinfo')
+                ->where('id', $viewbooking->client_id)
+                ->first();
+
+            $otherMember = AuthervisaApplication::on('user_database')
+                ->where('clint_id', $viewbooking->client_id)
+                ->where('booking_id', $viewbooking->id)
+                ->get();
+
+            // Check and load other application details
+            $otherapplicationDetails = null;
+            if (!empty($viewbooking->otherclientid)) {
+                $otherapplicationDetails = AuthervisaApplication::on('user_database')
+                    ->where('id', $viewbooking->otherclientid)
+                    ->first();
+            }
+
+            // Set custom relations
+            $viewbooking->setRelation('clint', $clientFromUserDB);
+            $viewbooking->setRelation('otherclients', $otherMember);
+            $viewbooking->setRelation('otherapplicationDetails', $otherapplicationDetails);
+        }
+    }
+
+    return $bookings;
+}
 
 
 
@@ -624,15 +762,99 @@ public function getBookingByid($id, $type)
 
 
 
-    public function bookingDataById($id){
+    // public function bookingDataById($id){
       
-       $viewbooking=VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients','clientapplciation','downloadDocument'])
-        ->where('id', $id)
-       ->first(); 
-       
-       return $viewbooking;
+    //    $viewbooking=VisaBooking::with(['visa', 'agency','origin', 'destination', 'visasubtype','clint.clientinfo','otherclients','clientapplciation','downloadDocument','clientrequestdocuments'])
+    //     ->where('id', $id)
+    //    ->first(); 
+    
+    //     $database=$viewbooking->agency->database_name
+    //     $this->agencyService->setDatabase($database);
+
+    //    $viewbooking->setRelation('clint.clientinfo',ClientDe::where('client_id', $data->id)->get());
+
+    //    return $viewbooking;
       
+    // }
+
+    // public function bookingDataById($id)
+    // {
+    //     $viewbooking = VisaBooking::with([
+    //         'visa',
+    //         'agency',
+    //         'origin',
+    //         'destination',
+    //         'visasubtype',
+    //         'clint.clientinfo',
+    //         'otherclients',
+    //         'clientapplciation',
+    //         'downloadDocument',
+    //         'clientrequestdocuments'
+    //     ])->where('id', $id)->first();
+    
+    //     if (!$viewbooking) {
+    //         return null; // Or handle error as needed
+    //     }
+    
+    //     $database = $viewbooking->agency->database_name;
+    //     $this->agencyService->setConnectionByDatabase($database);
+    
+    //     // Set clientinfo manually from the user-specific database if needed
+    //     if ($viewbooking->clint) {
+           
+    //         $viewbooking->clint->setRelation(
+    //             'clint',
+    //             ClientDetails::on('user_database')->where('id', $viewbooking->client_id)->first()
+    //         );
+    //     }
+    
+    //     return $viewbooking;
+    // }
+    public function bookingDataById($id)
+{
+    // Load booking with everything except 'clint.clientinfo'
+    $viewbooking = VisaBooking::with([
+        'visa',
+        'agency',
+        'origin',
+        'destination',
+        'visasubtype',
+        // 'otherclients',
+        'clientapplciation',
+        'downloadDocument',
+        'clientrequestdocuments'
+    ])->where('id', $id)->first();
+
+    if (!$viewbooking) {
+        return null;
     }
+
+    // Get the user-specific database name from the agency
+    $database = $viewbooking->agency->database_name;
+    $this->agencyService->setConnectionByDatabase($database); // Optional if used elsewhere
+
+    // Load the clint relation from the user-specific database, including clientinfo
+    $clientFromUserDB = ClientDetails::on('user_database')
+        ->with('clientinfo') // You can add other nested relations if needed
+        ->where('id', $viewbooking->client_id)
+        ->first();
+    //   dd( $viewbooking->id);
+    $otherMember = AuthervisaApplication::on('user_database')
+        ->where('clint_id', $viewbooking->client_id)
+        ->where('booking_id', $viewbooking->id)
+        ->get();
+//   dd($otherMember);
+    // Override the default `clint` relation with the correct one from user DB
+    $viewbooking->setRelation('clint', $clientFromUserDB);
+    $viewbooking->setRelation('otherclients', $otherMember);
+
+    
+
+    return $viewbooking;
+}
+
+    
+
 
     public function deleteVisa($id)
     {
@@ -711,12 +933,25 @@ public function getBookingByid($id, $type)
        
     }
 
-    public function sendToAdmin($id){
-        $booking=$this->bookingDataById($id);
-        $booking->sendtoadmin=1;
-        $booking->save(); 
+    public function sendToAdmin($id)
+    {
+
+        $booking = $this->bookingDataById($id);
+        if (!$booking) {
+            return back()->with('error', 'Booking not found.');
+        }
+        $deduction = Deduction::where('flight_booking_id', $booking->id)->first();
+        if ($deduction) {
+            $deduction->displaynotification = 0;
+            $deduction->save();
+        }
+    
+        $booking->sendtoadmin = 1;
+        $booking->save();
+        // Return the booking object
         return $booking;
     }
+    
 
     public function getDataByClientId($id){
         return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients','downloadDocument'])
@@ -748,5 +983,68 @@ public function getBookingByid($id, $type)
         ->where('id', $id)
         ->first();
     }
+
+    public function updateClientBooking($id,$data){
+    
+        $visabooking=VisaBooking::with('visasubtype')->where('id',$id)->first(); 
+        // dd($visabooking);
+     
+        $price=$visabooking->visasubtype->price+$visabooking->visasubtype->commission;
+        $visabooking->total_amount=$price;
+        $visabooking->payment_status="Paid";
+        $visabooking->confirm_application=1;
+        $visabooking->save(); 
+        $this->payment($visabooking);
+
+        if (isset($data['othermember']) && is_array($data['othermember'])) {
+            foreach ($data['othermember'] as $memberId) {
+                $newBooking = $visabooking->replicate(); // clone the existing booking
+                $newBooking->client_id = $visabooking->client_id;
+                $newBooking->otherclientid = $memberId; // to indicate it's linked to the original client
+                $newBooking->application_number = strtolower(now()->format('ymdHis') . '-' . Str::random(3));
+                $newBooking->save();
+                $this->payment($newBooking);
+            }
+        }
+        return true;
+    }
+
+    public function createClientBooking($id, $data)
+    {
+        $visabooking = VisaBooking::with('visasubtype')->where('id', $id)->first(); 
+    
+        if (!$visabooking) {
+            return false;
+        }
+    
+        $price = $visabooking->visasubtype->price + $visabooking->visasubtype->commission;
+        $visabooking->total_amount = $price;
+        $visabooking->payment_status = "Paid";
+        
+        // Set first member as otherclientid in original booking
+        if (!empty($data['othermember']) && is_array($data['othermember'])) {
+            $visabooking->otherclientid = array_shift($data['othermember']); // Take first and remove from array
+        }
+    
+        $visabooking->confirm_application = 1;
+        $visabooking->save();
+    
+        $this->payment($visabooking);
+    
+        // Create bookings for remaining other members
+        if (!empty($data['othermember']) && is_array($data['othermember'])) {
+            foreach ($data['othermember'] as $memberId) {
+                $newBooking = $visabooking->replicate(); // Clone
+                $newBooking->client_id = $visabooking->client_id;
+                $newBooking->otherclientid = $memberId;
+                $newBooking->application_number = strtolower(now()->format('ymdHis') . '-' . Str::random(3));
+                $newBooking->save();
+                $this->payment($newBooking);
+            }
+        }
+    
+        return true;
+    }
+    
 
 }

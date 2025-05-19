@@ -170,7 +170,7 @@
                                 @endif
                             @endif
 
-                            <a href="{{ route('clientupload.documentdownload', ['id' => $booking->id]) }}" title="Download Document">
+                            <a href="{{ route('clientupload.documentdownload', ['type'=>'client','id' => $booking->id]) }}" title="Download Document">
                                 <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200 ml-1">
                                     <i class="fa fa-download"></i>
                                 </div>

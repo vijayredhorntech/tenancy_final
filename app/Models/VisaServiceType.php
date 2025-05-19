@@ -24,7 +24,7 @@ class VisaServiceType extends Model
     }
 
     public function Subvisas(){
-        return $this->hasMany(VisaSubtype::class,'visa_type_id','visa_id');
+        return $this->hasMany(VisaSubtype::class,'country_type_id','id');
     }
 
     public function origincountry(){

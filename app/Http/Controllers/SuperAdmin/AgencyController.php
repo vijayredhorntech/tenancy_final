@@ -450,14 +450,17 @@ class AgencyController extends Controller
         try {
             // Set the dynamic connection config using the helper function
             session()->flush();
+        
             DatabaseHelper::setDatabaseConnection($databaseName);
+           
             // Check if user exists in the specified database
             $user = User::on('user_database')->where('email', $validatedData['email'])->first();
+            // dd($user);
             if ($user && Hash::check($validatedData['password'], $user->password)) {
                 // Log the user in if the password matches
                 // Store validated data in the session
                 \session(['user_data' => $validatedData]);
-
+                // dd('heelo ');
 
                 Auth::login($user);
 

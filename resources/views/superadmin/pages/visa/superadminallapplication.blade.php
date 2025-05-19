@@ -96,32 +96,31 @@
                 </tr>
             
                 @forelse($allbookings as $booking)
-                   
+                      
                     <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking->application_number}}</td>
 
-                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">
-                        @php
+                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                    @php
+                                        if (isset($booking->otherclientid) && isset($booking->otherapplicationDetails)) {
+                                            $firstName = $booking->otherapplicationDetails?->name ?? '';
+                                            $lastName = $booking->otherapplicationDetails?->lastname ?? '';
+                                            $fullName = trim($firstName . ' ' . $lastName);
 
-                                    $fullName = isset($booking->clint->client_name) && isset($booking->clint->client_name) && isset($booking->clint->client_name) 
-                                                ? $booking->clint->client_name 
-                                                : '';
-                                    $cleanName = str_replace(',', '', $fullName);
+                                            $email = $booking->clint?->email ?? '';
+                                            $phone = $booking->clint?->phone_number ?? '';
+                                        } else {
+                                            $fullName = $booking->clint?->client_name ?? '';
+                                            $email = $booking->clint?->email ?? '';
+                                            $phone = $booking->clint?->phone_number ?? '';
+                                        }
+                                    @endphp
 
-                                    $email = isset($booking->clint) && isset($booking->clint) && isset($booking->clint->email) 
-                                            ? $booking->clint->email 
-                                            : '';
-
-                                    $phone = isset($booking->clint) && isset($booking->clint) && isset($booking->clint->phone_number) 
-                                            ? $booking->clint->phone_number 
-                                            : '';
-                                @endphp
-
-                                <span>{{ $cleanName }}</span><br>
-                                <span class="font-medium text-xs">{{ $email }}</span><br>
-                                <span class="font-medium text-xs">{{ $phone }}</span>
-                        </td>
+                                    <span>{{ $fullName }}</span><br>
+                                    <span class="font-medium text-xs">{{ $email }}</span><br>
+                                    <span class="font-medium text-xs">{{ $phone }}</span>
+                                </td>
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                              <span>{{$booking->visa->name }}</span><br>
                             <span class="font-medium text-xs">{{$booking->visasubtype->name }}</span><br> 
@@ -143,11 +142,7 @@
                                         Pending: {{ $booking->clientapplciation->where('document_status', '0')->count() }}<br>
                                         Done: {{ $booking->clientapplciation->where('document_status', '1')->count() }}
                                     </span>
-                                    <span class="font-medium text-xs">
-                                       <a href="{{ route('client.document.view', $booking->id) }}" class="text-blue-500 cursor-pointer">
-                                           <i class="fas fa-eye text-blue-500 cursor-pointer"></i> <!-- Single View Icon -->
-                                       </a>
-                                    </span>
+                                   
                                 </div>
                             </td>
 
@@ -193,7 +188,7 @@
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                             <div class="flex gap-2 items-center">
                                 @if($booking->applicationworkin_status == "Complete")              
-                                    <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
+                                    {{--<div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
                                         <i class="fa fa-check"></i> <!-- FontAwesome icon -->
                                     </div> 
 
@@ -201,10 +196,10 @@
                                     <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
                                        <i class="fas fa-upload"></i><!-- FontAwesome icon -->
                                         </div> 
-                                    </a>
+                                    </a> --}}
                                 @else
                                 
-                                 <a href="{{ route('superadminaad.document.application', ['id' => $booking->id]) }}" title="Remind for funds">
+                                 {{--<a href="{{ route('superadminaad.document.application', ['id' => $booking->id]) }}" title="Remind for funds">
                                     <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
                                             <i class="fa fa-plus"></i> <!-- FontAwesome icon -->
                                         </div> 
@@ -219,18 +214,18 @@
                                         <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
                                             <i class="fa fa-envelope"></i>
                                         </div>
-                                    </a>
+                                    </a> --}}
 
                                     {{-- <a href="{{route('superadminvisachat.client',['id' => $booking->client_id,'token'->$booking->agency->agencytoken])}}" title="Edit">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fas fa-comment-dots"></i>
                                         </div>
                                       </a> --}}
-                                      <a href="{{ route('superadminvisachat.client', ['id' => $booking->client_id, 'token' => $booking->agency->agencytoken]) }}" title="Edit">
+                                    {{--  <a href="{{ route('superadminvisachat.client', ['id' => $booking->client_id, 'token' => $booking->agency->agencytoken]) }}" title="Edit">
                                         <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fas fa-comment-dots"></i>
                                         </div>
-                                    </a>
+                                    </a>--}}
 
                                 @endif
 

@@ -285,8 +285,13 @@ class ClintRepository implements ClintRepositoryInterface
 // }
 public function getStoreclint(array $data)
 {
+
+  
     $dataset = $this->agencyService->getAgencyData();
-    
+    if(!$dataset){
+       $databasename=Agency::where('id',$data['agency_id'])->first();
+       $dataset = $this->agencyService->setConnectionByDatabase($databasename->database_name);
+ }  
     $userDb = DB::connection('user_database');
     $defaultDb = DB::connection();
 
@@ -316,7 +321,8 @@ public function getStoreclint(array $data)
 
         // Send welcome email
         try {
-            Mail::to($client->email)->queue(new ClientWelcomeEmail($client, $agency));
+           
+            Mail::to($data['email'])->queue(new ClientWelcomeEmail($client, $agency));
         } catch (\Exception $e) {
             \Log::error('Failed to send welcome email: ' . $e->getMessage());
         }
