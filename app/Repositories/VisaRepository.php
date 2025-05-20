@@ -30,6 +30,7 @@ use App\Mail\VisaApplicationMail;
 use App\Models\ClientApplicationDocument;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\ClientDetails;
+use App\Mail\ClientRequestNotificationMail;
 
 
 class VisaRepository implements VisaRepositoryInterface
@@ -822,7 +823,8 @@ public function getBookingByid($id, $type)
         // 'otherclients',
         'clientapplciation',
         'downloadDocument',
-        'clientrequestdocuments'
+        'clientrequestdocuments',
+        'applicationlog'
     ])->where('id', $id)->first();
 
     if (!$viewbooking) {
@@ -864,7 +866,7 @@ public function getBookingByid($id, $type)
 
 
     public function assignUpdateBooking($id,$data){
-      $visabooking=VisaBooking::where('id',$id)->first(); 
+      $visabooking=VisaBooking::with('agency')->where('id',$id)->first(); 
         $visabooking->document_status=$data['document_status']; 
         $visabooking->payment_status=$data['paymentstatus']; 
         if(isset($data['application_status'])){
@@ -941,13 +943,17 @@ public function getBookingByid($id, $type)
             return back()->with('error', 'Booking not found.');
         }
         $deduction = Deduction::where('flight_booking_id', $booking->id)->first();
+
+        Mail::to(env('SUPERADMIN_EMAIL'))->send(new ClientRequestNotificationMail($deduction));
+
         if ($deduction) {
             $deduction->displaynotification = 0;
             $deduction->save();
         }
-    
         $booking->sendtoadmin = 1;
         $booking->save();
+        $userId = auth()->id();
+       $save=$this->agencyService->saveLog($booking,'agency',' Send to Admin', $userId);
         // Return the booking object
         return $booking;
     }

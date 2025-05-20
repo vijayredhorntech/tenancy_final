@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ClientApplicationDocument;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
 use App\Models\DownloadCenter;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\DocumentUploadRequestMail;
+
 
 class DocumentSignRepository implements DocumentSignRepositoryInterface
 {
@@ -64,7 +67,11 @@ class DocumentSignRepository implements DocumentSignRepositoryInterface
       /****Add Document **** */
       public function storeDocument($request)
       {
-          $bookingApplication = VisaBooking::where('id', $request->bookingid)->first();
+          $bookingApplication = VisaBooking::with('agency')->where('id', $request->bookingid)->first();
+          $bookingApplication->document_status="Pending";
+          $bookingApplication->save();
+        
+        //   dd($bookingApplication);
  
           if (!$bookingApplication) {
               return false;
@@ -81,7 +88,13 @@ class DocumentSignRepository implements DocumentSignRepositoryInterface
                   'user_id'            => Auth::id(), // shortcut for Auth::user()->id
               ]);
           }
-      
+          $save=$this->agencyService->saveLog($bookingApplication,'Super Admin','Request Document', Auth::id());
+
+          Mail::to($bookingApplication->agency->email)
+          ->send(new DocumentUploadRequestMail(
+              $bookingApplication->agency->name,
+              $bookingApplication->application_number
+          ));
           return true;
       }
 
@@ -97,13 +110,34 @@ class DocumentSignRepository implements DocumentSignRepositoryInterface
 
     /****Update Document Status *** */
     public function updateDocumentStatus($data)
-    {
-        $document = ClientApplicationDocument::findOrFail($data['documentid']);
-        $document->document_status = $data['document_status']; 
-        $document->save();
-    
-        return $document;
+{
+    // Step 1: Find and update the specific document
+    $document = ClientApplicationDocument::findOrFail($data['documentid']);
+    $document->document_status = $data['document_status']; 
+    $document->save();
+    $bookings=VisaBooking::with('agency')
+    ->where('id', $document->application_id)
+    ->first();
+    // Step 2: Check if any other documents are still pending for the same application
+    $pendingDoc = ClientApplicationDocument::where('application_id', $document->application_id)
+                    ->where('document_status', '0')
+                    ->exists();
+
+    // Step 3: If all documents are verified, update the booking's document status
+    if (!$pendingDoc) {
+        $bookingApplication = VisaBooking::with('agency')
+                                ->where('id', $document->application_id)
+                                ->first();
+
+        if ($bookingApplication) {
+            $bookingApplication->document_status = "Done";
+            $bookingApplication->save();
+        }
     }
+    $save=$this->agencyService->saveLog($bookings,'Super Admin','Update Document status', Auth::id(),$data['document_status']);
+    return $document;
+}
+
 
    /****Document Data **** */ 
    public function uploadeDocumentById($id){

@@ -19,6 +19,10 @@ use App\Models\Balance;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Repositories\Interfaces\ClintRepositoryInterface;
 use App\Traits\ChatTrait;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\DocumentDownloadedNotificationMail;
+// use Illuminate\Support\Facades\Mail;
+use App\Mail\VisaBookingInProcessMail;
 
 
 
@@ -506,6 +510,9 @@ class VisaController extends Controller
         $clientData = $this->visaRepository->bookingDataById($id);
         if (isset($clientData) && $clientData->agency_id == $agency->id) {
             // $pay=$this->visaRepository->payment($clientData);
+            // dd($clientData);
+            Mail::to($clientData->clint->email)->send(new VisaBookingInProcessMail($clientData, $agency));
+
             return view('agencies.pages.invoices.visainvoice',compact('clientData'));
         }
         return view('agency.pages.visa.payment',compact('clientData'));
@@ -680,13 +687,17 @@ class VisaController extends Controller
             $data = $request->validate([
                 'applciationid' => 'required', // Consider adding: |exists:applications,id
                 'paymentstatus' => 'in:Paid,Pending',
-                'document_status' => 'in:Pending,Handed Over',
+                'document_status' => 'in:Pending,Done',
                 'application_status' => 'required|in:Under Process,Pending,Complete,Rejected',
                 'description' => 'nullable|string',
             ]);
 
-            $forms = $this->visaRepository->assignUpdateBooking($request->applciationid, $request->all());
+            $booking = $this->visaRepository->assignUpdateBooking($request->applciationid, $request->all());
+          $save=$this->agencyService->saveLog($booking,'Super Admin','Finish Application', Auth::id(), $request->application_status);
 
+            // dd($booking->agency->name);
+            Mail::to($booking->agency->email)->send(new DocumentDownloadedNotificationMail($booking));
+            // dd($booking);
             return redirect()->route('superadminview.allapplication');
         }
 
@@ -756,7 +767,9 @@ class VisaController extends Controller
    /***Send For super admin ****/
    public function hsSendAdmin($id){
 
+   
     $bookingData = $this->visaRepository->sendToAdmin($id);
+    // dd($bookingData);
     return redirect()->route('agency.application', ['type' => 'all']);
    }
 

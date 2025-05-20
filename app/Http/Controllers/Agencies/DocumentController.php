@@ -64,8 +64,11 @@ class DocumentController extends Controller
             'documents' => 'required|array|min:1',
             'documents.*' => 'required|string|max:255',
         ]);
-        $storeDocument = $this->documentSignRepository->storeDocument($request);
-        return redirect()->route('superadminview.allapplication')->with('success', 'Document uploaded successfully.');
+        // dd($request->all());
+        $storeDocument = $this->documentSignRepository->storeDocument($request);    
+        return redirect()->route('superadminvisa.applicationview', ['id' => $request->bookingid])
+        ->with('success', 'Booking successful');
+        // return redirect()->route('superadminview.allapplication')->with('success', 'Document uploaded successfully.');
     }
         /****Doc Sign *****/
     public function him_docsign(){

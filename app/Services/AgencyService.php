@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Agency;
 use Illuminate\Support\Facades\Config;
 use Auth;
+use App\Models\VisaApplicationAudit;
 
 class AgencyService
 {
@@ -116,6 +117,38 @@ class AgencyService
          $userData = session('user_data');
          return $userData;
 
+     }
+
+    //  public function saveLog($applicationId, $applicationNumber, $userType, $auditName, $userId, $description = null)
+    //  {
+    //      $audit = new VisaApplicationAudit();
+    //      $audit->application_id     = $applicationId;
+    //      $audit->application_number = $applicationNumber;
+    //      $audit->user_id            = $userId;
+    //      $audit->user_type          = $userType;
+    //      $audit->audit_name         = $auditName;
+    //      $audit->description        = $description;
+    //      $audit->audit_date         = now()->toDateString();
+    //      $audit->audit_time         = now()->toTimeString();
+    //      $audit->save();
+     
+    //      return true;
+    //  }
+  
+     public function saveLog($booking, $user_type, $auditName, $userId, $description = null)
+     {
+        $visa = new VisaApplicationAudit();
+        $visa->application_id     = $booking->id;
+        $visa->application_number = $booking->application_number;
+        $visa->user_id            = $userId;
+        $visa->user_type          = $user_type;
+        $visa->audit_name         = $auditName;
+        $visa->description        = $description;
+        $visa->audit_date         = now()->toDateString();
+        $visa->audit_time         = now()->toTimeString();
+        $visa->save();
+        return true;
+    
      }
      
 }

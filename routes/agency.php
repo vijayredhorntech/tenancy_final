@@ -283,7 +283,7 @@ Route::controller(ClientLoginController::class)->group(function () {
     // Route::get('{type}/uploade/document/{id}','hsClientUploadDocument')->name('clientuplaode.document');
     Route::get('{id}/{type?}/uploade/document', 'hsClientUploadDocument')->name('clientuplaode.document');
 
-    Route::post('/uploade/store}','hsClientStoreDocument')->name('client.document.upload');
+    Route::post('/uploade/{store?}','hsClientStoreDocument')->name('client.document.upload');
     Route::get('/download/center','hsDownloadDocumentCenter')->name('client.document.download');
     // Route::get('/{type}/document/download/{id}', 'hsdownloadDocument')->name('clientupload.documentdownload');
     Route::get('/{type?}/document/download/{id}', 'hsdownloadDocument')->name('clientupload.documentdownload');

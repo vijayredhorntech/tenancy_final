@@ -62,5 +62,10 @@ class VisaBooking extends Model
 
     }
 
+    public function applicationlog(){
+        return $this->hasMany(VisaApplicationAudit::class, 'application_id','id');
+
+    }
+
    
 }

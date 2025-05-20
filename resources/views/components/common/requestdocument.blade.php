@@ -64,8 +64,13 @@
                 removeBtn.classList.add('bg-red-500', 'text-white', 'py-2', 'rounded-md', 'hover:bg-red-600', 'transition-all', 'text-sm');
 
                 removeBtn.addEventListener('click', function () {
+                    // e.preventDefault();
                     inputDiv.remove();
                     toggleSubmitButton(); // 👈 Check if submit should hide again
+                    // if (confirm('Are you sure you want to remove this document request?')) {
+                    //         inputDiv.remove();
+                    //         toggleSubmitButton(); // 👈 Check if submit should hide again
+                    //     }
                 });
 
                 innerBox.appendChild(boxTitle);
@@ -77,6 +82,8 @@
 
                 toggleSubmitButton(); // 👈 Show submit if this is first input
     });
+
+    
     addBtn.click();
 </script>
 </div>

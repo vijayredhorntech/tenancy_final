@@ -121,7 +121,7 @@
                                     <select name="document_status" id="document_status"
                                         class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 transition ease-in duration-200">
                                         <option value="Pending" {{ old('document_status', $clientData->document_status) == 'Pending' ? 'selected' : '' }}>Pending</option>
-                                        <option value="Handed Over" {{ old('document_status', $clientData->document_status) == 'Handed Over' ? 'selected' : '' }}>Handed Over</option>
+                                        <option value="Done" {{ old('document_status', $clientData->document_status) == 'Done' ? 'selected' : '' }}>Done</option>
                                     </select>
                                     <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
                                 </div>

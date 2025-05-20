@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\ClientDetails;
+use App\Models\ClientApplicationDocument;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session; // Add this at the top if not already
 use App\Services\AgencyService;
@@ -14,6 +15,8 @@ use App\Models\Support;
 use App\Models\Message;
 use Illuminate\Support\Str;
 use App\Traits\ChatTrait;
+use App\Mail\DocumentVerificationRequestMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 
 
@@ -231,11 +234,30 @@ class ClientLoginController extends Controller
             'documents' => 'required|max:2048', // 2MB max    
         ]);
     $storebooking = $this->visaRepository->storeClientDocuemtn($request->all());
+    // dd(request()->all());
+    $application=ClientApplicationDocument::where('application_id',$request->booking_id)->first();
+    
+    $bookingApplication= $this->visaRepository->bookingDataById($request->booking_id);
+  
+
+    $user=$this->agencyService->getCurrentLoginUser(); 
+    // $storebooking = $this->visaRepository->storeClientDocuemtn($request->all());
+    
+
+    
+    
+    // dd($application);
+    Mail::to(env('SUPERADMIN_EMAIL'))
+    ->send(new DocumentVerificationRequestMail(
+        $application->application_number
+    ));
    
     if($request->type=='agency') {
 
+        $save=$this->agencyService->saveLog($bookingApplication,'agency','Upload Document', $user->id);
         return redirect()->route('agency.application',['type' => 'all'])->with('success', 'Documents uploaded successfully.');
     }
+    $save=$this->agencyService->saveLog($bookingApplication,'Client','Upload Document', '1');
     return redirect()->route('client.notification')->with('success', 'Documents uploaded successfully.');
        
 

@@ -135,7 +135,7 @@ class ClientController extends Controller
         ]);
 
         $clients = $this->clintRepository->getStoreclint($request->all());
-        dd($clients);
+        // dd($clients);    
         return redirect()->route('client.index')->with('success', 'Client added successfully.');
     }
 

@@ -172,6 +172,10 @@
         btnRemove.classList.add('bg-red-500', 'text-white', 'py-2', 'rounded-md', 'hover:bg-red-600', 'transition-all', 'text-sm');
 
         btnRemove.addEventListener('click', function () {
+            // if (confirm('Are you sure you want to remove this document request?')) {
+            //                 inputDiv.remove();
+            //                 toggleSubmitButton(); // 👈 Check if submit should hide again
+            //             }
             outerDiv.remove();
             checkIfSubmitShouldShow();
         });
@@ -187,6 +191,8 @@
 
         checkIfSubmitShouldShow();
     });
+
+    
 
     // Automatically trigger one document box when page loads
     document.addEventListener('DOMContentLoaded', () => {

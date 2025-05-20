@@ -194,11 +194,18 @@
                     Conversation
                 </div>
                </a>
+
+               <div data-tid="logDataDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-eye text-ternary"></i>
+                    Log Data 
+                </div>
+
               </div>
 
                 <div class="w-full mt-4 ">
             <!-- start joing letter  -->
 
+        
                 <!-- view application  -->
                 <div id="ViewApplicationDiv" class="tab  ">
                     <x-common.viewapplication :clientData="$clientData" />
@@ -235,6 +242,12 @@
                       <div id="sendEmailDiv" class="tab hidden">
                         <x-common.sendemail :clientData="$clientData" :forms="$forms" />  
                     </div>       
+
+                    <div id="logDataDiv" class="tab  hidden">
+                        <x-common.visalog :logs="$clientData->applicationlog->sortByDesc('created_at')" /> 
+                    </div>
+
+
                 </div>
 
             </div>

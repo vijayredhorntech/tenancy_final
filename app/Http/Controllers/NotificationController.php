@@ -8,7 +8,7 @@ use App\Models\Agency;
 use App\Models\Deduction;
 use App\Models\User;
 use App\Models\TeamUser;
-
+use App\Services\AgencyService;
 
 use Auth; 
 
@@ -17,6 +17,11 @@ use Auth;
 
 class NotificationController extends Controller
 {
+    protected $agencyService;
+    public function __construct(AgencyService $agencyService)
+    {
+        $this->agencyService = $agencyService;
+    }
     //
     /****Notification all  */
     public function hs_indexNotificationAll(){
@@ -62,8 +67,10 @@ class NotificationController extends Controller
         $notification->displaynotification = 1;
         $notification->viewuserid = Auth::user()->id;
         $notification->save();
-    
+        $userId = Auth::user()->id;
+
         if ($notification->service == 3) {
+            $save=$this->agencyService->saveLog($notification->visaBooking,'Super Admin',' View Notification', $userId);
             return redirect()->route('superadminvisa.applicationview', ['id' => $notification->flight_booking_id]);
         } else {
             return back()->with('message', 'Notification marked as read');

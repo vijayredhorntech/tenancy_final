@@ -322,7 +322,9 @@ public function getStoreclint(array $data)
         // Send welcome email
         try {
            
-            Mail::to($data['email'])->queue(new ClientWelcomeEmail($client, $agency));
+            // Mail::to($data['email'])->queue(new ClientWelcomeEmail($client, $agency));
+            Mail::to($data['email'])->send(new ClientWelcomeEmail($client, $agency));
+
         } catch (\Exception $e) {
             \Log::error('Failed to send welcome email: ' . $e->getMessage());
         }
