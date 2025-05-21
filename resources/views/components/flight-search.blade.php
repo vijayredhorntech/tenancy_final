@@ -494,7 +494,8 @@ $(document).ready(function () {
     function fetchAutocompleteResults(inputText, input, dropdownContainer) {
      
         $.ajax({
-            url: '/agencies/airport/' + encodeURIComponent(inputText),
+            //url: '/agencies/airport/' + encodeURIComponent(inputText),
+            url: '{{ url('/agencies/airport') }}/' + encodeURIComponent(inputText)
             method: 'GET',
             success: function (data) {
                 displayAutocompleteResults(data, input, dropdownContainer);
