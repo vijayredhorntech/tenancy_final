@@ -98,6 +98,7 @@ class DatabaseHelper
         return true;
 
     } catch (\Exception $e) {
+        dd($e);
         Log::error("Failed to create tenant database '$databaseName': " . $e->getMessage());
 
         // Attempt to drop the database if it was created
