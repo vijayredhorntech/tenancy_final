@@ -55,10 +55,24 @@ class DatabaseHelper
 
     try {
         // Create database
-        DB::statement("CREATE DATABASE `$databaseName`");
+        if (app()->environment('local')) {
+            DB::statement("CREATE DATABASE `$databaseName`");
+        }
+        
+      
 
         // Update config to use the new database
-        config(['database.connections.tenant.database' => $databaseName]);
+        // config(['database.connections.tenant.database' => $databaseName]);
+        config(['database.connections.tenant' => [
+            'driver'    => 'mysql',
+            'host'      => env('DB_HOST', '127.0.0.1'),
+            'port'      => env('DB_PORT', '3306'),
+            'database'  => $databaseName,
+            'username'  => $agency->database_user ?? env('DB_USERNAME'),
+            'password'  => $agency->database_password ?? env('DB_PASSWORD'),
+            'charset'   => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+        ]]);
 
         // Reconnect to apply new settings
         DB::purge('tenant');
@@ -103,18 +117,39 @@ class DatabaseHelper
       /**
      * Set the database connection dynamically.
      */
-    public static function setDatabaseConnection($databaseName)
-    {
-        config(['database.connections.user_database' => [
-            'driver' => 'mysql',
+    // public static function setDatabaseConnection($databaseName)
+    // {
+    //     config(['database.connections.user_database' => [
+    //         'driver' => 'mysql',
+    //         'host' => env('DB_HOST', '127.0.0.1'),
+    //         'database' => $databaseName,
+    //         'username' => env('DB_USERNAME'),
+    //         'password' => env('DB_PASSWORD'),
+    //         // 'username' => config('database.connections.mysql.username'),
+    //         // 'password' => config('database.connections.mysql.password'),
+    //     ]]);
+    // }   
+
+    public static function setDatabaseConnection($databaseName, $agency = null)
+{
+    // Fallback values
+    $defaultUsername = env('DB_USERNAME');
+    $defaultPassword = env('DB_PASSWORD');
+
+    // Use agency's database credentials if provided and not null
+    $username = $agency && $agency->database_user ? $agency->database_user : $defaultUsername;
+    $password = $agency && $agency->database_password ? $agency->database_password : $defaultPassword;
+
+    // Set dynamic connection
+    config(['database.connections.user_database' => [
+          'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'database' => $databaseName,
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
-            // 'username' => config('database.connections.mysql.username'),
-            // 'password' => config('database.connections.mysql.password'),
-        ]]);
-    }   
+            'username' => $username,
+            'password' =>  $password,
+       
+    ]]);
+}
 
     /****Drop Data base ***** */
 

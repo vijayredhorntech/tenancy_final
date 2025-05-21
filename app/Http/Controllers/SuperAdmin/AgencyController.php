@@ -99,6 +99,7 @@ class AgencyController extends Controller
     public function him_store_agency(Request $request)
     {
        
+        // dd($request->all());
         // Validate the incoming data
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -210,6 +211,8 @@ class AgencyController extends Controller
             $agency->email = $request->email;
             $agency->phone = $request->agency_phone;
             $agency->database_name = $request->database_name;
+            $agency->database_user = $request->databaseuser;
+            $agency->database_password = $request->databasepassword;
             $agency->contact_person = $request->contact_name;
             $agency->contact_phone = $request->contact_phone;
             $agency->address = $request->address;
@@ -450,8 +453,16 @@ class AgencyController extends Controller
         try {
             // Set the dynamic connection config using the helper function
             session()->flush();
-        
-            DatabaseHelper::setDatabaseConnection($databaseName);
+             $agency=Agency::where('database_name', $databaseName)->first();
+            if ($agency) {
+                $databaseName = $agency->database_name;
+               
+                
+                DatabaseHelper::setDatabaseConnection($databaseName,$agency);
+            }else{
+                return redirect()->route('login')->with('error', 'Invalid credentials.');
+            }
+            // DatabaseHelper::setDatabaseConnection($databaseName);
            
             // Check if user exists in the specified database
             $user = User::on('user_database')->where('email', $validatedData['email'])->first();

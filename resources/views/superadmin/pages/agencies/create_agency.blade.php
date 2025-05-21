@@ -320,7 +320,7 @@
                         <div class=" w-full relative group flex flex-col gap-1">
                             <label for="name" class="font-semibold text-ternary/90 text-sm">Database Name</label>
                             <div class="w-full relative">
-                                <input type="text" name="database_name" id="database_name" placeholder="Phone....."
+                                <input type="text" name="database_name" id="database_name" placeholder="Database Name....."
                                     value="{{ old('database_name') }}"
                                     value="{{ old('database_name') }}"
                                     class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
@@ -329,6 +329,39 @@
                             </div>
 
                             @error('database_name')
+                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+                        <div class=" w-full relative group flex flex-col gap-1">
+                            <label for="name" class="font-semibold text-ternary/90 text-sm">Database User</label>
+                            <div class="w-full relative">
+                                <input type="text" name="databaseuser" id="databaseuser" placeholder="Database User....."
+                                    value="{{ old('databaseuser') }}"
+                                    value="{{ old('databaseuser') }}"
+                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
+                                    @error('databaseuser') border-red-500 @enderror">
+                                <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                            </div>
+
+                            @error('databaseuser')
+                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+
+                        <div class=" w-full relative group flex flex-col gap-1">
+                            <label for="name" class="font-semibold text-ternary/90 text-sm">Database Password</label>
+                            <div class="w-full relative">
+                                <input type="text" name="databasepassword" id="databasepassword" placeholder="Database Password....."
+                                    value="{{ old('databasepassword') }}"
+                                    value="{{ old('databasepassword') }}"
+                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
+                                    @error('databasepassword') border-red-500 @enderror">
+                                <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                            </div>
+
+                            @error('databasepassword')
                             <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                             @enderror
                         </div>

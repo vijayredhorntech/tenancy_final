@@ -695,9 +695,9 @@ public function getBookingByid($id, $type)
     
                  // Fetch all agencies
                  $agencies = UserServiceAssignment::with('agency')->where('service_id','3')->get();
-                 foreach ($agencies as $agency) {
-                    Mail::to($agency->agency->email)->queue(new NewFormNotification($new));
-                }
+                //  foreach ($agencies as $agency) {
+                //     Mail::to($agency->agency->email)->queue(new NewFormNotification($new));
+                // }
                 DB::commit(); // Commit transaction if everything is successful
     
                 return response()->json(['message' => 'Form saved successfully'], 200);
