@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 trait FlightDataTrait
 {
 
+   
     function getFlexiDepartureDates($deptime, $flexi = 3)
     {
         $deptime = Carbon::parse($deptime);

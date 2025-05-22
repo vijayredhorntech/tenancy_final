@@ -19,7 +19,7 @@ class SuperadminserviceController extends Controller
         $id = Auth::user()->id;
         $user = User::find($id);
         $service=Service::get();
-        return view('auth.admin.pages.service.service', ['user_data' => $user,'services' => $service]);
+        return view('superadmin.pages.service.service', ['user_data' => $user,'services' => $service]);
     }
 
       /** Form create for serice **/
@@ -28,7 +28,7 @@ class SuperadminserviceController extends Controller
         $id = Auth::user()->id;
         $user = User::find($id);
         $service=Service::get();
-        return view('auth.admin.pages.service.service_form', ['user_data' => $user,'services' => $service]);
+        return view('superadmin.admin.pages.service.service_form', ['user_data' => $user,'services' => $service]);
     }
 
 
