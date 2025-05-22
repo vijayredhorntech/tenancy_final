@@ -142,6 +142,8 @@ class DatabaseHelper
     $password = $agency && $agency->database_password ? $agency->database_password : $defaultPassword;
 
     // Set dynamic connection
+
+    
     config(['database.connections.user_database' => [
           'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
