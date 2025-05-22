@@ -134,7 +134,9 @@ class DatabaseHelper
     public static function setDatabaseConnection($databaseName, $agency = null)
 {
     // Fallback values
-     dd($databaseName);
+   
+    $agency =Agency::where('database_name',$databaseName)->first();
+    dd($agency);
     $defaultUsername = env('DB_USERNAME');
     $defaultPassword = env('DB_PASSWORD');
 
