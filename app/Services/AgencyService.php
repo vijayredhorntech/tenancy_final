@@ -81,8 +81,7 @@ class AgencyService
      public function getCurrentLoginUser()
      {
         $userData = session('user_data');
-        dd($userData);
-
+       
         if (!$userData) {
             return null; // Handle case where session data is missing
         }
