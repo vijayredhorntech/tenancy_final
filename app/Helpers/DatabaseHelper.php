@@ -136,10 +136,10 @@ class DatabaseHelper
 {
     // Fallback values
    
-    $agency =Agency::where('database_name',$databaseName)->first();
-    dd($agency);
+    // dd($agency);
     $defaultUsername = env('DB_USERNAME');
     $defaultPassword = env('DB_PASSWORD');
+    $agency =Agency::where('database_name',$databaseName)->first();
 
     // Use agency's database credentials if provided and not null
     $username = $agency && $agency->database_user ? $agency->database_user : $defaultUsername;
