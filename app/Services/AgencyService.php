@@ -26,8 +26,8 @@ class AgencyService
             return null; // Handle case where session data is missing
         }
         // Set dynamic database connection
-        $agency=Agency::where('database_name', $userData['database'])->first();
-        DatabaseHelper::setDatabaseConnection($userData['database'],$agency);
+       
+        DatabaseHelper::setDatabaseConnection($userData['database']);
         // Fetch user from dynamic database
         $user = User::on('user_database')->where('email', $userData['email'])->first();
 
