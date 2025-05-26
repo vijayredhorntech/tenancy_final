@@ -379,6 +379,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                
                                 Route::get('/document/application/{id}','hsshowUploadForm')->name('superadminaad.document.upload');
                                 Route::post('/document/upload','hsuploadDocument')->name('upload.document');
+                                Route::get('/clientupload/documentdelete/{id}/{bookingid}','hsdocuemntdestroy')->name('clientupload.documentdelete');
                                 // Route::get('/document/download/{filename}', 'downloadDocument')->name('document.download');
 
                             

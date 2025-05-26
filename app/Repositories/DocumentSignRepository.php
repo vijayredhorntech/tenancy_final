@@ -147,34 +147,77 @@ class DocumentSignRepository implements DocumentSignRepositoryInterface
    }
 
    /*****Document Save *** */
-   public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $clientId, $agencyId, $bookingType)
-   {
-       $merged = [];
+//    public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $clientId, $agencyId, $bookingType)
+//    {
+//        $merged = [];
    
-       foreach ($documents as $index => $docName) {
-           $file = $files[$index];
+//        foreach ($documents as $index => $docName) {
+//            $file = $files[$index];
    
-           $fileName = time() . '_' . $file->getClientOriginalName();
-           $filePath = $file->storeAs('documents/clientuploadDocument', $fileName, 'public'); // Use forward slashes
+//            $fileName = time() . '_' . $file->getClientOriginalName();
+//            $filePath = $file->storeAs('documents/clientuploadDocument', $fileName, 'public'); // Use forward slashes
    
-           $merged[] = [
-               'name' => $docName,
-               'file' => $filePath,
-           ];
-       }
+//            $merged[] = [
+//                'name' => $docName,
+//                'file' => $filePath,
+//            ];
+//        }
    
-       // Insert data into your table
-       DownloadCenter::create([
-        'invoice_id' => $invoiceId,
-        'client_id' => $clientId,
-        'agency_id' => $agencyId,
-        'booking_id' => $bookingId,
-        'booking_type' => $bookingType,
-        'documents' => json_encode($merged),
-    ]);
+//        // Insert data into your table
+//        DownloadCenter::create([
+//         'invoice_id' => $invoiceId,
+//         'client_id' => $clientId,
+//         'agency_id' => $agencyId,
+//         'booking_id' => $bookingId,
+//         'booking_type' => $bookingType,
+//         'documents' => json_encode($merged),
+//     ]);
     
-   }
+//    }
    
+public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $clientId, $agencyId, $bookingType)
+{
+    $newDocs = [];
+
+    foreach ($documents as $index => $docName) {
+        $file = $files[$index];
+
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $filePath = $file->storeAs('documents/clientuploadDocument', $fileName, 'public');
+
+        $newDocs[] = [
+            'name' => $docName,
+            'file' => $filePath,
+        ];
+    }
+
+    // Check for existing record by invoice_id
+    $existing = DownloadCenter::where('invoice_id', $invoiceId)->first();
+
+    if ($existing) {
+        // Merge old documents with new ones
+        $oldDocs = json_decode($existing->documents, true) ?? [];
+        $merged = array_merge($oldDocs, $newDocs);
+
+        $existing->update([
+            'documents' => json_encode($merged),
+            'booking_id' => $bookingId,
+            'client_id' => $clientId,
+            'agency_id' => $agencyId,
+            'booking_type' => $bookingType,
+        ]);
+    } else {
+        // Create new record
+        DownloadCenter::create([
+            'invoice_id' => $invoiceId,
+            'client_id' => $clientId,
+            'agency_id' => $agencyId,
+            'booking_id' => $bookingId,
+            'booking_type' => $bookingType,
+            'documents' => json_encode($newDocs),
+        ]);
+    }
+}
 
     
 

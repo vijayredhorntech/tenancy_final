@@ -2,7 +2,7 @@
 <form class="visaajax-form w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4" method="post">
                                       
 
-                         <div class="w-full relative group flex flex-col gap-1 col-span-3">
+                                <div class="w-full relative group flex flex-col gap-1 col-span-3">
                                     <label for="cities_visited" class="font-semibold text-ternary/90 text-sm">Cities Visited Before (if any)</label>
                                     <div class="w-full relative">
                                         <textarea name="cities_visited" id="cities_visited"

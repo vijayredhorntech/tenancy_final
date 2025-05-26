@@ -1,6 +1,6 @@
 
 <form class="ajax-form w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4" method="post">
-                                        <div class="w-full relative group flex flex-col gap-1">
+                                <div class="w-full relative group flex flex-col gap-1">
                                             <label for="zip_code" class="font-semibold text-ternary/90 text-sm">Zip/Postal Code</label>
                                             <div class="w-full relative flex items-center gap-2">
                                                 <input type="text" name="zip_code" id="zip_code"
@@ -11,9 +11,9 @@
                                                     <i class="fa fa-search"></i>
                                                 </button>
                                             </div>
-                                        </div>
+                                </div>
 
-                                        <div class="w-full mt-2 hidden" id="address-wrapper">
+                                <div class="w-full mt-2 hidden" id="address-wrapper">
                                             <label for="address-select" class="text-sm font-semibold text-ternary/90">Select Address</label>
                                             <select id="address-select" name="address"
                                                 class="w-full px-2 py-1 border border-secondary/40 rounded focus:outline-none focus:border-secondary/70">

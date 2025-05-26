@@ -132,7 +132,7 @@
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
             <span class="font-semibold text-ternary text-xl"></span>
             <span class="font-semibold text-ternary text-xl">
-              Application Number:=>  {{ $clientData->application_number ?? 'N/A' }} 
+              Application Number : {{ $clientData->application_number ?? 'N/A' }} 
                 
 
 </span>
@@ -200,10 +200,16 @@
                     Log Data 
                 </div>
 
-                <div data-tid="applicationDataDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                <!-- <div data-tid="applicationDataDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-eye text-ternary"></i>
+                    View Application  
+                </div> -->
+                <a href="{{ route('verifyvisa.application', ['id' => $clientData->id, 'type' => 'superadmin']) }}">
+                <div  class="w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-eye text-ternary"></i>
                     View Application  
                 </div>
+    </a>
 
               </div>
 
@@ -278,7 +284,7 @@
 
              
                     <!-- Add your contact details form fields here -->
-                    <div class="w-full">
+                    <div class="w-full" >
                             @include('components.application.viewapplication', ['bookingData' => $clientData, 'type' => 'superadmin'])          
                         </div>
 

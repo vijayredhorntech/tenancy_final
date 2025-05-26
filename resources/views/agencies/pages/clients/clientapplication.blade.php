@@ -46,7 +46,7 @@
 
             {{-- Step 1: Personal Information --}}
    
-            <div class="form-step active hidden" id="form-step1" data-step="1">
+            <div class="form-step  active hidden" id="form-step1" data-step="1">
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
    
                     <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
@@ -176,7 +176,7 @@
 
 
             {{-- Step 2: Contact Details --}}
-            <div class="form-step hidden " id="form-step3" data-step="3">
+            <div class="form-step  hidden " id="form-step3" data-step="3">
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
                     <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
                         <span class="text-lg font-bold text-ternary">Verify Application</span>
@@ -468,10 +468,14 @@ $(document).ready(function () {
                             success: function (response) {
                                               
                                             if(response.step == 'Done'){
-                                                jQuery(".form-step").removeClass("active").addClass("hide");
-                                                jQuery("#form-step3").addClass("active").removeClass("hide").show();
-                                                jQuery(".fstep-indicator").removeClass("active").addClass("hide");
-                                                jQuery("#step-indicator3").addClass("active").removeClass("hide").show();
+                                                let redirectUrl = "{{ route('verifyvisa.application', ['id' => 'booking_id_placeholder', 'type' => 'agency']) }}";
+                                               redirectUrl = redirectUrl.replace('booking_id_placeholder', bookingid);
+ 
+                                             window.location.href = redirectUrl;
+                                                // jQuery(".form-step").removeClass("active").addClass("hide");
+                                                // jQuery("#form-step3").addClass("active").removeClass("hide").show();
+                                                // jQuery(".fstep-indicator").removeClass("active").addClass("hide");
+                                                // jQuery("#step-indicator3").addClass("active").removeClass("hide").show();
 
                                             }
                                             jQuery("#detailsofvisasought").hide(); 

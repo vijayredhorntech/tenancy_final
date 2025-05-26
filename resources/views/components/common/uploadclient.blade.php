@@ -15,14 +15,16 @@
     </div>
 @endif
 
- 
-  @if($booking->downloadDocument)
+
   <div class="w-full overflow-x-auto p-4">
         <div class="grid grid-cols-3 gap-4">
-                        @php
-                        $documents = json_decode($booking->downloadDocument->documents, true);         
-                        @endphp
-                        @foreach($documents as $doc)         
+        @php
+                        $documents = $booking->downloadDocument && $booking->downloadDocument->documents
+                            ? json_decode($booking->downloadDocument->documents, true)
+                            : [];
+
+                    @endphp
+                    {{--   @foreach($documents as $doc)         
                             <div class="flex flex-col gap-2">
                                 <label for="documentfile }}" class="text-sm font-semibold text-ternary">
                                     {{ $doc['name'] }}
@@ -32,10 +34,41 @@
                                         Download
                                     </a>
                             </div>
-                        @endforeach
+                        @endforeach --}}
+
+            @foreach($documents as $doc)     
+               
+                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-sm transition-shadow">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-center">
+                            <i class="fa fa-file mr-2"></i>
+                            <p class="font-medium text-ternary">{{ $doc['name'] }}</p>
+                         
+                        </div>
+                     
+
+        
+
+                     <div>
+                     <a href="{{ route('clientupload.documentdelete', ['id' => $doc['name'] ,'bookingid'=>$booking->downloadDocument->booking_id]) }}"
+                            class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-red-500 hover:'bg-red-500 focus:outline-none transition-colors">
+                           <i class="fa fa-xmark mr-2"></i>
+                            Delete
+                        </a>
+
+                        <a href="{{ route('clientupload.documentdownloadjson', ['file' => urlencode($doc['file'])]) }}"
+                            class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary/90 focus:outline-none transition-colors">
+                            <i class="fa fa-download mr-2"></i>
+                            Download
+                        </a>
+                     </div>
+
+                    </div>
+                </div>
+            @endforeach
         </div>
  </div>
-  @else
+
     <form action="{{ route('upload.document') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
@@ -54,7 +87,6 @@
             </button>
         </div>
     </form>
-  @endif
 
    
 

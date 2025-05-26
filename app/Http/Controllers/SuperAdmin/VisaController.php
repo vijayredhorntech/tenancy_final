@@ -899,6 +899,17 @@ class VisaController extends Controller
 
  }
 
+ public function hs_veriryvisaapplication($id,$type){
+     $bookingData = $this->visaRepository->bookingDataById($id);
+ 
+     if($type=='agency'){
+        return view('superadmin.pages.visa.veriryvisaapplication',compact('bookingData','type'));
+
+     }
+    //  veriryvisaapplication
+     return view('superadmin.pages.visa.superadminveriryvisaapplication',compact('bookingData','type'));
+ }
+
 
 
 }

@@ -60,7 +60,7 @@
                                     </div>
 
                                 </div>
-                            @endif
+                            @else
                             <div id="spouseDetailsSection" class=" p-4 border-[1px] border-primary/70 rounded-md  bg-black/10 shadow-lg shadow-black/10  mt-4 xl:col-span-3 lg:col-span-3 md:col-span-3 col-span-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 
                                                 <div class="w-full">

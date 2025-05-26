@@ -153,6 +153,7 @@ class DocumentController extends Controller
             'files' => 'required|array',
             'files.*' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
+       
                 $bookingId = $request->input('bookingid');
                 $booking = $this->documentSignRepository->uploadeDocumentById($bookingId);
           
@@ -199,5 +200,26 @@ class DocumentController extends Controller
         $allbookings=$this->visaRepository->getBookingByid($agency->id,$type);
         return view('agencies.pages.clients.downloadcenter',compact('allbookings'));
     }
+
+
+    public function hsdocuemntdestroy($name, $id)
+    {
+
+        $booking = $this->documentSignRepository->uploadeDocumentById($id);
+        $documents = json_decode($booking->downloadDocument->documents, true);
+        if (!$documents) {
+            return redirect()->back()->with('error', 'No documents found.');
+        }
+        $filteredDocuments = array_filter($documents, function ($doc) use ($name) {
+            return $doc['name'] !== $name;
+        });
+        $filteredDocuments = array_values($filteredDocuments);
+        $booking->downloadDocument->documents = json_encode($filteredDocuments);
+        $booking->downloadDocument->save();
+    
+        return redirect()->route('superadminvisa.applicationview', ['id' => $id])
+        ->with('success', 'Booking successful');
+    }
+    
   
 }
