@@ -309,6 +309,8 @@ Route::controller(ClientLoginController::class)->group(function () {
   
     Route::get('/agencies/clientcreate/{token}','hsClientCreate');
     Route::post('/agencies/clientstore','hs_ClientStore')->name('client.store');
+    Route::post('/agencies/clientstoreajax','hs_ClientStoreAjax')->name('client.update');
+  
     
   
 });
@@ -319,4 +321,10 @@ Route::controller(ClientLoginController::class)->group(function () {
 Route::controller(VisaController::class)->group(function () {
         Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
         Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
+        Route::get('/fillapplication/{id}/{token}','hsfillApplication')->name('application.client');
+        Route::post('/agencies/visastoretoreajax','hs_VisaStoreAjax')->name('visadocument.update');
+
+        Route::post('/confirmapplication','hsconfirmApplication')->name('comfirm.application');
+
+        
 });

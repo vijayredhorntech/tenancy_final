@@ -39,6 +39,7 @@ interface VisaRepositoryInterface
     public function updateClientBooking($id,$data);
     public function createClientBooking($id,$data);
     public function updateVisaAssignment(array $data, int $id);
+    public function visadocumentstore($data);
 
 
    

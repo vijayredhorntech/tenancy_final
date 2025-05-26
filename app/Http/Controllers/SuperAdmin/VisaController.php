@@ -23,19 +23,25 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\DocumentDownloadedNotificationMail;
 // use Illuminate\Support\Facades\Mail;
 use App\Mail\VisaBookingInProcessMail;
+use App\Models\ClientMoreInfo;
+use App\Models\ClientDetails;
+use App\Models\VisaServiceType;
+use App\Models\VisaBooking;
 
-
+use App\Models\ClientInfoForCountry;
 
 class VisaController extends Controller
 {
     use ChatTrait;
 
-    protected $visaRepository;
+    protected $visaRepository,$clintRepository;
     protected $agencyService;
 
-    public function __construct( VisaRepositoryInterface $visaRepository, AgencyService $agencyService) {
+    public function __construct( ClintRepositoryInterface $clintRepository,VisaRepositoryInterface $visaRepository, AgencyService $agencyService) {
         $this->visaRepository = $visaRepository;
         $this->agencyService = $agencyService;
+        $this->clintRepository = $clintRepository;
+
 
     }
 
@@ -129,9 +135,85 @@ class VisaController extends Controller
     }
 
 
-      /***Store Visa Data *****/
-    public function hsStore(Request $request)
+    public function hsrequiredClientFiled($id)
     {
+        // dd($id);
+        
+        $visadetails=VisaServiceType::with('destinationcountry','VisaServices')->where('id',$id)->first();
+        $client = ClientDetails::first();
+        $clientMore = ClientMoreInfo::first();
+        $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
+
+    
+        // Combine both tables' data
+        $combined = array_merge(
+            $client ? $client->toArray() : [],
+            $clientMore ? $clientMore->toArray() : []
+        );
+    
+    
+        // Keep only these permission fields
+        $allowed = [
+            'personal_details_permission',
+            'other_details_permission',
+            'address_permission',
+            'passport_details_permission',
+            'additional_passport_info_permission',
+            'family_details_permission',
+            'wife_details_permission',
+            'occupation_details_permission',
+            'armed_force_details_permission',
+            'citizenship_id',
+           'children_permission',
+            'educational_qualification',
+            'identification_marks',
+            'nationality',    
+        ];
+  
+        $combined = collect($combined)
+            ->filter(function ($value, $key) use ($allowed) {
+                return in_array($key, $allowed);
+            })
+            ->toArray();
+        //    dd($combined);
+        return view('superadmin.pages.visa.assigncountry', compact('combined','visadetails','assign'));
+    }
+    
+   public function hsrequiredClientFiledStore(Request $request){
+    // dd($request->all());
+    $validated = $request->validate([
+        'visa_fields' => 'required|array',
+        'visa_fields.*' => 'string', // each element should be string
+    ]);
+
+    // Convert visa_fields array to JSON before storing
+    $jsonVisaFields = json_encode($validated['visa_fields']);
+    $visadetails=VisaServiceType::with('destinationcountry','VisaServices')->where('id',$request->assigncoutnry)->first();
+    $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
+
+        if ($assign) {
+            // Update existing record
+            $assign->visa_id = $visadetails->visa_id;
+            $assign->name_of_field = $jsonVisaFields;
+            $assign->destination_id = $visadetails->destination;
+            $assign->save();
+        } else {
+            // Create new record
+            ClientInfoForCountry::create([
+                'visa_id' => $visadetails->visa_id,
+                'assignid' => $visadetails->id,
+                'name_of_field' => $jsonVisaFields,
+                'destination_id' => $visadetails->destination,
+            ]);
+        }
+       return redirect()->route('visa.country')->with('success', 'Visa created successfully');
+    
+   }
+      /***Store Visa Data *****/
+  
+  
+      public function hsStore(Request $request)
+     {
 
         $data = $request->validate([
             'name'         => 'required|string|max:255|unique:visa_types,name',
@@ -775,6 +857,47 @@ class VisaController extends Controller
 
 
 
+   public function hsfillApplication(Request $request, $id, $token)
+   {
+    //    dd($id);
+       $agency = $this->agencyService->getAgencyData();
+       $bookingData = $this->visaRepository->bookingDataById($id);
+   
+       return view('agencies.pages.clients.clientapplication', compact('agency', 'bookingData'));
+   }
+   
+ public function hs_VisaStoreAjax(Request $request){
+    // dd($request->all());s
+  
+    $this->visaRepository->visadocumentstore($request->all());
+
+    // Return JSON response
+    return response()->json([
+        'status' => 'success',
+        'preview'=>$request->previewstep,
+        'step' => $request->step
+    ]);
+    // $this->visaRepository->storeVisa($request->all(),$request->file
+ }
+
+
+ public function hsconfirmApplication(Request $request){
+    //  dd($request->all());
+    $this->clintRepository->step1createclient($request->all());
+    $this->visaRepository->visadocumentstore($request->all());
+    // $bookingData = $this->visaRepository->sendToAdmin($request->booking_id);
+    if($request->type=='superadmin'){
+        return redirect()->route('superadminvisa.applicationview', ['id' => $request->bookingid]);
+    }else{
+        $booking = VisaBooking::where('id', $request->bookingid)->first();
+        $booking->sendtoadmin=3;
+        $booking->save();
+        // dd($bookingData);
+        return redirect()->route('visa.applicationview', ['id' => $request->bookingid]);
+    }
+
+
+ }
 
 
 

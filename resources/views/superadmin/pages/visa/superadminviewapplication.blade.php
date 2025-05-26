@@ -200,6 +200,11 @@
                     Log Data 
                 </div>
 
+                <div data-tid="applicationDataDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-eye text-ternary"></i>
+                    View Application  
+                </div>
+
               </div>
 
                 <div class="w-full mt-4 ">
@@ -247,6 +252,39 @@
                         <x-common.visalog :logs="$clientData->applicationlog->sortByDesc('created_at')" /> 
                     </div>
 
+                    <div id="applicationDataDiv" class="tab hidden">
+                        <!-- here -->
+                    <div class="w-full flex flex-col gap-2 px-4 mt-4">
+                    <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
+                        <span class="text-lg font-bold text-ternary">Verify Application</span>
+                    </div>
+                    @php
+                    $permission = $clientData && $clientData->clientrequiremtsinfo->name_of_field ? json_decode($clientData->clientrequiremtsinfo->name_of_field, true) : [];
+                    // Fields to be removed
+                        $fieldsToRemove = [
+                            'citizenship_id',
+                            'educational_qualification',
+                            'identification_marks',
+                            'nationality',
+                            'additional_passport_info_permission'
+                        ];
+
+                        // Filter the array to remove unwanted fields
+                        $alreadySelect = array_values(array_diff($permission, $fieldsToRemove));
+                 
+
+                    @endphp
+                    <input type="hidden" name="booking_id" id="bookingid" value="{{ $clientData->id }}">
+
+             
+                    <!-- Add your contact details form fields here -->
+                    <div class="w-full">
+                            @include('components.application.viewapplication', ['bookingData' => $clientData, 'type' => 'superadmin'])          
+                        </div>
+
+                </div>
+                <!-- here -->
+                    </div>
 
                 </div>
 

@@ -29,4 +29,8 @@ trait ClientTrait
         {
             return Excel::download(new ClientExport($clints), 'clients.xlsx');
         }
+
+        public function savedata($data){
+            dd($data);
+        }
 }

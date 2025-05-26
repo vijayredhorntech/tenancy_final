@@ -44,6 +44,8 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\ClientLoginController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\InvoiceController;
+
 
 
 
@@ -336,6 +338,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                  Route::get('/subtypeedit/{id}','hseditSubtype')->name('visaedit.subtype');
                                  Route::post('/visa/updatesubtype','hsupdateSubTypeStore')->name('updatesubtype');
 
+                                 Route::get('/requred/{id}','hsrequiredClientFiled')->name('requiredclient.field');
+                                 Route::post('/visa/requiredstore','hsrequiredClientFiledStore')->name('superadmin.assignclientfieldcountry');
                                  
 
                                  
@@ -392,6 +396,17 @@ Route::middleware([LogUserActivity::class])->group(function () {
                             Route::post('/notifications/assign/user', 'hsAssignUser')->name('assign.user');
 
                         });
+
+
+                        /*****Invoice and atoll **** */
+
+                    Route::controller(InvoiceController::class)->group(function () {
+                                Route::get('atolinvoice', 'hsatolVoice')->name('atolinvoice');
+
+                                Route::get('invoice/create', 'hs_createInvoice')->name('invoice.create');
+                                Route::post('invoice/store', 'hs_storeInvoice')->name('invoice.store');
+                                Route::get('invoice/view/{id}', 'hs_viewInvoice')->name('invoice.view');
+                    });
 
    });
 

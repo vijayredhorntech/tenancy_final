@@ -773,9 +773,9 @@
                         </div>
 
                         <div class="w-full flex justify-between px-4 pb-4 gap-2 mt-8">
-                            <button type="button" class="prev-step text-sm bg-ternary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/90 text-ternary hover:text-white hover:bg-ternary hover:border-ternary/30 transition ease-in duration-200">
+                            <!-- <button type="button" class="prev-step text-sm bg-ternary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/90 text-ternary hover:text-white hover:bg-ternary hover:border-ternary/30 transition ease-in duration-200">
                                 <i class="fa fa-arrow-left mr-1"></i> Previous
-                            </button>
+                            </button> -->
                             <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-200">
                                 Submit Application <i class="fa fa-check ml-1"></i>
                             </button>

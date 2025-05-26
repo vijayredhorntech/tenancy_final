@@ -67,5 +67,14 @@ class VisaBooking extends Model
 
     }
 
+    public function clientrequiremtsinfo(){
+        return $this->hasOne(ClientInfoForCountry::class, 'destination_id','destination_id');
+
+    }
+
+    public function visarequireddocument(){
+        return $this->hasOne(VisaRelatedDocument::class, 'bookingid','id');
+
+    }
    
 }

@@ -31,7 +31,7 @@ use App\Models\ClientApplicationDocument;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\ClientDetails;
 use App\Mail\ClientRequestNotificationMail;
-
+use App\Models\VisaRelatedDocument;
 
 class VisaRepository implements VisaRepositoryInterface
 {
@@ -824,7 +824,9 @@ public function getBookingByid($id, $type)
         'clientapplciation',
         'downloadDocument',
         'clientrequestdocuments',
-        'applicationlog'
+        'applicationlog',
+        'clientrequiremtsinfo',
+        'visarequireddocument'
     ])->where('id', $id)->first();
 
     if (!$viewbooking) {
@@ -1053,4 +1055,37 @@ public function getBookingByid($id, $type)
     }
     
 
+
+    /****Store Visa doucment **** */
+
+    public function visadocumentstore($data)
+    {
+        $visa = VisaRelatedDocument::where('bookingid', $data['bookingid'])->first();
+    
+        if (!$visa) {
+            $visa = new VisaRelatedDocument();
+            $visa->bookingid = $data['bookingid'];
+        }
+    
+        // Common assignments for both new and existing records
+        $visa->type_of_visa_required = $data['visatype'] ?? $visa->type_of_visa_required;
+        $visa->number_of_entries = $data['noofentries'] ?? $visa->number_of_entries;
+        $visa->period_of_visa_month = $data['periodofvisa'] ?? $visa->period_of_visa_month;
+        $visa->expected_date_of_journey = $data['expecteddate'] ?? $visa->expected_date_of_journey;
+        $visa->port_of_arrival = $data['portofarrival'] ?? $visa->port_of_arrival;
+        $visa->port_of_exit = $data['portofexit'] ?? $visa->port_of_exit;
+        $visa->places_to_be_visited = $data['placeofvisit'] ?? $visa->places_to_be_visited;
+        $visa->purpose_of_visit = $data['purposeofvisit'] ?? $visa->purpose_of_visit;
+    
+        $visa->previous_visa_number = $data['previous_visa_number'] ?? $visa->previous_visa_number;
+        $visa->previous_visa_issued_place = $data['previous_visa_place'] ?? $visa->previous_visa_issued_place;
+        $visa->previous_visa_issue_date = $data['previous_visa_issue_date'] ?? $visa->previous_visa_issue_date;
+        $visa->countries_visited_last_10_years = $data['countries_visited_last_10_years'] ?? $visa->countries_visited_last_10_years;
+    
+        $visa->otherdocument = $data['otherdocument'] ?? $visa->otherdocument;
+        $visa->visa_refused_or_deported = $data['visa_refused_or_deported'] ?? $visa->visa_refused_or_deported;
+    
+        $visa->save();
+    }
+    
 }

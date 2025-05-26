@@ -7,7 +7,7 @@
 
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">Country  List </span>
+                <span class="font-semibold text-ternary text-xl">Assign Country List </span>
                 <a href="{{route('visa.assign')}}" class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000"> Create New Visa </a> 
                 
                 <!-- <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">Create New Visa</button> -->
@@ -67,6 +67,12 @@
                                     <a href="{{ route('visa.editcountry', ['id' => $visa->id]) }}" title="Edit Country">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-pencil"></i>
+                                        </div>
+                                    </a>
+
+                                    <a href="{{ route('requiredclient.field', ['id' => $visa->id]) }}" title="Assign  Country">
+                                        <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
+                                            <i class="fa fa-plus"></i>
                                         </div>
                                     </a>
                              
