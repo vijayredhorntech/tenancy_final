@@ -39,7 +39,7 @@
         </div>
 
         <!-- Main Form Content -->
-        <form action="{{ route('comfirm.application') }}" method="POST" class="space-y-6">
+        <form action="{{ route('comfirm.application') }}" method="POST" id="confirmform" class="space-y-6">
             @csrf
             <input type="hidden" value="{{ $bookingData->id }}" name="bookingid">
             <input type="hidden" name="type" value="{{ $type ?? 'agency' }}">
@@ -480,6 +480,15 @@
                     </div>
                 </div>
             </div>
+
+
+             <!-- Buttons Section -->
+        <div class="flex justify-between mt-8">
+
+            <button class="bg-success text-white px-6 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-success focus:ring-opacity-50">
+                Submit
+            </button>
+        </div>
         </form>
     </div>
 </div>
@@ -487,23 +496,22 @@
 
 <script>
 $(document).ready(function() {
-    // Disable all inputs initially
-    $('input, select, textarea').prop('disabled', true);
+    // Disable all inputs/selects/textareas inside only this form initially
+    $('#confirmform').find('input, select, textarea').prop('disabled', true);
     
     // Handle edit button clicks
     $('.section-edit-btn').click(function() {
         const section = $(this).data('section');
-    
-        // Disable all sections first
-        $('.section-container').each(function() {
+
+        // Loop through all section containers within the form
+        $('#confirmform').find('.section-container').each(function() {
             const currentSection = $(this).data('section');
-             
             const isActive = currentSection === section;
-            
-            // Toggle disabled state for all inputs in this section
+
+            // Enable/disable inputs/selects/textareas only in the target section
             $(this).find('input, select, textarea').prop('disabled', !isActive);
-            
-            // Update edit button text
+
+            // Update edit button styles and icon
             const btn = $(this).find('.section-edit-btn');
             if (isActive) {
                 btn.html('<i class="fas fa-times mr-1"></i> Cancel');
@@ -514,14 +522,15 @@ $(document).ready(function() {
             }
         });
     });
-    
-    // Optional: Handle form submission to re-enable all fields
-    $('#applicationForm').submit(function() {
-        $('input, select, textarea').prop('disabled', false);
+
+    // Optional: Re-enable all inputs before submission
+    $('#confirmform').submit(function() {
+        $(this).find('input, select, textarea').prop('disabled', false);
         return true;
     });
 });
 </script>
+
 
 
 </html>

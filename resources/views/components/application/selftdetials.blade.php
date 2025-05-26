@@ -60,6 +60,59 @@
                                     </div>
 
                                 </div>
+                            @endif
+                            <div id="spouseDetailsSection" class=" p-4 border-[1px] border-primary/70 rounded-md  bg-black/10 shadow-lg shadow-black/10  mt-4 xl:col-span-3 lg:col-span-3 md:col-span-3 col-span-1 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+                                                <div class="w-full">
+                                                    <label for="spouse_name" class="font-semibold text-ternary/90 text-sm">Husband / Wife Name</label>
+                                                    <input type="text" name="spouse_name" id="spouse_name"
+                                                        value=""
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                </div>
+
+                                                <div class="w-full">
+                                                    <label for="spouse_nationality" class="font-semibold text-ternary/90 text-sm">Nationality</label>
+                                                    <input type="text" name="spouse_nationality" id="spouse_nationality"
+                                                        value=""
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                </div>
+
+                                                <div class="w-full">
+                                                    <label for="spouse_birth_place" class="font-semibold text-ternary/90 text-sm">Place of Birth</label>
+                                                    <input type="text" name="spouse_birth_place" id="spouse_birth_place"
+                                                        value=""
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                </div>
+
+                                                <div class="w-full">
+                                                    <label for="spouse_previous_nationality" class="font-semibold text-ternary/90 text-sm">Previous Nationality</label>
+                                                    <input type="text" name="spouse_previous_nationality" id="spouse_previous_nationality"
+                                                        value=""
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                </div>
+
+                                                <div class="w-full">
+                                                    <label for="spouse_dob" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
+                                                    <input type="date" name="spouse_dob" id="spouse_dob"
+                                                    value=""
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                </div>
+
+                                                <div class="w-full">
+                                                    <label for="spouse_employment" class="font-semibold text-ternary/90 text-sm">Employment Status</label>
+                                                    <input type="text" name="spouse_employment" id="spouse_employment"
+                                                        value=""
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                </div>
+
+                                                <div class="w-full">
+                                                    <label for="spouse_address" class="font-semibold text-ternary/90 text-sm">Address</label>
+                                                    <input type="text" name="spouse_address" id="spouse_address"
+                                                        value=""
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                </div>
+
+                                                </div>
                              @endif
 
 
