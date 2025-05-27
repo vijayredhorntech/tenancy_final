@@ -161,13 +161,20 @@
                 <th>Surname</th>
                 <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->last_name ?? '' }} " ></td>
             </tr>
+            
+            @php
+                   $fatherdetails = $clientData->clint->clientinfo->father_details ? json_decode($clientData->clint->clientinfo->father_details) : null;
+                   $motherdetails = $clientData->clint->clientinfo->father_details ? json_decode($clientData->clint->clientinfo->father_details) : null;
+                   $spouse = $clientData->clint->clientinfo->spouse_details ? json_decode($clientData->clint->clientinfo->spouse_details) : null;
+                                  
+            @endphp
             <tr>
                 <th>Father's Full Name</th>
-                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $clientData->clint->clientinfo->father_details ?? '' }} " ></td>
+                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;  {{ $fatherdetails->name ?? '' }} " ></td>
             </tr>
             <tr>
                 <th>Spouse's Name</th>
-                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;   {{ $clientData->clint->clientinfo->spouse_details ?? '' }} " ></td>
+                <td><input type="text"  value="&nbsp; &nbsp; &nbsp; &nbsp;   {{ $spouse->name ?? '' }} " ></td>
             </tr>
             <tr>
                 <th>Place of Birth</th>

@@ -16,7 +16,7 @@
 {{--        === this is code for table section ===--}}
             <div class="w-full overflow-x-auto p-4">
                      <!-- search function  -->
-                     <form id="filter-form" method="GET" action="{{ route('superadminvisa.booking') }}" class="space-y-4">
+                     <form id="filter-form" method="GET" action="{{ route('superadminview.allapplication') }}" class="space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <!-- Search -->
                                     <div>
@@ -105,7 +105,7 @@
                                         <button type="submit" class="bg-success text-white px-4 py-2 rounded-md hover:bg-success/90">
                                             Apply Filters
                                         </button>
-                                        <a href="{{ route('superadminvisa.booking') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                                        <a href="{{ route('superadminview.allapplication') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
                                             Clear Filters
                                         </a>
                                     </div>

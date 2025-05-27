@@ -984,7 +984,13 @@ I
 
              <!-- Buttons Section -->
         <div class="flex justify-between mt-8">
+        <!-- <a href="{{ route('download.fillapplication', ['id' => $bookingData->id]) }}">
+            <button class="bg-success text-white px-6 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-success focus:ring-opacity-50">
+                Download
+            </button>
+        </a> -->
 
+        
             <button class="bg-success text-white px-6 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-success focus:ring-opacity-50">
                 Submit
             </button>

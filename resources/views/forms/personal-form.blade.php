@@ -161,15 +161,23 @@
                 <input type="text" name="profession" class="editable" value="&nbsp; &nbsp; &nbsp;&nbsp;{{ $clientData->clint->clientinfo->present_occupation ?? '' }}" test="Enter profession">
             </div>
 
+            @php
+                   $fatherdetails = $clientData->clint->clientinfo->father_details ? json_decode($clientData->clint->clientinfo->father_details) : null;
+                   $motherdetails = $clientData->clint->clientinfo->father_details ? json_decode($clientData->clint->clientinfo->father_details) : null;
+                   $spouse = $clientData->clint->clientinfo->spouse_details ? json_decode($clientData->clint->clientinfo->spouse_details) : null;
+                                  
+            @endphp
+
+
             <div class="field">
                 7. a) Father: 
-                <input type="text" name="father_name" class="editable" value="&nbsp; &nbsp; &nbsp;&nbsp;{{ $clientData->clint->clientinfo->father_details ?? '' }}" test="Enter father's name">
+                <input type="text" name="father_name" class="editable" value="&nbsp; &nbsp; &nbsp;&nbsp;{{ $fatherdetails->name ?? '' }}" test="Enter father's name">
                 <br>
                 b) Mother: 
-                <input type="text" name="mother_name" class="editable" value="&nbsp; &nbsp; &nbsp;&nbsp;{{ $clientData->clint->clientinfo->mother_details ?? '' }}" test="Enter mother's name">
+                <input type="text" name="mother_name" class="editable" value="&nbsp; &nbsp; &nbsp;&nbsp;{{ $motherdetails->name ?? '' }}" test="Enter mother's name">
                 <br>
                 c) Husband / Wife: 
-                <input type="text" name="spouse_name" class="editable" value="&nbsp; &nbsp; &nbsp;&nbsp;{{ $clientData->clint->clientinfo->spouse_details ?? '' }}" test="Enter spouse's name">
+                <input type="text" name="spouse_name" class="editable" value="&nbsp; &nbsp; &nbsp;&nbsp;{{ $spouse->name ?? '' }}" test="Enter spouse's name">
             </div>
         </div>
 

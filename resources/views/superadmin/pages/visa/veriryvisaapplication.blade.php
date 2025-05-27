@@ -15,8 +15,12 @@
         {{-- Form Heading --}}
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
             <span class="font-semibold text-ternary text-xl">Visa Application Form</span>
+            <a href="{{ url()->previous() }}" class="text-sm text-primary hover:underline">
+              ← Back
+           </a>
         </div>
 
+        
         <div class="w-full ">
                         @include('components.application.viewapplication', ['bookingData' => $bookingData])          
                 

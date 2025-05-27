@@ -143,10 +143,15 @@
             <label for="nationality">NATIONALITY:</label>
             <input type="text" id="nationality" value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->clientinfo->nationality ?? '' }}  name="nationality" class="dotted-input">
         </div>
-
+        @php
+                   $fatherdetails = $clientData->clint->clientinfo->father_details ? json_decode($clientData->clint->clientinfo->father_details) : null;
+                   $motherdetails = $clientData->clint->clientinfo->father_details ? json_decode($clientData->clint->clientinfo->father_details) : null;
+                   $spouse = $clientData->clint->clientinfo->spouse_details ? json_decode($clientData->clint->clientinfo->spouse_details) : null;
+                                  
+            @endphp
         <div class="form-group">
             <label for="fathername">FATHER'S NAME:</label>
-            <input type="text" id="fathername"  value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $clientData->clint->clientinfo->father_details ?? '' }} " name="fathername" class="dotted-input">
+            <input type="text" id="fathername"  value="&nbsp;&nbsp;&nbsp;&nbsp;{{ $fatherdetails->name ?? '' }} " name="fathername" class="dotted-input">
         </div>
 
         <div class="form-group">

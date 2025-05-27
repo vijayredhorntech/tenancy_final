@@ -323,6 +323,8 @@ Route::controller(VisaController::class)->group(function () {
         Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
         Route::get('/fillapplication/{id}/{token}','hsfillApplication')->name('application.client');
         Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
+        Route::get('/download-fill-application/{id}', 'hs_')->name('download.fillapplication');
+        
 
         Route::post('/agencies/visastoretoreajax','hs_VisaStoreAjax')->name('visadocument.update');
 

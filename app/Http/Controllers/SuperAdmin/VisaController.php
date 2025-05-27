@@ -85,10 +85,11 @@ class VisaController extends Controller
     }
 
 //    all application
-    public function hs_visaAllApplication(){
-        $allbookings = $this->visaRepository->getSuperadminAllApplication();
-     
-        return view('superadmin.pages.visa.superadminallapplication', compact('allbookings'));
+    public function hs_visaAllApplication(Request $request){
+        $allbookings = $this->visaRepository->getSuperadminAllApplication($request);
+        $countries=Country::get();
+        $agencies=Agency::get();  
+        return view('superadmin.pages.visa.superadminallapplication', compact('allbookings','countries','agencies'));
     }
 
     /***View single Application of  ****/
@@ -603,15 +604,16 @@ class VisaController extends Controller
 
 
        /*******Visa Application form *******/
-    public function hs_visaApplication($type){
+    public function hs_visaApplication($type,Request $request){
 
 
         /***Ger Agency Rerod in the Visa Application ****/
         $agency = $this->agencyService->getAgencyData();
-        $allbookings = $this->visaRepository->getBookingByid($agency->id,$type);
+        $allbookings = $this->visaRepository->getBookingByid($agency->id,$type,$request);
+        $countries=Country::get();
       
      
-        return view('superadmin.pages.visa.visaApplication', compact('allbookings'));
+        return view('superadmin.pages.visa.visaApplication', compact('allbookings','countries'));
 
 
     }
