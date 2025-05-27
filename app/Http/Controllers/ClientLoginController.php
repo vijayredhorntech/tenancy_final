@@ -247,10 +247,10 @@ class ClientLoginController extends Controller
     
     
     // dd($application);
-    Mail::to(env('SUPERADMIN_EMAIL'))
-    ->send(new DocumentVerificationRequestMail(
-        $application->application_number
-    ));
+    // Mail::to(env('SUPERADMIN_EMAIL'))
+    // ->send(new DocumentVerificationRequestMail(
+    //     $application->application_number
+    // ));
    
     if($request->type=='agency') {
 

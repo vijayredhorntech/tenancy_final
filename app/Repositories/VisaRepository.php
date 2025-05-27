@@ -1051,7 +1051,7 @@ public function getBookingByid($id, $type, $request)
         }
         $deduction = Deduction::where('flight_booking_id', $booking->id)->first();
 
-        Mail::to(env('SUPERADMIN_EMAIL'))->send(new ClientRequestNotificationMail($deduction));
+        // Mail::to(env('SUPERADMIN_EMAIL'))->send(new ClientRequestNotificationMail($deduction));
 
         if ($deduction) {
             $deduction->displaynotification = 0;
