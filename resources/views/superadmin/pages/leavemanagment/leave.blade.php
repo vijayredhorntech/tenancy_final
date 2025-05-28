@@ -48,7 +48,7 @@
 
 
 {{--        === this is code for table section ===--}}
-            <div class="w-full overflow-x-auto p-4">
+            <!-- <div class="w-full overflow-x-auto p-4">
                 <div class="w-full flex justify-between gap-2 items-center">
                      <div class="flex gap-2">
                          <button title="Export to excel" class="bg-success/20 text-success h-8 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white  cursor-pointer transition ease-in duration-2000">
@@ -63,7 +63,7 @@
                            <button class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
                                 <i class="fa fa-search mr-1"></i> Search
                            </button>
-                    </div>
+                    </div> -->
                 </div>
                 <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                     <tr>

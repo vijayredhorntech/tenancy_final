@@ -116,7 +116,7 @@
                                 </span>
 
                                 <span class="bg-red-500 text-white px-2 py-[2px] rounded text-xs font-semibold ml-2">
-                                    Absent ({{ $absentCount }} Days)
+                                    Absent11 ({{ $absentCount }} Days)
                                 </span>
                             </td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"> 
