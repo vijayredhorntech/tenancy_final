@@ -88,11 +88,6 @@
             </div>
           
 </form>
-{{--        === table section code ends here===--}}
+
         </div>
-</x-front.layout>
-
-
-
-
-
+</x-front.layout> 

@@ -27,6 +27,7 @@ use App\Models\ClientMoreInfo;
 use App\Models\ClientDetails;
 use App\Models\VisaServiceType;
 use App\Models\VisaBooking;
+use App\Models\VisaSection;
 
 use App\Models\ClientInfoForCountry;
 
@@ -180,6 +181,25 @@ class VisaController extends Controller
         return view('superadmin.pages.visa.assigncountry', compact('combined','visadetails','assign'));
     }
     
+    // public function hsrequiredClientFiled($id)
+    // {
+    //     $visadetails = VisaServiceType::with('destinationcountry', 'VisaServices')->where('id', $id)->first();
+    //     $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
+    //     // Fetch all VisaSection records first
+    //     $groupedFields = VisaSection::all();
+    //     //  dd($groupedFields);
+    
+    //     // $groupedFields = [];
+    
+    //     // foreach ($sections as $section) {
+    //     //     $groupedFields[$section->group_name][] = $section->section_name;
+    //     // }
+    
+    //     // Pass the data to view
+    //     return view('superadmin.pages.visa.assigncountry', compact('groupedFields', 'visadetails','assign'));
+    // }
+    
+
    public function hsrequiredClientFiledStore(Request $request){
     // dd($request->all());
     $validated = $request->validate([
