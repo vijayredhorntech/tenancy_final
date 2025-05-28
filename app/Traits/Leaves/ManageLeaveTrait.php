@@ -62,20 +62,21 @@ trait ManageLeaveTrait
     /******Check Leave ***** */
     public function checkLeaves($type = null)
     {
-        dd($type);
+        //dd($type);
         $isAgency = isset($type) && $type === 'agency';
 
             // Get user ID and determine database connection
             $loginUser = $isAgency ? $this->agencyService->getCurrentLoginUser() : Auth::user();
-           dd($loginUser);
+           //dd($loginUser);
             $userId = $loginUser->id;
             $connection = $isAgency ? 'user_database' : null;
-
+        
         // $user = Auth::user();
     
-        return ApplyUserLeave::on('user_database')->where('user_id', $user->id)
-            ->where('status_of_leave', 'pending')
-            ->exists(); // Returns true if a pending leave exists, otherwise false
+        return ApplyUserLeave::on($connection )
+        ->where('user_id', $userId)
+        ->where('status_of_leave', 'pending')
+        ->exists(); // Returns true if a pending leave exists, otherwise false
     }
 
     /***Update superadin *** */

@@ -247,7 +247,7 @@ class LeaveManagementController extends Controller
 
     public function hs_applyleave(Request $request,$type=null){
      
-        dd($type);
+        // dd($type);
   
         // Validate the request data
 
@@ -258,6 +258,7 @@ class LeaveManagementController extends Controller
             'reason' => 'nullable|string|max:255',
         ]);
 
+        
     // Calculate the number of leave days
         $start_date = Carbon::parse($request->from);
         $end_date = Carbon::parse($request->to);
@@ -265,7 +266,7 @@ class LeaveManagementController extends Controller
         $result = $this->checkLeaves($type = $request->type);
 
 
-
+        //dd("hello");
      
         // Check if the user has already applied for a leave (Pending or Approved) within the same date range (from - to)
         if($result==true){
@@ -273,6 +274,7 @@ class LeaveManagementController extends Controller
         }
         $leavebalance=$this->checkLeaveBalance($start_date,$end_date,$request->all());
         if($leavebalance==false){
+            //dd("hello");
             return back()->with('error', 'You do not have sufficient leave balance..');
         }
     

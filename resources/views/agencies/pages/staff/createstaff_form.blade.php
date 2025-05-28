@@ -117,7 +117,7 @@
                             <div class="w-full relative group flex flex-col gap-1">
                                 <label for="name" class="font-semibold text-ternary/90 text-sm">Sort Code</label>
                                 <div class="w-full relative">
-                                    <input type="text" name="short_code" id="short_code" placeholder="Short Code....."
+                                    <input type="text" name="short_code" id="short_code" placeholder="Sort Code....."
                                         value="{{ old('short_code') }}"
                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                         @error('short_code') border-red-500 @enderror">
@@ -427,7 +427,7 @@
                                     <div class="w-full relative group flex flex-col gap-1">
                                         <label for="eductionname1" class="font-semibold text-ternary/90 text-sm">Education</label>
                                         <div class="w-full relative">
-                                            <input type="text" name="eductionname1" id="eductionname1" placeholder="Education  name..."
+                                            <input type="text" name="eductionname1" id="eductionname1" placeholder="Education  Name..."
                                                 value="{{ old('eductionname1') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                                 @error('eductionname1') border-red-500 @enderror">
@@ -869,15 +869,15 @@
            ///add functionality for document
 
            //add education function 
-           let counter = 1; // Initial counter for unique field names
+           let edcounter = 1; // Initial counter for unique field names
 
             document.getElementById('addEducationBtn').addEventListener('click', function(event) {
                 event.preventDefault(); // Prevent default behavior
 
-                let container = document.getElementById('educationContainer');
+                let edcontainer = document.getElementById('educationContainer');
 
-                if (counter < 10) { // Limit to 10 sets
-                    counter++; // Increment counter
+                if (edcounter < 10) { // Limit to 10 sets
+                    edcounter++; // Increment counter
 
                     // Create a new wrapper div
                     let docWrapper = document.createElement('div');
@@ -886,9 +886,9 @@
                     // Document Name Field
                     let documentField = `
                         <div class="w-full flex flex-col gap-1">
-                            <label for="eductionname1${counter}" class="font-semibold text-gray-700 text-sm">Education</label>
+                            <label for="eductionname1${edcounter}" class="font-semibold text-gray-700 text-sm">Education</label>
                             <div class="w-full relative">
-                                <input type="text" name="eductionname1${counter}" id="eductionname1${counter}" placeholder="Education  name..."
+                                <input type="text" name="eductionname1${edcounter}" id="eductionname1${edcounter}" placeholder="Education  name..."
                                     class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                 <i class="fa fa-link absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                             </div>
@@ -897,9 +897,9 @@
                     // File Upload Field
                     let fileField = `
                         <div class="w-full flex flex-col gap-1">
-                            <label for="eductionfile1${counter}" class="font-semibold text-gray-700 text-sm">Marksheet</label>
+                            <label for="eductionfile1${edcounter}" class="font-semibold text-gray-700 text-sm">Marksheet</label>
                             <div class="w-full relative">
-                                <input type="file" name="eductionfile1${counter}" id="eductionfile1${counter}"
+                                <input type="file" name="eductionfile1${edcounter}" id="eductionfile1${edcounter}"
                                     class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                 <i class="fa fa-database absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                             </div>
@@ -908,7 +908,7 @@
                     // Remove Button
                     let removeBtn = `
                     <div class="w-max flex flex-col gap-1 remove-btn">
-                            <label for="file${counter}" class="font-semibold text-gray-700 text-sm">&nbsp</label>
+                            <label for="file${edcounter}" class="font-semibold text-gray-700 text-sm">&nbsp</label>
                             <div class="w-full relative">
                             <button type="button" class="w-max h-max text-sm bg-danger/30 px-4 py-1 mt-2 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-danger/90 text-ternary hover:text-white hover:bg-danger hover:border-ternary/30 transition ease-in duration-2000">Remove</button>
                             </div>
@@ -919,10 +919,12 @@
                     docWrapper.innerHTML = documentField + fileField + removeBtn;
 
                     // Append the wrapper to the container
-                    container.appendChild(docWrapper);
+                   edcontainer.appendChild(docWrapper);
 
                     // Add event listener to remove the section
                     docWrapper.querySelector(".remove-btn").addEventListener('click', function() {
+                    
+                          if (edcounter > 1) edcounter--;
                         docWrapper.remove();
                     });
 
