@@ -209,25 +209,27 @@
 
                </form>   
                {{-- JavaScript --}}
-<script>
+               @isset($other_passport_details)
+                <script>
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const hasOtherPassport = {{ $other_passport_details ? 'true' : 'false' }};
+                        
+                        if (hasOtherPassport) {
+                            togglePassportidentity(true);
+                        } else {
+                            togglePassportidentity(false);
+                        }
+                    });
 
-document.addEventListener('DOMContentLoaded', function () {
-        const hasOtherPassport = {{ $other_passport_details ? 'true' : 'false' }};
-        
-        if (hasOtherPassport) {
-            togglePassportidentity(true);
-        } else {
-            togglePassportidentity(false);
-        }
-    });
-    function togglePassportidentity(show) {
-  
-        const section = document.getElementById('passport_identity_section');
-        if (show) {
-            section.classList.remove('hidden');
-        } else {
-            section.classList.add('hidden');
-        }
-    }
-</script>
+                    function togglePassportidentity(show) {
+                        const section = document.getElementById('passport_identity_section');
+                        if (show) {
+                            section.classList.remove('hidden');
+                        } else {
+                            section.classList.add('hidden');
+                        }
+                    }
+                </script>
+@endisset
+
           
