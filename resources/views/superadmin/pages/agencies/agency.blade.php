@@ -553,7 +553,6 @@
         </a> 
          @endcanany
 
-
         </div>
    
 
@@ -589,9 +588,9 @@
                 <div>
                     <label for="date_from" class="block text-sm font-medium text-gray-700">Date Range</label>
                     <div class="flex gap-2">
-                        <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}"
+                        <input type="date" name="date_from" id="date_from" max="2099-12-31" value="{{ request('date_from') }}"
                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                        <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}"
+                        <input type="date" name="date_to" id="date_to" max="2099-12-31"  value="{{ request('date_to') }}"
                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
                     </div>
                 </div>
@@ -694,22 +693,20 @@
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$agency['name']}}</td>
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$agency['email']}}</td>
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">
+
                             <div class="flex flex-col">
                                 <span><i class="fa fa-user text-sm mr-1 text-secondary"></i> {{$agency['contact_person']}}</span>
                                 <span class="font-medium"> <a href="tel:({{$agency['contact_phone']}} )"><i class="fa fa-phone mr-1 text-sm text-secondary"></i> ({{$agency['contact_phone']}} )</a></span>
                             </div>
                         </td>
-                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                            <div class="flex  gap-2">
-                                {{ $agency->userAssignments ? $agency->userAssignments->count() : 0 }}
-                                <button type="button" title="View Services"
-                                        onclick="document.getElementById('viewServiceModel').classList.toggle('hidden')">
-                                    <!-- <div
-                                        class=" bg-primary/10 text-primary h-6 w-6 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                        <i class="fa fa-eye"></i>
-                                    </div> -->
-                                </button>
-                            </div>
+                       <td  class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
+                          <div class="flex gap-2">
+                            @if($agency->userAssignments && $agency->userAssignments->count() > 0)
+                                {{ $agency->userAssignments->pluck('service.name')->implode(', ') }}
+                            @else
+                                No services
+                            @endif
+                        </div>
                         </td>
 
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">

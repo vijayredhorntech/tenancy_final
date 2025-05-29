@@ -101,7 +101,7 @@
                     <form action="{{ route('search') }}" method="POST" enctype="multipart/form-data">
                       @csrf
                       <input type="hidden" name="type" value="visa">
-                         <input type="text" placeholder="visa name....." name="search"
+                         <input type="text" placeholder="Visa Name....." name="search"
      
                                 class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000">
                          <button type="submit"
@@ -123,7 +123,7 @@
                 <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                     <tr>
                         <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</th>
-                        <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Visa name</th>
+                        <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Visa Name</th>
                         <!-- <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Description</td> -->
                         <!-- <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sub Type</td> -->
                       

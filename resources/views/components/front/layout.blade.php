@@ -210,6 +210,7 @@
 
                 // Add event listener to remove the section
                 docWrapper.querySelector(".remove-btn").addEventListener('click', function() {
+                  if (documentcounter > 1) documentcounter--;
                     docWrapper.remove();
                 });
 

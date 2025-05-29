@@ -20,8 +20,9 @@
 
                        <div class="w-full relative group flex flex-col gap-1">
                            <label for="profile" class="font-semibold text-ternary/90 text-sm">Profile</label>
+                           <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg </span>
                            <div class="w-full relative">
-                               <input type="file" name="profile" id="profile" placeholder="Staff name....."
+                               <input type="file" name="profile" id="profile" placeholder="Staff Name....."
                                    value="{{ old('profile') }}"
                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                    @error('profile') border-red-500 @enderror">
@@ -38,7 +39,7 @@
                        <div class="w-full relative group flex flex-col gap-1">
                            <label for="name" class="font-semibold text-ternary/90 text-sm">Name <span class="text-red-600">*</span></label>
                            <div class="w-full relative">
-                               <input type="text" name="name" id="name" placeholder="Staff name....."
+                               <input type="text" name="name" id="name" placeholder="Staff Name....."
                                    value="{{ old('name') }}"
                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                    @error('name') border-red-500 @enderror">
@@ -116,7 +117,7 @@
                        <div class="w-full relative group flex flex-col gap-1">
                            <label for="name" class="font-semibold text-ternary/90 text-sm">Sort Code</label>
                            <div class="w-full relative">
-                               <input type="text" name="short_code" id="short_code" placeholder="Short Code....."
+                               <input type="text" name="short_code" id="short_code" placeholder="Sort Code....."
                                    value="{{ old('short_code') }}"
                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                    @error('short_code') border-red-500 @enderror">
@@ -151,7 +152,7 @@
                        <div class="w-full relative group flex flex-col gap-1">
                            <label for="name" class="font-semibold text-ternary/90 text-sm">Zip Code <span class="text-red-600">*</span> </label>
                            <div class="w-full relative">
-                               <input type="text" name="zip_code" id="zip_code" placeholder="zip code....."
+                               <input type="text" name="zip_code" id="zip_code" placeholder="Zip Code....."
                                    value="{{ old('zip_code') }}"
                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000
                                    @error('zip_code') border-red-500 @enderror">
@@ -350,6 +351,7 @@
 
                        <div class="w-full relative group flex flex-col gap-1">
                            <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Password Front</label>
+                           <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg </span>
                            <div class="w-full relative">
                                <input type="file" name="passportfront" id="datePicker"
                                    class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
@@ -359,6 +361,7 @@
 
                        <div class="w-full relative group flex flex-col gap-1">
                            <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Passport back</label>
+                           <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg </span>
                            <div class="w-full relative">
                                <input type="file" name="passport_back" id="datePicker"
                                    class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
@@ -440,6 +443,7 @@
 
                                <div class="w-full relative group flex flex-col gap-1">
                                    <label for="attachment1" class="font-semibold text-ternary/90 text-sm">Marksheet</label>
+                                   <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg/Pdf </span>
                                    <div class="w-full relative">
                                        <input type="file" name="eductionfile1" id="eductionfile1"
                                            value="{{ old('eductionfile1') }}"
@@ -666,6 +670,7 @@
 
                                <div class="w-full relative group flex flex-col gap-1">
                                    <label for="attachment1" class="font-semibold text-ternary/90 text-sm">Attachment</label>
+                                   <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg/Pdf </span>
                                    <div class="w-full relative">
                                        <input type="file" name="file1" id="file1"
                                            value="{{ old('file1') }}"
@@ -915,7 +920,7 @@
                     <div class="w-max flex flex-col gap-1 remove-btn">
                             <label for="file${counter}" class="font-semibold text-gray-700 text-sm">&nbsp</label>
                             <div class="w-full relative">
-                            <button type="button" class="w-max h-max text-sm bg-danger/30 px-4 py-1 mt-2 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-danger/90 text-ternary hover:text-white hover:bg-danger hover:border-ternary/30 transition ease-in duration-2000">Remove</button>
+                            <button type="button" class="w-max h-max text-sm bg-danger/30 px-4 py-1 mt-2 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-danger/90 text-ternary hover:text-white hover:bg-danger hover:border-ternary/30 transition ease-in duration-2000">Remove </button>
                             </div>
                         </div>
                     `;
@@ -928,6 +933,7 @@
 
                     // Add event listener to remove the section
                     docWrapper.querySelector(".remove-btn").addEventListener('click', function() {
+                       if (counter > 1) counter--;
                         docWrapper.remove();
                     });
 
@@ -991,6 +997,7 @@ document.getElementById('addDocumentBtn').addEventListener('click', function(eve
 
         // Add event listener to remove the section
         docWrapper.querySelector(".remove-btn").addEventListener('click', function() {
+             if (counter > 1) counter--;
             docWrapper.remove();
         });
 

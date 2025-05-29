@@ -4,7 +4,15 @@
     @endsection
 
 
-
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
@@ -150,7 +158,7 @@
                                      @forelse($user->leaves  as $leave)
                                             <option value="{{ $leave->leave->id}}">{{ $leave->leave->leave_type }}</option>
                                      @empty
-                                       <option value="">NO Leave</option>
+                                       
                                      @endforelse
                                  </select>
                                  <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>

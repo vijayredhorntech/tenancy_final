@@ -21,7 +21,7 @@
 
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">Staff Attandamce </span>
+                <span class="font-semibold text-ternary text-xl">Staff Attendance </span>
                 {{ \Carbon\Carbon::parse($date_from)->format('l, d F Y') }} to {{ \Carbon\Carbon::parse($date_to)->format('l, d F Y') }}
 
                <!-- <a href="{{route('superadmin_staffcreate')}}" class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000" > Create New Staff </a> -->
@@ -45,9 +45,9 @@
                     <div>
                         <label for="date_from" class="block text-sm font-medium text-gray-700">Date Range</label>
                         <div class="flex gap-2">
-                            <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}"
+                            <input type="date" name="date_from" id="date_from" max="2099-12-31" value="{{ request('date_from') }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                            <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}"
+                            <input type="date" name="date_to" id="date_to" max="2099-12-31"  value="{{ request('date_to') }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
                         </div>
                     </div>
@@ -116,7 +116,7 @@
                                 </span>
 
                                 <span class="bg-red-500 text-white px-2 py-[2px] rounded text-xs font-semibold ml-2">
-                                    Absent ({{ $absentCount }} Days)
+                                    Absent11 ({{ $absentCount }} Days)
                                 </span>
                             </td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"> 

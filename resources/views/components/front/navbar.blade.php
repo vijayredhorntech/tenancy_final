@@ -68,6 +68,8 @@
     </div>
 </div>--}}
 
+
+
 <div class="w-full px-4 py-2 flex xl:justify-between lg:justify-between md:justify-between sm:justify-between justify-between items-center bg-white sticky z-50 top-0 border-b-[2px] border-b-ternary/20">
     <div class="flex items-center">
         <div class="rounded-full h-10 w-10 xl:hidden lg:hidden flex justify-center items-center text-secondary" onclick="document.getElementById('sideBarDiv').classList.toggle('hidden');
@@ -89,6 +91,8 @@
                     </button>
                 </a>
             @else
+
+            
                 <!-- Show Login Time if User is Logged In -->
                 <div class="text-lg font-medium text-green-600">
                     <i class="fa fa-clock mr-2"></i> Logged in {{ \Carbon\Carbon::createFromFormat('H:i:s',  $login_time)->format('h:i:s A') }}
@@ -259,6 +263,46 @@
             <i class="fa fa-gear animate-spin" title="Settings"></i>
         </div>
 
+        <!-- Notification  -->
+                <!-- Success Alert -->
+                @if (session('success'))
+                    <div id="success-alert" class="alert flex items-center justify-between p-4 mb-4 text-sm font-medium text-white border-2 border-success/30 rounded-lg bg-success shadow-md transition-all duration-300" role="alert">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-4l-3-3 1.414-1.414L9 11.172l4.586-4.586L15 8l-6 6z" clip-rule="evenodd" />
+                            </svg>
+                            <span>{{ session('success') }}</span>
+                        </div>
+                        <button onclick="dismissAlert('success-alert')" class="alert ml-4 text-white hover:text-gray-200 focus:outline-none">
+                            <span class="sr-only">Close</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                    
+                @endif
+
+                <!-- Error Alert -->
+                @if (session('error'))
+                    <div id="error-alert" class="alert flex items-center justify-between p-4 mb-4 text-sm font-medium text-white border-2 border-danger/30 rounded-lg bg-danger shadow-md transition-all duration-300" role="alert">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9 8a1 1 0 112 0v4a1 1 0 11-2 0V8zm1 6a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" clip-rule="evenodd" />
+                            </svg>
+                            <span>{{ session('error') }}</span>
+                        </div>
+                        <button onclick="dismissAlert('error-alert')" class=" alert ml-4 text-white hover:text-gray-200 focus:outline-none">
+                            <span class="sr-only">Close</span>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </div>
+
+                @endif
+
         <!-- User Profile -->
         <div class="flex items-center gap-2 mx-4 cursor-pointer">
             <div class="">
@@ -320,6 +364,27 @@
             notificationPanel.classList.add('hidden');
         }
     });
+    
+
+                             // Auto-hide all alerts with class 'alert' after 5 seconds
+                                                                    setTimeout(() => {
+                                        const alerts = [...document.getElementsByClassName('alert')];
+                                        alerts.forEach(hideAlert); // Cleaner iteration
+                                    }, 5000);
+
+                                function hideAlert(element) {
+                                    if (!element) return;
+
+                                    // Add Tailwind classes to fade out and collapse
+                                    element.classList.add('opacity-0', 'h-0', 'overflow-hidden', 'mb-0', 'transition-all', 'duration-300');
+
+                                    // Remove the element after transition (300ms)
+                                    setTimeout(() => {
+                                        element.style.display = 'none';
+                                    }, 300);
+                                }
+           
+
 </script>
 
 <style>

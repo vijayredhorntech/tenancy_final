@@ -745,6 +745,7 @@
                                 {{ $user->roles->isNotEmpty() ? $user->roles->pluck('name')->implode(', ') : 'No Role' }}
                                 </div>
                             </td>
+                            dd({{$user['status']}})
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <span class="bg-{{$user['status']==='Inactive'?'danger':'success'}}/10 text-{{$user['status']==='Inactive'?'danger':'success'}} px-2 py-1 rounded-[3px] font-bold">{{$user['status']}}</span>
                             </td>
