@@ -78,44 +78,29 @@
     </div>
 
     <script>
-    $(document).ready(function () {
-    function updateMainCheckboxState(category) {
-        var mainCheckbox = $(`.main-category[data-category="${category}"]`);
-        var subCheckboxes = $(`.subfield[data-category="${category}"] input`);
-        var allChecked = subCheckboxes.length && subCheckboxes.filter(':checked').length === subCheckboxes.length;
-        var anyChecked = subCheckboxes.filter(':checked').length > 0;
+document.addEventListener("DOMContentLoaded", function () {
+    const mainCategories = document.querySelectorAll('.main-category');
 
-        mainCheckbox.prop('checked', allChecked);
-        mainCheckbox.prop('indeterminate', anyChecked && !allChecked);
+    mainCategories.forEach(mainCheckbox => {
+        const category = mainCheckbox.dataset.category;
+        const subCheckboxes = document.querySelectorAll(`.subfield[data-category="${category}"] input[type="checkbox"]`);
 
-        mainCheckbox.prop('disabled', !anyChecked);
+        // When any subfield is toggled
+        subCheckboxes.forEach(sub => {
+            sub.addEventListener('change', function () {
+                const anyChecked = Array.from(subCheckboxes).some(cb => cb.checked);
+                mainCheckbox.checked = anyChecked;
+            });
+        });
 
-        if(mainCheckbox.prop('disabled')) {
-            mainCheckbox.closest('label').addClass('opacity-50 cursor-not-allowed');
-        } else {
-            mainCheckbox.closest('label').removeClass('opacity-50 cursor-not-allowed');
-        }
-    }
-
-    // Initialize main checkboxes state on page load
-    $('.main-category').each(function () {
-        var category = $(this).data('category');
-        updateMainCheckboxState(category);
-    });
-
-    // When main checkbox changes, toggle all subfields
-    $('.main-category').on('change', function () {
-        var category = $(this).data('category');
-        var isChecked = $(this).prop('checked');
-        $(`.subfield[data-category="${category}"] input`).prop('checked', isChecked).trigger('change');
-    });
-
-    // When subfield checkbox changes, update main checkbox accordingly
-    $('.subfield input').on('change', function () {
-        var category = $(this).closest('.subfield').data('category');
-        updateMainCheckboxState(category);
+        // When main checkbox is toggled
+        mainCheckbox.addEventListener('change', function () {
+            subCheckboxes.forEach(cb => {
+                cb.checked = mainCheckbox.checked;
+            });
+        });
     });
 });
+</script>
 
-    </script>
 </x-front.layout>
