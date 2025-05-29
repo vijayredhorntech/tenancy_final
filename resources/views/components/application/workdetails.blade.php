@@ -122,13 +122,13 @@
                                     </div>
                                 </div>
                                 @endif
-                                 @if(in_array('Monthly Income', $permission))
+                                 @if(in_array('Employment Monthly Income', $permission))
                                <!-- Monthly Income  -->
                                  <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="monthly_income" class="font-semibold text-ternary/90 text-sm">Monthly Income</label>
+                                    <label for="employment_monthly_income" class="font-semibold text-ternary/90 text-sm">Employment Monthly Income</label>
                                     <div class="w-full relative">
-                                        <input type="text" name="monthly_income" id="monthly_income"
-                                             value="{{ old('monthly_income', $bookingData->clint->clientinfo->monthly_income ?? '') }}"
+                                        <input type="text" name="employment_monthly_income" id="employment_monthly_income"
+                                             value="{{ old('employment_monthly_income', $bookingData->clint->clientinfo->employment_monthly_income ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                         <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>

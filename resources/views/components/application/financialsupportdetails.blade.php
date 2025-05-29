@@ -21,11 +21,11 @@
                                     </div>
                                     @endif
 
-                                    @if(in_array('Host Name', $permission))
+                                    @if(in_array('Financial Host Name', $permission))
                                  <div class="relative mb-4">
-                                    <label for="host_name" class="font-semibold text-ternary/90 text-sm">Host Name</label>
-                                    <input type="text" name="host_name" id="host_name"
-                                        value="{{ $bookingData->host_name ?? '' }}"
+                                    <label for="Financial_host_name" class="font-semibold text-ternary/90 text-sm">Financial Host Name</label>
+                                    <input type="text" name="Financial_host_name" id="Financial_host_name"
+                                        value="{{ $bookingData->Financial_host_name ?? '' }}"
                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('medical_diagnosis') border-red-500 @enderror">
                                     <!-- <i class="fa fa-notes-medical absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i> -->
                                     </div>
@@ -43,11 +43,11 @@
                                     @endif
 
 
-                                     @if(in_array('Monthly Income', $permission))
+                                     @if(in_array('Financial Monthly Income', $permission))
                                     <div class="relative mb-4">
-                                        <label for="monthly_income" class="font-semibold text-ternary/90 text-sm">Monthly Income</label>
-                                    <input type="text" name="monthly_income" id="monthly_incomer"
-                                        value="{{ $bookingData->monthly_income ?? '' }}"
+                                        <label for="financial_monthly_income" class="font-semibold text-ternary/90 text-sm">Financial Monthly Income</label>
+                                    <input type="text" name="financial_monthly_income" id="financial_monthly_income"
+                                        value="{{ $bookingData->financial_monthly_income ?? '' }}"
                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('hospital_address') border-red-500 @enderror">
                                     <!-- <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i> -->
                                     </div>
