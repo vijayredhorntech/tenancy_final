@@ -16,7 +16,7 @@ class VisaSectionSeeder extends Seeder
      
         $visa_application_fields = [
             "Personal Details" => [
-                "Title", "Full Name", "Gender", "Date of Birth", "Place of Birth",
+                "Title", "Full Name", "Gender", "Date of Birth", "Place of Birth","Preview Name",
                 "Country of Citizenship", "Nationality at Birth", "Marital Status",
                 "Religion", "Visible Identification Marks", "Languages Spoken"
             ],
@@ -28,21 +28,29 @@ class VisaSectionSeeder extends Seeder
                 "Passport Type", "Passport Number", "Place of Issue", "Date of Issue",
                 "Date of Expiry", "Issuing Authority", "Previous Passport Number"
             ],
-            
+            "Family Information" => [
+                   "Father Section","Father’s Full Name", "Father Place of Birth", "Father Nationality",
+                   "Father Previous Nationality","Father Country of birth","Father’s DOB","Father Employment",
+                   //mother section
+                   "Mother Section","Mother’s Full Name", "Mother Place of Birth", "Mother Nationality",
+                   "Mother Previous Nationality","Mother Country of birth","Mother’s DOB","Mother Employment",
+                   "Spouse Section","Spouse’s Full Name", "Spouse’s Nationality", "Spouse’s Place of Birth",
+                   "Spouse’s Previous Nationality","Spouse’s DOB","Spouse’s Employment Status","Spouse’s Address",
+                   "Children Section"
+    // Additional Family Info
+    // "Family Members Traveling",
+    // "Emergency Contact Name",
+    // "Emergency Contact Relationship",
+    // "Emergency Contact Phone"
+],
+
             "Employment Education Details" => [
-                "Occupation", "Job Title", "Employer Name", "Business Name", "School Name",
+                "Occupation", "Past Occupaton","Designation", "Employer Name", "Business Name", "School Name",
                 "Employer Address", "Employer Phone Number", "Duration of Employment",
                 "Duration of Study", "Monthly Income", "Educational Qualifications",
                 "Employment History", "Education History"
             ],
-            "Family Information" => [
-                "Father’s Full Name", "Father’s DOB", "Father’s Citizenship",
-                "Mother’s Full Name", "Mother’s DOB", "Mother’s Citizenship",
-                "Spouse’s Full Name", "Spouse’s DOB", "Spouse’s Citizenship",
-                "Children’s Names", "Children’s DOBs", "Children’s Passport Numbers",
-                "Family Members Traveling", "Emergency Contact Name",
-                "Emergency Contact Relationship", "Emergency Contact Phone"
-            ],
+            
             "Social Media Online Presence" => [
                 "Facebook", "Instagram", "Twitter", "LinkedIn",
                 "Other Social Media Accounts", "Personal Website", "Blog URLs"
