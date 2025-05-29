@@ -115,16 +115,16 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                 /***Route for Agency ***/
                     Route::controller(AgencyController::class)->group(function () {
-                        Route::get('/agency','him_agency_index')->name('agency');
-                        Route::get('create', 'him_create_agency')->name('create_agency');
-                        Route::post('store', 'him_store_agency')->name('agencies.store');
-                        Route::get('edit/{id}', 'him_edit_agency')->name('agencies.edit');
-                        Route::post('editstore', 'him_editstore')->name('agencies.editstore');
-                        Route::get('delete/{id}', 'him_delete_agency')->name('agencies.delete');
-                        Route::get('/export-agency','exportAgency')->name('agencies.downloade');
-                        Route::get('/agencygeneratenew-pdf',  'generatePDF')->name('agencies.invoice');
-                        Route::get('/agency/{id}','hs_agency_hisoty')->name('agencies.history');
-                        Route::get('/deleteagency/{id}','hs_agency_delete')->name('agencies.delete');
+                        Route::get('/agency','him_agency_index')->middleware('can:agency view')->name('agency');
+                         Route::get('create', 'him_create_agency')->middleware('can:agency create')->name('create_agency');
+                        Route::post('store', 'him_store_agency')->middleware('can:agency create')->name('agencies.store');
+                        Route::get('edit/{id}', 'him_edit_agency')->middleware('can:agency update')->name('agencies.edit');
+                        Route::post('editstore', 'him_editstore')->middleware('can:agency update')->name('agencies.editstore');
+                        Route::get('delete/{id}', 'him_delete_agency')->middleware('can:agency delete')->name('agencies.delete');
+                        Route::get('/export-agency','exportAgency')->middleware('can:agency view')->name('agencies.downloade');
+                        Route::get('/agencygeneratenew-pdf',  'generatePDF')->middleware('can:agency view')->name('agencies.invoice');
+                        Route::get('/agency/{id}','hs_agency_hisoty')->middleware('can:agency view')->name('agencies.history');
+                        Route::get('/deleteagency/{id}','hs_agency_delete')->middleware('can:agency delete')->name('agencies.delete');
                     });
 
 
@@ -179,24 +179,24 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     /*** Route for staff ***/
                     Route::controller(SuperadminController::class)->group(function () {
                         // Route::get('/generate-pdf','generatePDF')->name('studentgenerate.pdf');
-                        Route::get('/studentgenerate-pdf', 'generatePDF')->name('studentgenerate.pdf');
-                        Route::get('/studnetgenerate-excel','exportStudent')->name('studentgenerate.excel');
-                        Route::get('/staffindex', 'hs_staffindex')->name('staff');
-                        Route::get('/staffcreate', 'hs_staffcreate')->name('superadmin_staffcreate');
-                        Route::post('/staffstore', 'hs_staffstore')->name('superadmin_staffstore');
-                        Route::get('/staffupdate/{id}', 'hs_staffupdate')->name('superadmin_staffupdate');
+                        Route::get('/studentgenerate-pdf', 'generatePDF')->middleware('can:student export')->name('studentgenerate.pdf');
+                        Route::get('/studnetgenerate-excel','exportStudent')->middleware('can:student export')->name('studentgenerate.excel');
+                        Route::get('/staffindex', 'hs_staffindex')->middleware('can:staff view')->name('staff');
+                        Route::get('/staffcreate', 'hs_staffcreate')->middleware('can:staff create')->name('superadmin_staffcreate');
+                        Route::post('/staffstore', 'hs_staffstore')->middleware('can:staff create')->name('superadmin_staffstore');
+                        Route::get('/staffupdate/{id}', 'hs_staffupdate')->middleware('can:staff update')->name('superadmin_staffupdate');
                         Route::post('/staffupdate', 'hs_supdatedstore')->name('hs_supdatedstore');
                         Route::get('/staffdelete/{id}', 'hs_staffdelete')->middleware('can:staff delete')->name('superadmin_staffdelete'); // Fixed incorrect controller method
-                        Route::get('/staffDetails/{id}', 'hs_staffDetails')->middleware('can:view staffdetails')->name('superadmin_staffDetails');
-                        Route::get('/staff/{id}','hs_staff_hisoty')->name('staff.history');
+                        Route::get('/staffDetails/{id}', 'hs_staffDetails')->name('superadmin_staffDetails');
+                        Route::get('/staff/{id}','hs_staff_hisoty')->middleware('can:staff view')->name('staff.history');
                         Route::get('/attandance','hs_attendance')->name('attendance');
                         Route::get('/profile','hs_profile')->name('profile');
                         Route::get('/generate','hs_generatesaleryslip')->name('generate.saleryslip');
 
                         /****Staff attandence *** */
-                        Route::get('staffattendance','hs_staffattandance')->name('staff.attandance');
-                        Route::get('staffwages','hs_staffwages')->name('staff.wages');
-                        Route::get('/staffattandance/{id}','hsstaffAttendance')->name('staff.single.attendance');
+                        Route::get('staffattendance','hs_staffattandance')->middleware('can:staff view')->name('staff.attandance');
+                        Route::get('staffwages','hs_staffwages')->middleware('can:staff view')->name('staff.wages');
+                        Route::get('/staffattandance/{id}','hsstaffAttendance')->middleware('can:staff view')->name('staff.single.attendance');
 
                         
 
@@ -205,18 +205,18 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                         /*** Route for Roles ***/
                         Route::controller(RoleController::class)->group(function () {
-                            Route::get('/roleindex', 'hs_roleindex')->name('superadmin.role');
-                            Route::post('/rolestore', 'hs_rolestore')->name('superadmin_rolestore');
-                            Route::get('/roledelete/{id}', 'hs_roledelete')->name('superadmin_roledelete');
-                            Route::get('/permissionassign/{id}', 'hs_permissionassign')->name('superadmin_permissionassign');
-                            Route::post('/permissionassign', 'hs_permissioned')->name('superadmin_assignpermission');
+                            Route::get('/roleindex', 'hs_roleindex')->middleware('can:role view')->name('superadmin.role');
+                            Route::post('/rolestore', 'hs_rolestore')->middleware('can:role create')->name('superadmin_rolestore');
+                            Route::get('/roledelete/{id}', 'hs_roledelete')->middleware('can:role delete')->name('superadmin_roledelete');
+                            Route::get('/permissionassign/{id}', 'hs_permissionassign')->middleware('can:role update')->name('superadmin_permissionassign');
+                            Route::post('/permissionassign', 'hs_permissioned')->middleware('can:role update')->name('superadmin_assignpermission');
                         });
 
 
 
                         /*** Route for permissions ***/
                     Route::controller(PermissionController::class)->group(function () {
-                        Route::get('/permission', 'hs_permissionindex')->name('superadmin.permission');
+                        Route::get('/permission', 'hs_permissionindex')->middleware('can:permission view')->name('superadmin.permission');
                         Route::post('/permissionstore', 'hs_permissionstore')->name('superadmin_permissionstore');
                         Route::get('/permissiondelete/{id}', 'hs_permissiondelete')->middleware('can:permission delete')->name('superadmin_permissiondelete');
 
