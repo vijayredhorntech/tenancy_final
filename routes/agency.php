@@ -41,6 +41,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\ClientLoginController;
+use App\Http\Controllers\InvoiceController;
 
 use App\Events\MessageSent;
 
@@ -331,4 +332,12 @@ Route::controller(VisaController::class)->group(function () {
         Route::post('/confirmapplication','hsconfirmApplication')->name('comfirm.application');
 
         
+});
+
+
+
+Route::controller(InvoiceController::class)->group(function () {
+    Route::get('{type}/invoice', 'hs_invoice')->name('invoice.index');
+
+    
 });

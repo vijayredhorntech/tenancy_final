@@ -1,5 +1,4 @@
-                          
-                <form id="" class="ajax-form" method="post"> 
+<form id="" class="ajax-form" method="post"> 
                          
                 <div class="w-full grid xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4">
                                 @php
@@ -131,4 +130,4 @@
                                                 </button>
                          </div>
                         </div>
-                </form>   
+                </form>

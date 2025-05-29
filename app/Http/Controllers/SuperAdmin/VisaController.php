@@ -137,77 +137,92 @@ class VisaController extends Controller
     }
 
 
-    public function hsrequiredClientFiled($id)
-    {
-        // dd($id);
-        
-        $visadetails=VisaServiceType::with('destinationcountry','VisaServices')->where('id',$id)->first();
-        $client = ClientDetails::first();
-        $clientMore = ClientMoreInfo::first();
-        $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
-
-    
-        // Combine both tables' data
-        $combined = array_merge(
-            $client ? $client->toArray() : [],
-            $clientMore ? $clientMore->toArray() : []
-        );
-    
-    
-        // Keep only these permission fields
-        $allowed = [
-            'personal_details_permission',
-            'other_details_permission',
-            'address_permission',
-            'passport_details_permission',
-            'additional_passport_info_permission',
-            'family_details_permission',
-            'wife_details_permission',
-            'occupation_details_permission',
-            'armed_force_details_permission',
-            'citizenship_id',
-           'children_permission',
-            'educational_qualification',
-            'identification_marks',
-            'nationality',    
-        ];
-  
-        $combined = collect($combined)
-            ->filter(function ($value, $key) use ($allowed) {
-                return in_array($key, $allowed);
-            })
-            ->toArray();
-        //    dd($combined);
-        return view('superadmin.pages.visa.assigncountry', compact('combined','visadetails','assign'));
-    }
-    
     // public function hsrequiredClientFiled($id)
     // {
-    //     $visadetails = VisaServiceType::with('destinationcountry', 'VisaServices')->where('id', $id)->first();
+    //     // dd($id);
+        
+    //     $visadetails=VisaServiceType::with('destinationcountry','VisaServices')->where('id',$id)->first();
+    //     $client = ClientDetails::first();
+    //     $clientMore = ClientMoreInfo::first();
     //     $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
-    //     // Fetch all VisaSection records first
-    //     $groupedFields = VisaSection::all();
-    //     //  dd($groupedFields);
+
     
-    //     // $groupedFields = [];
+    //     // Combine both tables' data
+    //     $combined = array_merge(
+    //         $client ? $client->toArray() : [],
+    //         $clientMore ? $clientMore->toArray() : []
+    //     );
     
-    //     // foreach ($sections as $section) {
-    //     //     $groupedFields[$section->group_name][] = $section->section_name;
-    //     // }
     
-    //     // Pass the data to view
-    //     return view('superadmin.pages.visa.assigncountry', compact('groupedFields', 'visadetails','assign'));
+    //     // Keep only these permission fields
+    //     $allowed = [
+    //         'personal_details_permission',
+    //         'other_details_permission',
+    //         'address_permission',
+    //         'passport_details_permission',
+    //         'additional_passport_info_permission',
+    //         'family_details_permission',
+    //         'wife_details_permission',
+    //         'occupation_details_permission',
+    //         'armed_force_details_permission',
+    //         'citizenship_id',
+    //        'children_permission',
+    //         'educational_qualification',
+    //         'identification_marks',
+    //         'nationality',    
+    //     ];
+  
+    //     $combined = collect($combined)
+    //         ->filter(function ($value, $key) use ($allowed) {
+    //             return in_array($key, $allowed);
+    //         })
+    //         ->toArray();
+    //     //    dd($combined);
+    //     return view('superadmin.pages.visa.assigncountry', compact('combined','visadetails','assign'));
     // }
+    
+    public function hsrequiredClientFiled($id)
+    {
+        $visadetails = VisaServiceType::with('destinationcountry', 'VisaServices')->where('id', $id)->first();
+        $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
+    
+        // Fetch all VisaSection records and decode fields
+        $sections = VisaSection::all();
+  
+        $groupedFields = [];
+    
+        foreach ($sections as $section) {
+            $fields = $section->fields;
+        
+            if (is_array($fields)) {
+                $groupedFields[] = [
+                    'name' => $section->section_name,
+                    'slug' => $section->slug,
+                    'filed' => $fields
+                ];
+            }}
+        // dd($groupedFields);
+    
+       // For debugging
+        // dd($groupedFields); // For debugging
+    
+        return view('superadmin.pages.visa.assigncountry', compact('groupedFields', 'visadetails', 'assign'));
+    }
+    
     
 
    public function hsrequiredClientFiledStore(Request $request){
     // dd($request->all());
     $validated = $request->validate([
+        'section_name' => 'required|array',
+        'section_name.*' =>'string', // each element should be string
         'visa_fields' => 'required|array',
         'visa_fields.*' => 'string', // each element should be string
     ]);
 
     // Convert visa_fields array to JSON before storing
+    $section_name = json_encode($validated['section_name']);
+
     $jsonVisaFields = json_encode($validated['visa_fields']);
     $visadetails=VisaServiceType::with('destinationcountry','VisaServices')->where('id',$request->assigncoutnry)->first();
     $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
@@ -215,6 +230,8 @@ class VisaController extends Controller
         if ($assign) {
             // Update existing record
             $assign->visa_id = $visadetails->visa_id;
+            $assign->visa_id = $visadetails->visa_id;
+            $assign->section_name = $section_name; // Assuming you want to store it as a JSON array
             $assign->name_of_field = $jsonVisaFields;
             $assign->destination_id = $visadetails->destination;
             $assign->save();
@@ -222,6 +239,7 @@ class VisaController extends Controller
             // Create new record
             ClientInfoForCountry::create([
                 'visa_id' => $visadetails->visa_id,
+                'section_name' => $section_name, // Assuming you want to store it as a JSON array
                 'assignid' => $visadetails->id,
                 'name_of_field' => $jsonVisaFields,
                 'destination_id' => $visadetails->destination,
@@ -884,8 +902,9 @@ class VisaController extends Controller
     //    dd($id);
        $agency = $this->agencyService->getAgencyData();
        $bookingData = $this->visaRepository->bookingDataById($id);
+       $sections = VisaSection::all();
    
-       return view('agencies.pages.clients.clientapplication', compact('agency', 'bookingData'));
+       return view('agencies.pages.clients.clientapplication', compact('agency', 'bookingData','sections'));
    }
    
  public function hs_VisaStoreAjax(Request $request){

@@ -1,21 +1,40 @@
 
 
                 <form id="" class="ajax-form grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4" method="post"> 
-                        
-                            <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="passport_country" class="font-semibold text-ternary/90 text-sm">Passport Country *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="passport_country" id="passport_country" requiresdd
-                                            value="{{ old('passport_country', $bookingData->clint->clientinfo->passport_country ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('passport_country') border-red-500 @enderror">
-                                        <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('passport_country')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                            </div>
 
+                           <!-- issueg authority country -->
+                           @if(in_array('Passport Type', $permission))    
+                                <!-- <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="passport_country" class="font-semibold text-ternary/90 text-sm">Passport Country *</label>
+                                        <div class="w-full relative">
+                                            <input type="text" name="passport_country" id="passport_country" requiresdd
+                                                value="{{ old('passport_country', $bookingData->clint->clientinfo->passport_country ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                @error('passport_country') border-red-500 @enderror">
+                                            <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+                                        @error('passport_country')
+                                        <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                        @enderror
+                                </div> -->
+                                @endif
+                              @if(in_array('Issuing Authority', $permission))    
+                                <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="passport_country" class="font-semibold text-ternary/90 text-sm">Passport Country *</label>
+                                        <div class="w-full relative">
+                                            <input type="text" name="passport_country" id="passport_country" requiresdd
+                                                value="{{ old('passport_country', $bookingData->clint->clientinfo->passport_country ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                @error('passport_country') border-red-500 @enderror">
+                                            <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+                                        @error('passport_country')
+                                        <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                        @enderror
+                                </div>
+                                @endif
+                                <!-- issue of place  -->
+                                @if(in_array('Place of Issue', $permission))
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="passport_issue_place" class="font-semibold text-ternary/90 text-sm">Passport Issue Place *</label>
                                     <div class="w-full relative">
@@ -30,7 +49,10 @@
                                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
+                                @endif
 
+                                <!-- passport number  -->
+                                @if(in_array('Passport Number', $permission))
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="passport_ic_number" class="font-semibold text-ternary/90 text-sm">Passport Number *</label>
                                     <div class="w-full relative">
@@ -44,7 +66,10 @@
                                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
+                                @endif
 
+                                <!-- passport issue date -->
+                                @if(in_array('Date of Issue', $permission))
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="passport_issue_date" class="font-semibold text-ternary/90 text-sm">Passport Issue Date *</label>
                                     <div class="w-full relative">
@@ -58,7 +83,8 @@
                                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
-
+                                @endif
+                                @if(in_array('Previous Passport Number', $permission))
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="passport_expiry_date" class="font-semibold text-ternary/90 text-sm">Passport Expiry Date *</label>
                                     <div class="w-full relative">
@@ -72,84 +98,85 @@
                                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
+                                @endif
           
                      
-                          @php
-                              $other_passport_details = json_decode($bookingData->clint->clientinfo->other_passport_details);
-
-                          @endphp
+                        
                           
-                          @if(in_array('additional_passport_info_permission', $permission))
-                            <div class="mb-4">
-                                <label class="font-semibold text-sm text-ternary/90">Any Other Valid Passport/Identity Certificate held</label>
-                                <div class="flex gap-4 mt-1">
-                                    <label>
-                                        <input type="radio" name="haspassportidenty" value="yes"
-                                            onclick="togglePassportidentity(true)"
-                                            {{ $other_passport_details ? 'checked' : '' }}> Yes
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="haspassportidenty" value="no"
-                                            onclick="togglePassportidentity(false)"
-                                            {{ !$other_passport_details ? 'checked' : '' }}> No
-                                    </label>
+                            @if(in_array('Previous Passport Number', $permission))
+                                @php
+                                $other_passport_details = json_decode($bookingData->clint->clientinfo->other_passport_details);
+                               @endphp
+                                <div class="mb-4">
+                                    <label class="font-semibold text-sm text-ternary/90">Any Other Valid Passport/Identity Certificate held</label>
+                                    <div class="flex gap-4 mt-1">
+                                        <label>
+                                            <input type="radio" name="haspassportidenty" value="yes"
+                                                onclick="togglePassportidentity(true)"
+                                                {{ $other_passport_details ? 'checked' : '' }}> Yes
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="haspassportidenty" value="no"
+                                                onclick="togglePassportidentity(false)"
+                                                {{ !$other_passport_details ? 'checked' : '' }}> No
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div id="passport_identity_section" class="{{ $other_passport_details ? '' : 'hidden' }} lg:col-span-4 md:col-span-4 grid lg:grid-cols-4 gap-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-1">
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="other_passport_country" class="font-semibold text-ternary/90 text-sm">Country Of issue *</label>
-                                            <div class="w-full relative">
-                                                <input type="text" name="other_passport_country" id="other_passport_country" required
-                                                    value="{{ old('other_passport_country', $other_passport_details->country ?? '') }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_country') border-red-500 @enderror">
-                                                <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                <div id="passport_identity_section" class="{{ $other_passport_details ? '' : 'hidden' }} lg:col-span-4 md:col-span-4 grid lg:grid-cols-4 gap-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-1">
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                                <label for="other_passport_country" class="font-semibold text-ternary/90 text-sm">Country Of issue *</label>
+                                                <div class="w-full relative">
+                                                    <input type="text" name="other_passport_country" id="other_passport_country" requireed
+                                                        value="{{ old('other_passport_country', $other_passport_details->country ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_country') border-red-500 @enderror">
+                                                    <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                </div>
+                                                @error('other_passport_country')
+                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                            @error('other_passport_country')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                                        </div>
 
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="other_passport_issue_place" class="font-semibold text-ternary/90 text-sm">Passport Issue Place *</label>
-                                            <div class="w-full relative">
-                                                <input type="text" name="other_passport_issue_place" id="other_passport_issue_place" required
-                                                    value="{{ old('other_passport_issue_place', $other_passport_details->issue_place ?? '') }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_issue_place') border-red-500 @enderror">
-                                                <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                                <label for="other_passport_issue_place" class="font-semibold text-ternary/90 text-sm">Passport Issue Place *</label>
+                                                <div class="w-full relative">
+                                                    <input type="text" name="other_passport_issue_place" id="other_passport_issue_place" requiredd
+                                                        value="{{ old('other_passport_issue_place', $other_passport_details->issue_place ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_issue_place') border-red-500 @enderror">
+                                                    <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                </div>
+                                                @error('other_passport_issue_place')
+                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                            @error('other_passport_issue_place')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                                        </div>
 
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="other_passport_ic_number" class="font-semibold text-ternary/90 text-sm">Passport/IC Number *</label>
-                                            <div class="w-full relative">
-                                                <input type="text" name="other_passport_ic_number" id="other_passport_ic_number" required
-                                                    value="{{ old('other_passport_ic_number', $other_passport_details->ic_number ?? '') }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_ic_number') border-red-500 @enderror">
-                                                <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                                <label for="other_passport_ic_number" class="font-semibold text-ternary/90 text-sm">Passport/IC Number *</label>
+                                                <div class="w-full relative">
+                                                    <input type="text" name="other_passport_ic_number" id="other_passport_ic_number" requireed
+                                                        value="{{ old('other_passport_ic_number', $other_passport_details->ic_number ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_ic_number') border-red-500 @enderror">
+                                                    <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                </div>
+                                                @error('other_passport_ic_number')
+                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                            @error('other_passport_ic_number')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                                        </div>
 
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="other_passport_issue_date" class="font-semibold text-ternary/90 text-sm">Passport Issue Date *</label>
-                                            <div class="w-full relative">
-                                                <input type="date" name="other_passport_issue_date" id="other_passport_issue_date" required
-                                                    value="{{ old('other_passport_issue_date', $other_passport_details->issue_date ?? '') }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_issue_date') border-red-500 @enderror">
-                                                <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                                <label for="other_passport_issue_date" class="font-semibold text-ternary/90 text-sm">Passport Issue Date *</label>
+                                                <div class="w-full relative">
+                                                    <input type="date" name="other_passport_issue_date" id="other_passport_issue_date" requireed
+                                                        value="{{ old('other_passport_issue_date', $other_passport_details->issue_date ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_issue_date') border-red-500 @enderror">
+                                                    <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                </div>
+                                                @error('other_passport_issue_date')
+                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                            @error('other_passport_issue_date')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                            </div>
-                        @endif
+                                </div>
+                            @endif
 
                                 <!-- <div class="w-full relative group flex flex-col gap-1">
                                     <label for="passport_expiry_date" class="font-semibold text-ternary/90 text-sm">Passport Expiry Date *</label>

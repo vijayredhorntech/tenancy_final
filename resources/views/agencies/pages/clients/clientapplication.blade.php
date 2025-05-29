@@ -42,11 +42,10 @@
  
 
         {{-- Form Content --}}
-        
 
             {{-- Step 1: Personal Information --}}
    
-            <div class="form-step  active hidden" id="form-step1" data-step="1">
+            <div class="form-step   hidden" id="form-step1" data-step="1">
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
    
                     <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
@@ -55,37 +54,31 @@
                   
                  
                     @php
-                            $permission = [];
+
+                    $permission = [];
 
                             if ($bookingData && $bookingData->clientrequiremtsinfo && $bookingData->clientrequiremtsinfo->name_of_field) {
                                 $permission = json_decode($bookingData->clientrequiremtsinfo->name_of_field, true);
                             }
 
-                            // Fields to be removed
-                            $fieldsToRemove = [
-                                'citizenship_id',
-                                'educational_qualification',
-                                'identification_marks',
-                                'nationality',
-                                'additional_passport_info_permission'
-                            ];
+                            $alreadySelect = [];
+                            if($bookingData && $bookingData->clientrequiremtsinfo && $bookingData->clientrequiremtsinfo->section_name){
+                                $alreadySelect =json_decode($bookingData->clientrequiremtsinfo->section_name);
+                            }
+                     @endphp
 
-                            // Filter the array to remove unwanted fields
-                            $alreadySelect = array_values(array_diff($permission, $fieldsToRemove));
-                        @endphp
-
+                 
                     <input type="hidden" name="booking_id" id="bookingid" value="{{ $bookingData->id }}">
+                    <input type="hidden" id="oldstep" name="oldstep" value="">
                     <input type="hidden" name="previewDetails" id="previewstep" >
                     <input type="hidden" name="nextDetails" id="nextstep" >
 
-                            
-
-
-                    <div id="personal_details_permission" class="datashow w-full ">
-                        @include('components.application.persionalinfo', ['agency' => $agency, 'bookingData' => $bookingData])
+     
+                    <div id="personal_details" class="datashow w-full">
+                        @include('components.application.persionalinfo', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])
                     </div>
 
-                    <div id="other_details_permission" class="datashow w-full hidden ">
+                    <div id="contact_details" class="datashow w-full hidden ">
                         @include('components.application.other_details', ['agency' => $agency, 'bookingData' => $bookingData ,'permission'=>$permission])             
                     </div>  
                   
@@ -94,38 +87,34 @@
                         @include('components.application.addressdetails', ['agency' => $agency, 'bookingData' => $bookingData])             
                     </div>  
 
-                     <!-- get details  -->
-                    <div id="wife_details_permission" class="datashow hidden">
-                        @include('components.application.selftdetials', ['agency' => $agency, 'bookingData' => $bookingData])             
-                    </div>   
-
-                        <!-- Passport details   details -->
-                        <div id="passport_details_permission" class="datashow w-full hidden">
+                           <!-- Passport details   details -->
+                    <div id="passport_information" class="datashow w-full hidden">
                         @include('components.application.passportdetails', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])             
                     </div> 
 
-                    <!-- child information -->
-                    <div id="children_permission" class="datashow w-full hidden">
-                        @include('components.application.childreendetails', ['agency' => $agency, 'bookingData' => $bookingData])             
+                      <!-- Family   details -->
+                      <div id="family_information" class="datashow w-full p-4 hidden">
+                        @include('components.application.familydetails', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])             
                     </div>  
-
-                 
-
-                    <!-- Family   details -->
-                    <div id="family_details_permission" class="datashow w-full p-4 hidden">
-                        @include('components.application.familydetails', ['agency' => $agency, 'bookingData' => $bookingData])             
-                    </div>  
-
-                 
-
                     <!-- Work  details   details -->
-                    <div id="occupation_details_permission" class="datashow w-full  hidden">
-                        @include('components.application.workdetails', ['agency' => $agency, 'bookingData' => $bookingData])             
+                    <div id="employment_education_details" class="datashow w-full  hidden">
+                        @include('components.application.workdetails', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])             
+                    </div>  
+
+
+                        <!--  Social Media    details -->
+                    <div id="social_media_online_presence" class="datashow w-full  hidden">
+                        @include('components.application.socialmedia', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])             
                     </div>  
 
                     <div id="armed_force_details_permission" class="datashow w-full grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4  hidden">
-                        @include('components.application.armedforce', ['agency' => $agency, 'bookingData' => $bookingData])             
+                        @include('components.application.armedforce', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])             
                     </div>  
+                        <!-- Work  details   details -->
+                      
+
+                    
+                    
 
                     <!-- <div class="w-full flex justify-end px-4 pb-4 gap-2 mt-8">
                                 <button type="button" class="next-step text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
@@ -139,25 +128,43 @@
        
 
             {{-- Step 2: Contact Details --}}
-            <div class="form-step  hidden" id="form-step2" data-step="2">
+            <div class="form-step  active hidden" id="form-step2" data-step="2">
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
                     <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
                         <span class="text-lg font-bold text-ternary">Travel Details</span>
                     </div>
-                    
                     <!-- Add your contact details form fields here -->
                     
-                    <div id="detailsofvisasought" class="datashow w-full">
-                        @include('components.application.detailsofvisasought', ['agency' => $agency, 'bookingData' => $bookingData])
+                    <div id="travel_information" class="datashow w-full hidden">
+                        @include('components.application.travelinformation', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])
                     </div>
                   
                     
-                    <div id="previewvisadetails" class="datashow w-full hidden">
-                        @include('components.application.previewvisadetails', ['agency' => $agency, 'bookingData' => $bookingData])
+                    <div id="visa_history_background" class="datashow w-full ">
+                        @include('components.application.visahistorybackground', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])
                     </div>
 
+                    <div id="medical_visa_specifics" class="datashow w-full  hidden">
+                        @include('components.application.medicalvisaspecifics', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])
+                    </div>
 
+                    <div id="student_visa_specifics" class="datashow w-full hidden">
+                        @include('components.application.studentvisaspecifics', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])
+                    </div>
 
+                    <div id="accommodation_details" class="datashow w-full hidden">
+                        @include('components.application.accommodationdetails', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])
+                    </div>
+
+                    <div id="host_sponsor_inviter_details" class="datashow w-full hidden">
+                        @include('components.application.hostsponsorinviterdetails', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])
+                    </div>
+
+                    <div id="financial_support_details" class="datashow w-full  hidden">
+                        @include('components.application.financialsupportdetails', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])             
+                    </div>  
+
+                    
 
 
 
@@ -184,7 +191,7 @@
                     
                     <!-- Add your contact details form fields here -->
                     <div class="w-full ">
-                        @include('components.application.viewapplication', ['agency' => $agency, 'bookingData' => $bookingData])          
+                        @include('components.application.viewapplication', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])          
                 
                     </div>
                 </div>
@@ -206,22 +213,42 @@
     <script>
 
         // function for back
+        // const alreadySelect = @json($alreadySelect);
+        // $(document).ready(function () {
+        //         // Get the currently visible element with class `datashow`
+        //         let visibleElementId = $('.datashow:visible').attr('id');
+        //         $("#previewstep").val(visibleElementId);
+        //         let currentIndex = alreadySelect.indexOf(visibleElementId);
+        //         let nextStep = alreadySelect[currentIndex + 1] ?? null;
+        //         let oldsStep=alreadySelect[currentIndex - 1]?? null;
+        //         if (oldsStep) {
+        //             $("#oldstep").val(oldsStep);
+        //         } else {
+        //             $("#oldstep").val(""); // or handle "no more steps"
+        //         }
+
+        //         if (nextStep) {
+        //             $("#nextstep").val(nextStep);
+        //         } else {
+        //             $("#nextstep").val(""); // or handle "no more steps"
+        //         }
+
+                
+        // });
+
         const alreadySelect = @json($alreadySelect);
-        $(document).ready(function () {
-                // Get the currently visible element with class `datashow`
-                let visibleElementId = $('.datashow:visible').attr('id');
-                $("#previewstep").val(visibleElementId);
-                let currentIndex = alreadySelect.indexOf(visibleElementId);
-                let nextStep = alreadySelect[currentIndex + 1] ?? null;
 
-                if (nextStep) {
-                    $("#nextstep").val(nextStep);
-                } else {
-                    $("#nextstep").val(""); // or handle "no more steps"
-                }
-
-                console.log("Next Step ID:", nextStep);
+        jQuery(document).ready(function () {
+            // Get the currently visible element with class `datashow`
+            let visibleElementId = jQuery('.datashow:visible').attr('id');
+            jQuery("#previewstep").val(visibleElementId);
+            let currentIndex = alreadySelect.indexOf(visibleElementId);
+            let previousStep = currentIndex > 0 ? alreadySelect[currentIndex - 1] : null;
+            let nextStep = alreadySelect[currentIndex + 1] ?? null;
+            
+            jQuery("#nextstep").val(nextStep ?? "");
         });
+
 
         jQuery(document).ready(function($) {
           
@@ -229,12 +256,21 @@
             $(document).on('click','.backbutton',function(e) {
             
                 e.preventDefault();
-                let currentStep = $(this).data('current');
+                let currentStep = $("#previewstep").val();
+                let previewTab = $("#oldstep").val();
+                jQuery("#"+currentStep).hide();
+                jQuery("#"+previewTab).show();
+                
+                let visibleElementId = jQuery('.datashow:visible').attr('id');
+            jQuery("#previewstep").val(visibleElementId);
+            let currentIndex = alreadySelect.indexOf(visibleElementId);
+            let previousStep = currentIndex > 0 ? alreadySelect[currentIndex - 1] : null;
+            let nextStep = alreadySelect[currentIndex + 1] ?? null;
+            
+            jQuery("#nextstep").val(nextStep ?? "");
+            jQuery("#oldstep").val(previousStep ?? "");
+
               
-                let previewTab = $(this).data('previewtab');
-                jQuery("#form_"+currentStep).hide();
-                jQuery("#form_"+previewTab).show();
-                    
             }) 
         })
         // Preview Name
@@ -424,18 +460,23 @@
                                             let nextStep = $("#nextstep").val();
                                             let previewStep = $("#previewstep").val();
                                             if (nextStep && nextStep.length > 0) {
+                                                if(nextStep == 'travel_information'){
+                                                    jQuery(".form-step").removeClass("active").addClass("hide");
+                                                jQuery("#form-step2").addClass("active").removeClass("hide").show();
+                                                jQuery(".fstep-indicator").removeClass("active").addClass("hide");
+                                                jQuery("#step-indicator2").addClass("active").removeClass("hide").show();
+                                            
+                                                 }
+                                          
                                                 let currentIndex = alreadySelect.indexOf(nextStep);
                                                 let nextStepValue = alreadySelect[currentIndex + 1] ?? null;
+                                                let oldStep = currentIndex > 0 ? alreadySelect[currentIndex - 1] : null;
+                                                jQuery("#oldstep").val(oldStep ?? "");
                                                 $("#nextstep").val(nextStepValue);
                                                 $("#" + nextStep).show();
                                                 $("#" + previewStep).hide();
                                                 $("#previewstep").val(nextStep);
-                                            } else {
-                                                jQuery(".form-step").removeClass("active").addClass("hide");
-                                                jQuery("#form-step2").addClass("active").removeClass("hide").show();
-                                                jQuery(".fstep-indicator").removeClass("active").addClass("hide");
-                                                jQuery("#step-indicator2").addClass("active").removeClass("hide").show();
-                                             }
+                                            } 
                                 },
                             error: function (xhr) {
                                 alert("Error: " + xhr.responseText);
@@ -467,19 +508,31 @@ $(document).ready(function () {
                             data: formData ,
                             success: function (response) {
                                               
-                                            if(response.step == 'Done'){
-                                                let redirectUrl = "{{ route('verifyvisa.application', ['id' => 'booking_id_placeholder', 'type' => 'agency']) }}";
+                                let nextStep = $("#nextstep").val();
+                                            let previewStep = $("#previewstep").val();
+                                            if (nextStep && nextStep.length > 0) {
+                                                
+                                          
+                                                let currentIndex = alreadySelect.indexOf(nextStep);
+                                                let nextStepValue = alreadySelect[currentIndex + 1] ?? null;
+                                                $("#nextstep").val(nextStepValue);
+                                                $("#" + nextStep).show();
+                                                $("#" + previewStep).hide();
+                                                $("#previewstep").val(nextStep);
+                                            }else{
+                                               let redirectUrl = "{{ route('verifyvisa.application', ['id' => 'booking_id_placeholder', 'type' => 'agency']) }}";
                                                redirectUrl = redirectUrl.replace('booking_id_placeholder', bookingid);
- 
-                                             window.location.href = redirectUrl;
-                                                // jQuery(".form-step").removeClass("active").addClass("hide");
-                                                // jQuery("#form-step3").addClass("active").removeClass("hide").show();
-                                                // jQuery(".fstep-indicator").removeClass("active").addClass("hide");
-                                                // jQuery("#step-indicator3").addClass("active").removeClass("hide").show();
-
+                                               window.location.href = redirectUrl;
                                             }
-                                            jQuery("#detailsofvisasought").hide(); 
-                                            jQuery("#previewvisadetails").show(); 
+                                            // if(response.step == 'Done'){
+                                            //     let redirectUrl = "{{ route('verifyvisa.application', ['id' => 'booking_id_placeholder', 'type' => 'agency']) }}";
+                                            //    redirectUrl = redirectUrl.replace('booking_id_placeholder', bookingid);
+ 
+                                            //  window.location.href = redirectUrl;
+                                              
+                                            // }
+                                            // jQuery("#travel_information").hide(); 
+                                            // jQuery("#accommodation_details").show(); 
                                             } 
                                 ,
                             error: function (xhr) {

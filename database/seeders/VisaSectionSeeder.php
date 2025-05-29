@@ -20,46 +20,20 @@ class VisaSectionSeeder extends Seeder
                 "Country of Citizenship", "Nationality at Birth", "Marital Status",
                 "Religion", "Visible Identification Marks", "Languages Spoken"
             ],
-            "Passport Information" => [
-                "Passport Type", "Passport Number", "Place of Issue", "Date of Issue",
-                "Date of Expiry", "Issuing Authority", "Previous Passport Number"
-            ],
             "Contact Details" => [
                 "Current Residential Address", "City", "State", "Postal Code",
                 "Country of Residence", "Phone Number (Mobile)", "Phone Number (Landline)", "Email Address"
             ],
+            "Passport Information" => [
+                "Passport Type", "Passport Number", "Place of Issue", "Date of Issue",
+                "Date of Expiry", "Issuing Authority", "Previous Passport Number"
+            ],
+            
             "Employment Education Details" => [
                 "Occupation", "Job Title", "Employer Name", "Business Name", "School Name",
                 "Employer Address", "Employer Phone Number", "Duration of Employment",
                 "Duration of Study", "Monthly Income", "Educational Qualifications",
                 "Employment History", "Education History"
-            ],
-            "Travel Information" => [
-                "Purpose of Travel", "Countries to Visit", "Main Destination Country",
-                "Number of Entries Requested", "Intended Arrival Date", "Intended Departure Date",
-                "Duration of Stay", "Port of Entry", "Port of Exit", "Travel Itinerary",
-                "Mode of Transport"
-            ],
-            "Accommodation Details" => [
-                "Accommodation Type", "Hotel Name", "Host Name", "Full Address of Stay",
-                "Contact Number of Hotel", "Contact Number of Host", "Relationship to Host"
-            ],
-            "Host Sponsor Inviter Details" => [
-                "Host Full Name", "Company Name", "Relationship to Applicant",
-                "Host Address", "Host Phone Number", "Host Email",
-                "Company Registration", "Invitation Letter"
-            ],
-            "Financial Support Details" => [
-                "Funding Source", "Sponsor Name", "Host Name", "Financial Documents",
-                "Monthly Income", "Means of Financial Support", "Travel Insurance Company",
-                "Travel Insurance Policy Number", "Insurance Validity"
-            ],
-            "Visa History Background" => [
-                "Previous Visas Held", "Visa Rejections", "Overstays",
-                "Countries Visited (Last 5 Years)", "Previous UK Travel", "Previous USA Travel",
-                "Previous Schengen Travel", "Previous China Travel", "Previous Russia Travel",
-                "Previous India Travel", "Criminal History", "Denied Entry Anywhere",
-                "Security Background Questions"
             ],
             "Family Information" => [
                 "Father’s Full Name", "Father’s DOB", "Father’s Citizenship",
@@ -73,6 +47,21 @@ class VisaSectionSeeder extends Seeder
                 "Facebook", "Instagram", "Twitter", "LinkedIn",
                 "Other Social Media Accounts", "Personal Website", "Blog URLs"
             ],
+
+            "Travel Information" => [
+                "Purpose of Travel", "Countries to Visit", "Main Destination Country",
+                "Number of Entries Requested", "Intended Arrival Date", "Intended Departure Date",
+                "Duration of Stay", "Port of Entry", "Port of Exit", "Travel Itinerary",
+                "Mode of Transport"
+            ],
+
+            "Visa History Background" => [
+                "Previous Visas Held", "Visa Rejections", "Overstays",
+                "Countries Visited (Last 5 Years)", "Previous UK Travel", "Previous USA Travel",
+                "Previous Schengen Travel", "Previous China Travel", "Previous Russia Travel",
+                "Previous India Travel", "Criminal History", "Denied Entry Anywhere",
+                "Security Background Questions"
+            ],
             "Medical Visa Specifics" => [
                 "Patient Name", "Medical Diagnosis", "Hospital Name",
                 "Hospital Address", "Doctor’s Letter", "Medical Report",
@@ -82,7 +71,24 @@ class VisaSectionSeeder extends Seeder
                 "Course Name", "Institution Name", "Institution Address", "Institution Phone",
                 "Letter of Admission", "SEVIS ID", "Tuition Fee Estimate",
                 "Living Expenses Estimate", "Financial Sponsor Name", "Sponsor Details"
+            ],            
+          
+            "Accommodation Details" => [
+                "Accommodation Type", "Hotel Name", "Host Name", "Full Address of Stay",
+                "Contact Number of Hotel", "Contact Number of Host", "Relationship to Host",
+                
+            ],
+            "Host Sponsor Inviter Details" => [
+                "Host Full Name", "Company Name", "Relationship to Applicant",
+                "Host Address", "Host Phone Number", "Host Email",
+                "Company Registration", "Invitation Letter"
+            ],
+            "Financial Support Details" => [
+                "Funding Source", "Sponsor Name", "Host Name", "Financial Documents",
+                "Monthly Income", "Means of Financial Support", "Travel Insurance Company",
+                "Travel Insurance Policy Number", "Insurance Validity"
             ]
+          
         ];
 
         foreach ($visa_application_fields as $section => $fields) {
