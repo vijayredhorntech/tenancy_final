@@ -78,29 +78,29 @@
     </div>
 
     <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const mainCategories = document.querySelectorAll('.main-category');
+            document.addEventListener("DOMContentLoaded", function () {
+                const mainCategories = document.querySelectorAll('.main-category');
 
-    mainCategories.forEach(mainCheckbox => {
-        const category = mainCheckbox.dataset.category;
-        const subCheckboxes = document.querySelectorAll(`.subfield[data-category="${category}"] input[type="checkbox"]`);
+                mainCategories.forEach(mainCheckbox => {
+                    const category = mainCheckbox.dataset.category;
+                    const subCheckboxes = document.querySelectorAll(`.subfield[data-category="${category}"] input[type="checkbox"]`);
 
-        // When any subfield is toggled
-        subCheckboxes.forEach(sub => {
-            sub.addEventListener('change', function () {
-                const anyChecked = Array.from(subCheckboxes).some(cb => cb.checked);
-                mainCheckbox.checked = anyChecked;
+                    // When any subfield is toggled
+                    subCheckboxes.forEach(sub => {
+                        sub.addEventListener('change', function () {
+                            const anyChecked = Array.from(subCheckboxes).some(cb => cb.checked);
+                            mainCheckbox.checked = anyChecked;
+                        });
+                    });
+
+                    // When main checkbox is toggled
+                    mainCheckbox.addEventListener('change', function () {
+                        subCheckboxes.forEach(cb => {
+                            cb.checked = mainCheckbox.checked;
+                        });
+                    });
+                });
             });
-        });
-
-        // When main checkbox is toggled
-        mainCheckbox.addEventListener('change', function () {
-            subCheckboxes.forEach(cb => {
-                cb.checked = mainCheckbox.checked;
-            });
-        });
-    });
-});
 </script>
 
 </x-front.layout>
