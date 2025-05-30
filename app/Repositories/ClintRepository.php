@@ -845,7 +845,7 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
         }
     }
 
-    if($data['step']=="socialmedia"){
+    if(($data['step']?? null)=="socialmedia"){
         $socialMedia = [
             'facebook' => $data['facebook'] ?? null,
             'instagram' => $data['instagram'] ?? null,
@@ -859,7 +859,7 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
         $info->social_media = json_encode($socialMedia);
     }
 
-    if($data['step']=="employment"){
+    if(($data['step'] ?? null)=="employment"){
         $employmentEducationData = [
             'business_name' => $data['business_name'] ?? null,
             'school_name' => $data['school_name'] ?? null,

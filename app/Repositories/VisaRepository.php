@@ -1177,7 +1177,7 @@ public function getBookingByid($id, $type, $request)
             $visa = new VisaRelatedDocument();
             $visa->bookingid = $data['bookingid'];
         }
-        if($data['step']=="visahistory"){
+        if(($data['step']?? null)=="visahistory"){
             $travelHistory = [
                 'previous_visas_held' => $data['previous_visas_held'] ?? null,
                 'visarejections' => $data['visarejections'] ?? null,
@@ -1197,7 +1197,7 @@ public function getBookingByid($id, $type, $request)
             $visa->visa_history_background = json_encode($travelHistory); 
         }
 
-        if($data['step']=='medical'){
+        if(($data['step']?? null)=='medical'){
             $medicalData = [
                 'patient_name' => $data['patient_name'] ?? null,
                 'medical_diagnosis' => $data['medical_diagnosis'] ?? null,
@@ -1213,7 +1213,7 @@ public function getBookingByid($id, $type, $request)
           
         }
 
-        if ($data['step'] == 'studentvisaspecifics') {
+        if (($data['step']?? null) == 'studentvisaspecifics') {
             $studentVisaData = [
                 'course_name' => $data['course_name'] ?? null,
                 'institution_name' => $data['institution_name'] ?? null,
@@ -1230,7 +1230,7 @@ public function getBookingByid($id, $type, $request)
         }
    
 
-        if ($data['step'] == 'accommondation') {
+        if (($data['step']?? null) == 'accommondation') {
             $accommodationData = [
                 'accommodation_type' => $data['accommodation_type'] ?? null,
                 'hotel_name' => $data['hotel_name'] ?? null,
@@ -1244,7 +1244,7 @@ public function getBookingByid($id, $type, $request)
             $visa->accommodation_details = json_encode($accommodationData);
         }
 
-        if ($data['step'] == 'hostsponsor') {
+        if (($data['step']?? null) == 'hostsponsor') {
             $hostSponsorData = [
                 'host_Full_name' => $data['host_Full_name'] ?? null,
                 'company_name' => $data['company_name'] ?? null,
@@ -1259,7 +1259,7 @@ public function getBookingByid($id, $type, $request)
             $visa->host_sponsor_inviter_details = json_encode($hostSponsorData);
         }
     
-        if ($data['step'] == 'financial') {
+        if (($data['step']?? null) == 'financial') {
     
             $financialData = [
                 'funding_source' => $data['funding_source'] ?? null,
