@@ -129,7 +129,7 @@
 
 
 
-s
+
 
             {{-- Step 2: Contact Details --}}
             <div class="form-step  hidden" id="form-step2" data-step="2">
