@@ -47,7 +47,7 @@ class VisaSectionSeeder extends Seeder
             "Employment Education Details" => [
                 "Occupation", "Past Occupaton","Designation", "Employer Name", "Business Name", "School Name",
                 "Employer Address", "Employer Phone Number", "Duration of Employment",
-                "Duration of Study", "Monthly Income", "Educational Qualifications",
+                "Duration of Study", "Employment Monthly Income", "Educational Qualifications",
                 "Employment History", "Education History"
             ],
             
@@ -72,17 +72,17 @@ class VisaSectionSeeder extends Seeder
             ],
             "Medical Visa Specifics" => [
                 "Patient Name", "Medical Diagnosis", "Hospital Name",
-                "Hospital Address", "Doctor’s Letter", "Medical Report",
+                "Hospital Address", "Doctor’s Letter",
                 "Treatment Duration", "Treatment Cost", "Attendant Name", "Attendant Details"
             ],
             "Student Visa Specifics" => [
                 "Course Name", "Institution Name", "Institution Address", "Institution Phone",
-                "Letter of Admission", "SEVIS ID", "Tuition Fee Estimate",
+                "SEVIS ID", "Tuition Fee Estimate",
                 "Living Expenses Estimate", "Financial Sponsor Name", "Sponsor Details"
             ],            
           
             "Accommodation Details" => [
-                "Accommodation Type", "Hotel Name", "Host Name", "Full Address of Stay",
+                "Accommodation Type", "Hotel Name", "Accommodation Host Name", "Full Address of Stay",
                 "Contact Number of Hotel", "Contact Number of Host", "Relationship to Host",
                 
             ],
@@ -92,8 +92,8 @@ class VisaSectionSeeder extends Seeder
                 "Company Registration", "Invitation Letter"
             ],
             "Financial Support Details" => [
-                "Funding Source", "Sponsor Name", "Host Name", "Financial Documents",
-                "Monthly Income", "Means of Financial Support", "Travel Insurance Company",
+                "Funding Source", "Sponsor Name", "Financial Host Name", "Financial Documents",
+                "Financial Monthly Income", "Means of Financial Support", "Travel Insurance Company",
                 "Travel Insurance Policy Number", "Insurance Validity"
             ]
           

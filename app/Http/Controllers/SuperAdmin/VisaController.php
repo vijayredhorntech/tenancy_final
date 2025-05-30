@@ -212,7 +212,7 @@ class VisaController extends Controller
     
 
    public function hsrequiredClientFiledStore(Request $request){
-    // dd($request->all());
+    //dd($request->all());
     $validated = $request->validate([
         'section_name' => 'required|array',
         'section_name.*' =>'string', // each element should be string

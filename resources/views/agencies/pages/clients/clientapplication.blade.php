@@ -45,7 +45,11 @@
 
             {{-- Step 1: Personal Information --}}
    
+<<<<<<< HEAD
             <div class="form-step    hidden" id="form-step1" data-step="1">
+=======
+            <div class="form-step active hidden" id="form-step1" data-step="1">
+>>>>>>> 6588a2fec7d3555f0759b92c16d8a53c8bc91be8
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
    
                     <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
@@ -128,7 +132,11 @@
        
 
             {{-- Step 2: Contact Details --}}
+<<<<<<< HEAD
             <div class="form-step  active hidden" id="form-step2" data-step="2">
+=======
+            <div class="form-step  hidden" id="form-step2" data-step="2">
+>>>>>>> 6588a2fec7d3555f0759b92c16d8a53c8bc91be8
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
                     <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
                         <span class="text-lg font-bold text-ternary">Travel Details</span>
@@ -144,9 +152,13 @@
                         @include('components.application.visahistorybackground', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])
                     </div>
 
+<<<<<<< HEAD
 
 
                     <div id="medical_visa_specifics" class="datashow w-full  ">
+=======
+                    <div id="medical_visa_specifics" class="datashow w-full hidden">
+>>>>>>> 6588a2fec7d3555f0759b92c16d8a53c8bc91be8
                         @include('components.application.medicalvisaspecifics', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])
                     </div>
 
@@ -162,7 +174,7 @@
                         @include('components.application.hostsponsorinviterdetails', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])
                     </div>
 
-                    <div id="financial_support_details" class="datashow w-full  hidden">
+                    <div id="financial_support_details" class="datashow w-full hidden">
                         @include('components.application.financialsupportdetails', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])             
                     </div>  
 

@@ -19,8 +19,7 @@
 
 
                        <div class="w-full relative group flex flex-col gap-1">
-                           <label for="profile" class="font-semibold text-ternary/90 text-sm">Profile</label>
-                           <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg </span>
+                           <label for="profile" class="font-semibold text-ternary/90 text-sm">Profile <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg </span> </label>
                            <div class="w-full relative">
                                <input type="file" name="profile" id="profile" placeholder="Staff Name....."
                                    value="{{ old('profile') }}"
@@ -350,8 +349,7 @@
 
 
                        <div class="w-full relative group flex flex-col gap-1">
-                           <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Password Front</label>
-                           <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg </span>
+                           <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Password Front <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg </span> </label>
                            <div class="w-full relative">
                                <input type="file" name="passportfront" id="datePicker"
                                    class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
@@ -360,8 +358,7 @@
                        </div>
 
                        <div class="w-full relative group flex flex-col gap-1">
-                           <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Passport back</label>
-                           <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg </span>
+                           <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Passport back <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg </span> </label>
                            <div class="w-full relative">
                                <input type="file" name="passport_back" id="datePicker"
                                    class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
@@ -442,8 +439,7 @@
                                </div>
 
                                <div class="w-full relative group flex flex-col gap-1">
-                                   <label for="attachment1" class="font-semibold text-ternary/90 text-sm">Marksheet</label>
-                                   <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg/Pdf </span>
+                                   <label for="attachment1" class="font-semibold text-ternary/90 text-sm">Marksheet <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg/Pdf </span> </label>
                                    <div class="w-full relative">
                                        <input type="file" name="eductionfile1" id="eductionfile1"
                                            value="{{ old('eductionfile1') }}"
@@ -669,8 +665,8 @@
                                </div>
 
                                <div class="w-full relative group flex flex-col gap-1">
-                                   <label for="attachment1" class="font-semibold text-ternary/90 text-sm">Attachment</label>
-                                   <span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg/Pdf </span>
+                                   <label for="attachment1" class="font-semibold text-ternary/90 text-sm">Attachment<span class="text-red-600 text-[12px]"> Max 2MB allowed/Jpg/Pdf </span> </label>
+                                   <div class="w-full relative">
                                    <div class="w-full relative">
                                        <input type="file" name="file1" id="file1"
                                            value="{{ old('file1') }}"
