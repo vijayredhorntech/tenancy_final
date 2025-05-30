@@ -556,6 +556,8 @@ public function updateVisa($id, array $data)
     $deduction->invoice_number =  $data['application_number'];
     $deduction->flight_booking_id = $data['id'];
     $deduction->amount = $data['total_amount'];
+    $deduction->create_userid = $data['total_amount'];
+    $deduction->client_id = $data['total_amount'];
     $deduction->displaynotification = 3;
     $deduction->date = now();
     $deduction->save();

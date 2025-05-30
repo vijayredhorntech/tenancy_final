@@ -225,6 +225,7 @@
                 @endphp
 
             <!-- Child Info Section -->
+            <!-- Children Section -->
             <div id="childInfoSection" class="{{ !$childsection ? 'hidden' : '' }} mb-4">
                 <div id="childFieldsContainer" class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
                     @if($childsection)

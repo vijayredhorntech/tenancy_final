@@ -146,15 +146,15 @@
 
         <!-- invoice data -->
         @if($user_data->getAllPermissions()->pluck('name')->intersect(['invoice', 'manage everything'])->isNotEmpty())
-        <a href="{{route('invoice.index',['type','agencies'])}}">
-            <div class="{{Route::currentRouteName()===''?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                <div class="flex items-center">
-                    <i class="fa fa-file-invoice mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Invoice </span>
+            <a href="{{ route('invoice.index', ['type' => 'agencies']) }}">
+                <div class="{{Route::currentRouteName()===''?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                    <div class="flex items-center">
+                        <i class="fa fa-file-invoice mr-2 text-sm"></i>
+                        <span class="text-lg font-medium">Invoice </span>
+                    </div>
+                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                 </div>
-                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-            </div>
-        </a>
+            </a>
        @endif
 
 

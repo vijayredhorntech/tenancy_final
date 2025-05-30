@@ -170,6 +170,7 @@
     <script>
 
 $(document).ready(function() {
+   
         $('#existingUserDropdown').select2({
             placeholder: "---Select USer---",
             allowClear: true,
@@ -458,6 +459,7 @@ $("#existingUserBtn").on("click", function () {
 
     // Auto-fill address when user is selected
     $("#existingUserDropdown").on("change", function () {
+        // alert("heelo");
         let selectedUser = $(this).find(":selected");
          var fullName=selectedUser.data("name");
         var email=selectedUser.data("email");
