@@ -14,6 +14,8 @@ class VisaBooking extends Model
     protected $table = 'visabookings';
     // Define relationships
     
+
+    
     public function user()
     {
         return $this->belongsTo(User::class);

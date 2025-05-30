@@ -404,9 +404,9 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     Route::controller(InvoiceController::class)->group(function () {
                                 Route::get('atolinvoice', 'hsatolVoice')->name('atolinvoice');
 
-                                Route::get('invoice/create', 'hs_createInvoice')->name('invoice.create');
-                                Route::post('invoice/store', 'hs_storeInvoice')->name('invoice.store');
-                                Route::get('invoice/view/{id}', 'hs_viewInvoice')->name('invoice.view');
+                                Route::get('atolinvoice/create', 'hs_createInvoice')->name('atolinvoice.create');
+                                Route::post('atolinvoice/store', 'hs_storeInvoice')->name('atolinvoice.store');
+                                Route::get('atolinvoice/view/{id}', 'hs_viewInvoice')->name('atolinvoice.view');
                     });
 
    });

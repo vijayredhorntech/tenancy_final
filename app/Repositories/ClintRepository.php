@@ -604,6 +604,7 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
 
     public function step1createclient($data)
 {
+    
     // Assuming this gets visa booking data from default DB
     $visabooking = $this->visaRepository->bookingDataById($data['bookingid']);
     $agency = $this->agencyService->getAgencyData();
@@ -766,61 +767,66 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
         $info->setConnection($connection);
     }
 
-    // Step 4: Spouse Details
-    if (($data['marital_status'] ?? null) === 'married') {
-        $info->spouse_details = json_encode([
-            'name' => $data['spouse_name'] ?? null,
-            'nationality' => $data['spouse_nationality'] ?? null,
-            'birth_place' => $data['spouse_birth_place'] ?? null,
-            'previous_nationality' => $data['spouse_previous_nationality'] ?? null,
-            'dob' => $data['spouse_dob'] ?? null,
-            'employementstatus' => $data['spouse_employment'] ?? null,
-            'address' => $data['spouse_address'] ?? null,
-        ]);
-    }
+    
 
     // Step 5: Children
-    if (($data['step'] ?? null) == 5) {
-        $children = [];
-        $childNames = $data['child_name'] ?? [];
-        $childDobs = $data['child_dob'] ?? [];
-        $childNationalities = $data['child_nationality'] ?? [];
-        $childAddresses = $data['child_address'] ?? [];
 
-        for ($i = 0; $i < count($childNames); $i++) {
-            $children[] = [
-                'name' => $childNames[$i] ?? '',
-                'dob' => $childDobs[$i] ?? '',
-                'nationality' => $childNationalities[$i] ?? '',
-                'address' => $childAddresses[$i] ?? '',
-            ];
-        }
-
-        $info->children = json_encode($children);
-    }
 
     // Step 7: Father & Mother
     if (($data['step'] ?? null) == 7) {
+      
         $info->father_details = json_encode([
             'name' => $data['father_name'] ?? null,
             'nationality' => $data['father_nationality'] ?? null,
             'birth_place' => $data['father_birth_place'] ?? null,
             'previous_nationality' => $data['father_previous_nationality'] ?? null,
+            'country_of_birth' => $data['father_country_of_birth'] ?? null,
             'dob' => $data['father_dob'] ?? null,
-            'employementstatus' => $data['father_employment'] ?? null,
+            'employment' => $data['father_employment'] ?? null,
             'address' => $data['father_address'] ?? null,
         ]);
-
+    
         $info->mother_details = json_encode([
             'name' => $data['mother_name'] ?? null,
             'nationality' => $data['mother_nationality'] ?? null,
             'birth_place' => $data['mother_birth_place'] ?? null,
             'previous_nationality' => $data['mother_previous_nationality'] ?? null,
+            'country_of_birth' => $data['mother_country_of_birth'] ?? null,
             'dob' => $data['mother_dob'] ?? null,
-            'employementstatus' => $data['mother_employment'] ?? null,
+            'employment' => $data['mother_employment'] ?? null,
             'address' => $data['mother_address'] ?? null,
         ]);
-    }
+    
+        $info->spouse_details = json_encode([
+            'name' => $data['spouse_name'] ?? null,
+            'birth_place' => $data['spouse_birth_place'] ?? null,
+            'nationality' => $data['spouse_nationality'] ?? null,
+            'previous_nationality' => $data['spouse_previous_nationality'] ?? null,
+            'dob' => $data['spouse_dob'] ?? null,
+            'employment' => $data['spouse_employment'] ?? null,
+            'address' => $data['spouse_address'] ?? null,
+        ]);
+    
+        if (($data['has_child'] ?? null) === 'yes') {
+            $children = [];
+            $childNames = $data['child_name'] ?? [];
+            $childDobs = $data['child_dob'] ?? [];
+            $childNationalities = $data['child_nationality'] ?? [];
+            $childAddresses = $data['child_address'] ?? [];
+    
+            for ($i = 0; $i < count($childNames); $i++) {
+                $children[] = [
+                    'name' => $childNames[$i] ?? '',
+                    'dob' => $childDobs[$i] ?? '',
+                    'nationality' => $childNationalities[$i] ?? '',
+                    'address' => $childAddresses[$i] ?? '',
+                ];
+            }
+    
+            $info->children = json_encode($children);
+        }
+}
+
 
     // Step 8: Other Passport Info
     if (($data['step'] ?? null) == 8) {
@@ -838,6 +844,35 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
             $info->other_passport_details = null;
         }
     }
+
+    if($data['step']=="socialmedia"){
+        $socialMedia = [
+            'facebook' => $data['facebook'] ?? null,
+            'instagram' => $data['instagram'] ?? null,
+            'twitter' => $data['twitter'] ?? null,
+            'linkedIn' => $data['linkedIn'] ?? null,
+            'other_social_media_accounts' => $data['othersocialmediaaccounts'] ?? null,
+            'personal_website' => $data['personalwebsite'] ?? null,
+            'blog_url' => $data['blogurl'] ?? null,
+        ];
+
+        $info->social_media = json_encode($socialMedia);
+    }
+
+    if($data['step']=="employment"){
+        $employmentEducationData = [
+            'business_name' => $data['business_name'] ?? null,
+            'school_name' => $data['school_name'] ?? null,
+            'duration_of_employment' => $data['duration_of_employment'] ?? null,
+            'duration_of_study' => $data['duration_of_study'] ?? null,
+            'employment_monthly_income' => $data['employment_monthly_income'] ?? null,
+            'employment_history' => $data['employment_history'] ?? null,
+            'education_history' => $data['education_history'] ?? null,
+        ];
+        $info->employment = json_encode($employmentEducationData);
+
+    }
+
 
     // Common info (applies to all steps)
     $info->previous_name = $data['previous_name'] ?? $info->previous_name;
@@ -862,6 +897,19 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
     $info->past_occupation = $data['past_occupation'] ?? $info->past_occupation;
     $info->reference_name = $data['reference_name'] ?? $info->reference_name;
     $info->reference_address = $data['reference_address'] ?? $info->reference_address;
+    $info->title = $data['title'] ?? $info->title;
+    $info->language_spoken = $data['languages_spoken'] ?? $info->language_spoken;
+
+    // family
+    $info->father_details = $info->father_details ?? $info->father_details;
+    $info->mother_details = $info->mother_details ?? $info->mother_details;
+    $info->spouse_details = $info->spouse_details ?? $info->spouse_details;
+    $info->children = $info->children ?? $info->children;
+
+
+
+    $info->employment=  $info->employment ?? $info->employment;
+    $info->social_media =$info->social_media ?? $info->social_media;
 
 
     $info->haspassportidenty = $info->haspassportidenty ??  $info->haspassportidenty;

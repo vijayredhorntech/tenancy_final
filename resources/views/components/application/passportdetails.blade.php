@@ -209,7 +209,7 @@
 
                </form>   
                {{-- JavaScript --}}
-               @isset($other_passport_details)
+               @if(in_array('Previous Passport Number', $permission))
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         const hasOtherPassport = {{ $other_passport_details ? 'true' : 'false' }};
@@ -230,6 +230,6 @@
                         }
                     }
                 </script>
-@endisset
+ @endif
 
           

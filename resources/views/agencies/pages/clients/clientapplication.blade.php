@@ -45,7 +45,7 @@
 
             {{-- Step 1: Personal Information --}}
    
-            <div class="form-step active hidden" id="form-step1" data-step="1">
+            <div class="form-step active  hidden" id="form-step1" data-step="1">
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
    
                     <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
@@ -127,12 +127,8 @@
             
        
 
-
-
-
-
             {{-- Step 2: Contact Details --}}
-            <div class="form-step  hidden" id="form-step2" data-step="2">
+            <div class="form-step   hidden" id="form-step2" data-step="2">
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
                     <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
                         <span class="text-lg font-bold text-ternary">Travel Details</span>
@@ -216,29 +212,7 @@
 
     <script>
 
-        // function for back
-        // const alreadySelect = @json($alreadySelect);
-        // $(document).ready(function () {
-        //         // Get the currently visible element with class `datashow`
-        //         let visibleElementId = $('.datashow:visible').attr('id');
-        //         $("#previewstep").val(visibleElementId);
-        //         let currentIndex = alreadySelect.indexOf(visibleElementId);
-        //         let nextStep = alreadySelect[currentIndex + 1] ?? null;
-        //         let oldsStep=alreadySelect[currentIndex - 1]?? null;
-        //         if (oldsStep) {
-        //             $("#oldstep").val(oldsStep);
-        //         } else {
-        //             $("#oldstep").val(""); // or handle "no more steps"
-        //         }
-
-        //         if (nextStep) {
-        //             $("#nextstep").val(nextStep);
-        //         } else {
-        //             $("#nextstep").val(""); // or handle "no more steps"
-        //         }
-
-                
-        // });
+    
 
         const alreadySelect = @json($alreadySelect);
 

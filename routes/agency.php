@@ -338,6 +338,8 @@ Route::controller(VisaController::class)->group(function () {
 
 Route::controller(InvoiceController::class)->group(function () {
     Route::get('{type}/invoice', 'hs_invoice')->name('invoice.index');
+    Route::get('invoice/view/{id}', 'hs_viewInvoice')->name('invoice.view');
+
 
     
 });

@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Config;
 use App\Models\Document;
 use App\Models\VisaServiceTypeDocument;
 use App\Services\AgencyService;
+use App\Services\VisaverifyService;
 use App\Models\UserServiceAssignment;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewFormNotification;
@@ -38,10 +39,12 @@ class VisaRepository implements VisaRepositoryInterface
     
     protected $fileUploadService;
     protected $agencyService;
-    public function __construct(FileUploadService $fileUploadService,AgencyService $agencyService)
+    protected $visaverifyService;
+    public function __construct(FileUploadService $fileUploadService,AgencyService $agencyService,VisaverifyService $visaverifyService)
     {
         $this->fileUploadService = $fileUploadService;
         $this->agencyService = $agencyService;
+        $this->visaverifyService = $visaverifyService;
     }
 
     public function getAllCountry(){
@@ -556,6 +559,8 @@ public function updateVisa($id, array $data)
     $deduction->invoice_number =  $data['application_number'];
     $deduction->flight_booking_id = $data['id'];
     $deduction->amount = $data['total_amount'];
+    $deduction->create_userid = $data['total_amount'];
+    $deduction->client_id = $data['total_amount'];
     $deduction->displaynotification = 3;
     $deduction->date = now();
     $deduction->save();
@@ -1165,13 +1170,113 @@ public function getBookingByid($id, $type, $request)
 
     public function visadocumentstore($data)
     {
+       
         $visa = VisaRelatedDocument::where('bookingid', $data['bookingid'])->first();
     
         if (!$visa) {
             $visa = new VisaRelatedDocument();
             $visa->bookingid = $data['bookingid'];
         }
+        if($data['step']=="visahistory"){
+            $travelHistory = [
+                'previous_visas_held' => $data['previous_visas_held'] ?? null,
+                'visarejections' => $data['visarejections'] ?? null,
+                'overstays' => $data['overstays'] ?? null,
+                'countries_visited_last_10_years' => $data['countries_visited_last_10_years'] ?? null,
+                'has_previous_uktravel' => $data['has_previous_uktravel'] ?? null,
+                'previous_usa_travel' => $data['previous_usa_travel'] ?? null,
+                'previousschengentravel' => $data['previousschengentravel'] ?? null,
+                'previouschinatravel' => $data['previouschinatravel'] ?? null,
+                'previousrussiatravel' => $data['previousrussiatravel'] ?? null,
+                'previoustndiatravel' => $data['previoustndiatravel'] ?? null,
+                'criminalhistory' => $data['criminalhistory'] ?? null,
+                'deniedentryanywhere' => $data['deniedentryanywhere'] ?? null,
+                'securitybackgroundquestions' => $data['securitybackgroundquestions'] ?? null,
+            ];
     
+            $visa->visa_history_background = json_encode($travelHistory); 
+        }
+
+        if($data['step']=='medical'){
+            $medicalData = [
+                'patient_name' => $data['patient_name'] ?? null,
+                'medical_diagnosis' => $data['medical_diagnosis'] ?? null,
+                'hospital_name' => $data['hospital_name'] ?? null,
+                'hospital_address' => $data['hospital_address'] ?? null,
+                'doctor_letter' => $data["doctor's_letter"] ?? null, // key with apostrophe
+                'treatment_duration' => $data['treatment_duration'] ?? null,
+                'treatment_cost' => $data['treatment_cost'] ?? null,
+                'attendant_name' => $data['attendant_name'] ?? null,
+                'attendant_details' => $data['attendant_details'] ?? null,
+            ];
+              $visa->medical_visa_specifics = json_encode($medicalData);
+          
+        }
+
+        if ($data['step'] == 'studentvisaspecifics') {
+            $studentVisaData = [
+                'course_name' => $data['course_name'] ?? null,
+                'institution_name' => $data['institution_name'] ?? null,
+                'institution_address' => $data['institution_address'] ?? null,
+                'institution_phone' => $data['institution_phone'] ?? null,
+                'sevis_id' => $data['sevis_id'] ?? null,
+                'tuition_fee_estimate' => $data['tuition_fee_estimate'] ?? null,
+                'living_expenses_estimate' => $data['living_expenses_estimate'] ?? null,
+                'attendant_name' => $data['attendant_name'] ?? null,
+                'financial_sponsor_name' => $data['financial_sponsor_name'] ?? null,
+                'sponsor_details' => $data['sponsor_details'] ?? null,
+            ];      
+            $visa->student_visa_specifics = json_encode($studentVisaData);
+        }
+   
+
+        if ($data['step'] == 'accommondation') {
+            $accommodationData = [
+                'accommodation_type' => $data['accommodation_type'] ?? null,
+                'hotel_name' => $data['hotel_name'] ?? null,
+                'accommodation_host_name' => $data['accommodation_host_name'] ?? null,
+                'full_address_of_stay' => $data['full_address_of_stay'] ?? null,
+                'Contact_number_of_hotel' => $data['Contact_number_of_hotel'] ?? null,
+                'contact_number_of_host' => $data['contact_number_of_host'] ?? null,
+                'relationship_to_host' => $data['relationship_to_host'] ?? null,
+            ];
+        
+            $visa->accommodation_details = json_encode($accommodationData);
+        }
+
+        if ($data['step'] == 'hostsponsor') {
+            $hostSponsorData = [
+                'host_Full_name' => $data['host_Full_name'] ?? null,
+                'company_name' => $data['company_name'] ?? null,
+                'relationship_to_applicant' => $data['relationship_to_applicant'] ?? null,
+                'host_address' => $data['host_address'] ?? null,
+                'host_phone_number' => $data['host_phone_number'] ?? null,
+                'host_email' => $data['host_email'] ?? null,
+                'company_registration' => $data['company_registration'] ?? null,
+                'invitation_letter' => $data['invitation_letter'] ?? null,
+            ];
+        
+            $visa->host_sponsor_inviter_details = json_encode($hostSponsorData);
+        }
+    
+        if ($data['step'] == 'financial') {
+    
+            $financialData = [
+                'funding_source' => $data['funding_source'] ?? null,
+                'sponsor_name' => $data['sponsor_name'] ?? null,
+                'Financial_host_name' => $data['Financial_host_name'] ?? null,
+                'financial_documents' => $data['financial_documents'] ?? null,
+                'financial_monthly_income' => $data['financial_monthly_income'] ?? null,
+                'means_of_financial_support' => $data['means_of_financial_support'] ?? null,
+                'travel_insurance_company' => $data['travel_insurance_company'] ?? null,
+                'travel_insurance_policy_number' => $data['travel_insurance_policy_number'] ?? null,
+                'insurance_validity' => $data['insurance_validity'] ?? null,
+            ];
+        
+            $visa->financial_support_details = json_encode($financialData);
+        }
+    
+
         // Common assignments for both new and existing records
         $visa->type_of_visa_required = $data['visatype'] ?? $visa->type_of_visa_required;
         $visa->number_of_entries = $data['noofentries'] ?? $visa->number_of_entries;
@@ -1181,6 +1286,16 @@ public function getBookingByid($id, $type, $request)
         $visa->port_of_exit = $data['portofexit'] ?? $visa->port_of_exit;
         $visa->places_to_be_visited = $data['placeofvisit'] ?? $visa->places_to_be_visited;
         $visa->purpose_of_visit = $data['purposeofvisit'] ?? $visa->purpose_of_visit;
+
+        // backgroudhistory
+        $visa->visa_history_background =  $visa->visa_history_background ??  $visa->visa_history_background;
+        $visa->medical_visa_specifics = $visa->medical_visa_specifics ?? $visa->medical_visa_specifics;
+        $visa->student_visa_specifics = $visa->student_visa_specifics ?? $visa->student_visa_specifics;
+        $visa->accommodation_details =  $visa->accommodation_details ?? $visa->accommodation_details;
+        $visa->host_sponsor_inviter_details = $visa->host_sponsor_inviter_details ?? $visa->host_sponsor_inviter_details;
+        $visa->financial_support_details = $data->financial_support_details ?? $visa->financial_support_details;
+
+
     
         $visa->previous_visa_number = $data['previous_visa_number'] ?? $visa->previous_visa_number;
         $visa->previous_visa_issued_place = $data['previous_visa_place'] ?? $visa->previous_visa_issued_place;
