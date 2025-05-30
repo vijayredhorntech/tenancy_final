@@ -1,10 +1,12 @@
 <form class="visaajax-form w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4" method="post">
                                       
-       @php      
+                        @php
+                            $host_sponsor_inviter_details = null;
+                            if ($bookingData->visarequireddocument && $bookingData->visarequireddocument->host_sponsor_inviter_details) {
+                                $host_sponsor_inviter_details = json_decode($bookingData->visarequireddocument->host_sponsor_inviter_details);
+                            }
+                        @endphp
 
-         $host_sponsor_inviter_details = $bookingData->visarequireddocument->host_sponsor_inviter_details ? json_decode($bookingData->visarequireddocument->host_sponsor_inviter_details) : null;
-        
-         @endphp
                                 @if(in_array('Host Full Name', $permission))
                                 <div class="relative mb-4">
                                 <label for="host Full_name" class="font-semibold text-ternary/90 text-sm">Host Full Name</label>
