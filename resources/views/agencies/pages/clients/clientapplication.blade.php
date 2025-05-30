@@ -127,6 +127,10 @@
             
        
 
+
+
+s
+
             {{-- Step 2: Contact Details --}}
             <div class="form-step  hidden" id="form-step2" data-step="2">
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
