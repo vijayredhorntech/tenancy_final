@@ -4,19 +4,19 @@
 
                            <!-- issueg authority country -->
                            @if(in_array('Passport Type', $permission))    
-                                <!-- <div class="w-full relative group flex flex-col gap-1">
-                                        <label for="passport_country" class="font-semibold text-ternary/90 text-sm">Passport Country *</label>
+                                <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="passport_type" class="font-semibold text-ternary/90 text-sm">Passport Type *</label>
                                         <div class="w-full relative">
-                                            <input type="text" name="passport_country" id="passport_country" requiresdd
-                                                value="{{ old('passport_country', $bookingData->clint->clientinfo->passport_country ?? '') }}"
+                                            <input type="text" name="passport_type" id="passport_type" requiresdd
+                                                value="{{ old('passport_type', $bookingData->clint->clientinfo->passport_type ?? '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                @error('passport_country') border-red-500 @enderror">
+                                                @error('passport_type') border-red-500 @enderror">
                                             <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                         </div>
                                         @error('passport_country')
                                         <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                         @enderror
-                                </div> -->
+                                </div>
                                 @endif
                               @if(in_array('Issuing Authority', $permission))    
                                 <div class="w-full relative group flex flex-col gap-1">

@@ -38,7 +38,21 @@
                 </div>
             </div>
         </div>
+                         @php
+                        
+                    $permission = [];
 
+                            if ($bookingData && $bookingData->clientrequiremtsinfo && $bookingData->clientrequiremtsinfo->name_of_field) {
+                                $permission = json_decode($bookingData->clientrequiremtsinfo->name_of_field, true);
+                            }
+
+                            $alreadySelect = [];
+                            if($bookingData && $bookingData->clientrequiremtsinfo && $bookingData->clientrequiremtsinfo->section_name){
+                                $alreadySelect =json_decode($bookingData->clientrequiremtsinfo->section_name);
+                            }
+                     @endphp
+
+                        
         <!-- Main Form Content -->
         <form action="{{ route('comfirm.application') }}" method="POST" id="confirmform" class="space-y-6">
             @csrf
@@ -56,6 +70,7 @@
                         <i class="fas fa-edit mr-1"></i> Edit
                     </button>
                 </div>
+
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- First Name -->
@@ -91,7 +106,26 @@
                             </div>
                         </div>
 
+                        @if(in_array('Date of Birth', $permission))
+    <!-- Date of Birth -->
+    <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="date_of_birth" class="font-semibold text-ternary/90 text-sm">Date of Birth *</label>
+                                    <div class="w-full relative">
+                                        <input type="date" name="date_of_birth" id="date_of_birth" requiresdd
+                                              value="{{ old('date_of_birth', $bookingData->clint->clientinfo->date_of_birth ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            @error('date_of_birth') border-red-500 @enderror">
+                                        <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('date_of_birth')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+    </div>
+    @endif 
+
                         <!-- Email -->
+
+                        @if(in_array('Email Address', $permission))
                         <div class="w-full relative group flex flex-col gap-1">
                             <label for="email" class="font-semibold text-ternary/90 text-sm">Email Address <span class="text-danger">*</span></label>
                             <div class="w-full relative">
@@ -101,8 +135,10 @@
                                 <i class="fas fa-envelope absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             </div>
                         </div>
+                        @endif
 
                         <!-- Phone Number -->
+                          @if(in_array('Phone Number', $permission))
                         <div class="w-full relative group flex flex-col gap-1">
                             <label for="phone_number" class="font-semibold text-ternary/90 text-sm">Phone Number</label>
                             <div class="w-full relative">
@@ -112,36 +148,68 @@
                                 <i class="fas fa-phone absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             </div>
                         </div>
+                        @endif
 
                         <!-- Gender -->
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="gender" class="font-semibold text-ternary/90 text-sm">Gender <span class="text-danger">*</span></label>
-                            <div class="w-full relative">
-                                <select name="gender" id="gender" required
-                                        class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200 appearance-none bg-white">
-                                    <option value="MALE" {{ old('gender', $bookingData->clint->gender) == 'MALE' ? 'selected' : '' }}>Male</option>
-                                    <option value="FEMALE" {{ old('gender', $bookingData->clint->gender) == 'FEMALE' ? 'selected' : '' }}>Female</option>
-                                    <option value="OTHER" {{ old('gender', $bookingData->clint->gender) == 'OTHER' ? 'selected' : '' }}>Other</option>
-                                </select>
-                                <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
-                            </div>
-                        </div>
+                        @if(in_array('Gender', $permission)) 
+    <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="gender" class="font-semibold text-ternary/90 text-sm">Gender *</label>
+                                            <div class="w-full relative">
+                                                <select name="gender" id="gender" requiresdd
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                        @error('gender') border-red-500 @enderror">
+                                                     @if(!$bookingData->clint->gender) 
+                                                    <option value="">Select Gender</option>
+                                                    @endif
+                                                    <option value="MALE" {{ old('gender', $bookingData->clint->gender) == 'MALE' ? 'selected' : '' }}>Male</option>
+                                                    <option value="FEMALE" {{ old('gender', $bookingData->clint->gender) == 'FEMALE' ? 'selected' : '' }}>Female</option>
+                                                    <option value="OTHER" {{ old('gender', $bookingData->clint->gender) == 'OTHER' ? 'selected' : '' }}>Other</option>
+                                                  </select>
+                                                <i class="fa fa-venus-mars absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                            @error('gender')
+                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                            @enderror
+    </div>
+   @endif
 
-                        <!-- Marital Status -->
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="marital_status" class="font-semibold text-ternary/90 text-sm">Marital Status</label>
-                            <div class="w-full relative">
-                                <select name="marital_status" id="marital_status"
-                                        class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200 appearance-none bg-white">
-                                    <option value="single" {{ old('marital_status', $bookingData->clint->marital_status) == 'single' ? 'selected' : '' }}>Single</option>
-                                    <option value="married" {{ old('marital_status', $bookingData->clint->marital_status) == 'married' ? 'selected' : '' }}>Married</option>
-                                    <option value="divorced" {{ old('marital_status', $bookingData->clint->marital_status) == 'divorced' ? 'selected' : '' }}>Divorced</option>
-                                    <option value="widowed" {{ old('marital_status', $bookingData->clint->marital_status) == 'widowed' ? 'selected' : '' }}>Widowed</option>
-                                </select>
-                                <i class="fas fa-chevron-down absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none"></i>
-                            </div>
-                        </div>
+                         @if(in_array('Marital Status', $permission))
+    <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="marital_status" class="font-semibold text-ternary/90 text-sm">Marital Status *</label>
+                                            <div class="w-full relative">
+                                                <select name="marital_status" id="marital_status" requiresdd
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                        @error('marital_status') border-red-500 @enderror">
+                                                        @if(!$bookingData->clint->marital_status) 
+                                                           <option value="">Select Status</option>
+                                                       @endif
+                                                    <option value="single" {{ old('marital_status', $bookingData->clint->marital_status) == 'single' ? 'selected' : '' }}>Single</option>
+                                                    <option value="married" {{ old('marital_status', $bookingData->clint->marital_status) == 'married' ? 'selected' : '' }}>Married</option>
+                                                    <option value="divorced" {{ old('marital_status', $bookingData->clint->marital_status) == 'divorced' ? 'selected' : '' }}>Divorced</option>
+                                                    <option value="widowed" {{ old('marital_status', $bookingData->clint->marital_status) == 'widowed' ? 'selected' : '' }}>Widowed</option>
+                                                </select>
+                                                <i class="fa fa-heart absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                            @error('marital_status')
+                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                            @enderror
+    </div>
+  @endif
+                                @if(in_array('Religion', $permission)) 
+                                <!-- religion -->
+                                        <div class="w-full relative group flex flex-col gap-1">
+                                                                    <label for="religion" class="font-semibold text-ternary/90 text-sm">Religion</label>
+                                                                    <div class="w-full relative">
+                                                                        <input type="text" name="religion" id="religion"
+                                                                            value="{{ old('religion', $bookingData->clint->clientinfo->religion ?? '') }}"
+                                                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                                        <i class="fa fa-pray absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                                    </div>
+                                    </div>
+                                    @endif
 
+
+                                    @if(in_array('Mobile/Cell No ', $permission)) 
                         <!-- Mobile/Cell No -->
                         <div class="w-full relative group flex flex-col gap-1">
                             <label for="phone_number" class="font-semibold text-ternary/90 text-sm">Mobile/Cell No <span class="text-danger">*</span></label>
@@ -152,16 +220,102 @@
                                 <i class="fas fa-mobile-alt absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             </div>
                         </div>
+                        @endif
+                        @if(in_array('Place of Birth', $permission))
+                            <!-- Place of Birth -->
+                            <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="place_of_birth" class="font-semibold text-ternary/90 text-sm">Place of Birth</label>
+                                                            <div class="w-full relative">
+                                                                <input type="text" name="place_of_birth" id="place_of_birth"
+                                                                    value="{{ old('place_of_birth', $bookingData->clint->clientinfo->place_of_birth ?? '') }}"
+                                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                                <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                            </div>
+                            </div>
+                            @endif
+
+                            @if(in_array('Country of Citizenship', $permission))
+                            <!-- Country of Birth -->
+                            <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="country_of_birth" class="font-semibold text-ternary/90 text-sm">Country of Birth</label>
+                                                            <div class="w-full relative">
+                                                                <input type="text" name="country_of_birth" id="country_of_birth"
+                                                                    value="{{ old('country_of_birth', $bookingData->clint->clientinfo->country_of_birth ?? '') }}"
+                                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                                <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                            </div>
+                            </div>
+                            @endif
+
+                            @if(in_array('Nationality at Birth', $permission))
+                            <!-- Nationality -->
+                            <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="nationality" class="font-semibold text-ternary/90 text-sm">Nationality *</label>
+                                                            <div class="w-full relative">
+                                                                <input type="text" name="nationality" id="nationality" requiresdd
+                                                                    value="{{ old('nationality', $bookingData->clint->clientinfo->nationality ?? '') }}"
+                                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                                    @error('nationality') border-red-500 @enderror">
+                                                                <i class="fa fa-flag absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                            </div>
+                                                            @error('nationality')
+                                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                            @enderror
+                            </div>
+                            @endif
+
+                            @if(in_array('Nationality at Birth', $permission))
+                            <!-- Past Nationality (if any) -->
+                            <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="past_nationality" class="font-semibold text-ternary/90 text-sm">Past Nationality (if any)</label>
+                                                            <div class="w-full relative">
+                                                                <input type="text" name="past_nationality" id="past_nationality"
+                                                                    value="{{ old('past_nationality', $bookingData->clint->clientinfo->past_nationality ?? '') }}"
+                                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                                <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                            </div>
+                            </div>
+                            @endif
+
+                            @if(in_array('Visible Identification Marks', $permission))
+                            <!-- Identification Marks -->
+                            <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="identification_marks" class="font-semibold text-ternary/90 text-sm">Identification Marks</label>
+                                                            <div class="w-full relative">
+                                                                <input type="text" name="identification_marks" id="identification_marks"
+                                                                    value="{{ old('identification_marks', $bookingData->clint->clientinfo->identification_marks ?? '') }}"
+                                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                                <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                            </div>
+                            </div>
+                            @endif
+
+                            @if(in_array('Languages Spoken', $permission))
+                            <!-- Languages Spoken  -->
+                            <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="identification_marks" class="font-semibold text-ternary/90 text-sm">Languages Spoken</label>
+                                                            <div class="w-full relative">
+                                                                <input type="text" name="languages_spoken" id="languages_spoken"
+                                                                    value="{{ old('identification_marks', $bookingData->clint->clientinfo->language ?? '') }}"
+                                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                                <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                            </div>
+                            </div>
+                            @endif
                     </div>
                 </div>
             </div>
+
+
+
+
 
             <!-- Other Details Section -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="other">
                 <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h2 class="text-xl font-bold text-gray-800 flex items-center">
                         <i class="fas fa-info-circle text-primary mr-2"></i>
-                        Other Details
+                        Contact Details
                     </h2>
                     <button type="button" class="section-edit-btn text-primary hover:text-primary-dark text-sm font-medium" data-section="other">
                         <i class="fas fa-edit mr-1"></i> Edit
@@ -213,11 +367,12 @@
                                 <i class="fas fa-globe absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>
 
-            <!-- Address Section -->
+     {{--       <!-- Address Section -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="address">
                 <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h2 class="text-xl font-bold text-gray-800 flex items-center">
@@ -303,11 +458,14 @@
                                     <i class="fas fa-flag absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                                 </div>
                             </div>
+
+
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}} 
 
+            @if(in_array('passport_information', $alreadySelect))
             <!-- Passport Details Section -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="passport">
                 <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
@@ -321,17 +479,38 @@
                 </div>
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                         @if(in_array('Passport Type', $permission))    
+                                <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="passport_type" class="font-semibold text-ternary/90 text-sm">Passport Type *</label>
+                                        <div class="w-full relative">
+                                            <input type="text" name="passport_type" id="passport_type" requiresdd
+                                                value="{{ old('passport_type', $bookingData->clint->clientinfo->passport_type ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                @error('passport_type') border-red-500 @enderror">
+                                            <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+                                        @error('passport_country')
+                                        <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                        @enderror
+                                </div>
+                                @endif
                         <!-- Passport No -->
+                         @if(in_array('Passport Number', $permission))
                         <div class="w-full relative group flex flex-col gap-1">
-                            <label for="passport_country" class="font-semibold text-ternary/90 text-sm">Passport No. <span class="text-danger">*</span></label>
+                            <label for="passport_ic_number" class="font-semibold text-ternary/90 text-sm">Passport No. <span class="text-danger">*</span></label>
                             <div class="w-full relative">
-                                <input type="text" name="passport_country" id="passport_country" required
-                                       value="{{ old('passport_country', $bookingData->clint->clientinfo->passport_country ?? '') }}"
+                                <input type="text" name="passport_ic_number" id="passport_ic_number" required
+                                       value="{{ old('passport_ic_number', $bookingData->clint->clientinfo->passport_ic_number ?? '') }}"
                                        class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
                                 <i class="fas fa-id-card absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             </div>
+                            @error('passport_ic_number')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
                         </div>
+                        @endif
 
+                        
                         <!-- Date of Issue -->
                         <div class="w-full relative group flex flex-col gap-1">
                             <label for="passport_issue_date" class="font-semibold text-ternary/90 text-sm">Date of Issue <span class="text-danger">*</span></label>
@@ -364,33 +543,84 @@
                                 <i class="fas fa-map-marker-alt absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            @php
-                            $permission = [];
-
-                            if ($bookingData && $bookingData->clientrequiremtsinfo && $bookingData->clientrequiremtsinfo->name_of_field) {
-                                $permission = json_decode($bookingData->clientrequiremtsinfo->name_of_field, true);
-                            }
-
-                            // Fields to be removed
-                            $fieldsToRemove = [
-                                'citizenship_id',
-                                'educational_qualification',
-                                'identification_marks',
-                                'nationality',
-                                'additional_passport_info_permission'
-                            ];
-
-                            // Filter the array to remove unwanted fields
-                            $alreadySelect = array_values(array_diff($permission, $fieldsToRemove));
-                        @endphp
-                        
+                        @if(in_array('Previous Passport Number', $permission))
             @php
             $other_passport_details = json_decode($bookingData->clint->clientinfo->other_passport_details);
             @endphp
+            <div class="mb-4">
+                                    <label class="font-semibold text-sm text-ternary/90">Any Other Valid Passport/Identity Certificate held</label>
+                                    <div class="flex gap-4 mt-1">
+                                        <label>
+                                            <input type="radio" name="haspassportidenty" value="yes"
+                                                onclick="togglePassportidentity(true)"
+                                                {{ $other_passport_details ? 'checked' : '' }}> Yes
+                                        </label>
+                                        <label>
+                                            <input type="radio" name="haspassportidenty" value="no"
+                                                onclick="togglePassportidentity(false)"
+                                                {{ !$other_passport_details ? 'checked' : '' }}> No
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div id="passport_identity_section" class="{{ $other_passport_details ? '' : 'hidden' }} lg:col-span-4 md:col-span-4 grid lg:grid-cols-4 gap-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-1">
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                                <label for="other_passport_country" class="font-semibold text-ternary/90 text-sm">Country Of issue *</label>
+                                                <div class="w-full relative">
+                                                    <input type="text" name="other_passport_country" id="other_passport_country" requireed
+                                                        value="{{ old('other_passport_country', $other_passport_details->country ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_country') border-red-500 @enderror">
+                                                    <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                </div>
+                                                @error('other_passport_country')
+                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                                <label for="other_passport_issue_place" class="font-semibold text-ternary/90 text-sm">Passport Issue Place *</label>
+                                                <div class="w-full relative">
+                                                    <input type="text" name="other_passport_issue_place" id="other_passport_issue_place" requiredd
+                                                        value="{{ old('other_passport_issue_place', $other_passport_details->issue_place ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_issue_place') border-red-500 @enderror">
+                                                    <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                </div>
+                                                @error('other_passport_issue_place')
+                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                                <label for="other_passport_ic_number" class="font-semibold text-ternary/90 text-sm">Passport/IC Number *</label>
+                                                <div class="w-full relative">
+                                                    <input type="text" name="other_passport_ic_number" id="other_passport_ic_number" requireed
+                                                        value="{{ old('other_passport_ic_number', $other_passport_details->ic_number ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_ic_number') border-red-500 @enderror">
+                                                    <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                </div>
+                                                @error('other_passport_ic_number')
+                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                                <label for="other_passport_issue_date" class="font-semibold text-ternary/90 text-sm">Passport Issue Date *</label>
+                                                <div class="w-full relative">
+                                                    <input type="date" name="other_passport_issue_date" id="other_passport_issue_date" requireed
+                                                        value="{{ old('other_passport_issue_date', $other_passport_details->issue_date ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_issue_date') border-red-500 @enderror">
+                                                    <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                </div>
+                                                @error('other_passport_issue_date')
+                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                </div>
+                            @endif
+                    </div>
+                </div>
+            </div>
+            @endif
 
             @if(in_array('additional_passport_info_permission', $permission))
             <!-- Other Passport/Identity Certificate Section -->
@@ -539,10 +769,117 @@
                                 <i class="fas fa-building absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             </div>
                         </div>
+                                @if(in_array('Employer Phone Number', $permission))
+                                <!-- Employer Phone Number -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="employer_phone" class="font-semibold text-ternary/90 text-sm">Employer Phone</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="employer_phone" id="employer_phone"
+                                           value="{{ old('employer_phone', $bookingData->clint->clientinfo->employer_phone ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-phone-square-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
 
+                                   @if(in_array('Business Name', $permission))
+                                 <!-- Business Name  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Business Name</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="business_name" id="business_name"
+                                             value="{{ old('business_name', $bookingData->clint->clientinfo->business_name ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                @if(in_array('School Name', $permission))
+                                 <!-- School Name  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="school_name" class="font-semibold text-ternary/90 text-sm">School Name</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="school_name" id="school_name"
+                                             value="{{ old('school_name', $bookingData->clint->clientinfo->school_name ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                 @if(in_array('Duration of Employment', $permission))
+                                <!-- Duration of Employment  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="duration_of_employment" class="font-semibold text-ternary/90 text-sm">Duration of Employment</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="duration_of_employment" id="duration_of_employment"
+                                             value="{{ old('duration_of_employment', $bookingData->clint->clientinfo->duration_of_employment ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
 
+                                 @if(in_array('Duration of Study', $permission))
+                                <!-- Duration of Study  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="duration_of_study" class="font-semibold text-ternary/90 text-sm">Duration of Study</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="duration_of_study" id="duration_of_study"
+                                             value="{{ old('duration_of_study', $bookingData->clint->clientinfo->duration_of_study ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                @if(in_array('Employment Monthly Income', $permission))
+                               <!-- Monthly Income  -->
+                                 <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="employment_monthly_income" class="font-semibold text-ternary/90 text-sm">Employment Monthly Income</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="employment_monthly_income" id="employment_monthly_income"
+                                             value="{{ old('employment_monthly_income', $bookingData->clint->clientinfo->employment_monthly_income ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                @if(in_array('Educational Qualifications', $permission))
+                                <!-- Educational Qualifications  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="educational_qualification" class="font-semibold text-ternary/90 text-sm">Educational Qualification</label>
+                                        <div class="w-full relative">
+                                            <input type="text" name="educational_qualification" id="educational_qualification"
+                                                value="{{ old('educational_qualification', $bookingData->clint->clientinfo->educational_qualification ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                            <i class="fa fa-graduation-cap absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                         </div>
+                                </div>
+                                @endif
+                                @if(in_array('Employment History', $permission))
+                                <!-- Employment History  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Employment History</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="employment_history" id="employment_history"
+                                             value="{{ old('employment_history', $bookingData->clint->clientinfo->employment_history ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                 @if(in_array('Education History', $permission))
 
-                        <!-- Employer Phone Number -->
+                                <!-- Employment History  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Education History</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="education_history" id="education_history"
+                                             value="{{ old('education_history', $bookingData->clint->clientinfo->education_history ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                              @endif 
                     </div>
                 </div>
             </div>
