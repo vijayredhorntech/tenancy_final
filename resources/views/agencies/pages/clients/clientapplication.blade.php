@@ -212,29 +212,7 @@
 
     <script>
 
-        // function for back
-        // const alreadySelect = @json($alreadySelect);
-        // $(document).ready(function () {
-        //         // Get the currently visible element with class `datashow`
-        //         let visibleElementId = $('.datashow:visible').attr('id');
-        //         $("#previewstep").val(visibleElementId);
-        //         let currentIndex = alreadySelect.indexOf(visibleElementId);
-        //         let nextStep = alreadySelect[currentIndex + 1] ?? null;
-        //         let oldsStep=alreadySelect[currentIndex - 1]?? null;
-        //         if (oldsStep) {
-        //             $("#oldstep").val(oldsStep);
-        //         } else {
-        //             $("#oldstep").val(""); // or handle "no more steps"
-        //         }
-
-        //         if (nextStep) {
-        //             $("#nextstep").val(nextStep);
-        //         } else {
-        //             $("#nextstep").val(""); // or handle "no more steps"
-        //         }
-
-                
-        // });
+    
 
         const alreadySelect = @json($alreadySelect);
 

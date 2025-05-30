@@ -1,12 +1,10 @@
-@php
+                    @php
                    $fatherdetails = $bookingData->clint->clientinfo->father_details ? json_decode($bookingData->clint->clientinfo->father_details) : null;
                    $motherdetails = $bookingData->clint->clientinfo->father_details ? json_decode($bookingData->clint->clientinfo->father_details) : null;
                    $spouse = $bookingData->clint->clientinfo->spouse_details ? json_decode($bookingData->clint->clientinfo->spouse_details) : null;
-                   
-            @endphp
+                           
+                    @endphp
                 <form id="" class="ajax-form" method="post"> 
-                        
-
                 @if(in_array('Father Section', $permission))
                 {{-- Father Section --}}
                     <div id="fathersection" class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-black/10 shadow-lg border border-secondary/40">
@@ -111,6 +109,14 @@
                                         </div>
                                         @endif
 
+                                        @if(in_array('Mother Country of birth', $permission))
+                                        <div>
+                                        <label for="mother_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
+                                        <input type="text" name="mother_country_of_birth" id="mother_country_of_birth" value="{{ old('mother_country_of_birth', $motherdetails->mother_country_of_birth ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
                                         @if(in_array('Mother’s DOB', $permission))
                                         <div>
                                         <label for="mother_dob" class="font-semibold text-sm text-ternary/90">Date of Birth</label>
@@ -119,7 +125,7 @@
                                         </div>
                                         @endif
 
-                                        @if(in_array('Mother Employment Stauts', $permission))
+                                        @if(in_array('Mother Employment', $permission))
                                         <div>
                                         <label for="mother_employment" class="font-semibold text-sm text-ternary/90">Employment Status</label>
                                         <input type="text" name="mother_employment" id="mother_employment" value="{{ old('mother_employment', $motherdetails->employementstatus ?? '') }}"
@@ -135,7 +141,7 @@
                                         </div>
                                     @endif
                     </div>
-
+                    
                     @endif
                     @if(in_array('Spouse Section', $permission))
                     {{-- Spouse Section --}}
@@ -150,15 +156,7 @@
                                                     </div>
                                                     @endif
 
-                                                    @if(in_array('Spouse’s  Place of Birth', $permission))
-                                                    <div class="w-full">
-                                                    <label for="spouse_nationality" class="font-semibold text-ternary/90 text-sm">Nationality</label>
-                                                    <input type="text" name="spouse_nationality" id="spouse_nationality"
-                                                        value="{{ old('spouse_nationality', $spouse->nationality ?? '') }}"
-                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                                    </div>
-                                                    @endif
-                                                    @if(in_array('Spouse’s  Nationality', $permission))
+                                                    @if(in_array('Spouse’s Place of Birth', $permission))
                                                     <div class="w-full">
                                                     <label for="spouse_birth_place" class="font-semibold text-ternary/90 text-sm">Place of Birth</label>
                                                     <input type="text" name="spouse_birth_place" id="spouse_birth_place"
@@ -166,7 +164,16 @@
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
                                                     @endif
-                                                    @if(in_array('Spouse’s  Previous Nationality', $permission))
+
+                                                    @if(in_array('Spouse’s Nationality', $permission))
+                                                    <div class="w-full">
+                                                    <label for="spouse_nationality" class="font-semibold text-ternary/90 text-sm">Nationality</label>
+                                                    <input type="text" name="spouse_nationality" id="spouse_nationality"
+                                                        value="{{ old('spouse_nationality', $spouse->nationality ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
+                                                    @if(in_array('Spouse’s Previous Nationality', $permission))
                                                     <div class="w-full">
                                                     <label for="spouse_previous_nationality" class="font-semibold text-ternary/90 text-sm">Previous Nationality</label>
                                                     <input type="text" name="spouse_previous_nationality" id="spouse_previous_nationality"
@@ -182,7 +189,7 @@
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
                                                     @endif
-                                                    @if(in_array('Spouse’s  Employment Status', $permission))
+                                                    @if(in_array('Spouse’s Employment Status', $permission))
                                                     <div class="w-full">
                                                     <label for="spouse_employment" class="font-semibold text-ternary/90 text-sm">Employment Status</label>
                                                     <input type="text" name="spouse_employment" id="spouse_employment"
@@ -190,7 +197,7 @@
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
                                                     @endif
-                                                    @if(in_array('Spouse’s  Address', $permission))
+                                                    @if(in_array('Spouse’s Address', $permission))
                                                     <div class="w-full">
                                                     <label for="spouse_address" class="font-semibold text-ternary/90 text-sm">Address</label>
                                                     <input type="text" name="spouse_address" id="spouse_address"
