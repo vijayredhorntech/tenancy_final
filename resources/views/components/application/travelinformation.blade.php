@@ -182,7 +182,7 @@
                                 @endif
 
                               <input type="hidden" name="preview" value="detailsofvisasought">
-                                <input type="hidden" name="step" value="accommodation_details">
+                                <input type="hidden" name="step" value="travelinfo">
                                 
                                
                                 <div class="w-full flex justify-end  pb-4 gap-2 xl:col-span-4 lg:col-span-3 md:col-span-2 col-span-1">

@@ -1,7 +1,7 @@
 
 <form class="visaajax-form w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4" method="post">
                                       
-
+{{dd($bookingData->visarequireddocument->visa_history_background)}}
                                 @if(in_array('Previous Visas Held', $permission)) 
                                 <div class="w-full relative group flex flex-col gap-1 ">
                                     <label for="cities_visited" class="font-semibold text-ternary/90 text-sm">Previous Visas Held</label>
@@ -188,6 +188,8 @@
                                 </div>
 
                                 @endif
+
+                                <input type="hidden" name="step" value="visahistory">
 
 
                                 <div class="w-full flex justify-end  pb-4 gap-2 xl:col-span-4 lg: md:col-span-2 col-span-1">

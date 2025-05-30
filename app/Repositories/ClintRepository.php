@@ -604,6 +604,7 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
 
     public function step1createclient($data)
 {
+    
     // Assuming this gets visa booking data from default DB
     $visabooking = $this->visaRepository->bookingDataById($data['bookingid']);
     $agency = $this->agencyService->getAgencyData();
@@ -839,6 +840,34 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
         }
     }
 
+    if($data['step']=="socialmedia"){
+        $socialMedia = [
+            'facebook' => $data['facebook'] ?? null,
+            'instagram' => $data['instagram'] ?? null,
+            'twitter' => $data['twitter'] ?? null,
+            'linkedIn' => $data['linkedIn'] ?? null,
+            'other_social_media_accounts' => $data['othersocialmediaaccounts'] ?? null,
+            'personal_website' => $data['personalwebsite'] ?? null,
+            'blog_url' => $data['blogurl'] ?? null,
+        ];
+
+        $info->social_media = json_encode($socialMedia);
+    }
+
+    if($data['step']=="employment"){
+        $employmentEducationData = [
+            'business_name' => $data['business_name'] ?? null,
+            'school_name' => $data['school_name'] ?? null,
+            'duration_of_employment' => $data['duration_of_employment'] ?? null,
+            'duration_of_study' => $data['duration_of_study'] ?? null,
+            'employment_monthly_income' => $data['employment_monthly_income'] ?? null,
+            'employment_history' => $data['employment_history'] ?? null,
+            'education_history' => $data['education_history'] ?? null,
+        ];
+        $info->employment = json_encode($employmentEducationData);
+
+    }
+
     // Common info (applies to all steps)
     $info->previous_name = $data['previous_name'] ?? $info->previous_name;
     $info->passport_issue_date = $data['passport_issue_date'] ?? $info->passport_issue_date;
@@ -862,6 +891,11 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
     $info->past_occupation = $data['past_occupation'] ?? $info->past_occupation;
     $info->reference_name = $data['reference_name'] ?? $info->reference_name;
     $info->reference_address = $data['reference_address'] ?? $info->reference_address;
+    $info->title = $data['title'] ?? $info->title;
+    $info->language_spoken = $data['languages_spoken'] ?? $info->language_spoken;
+
+    $info->employment=  $info->employment ?? $info->employment;
+    $info->social_media =$info->social_media ?? $info->social_media;
 
 
     $info->haspassportidenty = $info->haspassportidenty ??  $info->haspassportidenty;

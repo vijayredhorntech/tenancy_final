@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Config;
 use App\Models\Document;
 use App\Models\VisaServiceTypeDocument;
 use App\Services\AgencyService;
+use App\Services\VisaverifyService;
 use App\Models\UserServiceAssignment;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\NewFormNotification;
@@ -38,10 +39,12 @@ class VisaRepository implements VisaRepositoryInterface
     
     protected $fileUploadService;
     protected $agencyService;
-    public function __construct(FileUploadService $fileUploadService,AgencyService $agencyService)
+    protected $visaverifyService;
+    public function __construct(FileUploadService $fileUploadService,AgencyService $agencyService,VisaverifyService $visaverifyService)
     {
         $this->fileUploadService = $fileUploadService;
         $this->agencyService = $agencyService;
+        $this->visaverifyService = $visaverifyService;
     }
 
     public function getAllCountry(){
@@ -1167,13 +1170,34 @@ public function getBookingByid($id, $type, $request)
 
     public function visadocumentstore($data)
     {
+       
         $visa = VisaRelatedDocument::where('bookingid', $data['bookingid'])->first();
     
         if (!$visa) {
             $visa = new VisaRelatedDocument();
             $visa->bookingid = $data['bookingid'];
         }
+        if($data['step']=="visahistory"){
+            $travelHistory = [
+                'previous_visas_held' => $data['previous_visas_held'] ?? null,
+                'visarejections' => $data['visarejections'] ?? null,
+                'overstays' => $data['overstays'] ?? null,
+                'countries_visited_last_10_years' => $data['countries_visited_last_10_years'] ?? null,
+                'has_previous_uktravel' => $data['has_previous_uktravel'] ?? null,
+                'previous_usa_travel' => $data['previous_usa_travel'] ?? null,
+                'previousschengentravel' => $data['previousschengentravel'] ?? null,
+                'previouschinatravel' => $data['previouschinatravel'] ?? null,
+                'previousrussiatravel' => $data['previousrussiatravel'] ?? null,
+                'previoustndiatravel' => $data['previoustndiatravel'] ?? null,
+                'criminalhistory' => $data['criminalhistory'] ?? null,
+                'deniedentryanywhere' => $data['deniedentryanywhere'] ?? null,
+                'securitybackgroundquestions' => $data['securitybackgroundquestions'] ?? null,
+            ];
     
+            $visa->visa_history_background = json_encode($travelHistory); 
+        }
+    
+
         // Common assignments for both new and existing records
         $visa->type_of_visa_required = $data['visatype'] ?? $visa->type_of_visa_required;
         $visa->number_of_entries = $data['noofentries'] ?? $visa->number_of_entries;
@@ -1183,6 +1207,16 @@ public function getBookingByid($id, $type, $request)
         $visa->port_of_exit = $data['portofexit'] ?? $visa->port_of_exit;
         $visa->places_to_be_visited = $data['placeofvisit'] ?? $visa->places_to_be_visited;
         $visa->purpose_of_visit = $data['purposeofvisit'] ?? $visa->purpose_of_visit;
+
+        // backgroudhistory
+        $visa->visa_history_background =  $visa->visa_history_background ??  $visa->visa_history_background;
+        $visa->medical_visa_specifics = $data['purposeofvisit'] ?? $visa->medical_visa_specifics;
+        $visa->student_visa_specifics = $data['purposeofvisit'] ?? $visa->student_visa_specifics;
+        $visa->accommodation_details = $data['purposeofvisit'] ?? $visa->accommodation_details;
+        $visa->host_sponsor_inviter_details = $data['purposeofvisit'] ?? $visa->host_sponsor_inviter_details;
+        $visa->financial_support_details = $data['purposeofvisit'] ?? $visa->financial_support_details;
+
+
     
         $visa->previous_visa_number = $data['previous_visa_number'] ?? $visa->previous_visa_number;
         $visa->previous_visa_issued_place = $data['previous_visa_place'] ?? $visa->previous_visa_issued_place;

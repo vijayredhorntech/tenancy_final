@@ -101,7 +101,7 @@
                                     @endif
 
 
-
+                                    <input type="hidden" name="step" value="medical">
                                     
                                 <div class="w-full flex justify-end  pb-4 gap-2 xl:col-span-4 lg: md:col-span-2 col-span-1">
                                             
