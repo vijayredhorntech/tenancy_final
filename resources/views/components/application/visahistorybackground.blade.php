@@ -1,13 +1,17 @@
 
 <form class="visaajax-form w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4" method="post">
-                                      
-{{dd($bookingData->visarequireddocument->visa_history_background)}}
+                                       
+             @php                 
+                   $visahistory = $bookingData->visarequireddocument->visa_history_background ? json_decode($bookingData->visarequireddocument->visa_history_background) : null;
+               
+            @endphp
+            
                                 @if(in_array('Previous Visas Held', $permission)) 
                                 <div class="w-full relative group flex flex-col gap-1 ">
                                     <label for="cities_visited" class="font-semibold text-ternary/90 text-sm">Previous Visas Held</label>
                                     <div class="w-full relative">
                                         <textarea name="previous_visas_held" id="previous_visas_held"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('cities_visited', $bookingData->visarequireddocument->cities_visited_in_india ?? '')  }}</textarea>
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">   {{ old('previous_visas_held', $visahistory->previous_visas_held ?? '') }}</textarea>
                                         <i class="fa fa-city absolute right-3 top-4 text-sm text-secondary/80"></i>
                                     </div>
                                 </div>
@@ -17,7 +21,7 @@
                                     <label for="visarejections" class="font-semibold text-ternary/90 text-sm">Visa Rejections</label>
                                     <div class="w-full relative">
                                         <textarea name="visarejections" id="visarejections"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('cities_visited', $bookingData->visarequireddocument->cities_visited_in_india ?? '')  }}</textarea>
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('visarejections', $visahistory->visarejections ?? '') }}</textarea>
                                         <i class="fa fa-city absolute right-3 top-4 text-sm text-secondary/80"></i>
                                     </div>
                                 </div>
@@ -28,7 +32,7 @@
                                     <label for="overstays" class="font-semibold text-ternary/90 text-sm">Overstays</label>
                                     <div class="w-full relative">
                                         <input type="text" name="overstays" id="overstays"
-                                             value="{{ old('overstays', $bookingData->visarequireddocument->previous_visa_issued_place ?? '') }}"
+                                             value="{{ old('overstays', $visahistory->overstays ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                         <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>
@@ -51,11 +55,11 @@
                                         <div class="flex gap-4 mt-1">
                                             
                                         <label>
-                                                <input type="radio" name="has_previous_uktravel" value="yes"> Yes
+                                                <input type="radio" name="has_previous_uktravel" value="yes"  {{ old('has_previous_uktravel', $visahistory->has_previous_uktravel ?? '') == 'yes' ? 'checked' : '' }}> Yes
                                                 
                                                  </label>
                                             <label>
-                                                <input type="radio" name="has_previous_uktravel" value="no" > No
+                                                <input type="radio" name="has_previous_uktravel" value="no" {{ old('has_previous_uktravel', $visahistory->has_previous_uktravel ?? '') == 'no' ? 'checked' : '' }} > No
                                                
                                             </label>
                                         </div>
@@ -68,11 +72,11 @@
                                         <div class="flex gap-4 mt-1">
                                             
                                         <label>
-                                                <input type="radio" name="previous_usa_travel" value="yes"> Yes
+                                                <input type="radio" name="previous_usa_travel" value="yes" {{ old('previous_usa_travel', $visahistory->previous_usa_travel ?? '') == 'yes' ? 'checked' : '' }}> Yes
                                                
                                                  </label>
                                             <label>
-                                                <input type="radio" name="previous_usa_travel" value="no"> No
+                                                <input type="radio" name="previous_usa_travel" value="no" {{ old('previous_usa_travel', $visahistory->previous_usa_travel ?? '') == 'no' ? 'checked' : '' }}> No
                                                
                                             </label>
                                         </div>
@@ -84,11 +88,11 @@
                                         <div class="flex gap-4 mt-1">
                                             
                                         <label>
-                                                <input type="radio" name="previousschengentravel" value="yes"> Yes
+                                                <input type="radio" name="previousschengentravel" value="yes" {{ old('previousschengentravel', $visahistory->previousschengentravel ?? '') == 'yes' ? 'checked' : '' }}> Yes
                                                 
                                                  </label>
                                             <label>
-                                                <input type="radio" name="previousschengentravel" value="no"> No
+                                                <input type="radio" name="previousschengentravel" value="no" {{ old('previousschengentravel', $visahistory->previousschengentravel ?? '') == 'no' ? 'checked' : '' }}> No
                                                
                                             </label>
                                         </div>
@@ -100,11 +104,11 @@
                                         <div class="flex gap-4 mt-1">
                                             
                                         <label>
-                                                <input type="radio" name="previouschinatravel" value="yes"> Yes
+                                                <input type="radio" name="previouschinatravel" value="yes" {{ old('previouschinatravel', $visahistory->previouschinatravel ?? '') == 'yes' ? 'checked' : '' }}> Yes
                                                 
                                                  </label>
                                             <label>
-                                                <input type="radio" name="previouschinatravel" value="no"> No
+                                                <input type="radio" name="previouschinatravel" value="no" {{ old('previouschinatravel', $visahistory->previouschinatravel ?? '') == 'no' ? 'checked' : '' }}> No
                                                
                                             </label>
                                         </div>
@@ -117,12 +121,12 @@
                                         <div class="flex gap-4 mt-1">
                                             
                                         <label>
-                                                <input type="radio" name="previousrussiatravel" value="yes"
+                                                <input type="radio" name="previousrussiatravel" value="yes" {{ old('previousrussiatravel', $visahistory->previousrussiatravel ?? '') == 'yes' ? 'checked' : '' }}
                                                 > Yes
                                                 
                                                  </label>
                                             <label>
-                                                <input type="radio" name="previousrussiatravel" value="no" 
+                                                <input type="radio" name="previousrussiatravel" value="no"  {{ old('previousrussiatravel', $visahistory->previousrussiatravel ?? '') == 'no' ? 'checked' : '' }}
                                                 > No
                                                
                                             </label>
@@ -135,11 +139,11 @@
                                         <div class="flex gap-4 mt-1">
                                             
                                         <label>
-                                                <input type="radio" name="previoustndiatravel" value="yes">Yes
+                                                <input type="radio" name="previoustndiatravel" value="yes" {{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? 'checked' : '' }}>Yes
                                                 
                                                  </label>
                                             <label>
-                                                <input type="radio" name="previoustndiatravel" value="no" > No
+                                                <input type="radio" name="previoustndiatravel" value="no"  {{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'no' ? 'checked' : '' }}> No
                                                
                                             </label>
                                         </div>
@@ -151,11 +155,11 @@
                                         <div class="flex gap-4 mt-1">
                                             
                                         <label>
-                                                <input type="radio" name="criminalhistory" value="yes"> Yes
+                                                <input type="radio" name="criminalhistory" value="yes" {{ old('criminalhistory', $visahistory->criminalhistory ?? '') == 'yes' ? 'checked' : '' }}> Yes
                                                 
                                                  </label>
                                             <label>
-                                                <input type="radio" name="criminalhistory" value="no"> No
+                                                <input type="radio" name="criminalhistory" value="no" {{ old('criminalhistory', $visahistory->criminalhistory ?? '') == 'no' ? 'checked' : '' }}> No
         
                                             </label>
                                         </div>
@@ -167,11 +171,11 @@
                                         <div class="flex gap-4 mt-1">
                                             
                                         <label>
-                                                <input type="radio" name="deniedentryanywhere" value="yes"> Yes
+                                                <input type="radio" name="deniedentryanywhere" value="yes" {{ old('deniedentryanywhere', $visahistory->deniedentryanywhere ?? '') == 'yes' ? 'checked' : '' }}> Yes
                                                 
                                                  </label>
                                             <label>
-                                                <input type="radio" name="deniedentryanywhere" value="no"> No
+                                                <input type="radio" name="deniedentryanywhere" value="no" {{ old('deniedentryanywhere', $visahistory->deniedentryanywhere ?? '') == 'no' ? 'checked' : '' }}> No
                                                
                                             </label>
                                         </div>
@@ -182,7 +186,7 @@
                                     <label for="securitybackgroundquestions" class="font-semibold text-ternary/90 text-sm">Security Background Questions</label>
                                     <div class="w-full relative">
                                         <textarea name="securitybackgroundquestions" id="securitybackgroundquestions"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('countries_visited_last_10_years', $bookingData->visarequireddocument->countries_visited_last_10_years ?? '')  }}</textarea>
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('securitybackgroundquestions', $visahistory->securitybackgroundquestions ?? '') }}</textarea>
                                         <i class="fa fa-globe-europe absolute right-3 top-4 text-sm text-secondary/80"></i>
                                     </div>
                                 </div>
