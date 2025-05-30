@@ -1,10 +1,12 @@
 
 <form class="visaajax-form w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4" method="post">
                                        
-             @php                 
-                   $visahistory = $bookingData->visarequireddocument->visa_history_background ? json_decode($bookingData->visarequireddocument->visa_history_background) : null;
-               
-            @endphp
+                            @php
+                                $visahistory = null;
+                                if ($bookingData->visarequireddocument && $bookingData->visarequireddocument->visa_history_background) {
+                                    $visahistory = json_decode($bookingData->visarequireddocument->visa_history_background);
+                                }
+                            @endphp
             
                                 @if(in_array('Previous Visas Held', $permission)) 
                                 <div class="w-full relative group flex flex-col gap-1 ">
