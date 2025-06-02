@@ -1178,19 +1178,28 @@ public function getBookingByid($id, $type, $request)
             $visa->bookingid = $data['bookingid'];
         }
         if(($data['step']?? null)=="visahistory"){
+         
             $travelHistory = [
                 'previous_visas_held' => $data['previous_visas_held'] ?? null,
                 'visarejections' => $data['visarejections'] ?? null,
                 'overstays' => $data['overstays'] ?? null,
                 'countries_visited_last_10_years' => $data['countries_visited_last_10_years'] ?? null,
                 'has_previous_uktravel' => $data['has_previous_uktravel'] ?? null,
+                'uk_travel_details' => $data['uk_travel_details'] ?? null,
                 'previous_usa_travel' => $data['previous_usa_travel'] ?? null,
+                'usa_travel_details' => $data['usa_travel_details'] ?? null,
                 'previousschengentravel' => $data['previousschengentravel'] ?? null,
+                'previousschengentravel_details' => $data['previousschengentravel_details'] ?? null,
                 'previouschinatravel' => $data['previouschinatravel'] ?? null,
+                'china_travel_details' => $data['china_travel_details'] ?? null,
                 'previousrussiatravel' => $data['previousrussiatravel'] ?? null,
+                'russia_travel_details' => $data['russia_travel_details'] ?? null,
                 'previoustndiatravel' => $data['previoustndiatravel'] ?? null,
+                'india_travel_details' => $data['india_travel_details'] ?? null,
                 'criminalhistory' => $data['criminalhistory'] ?? null,
+                'criminal_history' => $data['criminal_history'] ?? null,
                 'deniedentryanywhere' => $data['deniedentryanywhere'] ?? null,
+                'denied_entry_anywhere' => $data['denied_entry_anywhere'] ?? null,
                 'securitybackgroundquestions' => $data['securitybackgroundquestions'] ?? null,
             ];
     

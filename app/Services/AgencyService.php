@@ -99,6 +99,7 @@ class AgencyService
      }
 
      public function setDatabaseConnection(){
+    //    dd('here');
           $userData = \session('user_data');
           if(isset($userData))
           {
@@ -111,6 +112,7 @@ class AgencyService
      }
 
      public function setConnectionByDatabase($database){
+      
         DatabaseHelper::setDatabaseConnection($database);
      }
 

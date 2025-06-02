@@ -52,146 +52,197 @@
                                 </div>
                                 @endif
                                 @if(in_array('Previous UK Travel', $permission)) 
-                                <div class="mb-4">
-                                        <label class="font-semibold text-sm text-ternary/90">Previous UK Travel ?</label>
+                                    <div class="mb-4">
+                                        <label class="font-semibold text-sm text-ternary/90">Previous UK Travel?</label>
                                         <div class="flex gap-4 mt-1">
-                                            
-                                        <label>
-                                                <input type="radio" name="has_previous_uktravel" value="yes"  {{ old('has_previous_uktravel', $visahistory->has_previous_uktravel ?? '') == 'yes' ? 'checked' : '' }}> Yes
-                                                
-                                                 </label>
                                             <label>
-                                                <input type="radio" name="has_previous_uktravel" value="no" {{ old('has_previous_uktravel', $visahistory->has_previous_uktravel ?? '') == 'no' ? 'checked' : '' }} > No
-                                               
+                                                <input type="radio" name="has_previous_uktravel" value="yes"
+                                                    {{ old('has_previous_uktravel', $visahistory->has_previous_uktravel ?? '') == 'yes' ? 'checked' : '' }}> Yes
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="has_previous_uktravel" value="no"
+                                                    {{ old('has_previous_uktravel', $visahistory->has_previous_uktravel ?? '') == 'no' ? 'checked' : '' }}> No
                                             </label>
                                         </div>
-                               </div>
+                                    </div>
+
+                                    <div class="mt-2" id="uk-travel-details" style="{{ old('has_previous_uktravel', $visahistory->has_previous_uktravel ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                        <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
+                                        <textarea name="uk_travel_details" id="uk_travel_details"
+                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previous_visas_held', $visahistory->uk_travel_details ?? '') }}</textarea>
+                                    </div>
                                 @endif
 
                                 @if(in_array('Previous USA Travel', $permission)) 
-                                <div class="mb-4">
-                                        <label class="font-semibold text-sm text-ternary/90">Previous USA Travel?</label>
-                                        <div class="flex gap-4 mt-1">
-                                            
-                                        <label>
-                                                <input type="radio" name="previous_usa_travel" value="yes" {{ old('previous_usa_travel', $visahistory->previous_usa_travel ?? '') == 'yes' ? 'checked' : '' }}> Yes
-                                               
-                                                 </label>
+                                    <div class="mb-4">
+                                            <label class="font-semibold text-sm text-ternary/90">Previous USA Travel?</label>
+                                            <div class="flex gap-4 mt-1">
+                                                
                                             <label>
-                                                <input type="radio" name="previous_usa_travel" value="no" {{ old('previous_usa_travel', $visahistory->previous_usa_travel ?? '') == 'no' ? 'checked' : '' }}> No
-                                               
-                                            </label>
-                                        </div>
-                               </div>
+                                                    <input type="radio" name="previous_usa_travel" value="yes" {{ old('previous_usa_travel', $visahistory->previous_usa_travel ?? '') == 'yes' ? 'checked' : '' }}> Yes                       
+                                                    </label>
+                                                <label>
+                                                    <input type="radio" name="previous_usa_travel" value="no" {{ old('previous_usa_travel', $visahistory->previous_usa_travel ?? '') == 'no' ? 'checked' : '' }}> No                                              
+                                                </label>
+                                            </div>
+                                  </div>
+                                  <div class="mt-2" id="usa-travel-details" style="{{ old('previous_usa_travel', $visahistory->previous_usa_travel ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                        <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
+                                        <textarea name="usa_travel_details" id="usa_travel_details"
+                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('usa-travel-details', $visahistory->usa_travel_details ?? '') }}</textarea>
+                                    </div>
                                 @endif
+
+
                                 @if(in_array('Previous Schengen Travel', $permission)) 
-                                <div class="mb-4">
+                                    <div class="mb-4">
                                         <label class="font-semibold text-sm text-ternary/90">Previous Schengen Travel?</label>
                                         <div class="flex gap-4 mt-1">
-                                            
-                                        <label>
-                                                <input type="radio" name="previousschengentravel" value="yes" {{ old('previousschengentravel', $visahistory->previousschengentravel ?? '') == 'yes' ? 'checked' : '' }}> Yes
-                                                
-                                                 </label>
                                             <label>
-                                                <input type="radio" name="previousschengentravel" value="no" {{ old('previousschengentravel', $visahistory->previousschengentravel ?? '') == 'no' ? 'checked' : '' }}> No
-                                               
+                                                <input type="radio" name="previousschengentravel" value="yes"
+                                                    {{ old('previousschengentravel', $visahistory->previousschengentravel ?? '') == 'yes' ? 'checked' : '' }}> Yes
+                                            </label>
+                                            <label>
+                                                <input type="radio" name="previousschengentravel" value="no"
+                                                    {{ old('previousschengentravel', $visahistory->previousschengentravel ?? '') == 'no' ? 'checked' : '' }}> No
                                             </label>
                                         </div>
-                               </div>
-                                @endif
-                                @if(in_array('Previous China Travel', $permission)) 
-                                <div class="mb-4">
-                                        <label class="font-semibold text-sm text-ternary/90">Previous China Travel?</label>
-                                        <div class="flex gap-4 mt-1">
-                                            
-                                        <label>
-                                                <input type="radio" name="previouschinatravel" value="yes" {{ old('previouschinatravel', $visahistory->previouschinatravel ?? '') == 'yes' ? 'checked' : '' }}> Yes
-                                                
-                                                 </label>
-                                            <label>
-                                                <input type="radio" name="previouschinatravel" value="no" {{ old('previouschinatravel', $visahistory->previouschinatravel ?? '') == 'no' ? 'checked' : '' }}> No
-                                               
-                                            </label>
-                                        </div>
-                               </div>
+                                    </div>
 
+                                    <div class="mt-2" id="previousschengentravel_details" style="{{ old('previousschengentravel', $visahistory->previousschengentravel ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                        <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
+                                        <textarea name="previousschengentravel_details" id="previousschengentravel_details"
+                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previousschengentravel_details', $visahistory->previousschengentravel_details ?? '') }}</textarea>
+                                       
+                                    </div>
                                 @endif
+                             
+                                @if(in_array('Previous China Travel', $permission)) 
+                                        <div class="mb-4">
+                                                <label class="font-semibold text-sm text-ternary/90">Previous China Travel?</label>
+                                                <div class="flex gap-4 mt-1">                   
+                                                <label>
+                                                        <input type="radio" name="previouschinatravel" value="yes" {{ old('previouschinatravel', $visahistory->previouschinatravel ?? '') == 'yes' ? 'checked' : '' }}> Yes
+                                                        
+                                                        </label>
+                                                    <label>
+                                                        <input type="radio" name="previouschinatravel" value="no" {{ old('previouschinatravel', $visahistory->previouschinatravel ?? '') == 'no' ? 'checked' : '' }}> No
+                                                    
+                                                    </label>
+                                                </div>
+                                    </div>
+
+                                    <div class="mt-2" id="china-travel-details" style="{{ old('previouschinatravel', $visahistory->previouschinatravel ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                                <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
+                                                <textarea name="china_travel_details" id="china_travel_details"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('china_travel_details', $visahistory->china_travel_details ?? '') }}</textarea>
+                                    </div>
+                                @endif
+
                                 @if(in_array('Previous Russia Travel', $permission)) 
-                                <div class="mb-4">
-                                        <label class="font-semibold text-sm text-ternary/90">Previous Russia Travel?</label>
-                                        <div class="flex gap-4 mt-1">
-                                            
-                                        <label>
-                                                <input type="radio" name="previousrussiatravel" value="yes" {{ old('previousrussiatravel', $visahistory->previousrussiatravel ?? '') == 'yes' ? 'checked' : '' }}
-                                                > Yes
-                                                
-                                                 </label>
-                                            <label>
-                                                <input type="radio" name="previousrussiatravel" value="no"  {{ old('previousrussiatravel', $visahistory->previousrussiatravel ?? '') == 'no' ? 'checked' : '' }}
-                                                > No
-                                               
-                                            </label>
-                                        </div>
-                               </div>
+                                        <div class="mb-4">
+                                                <label class="font-semibold text-sm text-ternary/90">Previous Russia Travel?</label>
+                                                <div class="flex gap-4 mt-1">
+                                                    
+                                                <label>
+                                                        <input type="radio" name="previousrussiatravel" value="yes" {{ old('previousrussiatravel', $visahistory->previousrussiatravel ?? '') == 'yes' ? 'checked' : '' }}
+                                                        > Yes
+                                                        
+                                                        </label>
+                                                    <label>
+                                                        <input type="radio" name="previousrussiatravel" value="no"  {{ old('previousrussiatravel', $visahistory->previousrussiatravel ?? '') == 'no' ? 'checked' : '' }}
+                                                        > No
+                                                    
+                                                    </label>
+                                                </div>
+                                    </div>
+
+                                    <div class="mt-2" id="russia-travel-details" style="{{ old('previousrussiatravel', $visahistory->previousrussiatravel ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                                <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
+                                                <textarea name="russia_travel_details" id="russia_travel_details"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previous_visas_held', $visahistory->russia_travel_details ?? '') }}</textarea>
+                                    </div>
                                 @endif
                                 @if(in_array('Previous India Travel', $permission)) 
-                                <div class="mb-4">
-                                        <label class="font-semibold text-sm text-ternary/90">Previous India Travel?</label>
-                                        <div class="flex gap-4 mt-1">
-                                            
-                                        <label>
-                                                <input type="radio" name="previoustndiatravel" value="yes" {{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? 'checked' : '' }}>Yes
-                                                
-                                                 </label>
-                                            <label>
-                                                <input type="radio" name="previoustndiatravel" value="no"  {{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'no' ? 'checked' : '' }}> No
-                                               
-                                            </label>
-                                        </div>
-                               </div>
-                                @endif
-                                @if(in_array('Criminal History', $permission))                                 
-                                <div class="mb-4">
-                                        <label class="font-semibold text-sm text-ternary/90">Criminal History?</label>
-                                        <div class="flex gap-4 mt-1">
-                                            
-                                        <label>
-                                                <input type="radio" name="criminalhistory" value="yes" {{ old('criminalhistory', $visahistory->criminalhistory ?? '') == 'yes' ? 'checked' : '' }}> Yes
-                                                
-                                                 </label>
-                                            <label>
-                                                <input type="radio" name="criminalhistory" value="no" {{ old('criminalhistory', $visahistory->criminalhistory ?? '') == 'no' ? 'checked' : '' }}> No
-        
-                                            </label>
-                                        </div>
-                               </div>
-                                @endif
-                                @if(in_array('Denied Entry Anywhere', $permission)) 
-                                <div class="mb-4">
-                                        <label class="font-semibold text-sm text-ternary/90">Denied Entry Anywhere?</label>
-                                        <div class="flex gap-4 mt-1">
-                                            
-                                        <label>
-                                                <input type="radio" name="deniedentryanywhere" value="yes" {{ old('deniedentryanywhere', $visahistory->deniedentryanywhere ?? '') == 'yes' ? 'checked' : '' }}> Yes
-                                                
-                                                 </label>
-                                            <label>
-                                                <input type="radio" name="deniedentryanywhere" value="no" {{ old('deniedentryanywhere', $visahistory->deniedentryanywhere ?? '') == 'no' ? 'checked' : '' }}> No
-                                               
-                                            </label>
-                                        </div>
-                               </div>
-                                @endif
-                                @if(in_array('Security Background Questions', $permission)) 
-                                <div class="w-full relative group flex flex-col gap-1 ">
-                                    <label for="securitybackgroundquestions" class="font-semibold text-ternary/90 text-sm">Security Background Questions</label>
-                                    <div class="w-full relative">
-                                        <textarea name="securitybackgroundquestions" id="securitybackgroundquestions"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('securitybackgroundquestions', $visahistory->securitybackgroundquestions ?? '') }}</textarea>
-                                        <i class="fa fa-globe-europe absolute right-3 top-4 text-sm text-secondary/80"></i>
+                                     <div class="mb-4">
+                                                <label class="font-semibold text-sm text-ternary/90">Previous India Travel?</label>
+                                                <div class="flex gap-4 mt-1">
+                                                    
+                                                <label>
+                                                        <input type="radio" name="previoustndiatravel" value="yes" {{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? 'checked' : '' }}>Yes
+                                                        
+                                                        </label>
+                                                    <label>
+                                                        <input type="radio" name="previoustndiatravel" value="no"  {{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'no' ? 'checked' : '' }}> No
+                                                    
+                                                    </label>
+                                                </div>
                                     </div>
-                                </div>
+
+                                    <div class="mt-2" id="india-travel-details" style="{{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                                <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
+                                                <textarea name="india_travel_details" id="india_travel_details"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previous_visas_held', $visahistory->india_travel_details ?? '') }}</textarea>
+                                    </div>
+
+                                @endif
+
+                                @if(in_array('Criminal History', $permission))                                 
+                                        <div class="mb-4">
+                                                <label class="font-semibold text-sm text-ternary/90">Criminal History?</label>
+                                                <div class="flex gap-4 mt-1">
+                                                    
+                                                <label>
+                                                        <input type="radio" name="criminalhistory" value="yes" {{ old('criminalhistory', $visahistory->criminalhistory ?? '') == 'yes' ? 'checked' : '' }}> Yes
+                                                        
+                                                        </label>
+                                                    <label>
+                                                        <input type="radio" name="criminalhistory" value="no" {{ old('criminalhistory', $visahistory->criminalhistory ?? '') == 'no' ? 'checked' : '' }}> No
+                
+                                                    </label>
+                                                </div>
+                                    </div>
+
+                                    <div class="mt-2" id="criminal-history" style="{{ old('criminalhistory', $visahistory->criminalhistory ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                                <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
+                                                <textarea name="criminal_history" id="criminal_history"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previous_visas_held', $visahistory->criminal_history ?? '') }}</textarea>
+                                    </div>
+                                @endif
+
+                                @if(in_array('Denied Entry Anywhere', $permission)) 
+                                        <div class="mb-4">
+                                                <label class="font-semibold text-sm text-ternary/90">Denied Entry Anywhere?</label>
+                                                <div class="flex gap-4 mt-1">
+                                                    
+                                                <label>
+                                                        <input type="radio" name="deniedentryanywhere" value="yes" {{ old('deniedentryanywhere', $visahistory->deniedentryanywhere ?? '') == 'yes' ? 'checked' : '' }}> Yes
+                                                        
+                                                        </label>
+                                                    <label>
+                                                        <input type="radio" name="deniedentryanywhere" value="no" {{ old('deniedentryanywhere', $visahistory->deniedentryanywhere ?? '') == 'no' ? 'checked' : '' }}> No
+                                                    
+                                                    </label>
+                                                </div>
+                                    </div>
+
+                                    <div class="mt-2" id="denied-entery-details" style="{{ old('deniedentryanywhere', $visahistory->deniedentryanywhere ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                                <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
+                                                <textarea name="denied_entry_anywhere" id="denied_entry_anywhere"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previous_visas_held', $visahistory->denied_entry_anywhere ?? '') }}</textarea>
+                                    </div>
+                                @endif
+
+
+                                @if(in_array('Security Background Questions', $permission)) 
+                                    <div class="w-full relative group flex flex-col gap-1 ">
+                                        <label for="securitybackgroundquestions" class="font-semibold text-ternary/90 text-sm">Security Background Questions</label>
+                                        <div class="w-full relative">
+                                            <textarea name="securitybackgroundquestions" id="securitybackgroundquestions"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('securitybackgroundquestions', $visahistory->securitybackgroundquestions ?? '') }}</textarea>
+                                            <i class="fa fa-globe-europe absolute right-3 top-4 text-sm text-secondary/80"></i>
+                                        </div>
+                                    </div>
 
                                 @endif
 
@@ -210,3 +261,34 @@
                                 </div>
                            
 </form>
+
+
+
+<script>
+    function toggleTravelDetails(radioName, detailsId) {
+        const selected = $(`input[name="${radioName}"]:checked`).val();
+        $(`#${detailsId}`)[selected === 'yes' ? 'slideDown' : 'slideUp']();
+    }
+
+    $(document).ready(function () {
+        // Define mapping of radio names to detail section IDs
+        const travelMappings = [
+            { name: 'has_previous_uktravel', id: 'uk-travel-details' },
+            { name: 'previousschengentravel', id: 'previousschengentravel_details' },
+            { name: 'previous_usa_travel', id: 'usa-travel-details' },
+            { name: 'previouschinatravel', id: 'china-travel-details' },
+            { name: 'previousrussiatravel', id: 'russia-travel-details' },
+            { name: 'previoustndiatravel', id: 'india-travel-details' },
+            { name: 'criminalhistory', id: 'criminal-history' },
+            { name: 'deniedentryanywhere', id: 'denied-entery-details' }
+        ];
+
+        // Initialize and bind change event
+        travelMappings.forEach(({ name, id }) => {
+            toggleTravelDetails(name, id);
+            $(`input[name="${name}"]`).on('change', () => toggleTravelDetails(name, id));
+        });
+    });
+</script>
+
+

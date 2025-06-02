@@ -495,24 +495,22 @@ public function hs_generateinvocie($invoice){
 public function hs_invoice($invoice_number){
     // $invoice_number ="INV-20250220-080104-9ZMZ";
 
- 
- 
-    $flight=FlightBooking::where('invoice_number',$invoice_number)->first(); 
-    $price_data=$flight->invoice_number;
-    $booking=Deduction::with('agency')->where('invoice_number',$price_data)->first(); 
-    $agency_id=$booking->agency->id;
-    $agency_address=AgencyDetail::where('agency_id',$agency_id)->first();
+   
+    $booking=Deduction::with('agency.details','flightBooking.passengersdetails')->where('invoice_number',$invoice_number)->first(); 
+    //   dd($booking);
+    // $agency_id=$booking->agency->id;
+    // $agency_address=AgencyDetail::where('agency_id',$agency_id)->first();
     // $termcondition=TermsCondition::where('name','agency')->where('status',1)->first(); 
     $termcondition=TermsCondition::where('status',1)->first(); 
-    $passenger_deatils=PassengerInformation::where('invoice_number',$invoice_number)->first(); 
+    // $passenger_deatils=PassengerInformation::where('invoice_number',$invoice_number)->first(); 
 
-    $adults=json_decode($passenger_deatils->adult, true);
-    $children=json_decode($passenger_deatils->children, true);
-    $infants=json_decode($passenger_deatils->infant, true);
+    // $adults=json_decode($passenger_deatils->adult, true);
+    // $children=json_decode($passenger_deatils->children, true);
+    // $infants=json_decode($passenger_deatils->infant, true);
    
 
-    $details = json_decode($flight->details, true);
-    $flight_search = json_decode($flight->flightSearch, true);
+    // $details = json_decode($flight->details, true);
+    // $flight_search = json_decode($flight->flightSearch, true);
   
 
 
@@ -521,31 +519,15 @@ public function hs_invoice($invoice_number){
    
     if($segment=='agencies'){
         return view('agencies.pages.invoices.flightinvoice',[
-            'flight_serach'=>$flight_search,
-            'details'=>$details,
             'booking'=>$booking,
-            'flight'=>$flight,
-            'agency_address'=>$agency_address,
             'termcondition'=>$termcondition,
-            'adults'=>$adults,
-            'children'=>$children,
-            'infants'=>$infants,
-            'passenger_deatils'=>$passenger_deatils,
         ]);
         // return view('agencies.pages.invoices.paymentInvoice',['agency_data'=>$agency_data]);
     }else{
-         return view('superadmin.pages.invoice.bookinginvoice',[
-            'flight_serach'=>$flight_search,
-            'details'=>$details,
+     
+        return view('superadmin.pages.invoice.bookinginvoice',[
             'booking'=>$booking,
-            'flight'=>$flight,
-            'agency_address'=>$agency_address,
             'termcondition'=>$termcondition,
-            'adults'=>$adults,
-            'children'=>$children,
-            'infants'=>$infants,
-            'passenger_deatils'=>$passenger_deatils,
-        
         ]);
     }
    

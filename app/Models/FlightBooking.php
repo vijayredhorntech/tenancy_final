@@ -13,6 +13,10 @@ class FlightBooking extends Model
         return $this->hasMany(PassengerInformation::class, 'flight_booking_id');
     }
 
+    public function passengersdetails() {
+        return $this->hasOne(PassengerInformation::class, 'flight_booking_id');
+    }
+
     // Relationship: A flight booking belongs to an agency
     public function agency() {
         return $this->belongsTo(Agency::class);

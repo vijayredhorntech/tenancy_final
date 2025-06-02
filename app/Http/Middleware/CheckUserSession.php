@@ -9,7 +9,7 @@ class CheckUserSession
 {
     public function handle(Request $request, Closure $next)
     {
-      
+
         $data = session('user_data');
         $url = session('agency_full_url');
 

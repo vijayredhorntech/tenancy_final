@@ -67,6 +67,10 @@ class Deduction extends Model
     {
         return $this->hasMany(SupplierPaymentDetail::class, 'booking_id', 'id');  
     }
+
+    public function cancelinvoice(){
+        return $this->hasOne(CancelInvoice::class, 'invoice_id', 'id');
+    }
     
     
 

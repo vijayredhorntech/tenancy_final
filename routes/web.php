@@ -402,11 +402,13 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         /*****Invoice and atoll **** */
 
                     Route::controller(InvoiceController::class)->group(function () {
-                                Route::get('atolinvoice', 'hsatolVoice')->name('atolinvoice');
+                        Route::get('/cencelinvoice','hs_SAcancelInvoice')->name('superadmin.cancelinvoice');
+                        Route::get('/cencelinvoice/{id}','hs_SAcanceleditInvoice')->name('cancelinvoice.edit');
+                        Route::post('/cencelstoreinvoice','hsSAupdateinvoice')->name('superadmin.update.cancelinvoice');
 
-                                Route::get('atolinvoice/create', 'hs_createInvoice')->name('atolinvoice.create');
-                                Route::post('atolinvoice/store', 'hs_storeInvoice')->name('atolinvoice.store');
-                                Route::get('atolinvoice/view/{id}', 'hs_viewInvoice')->name('atolinvoice.view');
+                       
+
+                     
                     });
 
    });
