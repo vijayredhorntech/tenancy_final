@@ -75,7 +75,7 @@
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Form Upload</label>
                              <div class="w-full relative">
-                                 <input type="file" name="form_upload" id="formuploade" placeholder="Form name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="file" name="form_upload" id="form_upload" placeholder="Form name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                              </div>
                          </div>
@@ -102,7 +102,6 @@
              </div>
 {{--        === form section code ends here===--}}
 
-
 {{--        === this is code for table section ===--}}
             <div class="w-full overflow-x-auto p-4">
                 <div class="w-full flex justify-between gap-2 items-center">
@@ -123,27 +122,100 @@
                     </div> -->
                     <div class="flex items-center gap-2">
                     
-               <form action="{{ route('search') }}" method="POST" enctype="multipart/form-data">
-                 @csrf
-                 <input type="hidden" name="type" value="form">
-                    <input type="text" placeholder="Form name....." name="search"
 
-                           class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000">
-                    <button type="submit"
-                        class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
-                        <i class="fa fa-search mr-1"></i> Search
-                    </button>
-                </form>
-               @if(isset($searchback))
-                <a href="{{route('visa.forms')}}">   <button type="button" 
-                    class="text-sm bg-secondary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-secondary/90 text-ternary hover:text-white hover:bg-secondary hover:border-ternary/30 transition ease-in duration-2000">
-                Back
-                    </button>
-                </a> 
+                </div>
+                </div> 
+                   <form id="filter-form" method="GET" action="{{ route('visa.forms') }}" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Search -->
+                    <div>
+                        <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
+                        <input type="text" name="search" id="search" value="{{ request('search') }}" 
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm"
+                            placeholder="Name, Email, Transaction ID">
+                    </div>
 
-                @endif
+                    
+                     <div>
+                                            <label for="origin_id" class="block text-sm font-medium text-gray-700">Country Range</label>
+                                            <div class="flex gap-2">
+                                                <!-- Origin Country -->
+                                                <select name="origin_id" id="origin_id"
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                                    <option value="">Select Origin Country</option>
+                                                    @foreach($countries as $country)
+                                                        <option value="{{ $country->id }}" {{ request('origin_id') == $country->id ? 'selected' : '' }}>
+                                                            {{ $country->countryName }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                                <!-- Destination Country -->
+                                                <select name="destination_id" id="destination_id"
+                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                                    <option value="">Select Destination Country</option>
+                                                    @foreach($countries as $country)
+                                                        <option value="{{ $country->id }}" {{ request('destination_id') == $country->id ? 'selected' : '' }}>
+                                                            {{ $country->countryName }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+
+                    <!-- Date Range -->
+                    <!-- <div>
+                        <label for="date_from" class="block text-sm font-medium text-gray-700">Date Range</label>
+                        <div class="flex gap-2">
+                            <input type="date" name="date_from" id="date_from" max="2099-12-31" value="{{ request('date_from') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                            <input type="date" name="date_to" id="date_to" max="2099-12-31" value="{{ request('date_to') }}"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                        </div>
+                    </div> -->
+
+                    <!-- Status Filter -->
+                    <!-- <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                        <select name="status" id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                            <option value="">All Status</option>
+                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Online</option>
+                            <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Offline</option>
+                        </select>
+                    </div>  -->
                 </div>
+
+                <!-- Filter Actions -->
+                <div class="flex justify-between items-center mt-4">
+                    <div class="flex gap-2">
+                        <button type="submit" class="bg-success text-white px-4 py-2 rounded-md hover:bg-success/90">
+                            Apply Filters
+                        </button>
+                        <a href="{{ route('visa.forms') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                            Clear Filters
+                        </a>
+                    </div>
+                    <div class="flex gap-2 items-center">
+                        <label for="per_page" class="text-sm font-medium text-gray-700">Show:</label>
+                        <select name="per_page" id="per_page" class="rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm"
+                                onchange="this.form.submit()">
+                            @foreach([10, 25, 50, 100] as $perPage)
+                                <option value="{{ $perPage }}" {{ request('per_page', 10) == $perPage ? 'selected' : '' }}>
+                                    {{ $perPage }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <!-- <a href="{{ route('studentgenerate.excel') }}?{{ http_build_query(request()->all()) }}" 
+                        class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+                            Export CSV
+                        </a>
+                        <a href="{{ route('studentgenerate.pdf') }}?{{ http_build_query(request()->all()) }}"
+                            class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                                Export PDF
+                            </a> -->
+                    </div>
                 </div>
+            </form>
                 <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                     <tr>
                     <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
@@ -219,7 +291,10 @@
 
 
                 </table>
-    
+               <div class="mt-4">
+                 {{ $forms->withQueryString()->links() }}
+                </div>
+
 
 
             </div>

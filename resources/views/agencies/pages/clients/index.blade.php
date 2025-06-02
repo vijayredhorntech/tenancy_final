@@ -74,14 +74,14 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <a href="{{ route('agencies.funddownloade') }}?{{ http_build_query(request()->all()) }}" 
+                                    <!-- <a href="{{ route('agencies.funddownloade') }}?{{ http_build_query(request()->all()) }}" 
                                     class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
                                         Export CSV
                                     </a>
                                     <a href="{{ route('agencies.exportfundpdf') }}?{{ http_build_query(request()->all()) }}"
                                         class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
                                             Export PDF
-                                        </a>
+                                        </a> -->
                                 </div>
                             </div>
                     </form>   
