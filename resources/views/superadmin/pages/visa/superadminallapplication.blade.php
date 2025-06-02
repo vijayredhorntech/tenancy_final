@@ -34,9 +34,9 @@
                                     <div>
                                         <label for="date_from" class="block text-sm font-medium text-gray-700">Date Range</label>
                                         <div class="flex gap-2">
-                                            <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}"
+                                            <input type="date" name="date_from" id="date_from" max="9999-12-31" value="{{ request('date_from') }}"
                                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                                            <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}"
+                                            <input type="date" name="date_to" id="date_to" max="9999-12-31" value="{{ request('date_to') }}"
                                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
                                         </div>
                                     </div>
