@@ -1,9 +1,12 @@
 <form class="visaajax-form w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4" method="post">
 
-              @php      
+                        @php
+                            $student_visa_specifics = null;
+                            if ($bookingData->visarequireddocument && $bookingData->visarequireddocument->student_visa_specifics) {
+                                $student_visa_specifics = json_decode($bookingData->visarequireddocument->student_visa_specifics);
+                            }
+                        @endphp
 
-              $student_visa_specifics = $bookingData->visarequireddocument->student_visa_specifics ? json_decode($bookingData->visarequireddocument->student_visa_specifics) : null;
-              @endphp
                              @if(in_array('Course Name', $permission))
                                  <div class="relative mb-4">
                                      <label for="course_name" class="font-semibold text-ternary/90 text-sm">Course Name</label>

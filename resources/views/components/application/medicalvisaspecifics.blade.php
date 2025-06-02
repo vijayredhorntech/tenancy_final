@@ -1,9 +1,12 @@
 <form class="visaajax-form w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4" method="post">
                                       
-           @php      
-              $medical = $bookingData->visarequireddocument->medical_visa_specifics ? json_decode($bookingData->visarequireddocument->medical_visa_specifics) : null;
-       
-            @endphp
+                            @php
+                                $medical = null;
+                                if ($bookingData->visarequireddocument && $bookingData->visarequireddocument->medical_visa_specifics) {
+                                    $medical = json_decode($bookingData->visarequireddocument->medical_visa_specifics);
+                                }
+                            @endphp
+
 
                                 @if(in_array('Patient Name', $permission))
                                                 <div class="relative mb-4">

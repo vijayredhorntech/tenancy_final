@@ -178,20 +178,7 @@
                                 </div>
                             @endif
 
-                                <!-- <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="passport_expiry_date" class="font-semibold text-ternary/90 text-sm">Passport Expiry Date *</label>
-                                    <div class="w-full relative">
-                                        <input type="date" name="passport_expiry_date" id="passport_expiry_date" requiresdd
-                                            value="{{ old('passport_expiry_date') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('passport_expiry_date') border-red-500 @enderror">
-                                        <i class="fa fa-calendar-times absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('passport_expiry_date')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div> -->
-          
+                      
 
                              <input type="hidden" name="previewstep" value="7">                            
                              <input type="hidden" name="step" value="8">

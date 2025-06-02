@@ -199,6 +199,8 @@ public function hs_paysupplier($id){
 
 public function hs_payamountstore(Request $request)
 {
+  
+    // dd($request->all());
     $request->validate([
         'id' => 'required|exists:deductions,id',
         'add_ammount' => 'required|numeric|min:0',
@@ -219,11 +221,15 @@ public function hs_payamountstore(Request $request)
 
     // Get the latest payment entry to calculate remaining balance
     $latestPayment = SupplierPaymentDetail::where('booking_id', $request->id)
-                        ->orderByDesc('id')
-                        ->first();
+    ->where('supplier_type','Supplier')
+    ->orderByDesc('id')
+    ->first();
 
+    
     // Calculate previously paid amount
-    $totalPaid = SupplierPaymentDetail::where('booking_id', $request->id)->sum('paying_amount');
+    $totalPaid = SupplierPaymentDetail::where('booking_id', $request->id)
+    ->where('supplier_type','Supplier')
+    ->sum('paying_amount');
     $remaining = $booking->amount - $totalPaid;
 
     // Prevent overpayment
@@ -244,6 +250,7 @@ public function hs_payamountstore(Request $request)
     // Save supplier payment
     $supplier = new SupplierPaymentDetail();
     $supplier->booking_id = $request->id;
+    $supplier->supplier_type = 'Supplier';
     $supplier->invoice_number = $booking->invoice_number;
     $supplier->service_id = $booking->service;
     $supplier->supplier_name = $supplierName;

@@ -21,7 +21,7 @@ class AddSoftDeletesToMultipleTables extends Migration
         'role_has_permissions', 'roles', 'salaries', 'services', 'sessions', 'supports',
         'team_managements', 'team_user', 'user_activity_logs', 'user_meta',
         'user_meta_deduction', 'user_meta_passportdetails', 'user_service_assignments',
-        'users', 'visa_service_country', 'visa_service_type_entries',
+        'users', 'visa_service_country', 
         'visa_service_type_faqs', 'visa_service_type_notes', 'visa_services',
         'visa_subtypes', 'visa_types','visabookings'
     ];

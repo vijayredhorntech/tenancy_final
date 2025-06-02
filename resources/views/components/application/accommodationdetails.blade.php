@@ -1,10 +1,12 @@
 <form class="visaajax-form w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4" method="post">
                                       
-              @php      
-         
-              $accommodation_details = $bookingData->visarequireddocument->accommodation_details ? json_decode($bookingData->visarequireddocument->accommodation_details) : null;
-             
-              @endphp
+                        @php
+                            $accommodation_details = null;
+                            if ($bookingData->visarequireddocument && $bookingData->visarequireddocument->accommodation_details) {
+                                $accommodation_details = json_decode($bookingData->visarequireddocument->accommodation_details);
+                            }
+                        @endphp
+
                                  @if(in_array('Accommodation Type', $permission))
                                 <div class="relative mb-4">
                                 <label for="accommodation_type" class="font-semibold text-ternary/90 text-sm">Accommodation Type</label>

@@ -10,7 +10,7 @@
            
                    
             @endphp
-                     <!-- email address -->
+                        <!-- email address -->
                                     @if(in_array('Facebook', $permission))
                                         <div class="w-full relative group flex flex-col gap-1">
                                             <label for="facebook" class="font-semibold text-ternary/90 text-sm">Facebook *</label>

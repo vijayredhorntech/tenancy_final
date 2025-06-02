@@ -9,7 +9,7 @@
 
            {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl"> Flight Booking </span>
+                <span class="font-semibold text-ternary text-xl"> Cancel Invoice Listing </span>
             </div>
              {{--        === heading section code ends here===--}}
 
@@ -112,46 +112,30 @@
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>            
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">  Payable Amount</td>
-                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Paid</td>     
-                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Type</td>  
-                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Transaction Number</td>           
-                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Pay Date</td>
-                        <!-- <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td> -->
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md"> Amount</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                     </tr>
 
                     
-                    @forelse($booking->allpaydetails as $payment)
-                      
+                    @forelse($invoices as $invoice)
 
                                 <tr>
                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>                         
                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                   {{$booking['invoice_number']}}  </td> 
-                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->service_name['name']}}</td>
-                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$booking['amount']}}</td>
-                                    <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$payment['paying_amount']}}</td>
-
-                                        <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                        {{ $payment->payment_type ?? 'N/A' }}
-                                        </td>
-
-                                        
-
-                                        <td class="border-[1px] border-secondary/50 px-4 py-1 text-sm font-medium">
-                                        {{ $payment->transaction_number ?? 'N/A' }}
-                                            @if($payment->receipt)
-                                           <br> <a href="{{ asset('storage/' . $payment->receipt) }}" target="_blank">
-                                               View Attachment
-                                            </a>  
-                                            @endif
-                                         </td>
-
-                                        <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                        {{ $payment->payment_date ?? 'N/A' }}
-                                        </td>
-                                  
-                                </tr>
+                                   {{$invoice['invoice_number']}}  </td> 
+                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->service_name['name']}}</td>
+                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$invoice['amount']}}</td>
+                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                        <div class="flex gap-2 items-center">
+                                                <a href="{{route('cancelinvoice.edit',['id' => $invoice->id])}}" title="Edit">
+                                                    <div
+                                                        class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
+                                                        <i class="fa fa-pen"></i>
+                                                    </div>
+                                                </a>
+                                        </div>
+                                    </td>
+                             </tr>
 
 
                             @empty

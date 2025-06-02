@@ -45,7 +45,7 @@
 
             {{-- Step 1: Personal Information --}}
    
-            <div class="form-step active  hidden" id="form-step1" data-step="1">
+            <div class="form-step  active hidden" id="form-step1" data-step="1">
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
    
                     <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">

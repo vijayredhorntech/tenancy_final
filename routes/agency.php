@@ -24,6 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\LogUserActivity;
 use App\Http\Controllers\SuperAdmin\HotelSettingsController;
+use App\Http\Controllers\SuperAdmin\SupplierController;
 
 
 /******Controler for agencies ***** */
@@ -335,10 +336,17 @@ Route::controller(VisaController::class)->group(function () {
 });
 
 
+ 
+
+
 
 Route::controller(InvoiceController::class)->group(function () {
     Route::get('{type}/invoice', 'hs_invoice')->name('invoice.index');
-    Route::get('invoice/view/{id}', 'hs_viewInvoice')->name('invoice.view');
+    Route::get('/invoice/view/{id}', 'hs_viewInvoice')->name('invoice.view');
+    Route::post('agency/amount/store', 'hs_payamountstore')->name('agencypay.invoice.ammount');   
+    Route::get('agency/cancel', 'hs_cancelInvoice')->name('agencypay.invoice.cancel');   
+
+   
 
 
     

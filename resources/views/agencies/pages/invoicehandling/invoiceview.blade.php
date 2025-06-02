@@ -174,33 +174,38 @@
                         </div>
                 </div>
 
-                <div class="w-full mt-4 ">
-                        <div id="ViewinvoiceDiv" class="tab">
-                            <x-common.invoice.viewinvoice :clientData="$invoice" />
-                        </div>
+        <div>
+                <div id="ViewinvoiceDiv" class="tab @if(session('show_cancel_tab') || $errors->any()) hidden @endif">
+                    @if($invoice->service==3)
+                        <x-common.invoice.visainvoice :clientData="$invoice" />
+                    @elseif($invoice->service==2)
+                        <x-common.invoice.flightinvoice :booking="$invoice" />
+                    @else
+                        <x-common.invoice.hotelinvoice :booking="$invoice" />
+                    @endif
+                </div>
 
-                        <div id="editinvoiceDiv" class="tab hidden">
-                            <x-common.invoice.editinvoice />
-                        </div>
+                <div id="editinvoiceDiv" class="tab @if(session('show_cancel_tab') || $errors->any()) hidden @endif">
+                    <x-common.invoice.editinvoice :booking="$invoice"/>
+                </div>
 
-                        <div id="paidinvoiceDiv" class="tab hidden">
-                            <x-common.invoice.paidinvoice />
-                        </div>
+                <div id="paidinvoiceDiv" class="tab @if(session('show_cancel_tab') || $errors->any()) hidden @endif">
+                    <x-common.invoice.paidinvoice :booking="$invoice"/>
+                </div>
 
-                        <div id="cancelInvoiceDiv" class="tab hidden">
-                            <x-common.invoice.cancelinvoice />
-                        </div>
+                <div id="cancelInvoiceDiv" class="tab @if(session('show_cancel_tab') || $errors->any()) @else hidden @endif">
+                    <x-common.invoice.cancelinvoice :booking="$invoice"/>
+                </div>
 
-                   
-                        <div id="sendEmailDiv" class="tab hidden">
-                            <x-common.invoice.sendemail />
-                        </div>
+                <div id="sendEmailDiv" class="tab @if(session('show_cancel_tab') || $errors->any()) hidden @endif">
+                    <x-common.invoice.sendemail :clientData="$invoice"/>
+                </div>
 
-                        
-                        <div id="invoicePaySummaryDiv" class="tab hidden">
-                            <x-common.invoice.invoicepaysummary  />
-                        </div>
-
+                <div id="invoicePaySummaryDiv" class="tab @if(session('show_cancel_tab') || $errors->any()) hidden @endif">
+                    <x-common.invoice.invoicepaysummary :booking="$invoice"/>
+                </div>
+        </div> 
+    
 
              </div>
    

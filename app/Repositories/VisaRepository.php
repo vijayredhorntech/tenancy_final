@@ -1177,27 +1177,36 @@ public function getBookingByid($id, $type, $request)
             $visa = new VisaRelatedDocument();
             $visa->bookingid = $data['bookingid'];
         }
-        if($data['step']=="visahistory"){
+        if(($data['step']?? null)=="visahistory"){
+         
             $travelHistory = [
                 'previous_visas_held' => $data['previous_visas_held'] ?? null,
                 'visarejections' => $data['visarejections'] ?? null,
                 'overstays' => $data['overstays'] ?? null,
                 'countries_visited_last_10_years' => $data['countries_visited_last_10_years'] ?? null,
                 'has_previous_uktravel' => $data['has_previous_uktravel'] ?? null,
+                'uk_travel_details' => $data['uk_travel_details'] ?? null,
                 'previous_usa_travel' => $data['previous_usa_travel'] ?? null,
+                'usa_travel_details' => $data['usa_travel_details'] ?? null,
                 'previousschengentravel' => $data['previousschengentravel'] ?? null,
+                'previousschengentravel_details' => $data['previousschengentravel_details'] ?? null,
                 'previouschinatravel' => $data['previouschinatravel'] ?? null,
+                'china_travel_details' => $data['china_travel_details'] ?? null,
                 'previousrussiatravel' => $data['previousrussiatravel'] ?? null,
+                'russia_travel_details' => $data['russia_travel_details'] ?? null,
                 'previoustndiatravel' => $data['previoustndiatravel'] ?? null,
+                'india_travel_details' => $data['india_travel_details'] ?? null,
                 'criminalhistory' => $data['criminalhistory'] ?? null,
+                'criminal_history' => $data['criminal_history'] ?? null,
                 'deniedentryanywhere' => $data['deniedentryanywhere'] ?? null,
+                'denied_entry_anywhere' => $data['denied_entry_anywhere'] ?? null,
                 'securitybackgroundquestions' => $data['securitybackgroundquestions'] ?? null,
             ];
     
             $visa->visa_history_background = json_encode($travelHistory); 
         }
 
-        if($data['step']=='medical'){
+        if(($data['step']?? null)=='medical'){
             $medicalData = [
                 'patient_name' => $data['patient_name'] ?? null,
                 'medical_diagnosis' => $data['medical_diagnosis'] ?? null,
@@ -1213,7 +1222,7 @@ public function getBookingByid($id, $type, $request)
           
         }
 
-        if ($data['step'] == 'studentvisaspecifics') {
+        if (($data['step']?? null) == 'studentvisaspecifics') {
             $studentVisaData = [
                 'course_name' => $data['course_name'] ?? null,
                 'institution_name' => $data['institution_name'] ?? null,
@@ -1230,7 +1239,7 @@ public function getBookingByid($id, $type, $request)
         }
    
 
-        if ($data['step'] == 'accommondation') {
+        if (($data['step']?? null) == 'accommondation') {
             $accommodationData = [
                 'accommodation_type' => $data['accommodation_type'] ?? null,
                 'hotel_name' => $data['hotel_name'] ?? null,
@@ -1244,7 +1253,7 @@ public function getBookingByid($id, $type, $request)
             $visa->accommodation_details = json_encode($accommodationData);
         }
 
-        if ($data['step'] == 'hostsponsor') {
+        if (($data['step']?? null) == 'hostsponsor') {
             $hostSponsorData = [
                 'host_Full_name' => $data['host_Full_name'] ?? null,
                 'company_name' => $data['company_name'] ?? null,
@@ -1259,7 +1268,7 @@ public function getBookingByid($id, $type, $request)
             $visa->host_sponsor_inviter_details = json_encode($hostSponsorData);
         }
     
-        if ($data['step'] == 'financial') {
+        if (($data['step']?? null) == 'financial') {
     
             $financialData = [
                 'funding_source' => $data['funding_source'] ?? null,

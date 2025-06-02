@@ -1,10 +1,12 @@
 <form class="visaajax-form w-full grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4" method="post">
                                       
-@php      
+            @php
+                $funding = null;
+                if ($bookingData->visarequireddocument && $bookingData->visarequireddocument->financial_support_details) {
+                    $funding = json_decode($bookingData->visarequireddocument->financial_support_details);
+                }
+            @endphp
 
-$funding = $bookingData->visarequireddocument->financial_support_details ? json_decode($bookingData->visarequireddocument->financial_support_details) : null;
-
-@endphp
                                 @if(in_array('Funding Source', $permission))
                                 <div class="relative mb-4">
                                 <label for="funding_source" class="font-semibold text-ternary/90 text-sm">Funding Source</label>

@@ -70,7 +70,7 @@
                                 <label for="application_status" class="block text-sm font-medium text-gray-700">
                                    Service 
                                 </label>
-                                <select name="application_status" id="application_status" 
+                                <select name="serviceid" id="serviceid" 
                                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
                                     <option value="">All</option>
                                     @foreach($services as $service)
@@ -130,14 +130,17 @@
                     </tr>
 
                     @forelse($invoices as $invoice)
+      
                         <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100/40' : '' }} hover:bg-secondary/10 cursor-pointer transition ease-in duration-200">
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $loop->iteration }}</td>
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">{{ $invoice->invoice_number ?? 'N/A' }}</td>
 
                             <!-- Client Details (Assuming relation is client or user) -->
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                {{ $invoice->client->name ?? 'N/A' }}<br>
-                                <span class="text-xs text-gray-500">{{ $invoice->client->email ?? '' }}</span>
+                                {{ $invoice->visaBooking->clientDetailsFromUserDB->client_name ?? 'N/A' }}<br>
+                                <span class="text-xs text-gray-500">{{ $invoice->visaBooking->clientDetailsFromUserDB->email ?? '' }}</span> <br>
+                                <span class="text-xs text-gray-500">{{ $invoice->visaBooking->clientDetailsFromUserDB->phone_number ?? '' }}</span>
+                                
                             </td>
 
                             <!-- Service Type -->
@@ -157,7 +160,7 @@
 
                             <!-- Actions (e.g., View, Download, Edit) -->
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                 <a href="{{route('invoice.view',['id'=>$invoice->id])}}" title="View">
+                                 <a href="{{route('invoice.view',['id'=>$invoice->invoice_number])}}" title="View">
                                         <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-eye"></i>
                                         </div>
