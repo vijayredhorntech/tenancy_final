@@ -19,6 +19,7 @@
             <div class="bg-gradient-to-r from-primary to-secondary p-6">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
                     <div>
+                    
                         <h1 class="text-2xl md:text-3xl font-bold text-white">Visa Application Form</h1>
                         <div class="flex items-center mt-2 text-white/90">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -113,9 +114,8 @@
                             <div class="w-full relative group flex flex-col gap-1">
                                         <label for="date_of_birth" class="font-semibold text-ternary/90 text-sm">Date of Birth *</label>
                                         <div class="w-full relative">
-                                            <input type="date" name="date_of_birth" max="9999-12-31" id="date_of_birth" requiresdd
-                                                value="{{ old('date_of_birth', $bookingData->clint->clientinfo->date_of_birth ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            <input type="date" name="date_of_birth" id="date_of_birth" requiresdd
+                                                 value="{{ old('date_of_birth', $bookingData->clint->date_of_birth ?? '') }}"class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
                                                 @error('date_of_birth') border-red-500 @enderror">
                                             <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                         </div>
@@ -298,11 +298,12 @@
                                     <label for="identification_marks" class="font-semibold text-ternary/90 text-sm">Languages Spoken</label>
                                     <div class="w-full relative">
                                         <input type="text" name="languages_spoken" id="languages_spoken"
-                                            value="{{ old('identification_marks', $bookingData->clint->clientinfo->language ?? '') }}"
+                                              value="{{ old('languages_spoken', $bookingData->clint->clientinfo->language_spoken ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                         <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>
-                                </div>
+                                  </div>
+  
                             @endif
                     </div>
                 </div>
@@ -452,99 +453,7 @@
                 </div>
              @endif
 
-     {{--       <!-- Address Section -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="address">
-                <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
-                        <i class="fas fa-home text-primary mr-2"></i>
-                        Address Information
-                    </h2>
-                    <button type="button" class="text-primary hover:text-primary-dark text-sm font-medium section-edit-btn" data-section="address">
-                        <i class="fas fa-edit mr-1"></i> Edit
-                    </button>
-                </div>
-                <div class="p-6">
-                    <div class="space-y-6">
-                        <!-- Present Address -->
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label class="font-semibold text-ternary/90 text-sm">Present Address <span class="text-danger">*</span></label>
-                            <div class="w-full relative">
-                                    <textarea rows="3" name="permanent_address" id="permanent_address" required
-                                              class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">{{ old('permanent_address', $bookingData->clint->permanent_address ?? '') }}</textarea>
-                                <i class="fas fa-map-pin absolute right-3 top-4 text-gray-400"></i>
-                            </div>
-                        </div>
-
-                        <!-- Permanent Address -->
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label class="font-semibold text-ternary/90 text-sm">Permanent Address <span class="text-danger">*</span></label>
-                            <div class="w-full relative">
-                                <textarea rows="3" class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">{{ old('permanent_address', $bookingData->clint->permanent_address ?? '') }}</textarea>
-                                <i class="fas fa-map-marked-alt absolute right-3 top-4 text-gray-400"></i>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Citizenship/National ID No -->
-                            <div class="w-full relative group flex flex-col gap-1">
-                                <label class="font-semibold text-ternary/90 text-sm">Citizenship/National ID No</label>
-                                <div class="w-full relative">
-                                    <input type="text" class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                    <i class="fas fa-id-card absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                </div>
-                            </div>
-
-                            <!-- Educational Qualification -->
-                            <div class="w-full relative group flex flex-col gap-1">
-                                <label class="font-semibold text-ternary/90 text-sm">Educational Qualification</label>
-                                <div class="w-full relative">
-                                    <input type="text"  name="educational_qualification" id="educational_qualification"
-                                              value="{{ old('educational_qualification', $bookingData->clint->clientinfo->educational_qualification ?? '') }}"
-                                    class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                    <i class="fas fa-graduation-cap absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                </div>
-                            </div>
-
-                            <!-- Visible identification marks -->
-                            <div class="w-full relative group flex flex-col gap-1">
-                                <label class="font-semibold text-ternary/90 text-sm">Visible identification marks</label>
-                                <div class="w-full relative">
-                                    <input type="text" name="identification_marks" id="identification_marks"
-                                              value="{{ old('identification_marks', $bookingData->clint->clientinfo->identification_marks ?? '') }}"
-                                           
-                                    class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                    <i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                </div>
-                            </div>
-
-                            <!-- Current Nationality -->
-                            <div class="w-full relative group flex flex-col gap-1">
-                                <label class="font-semibold text-ternary/90 text-sm">Current Nationality <span class="text-danger">*</span></label>
-                                <div class="w-full relative">
-                                    <input type="text" name="nationality" id="nationality" requiresdd
-                                    value="{{ old('nationality', $bookingData->clint->clientinfo->nationality ?? '') }}"
-                                    required class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                    <i class="fas fa-passport absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                </div>
-                            </div>
-
-                            <!-- Nationality by Birth/Naturalization -->
-                            <div class="w-full relative group flex flex-col gap-1">
-                                <label class="font-semibold text-ternary/90 text-sm">Nationality by Birth/Naturalization</label>
-                                <div class="w-full relative">
-                                    <input type="text" name="nationality" id="nationality" requiresdd
-                                              value="{{ old('nationality', $bookingData->clint->clientinfo->nationality ?? '') }}"
-                                     class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                    <i class="fas fa-flag absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div>
-            </div> --}} 
-
+     
          @if(in_array('passport_information', $alreadySelect))
             <!-- Passport Details Section -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="passport">
@@ -965,7 +874,7 @@
                                         <label for="educational_qualification" class="font-semibold text-ternary/90 text-sm">Educational Qualification</label>
                                         <div class="w-full relative">
                                             <input type="text" name="educational_qualification" id="educational_qualification"
-                                                 value="{{ $eduEmployData->employment_monthly_income ?? '' }}"
+                                                 value="{{ $bookingData->clint->clientinfo->educational_qualification ?? '' }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                             <i class="fa fa-graduation-cap absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                          </div>
@@ -1022,70 +931,73 @@
                     @endphp
                     <div class="p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                          @if(in_array('Father’s Full Name', $permission))
-                                            <div>
-                                            <label for="father_name" class="font-semibold text-sm text-ternary/90">Father Name</label>
-                                            <input type="text" name="father_name" id="father_name" value="{{ old('father_name', $fatherdetails->name ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                            </div>
-                                            @endif
 
-                                            @if(in_array('Father Nationality', $permission))
-                                            <div>
-                                            <label for="father_nationality" class="font-semibold text-sm text-ternary/90">Nationality</label>
-                                            <input type="text" name="father_nationality" id="father_nationality" value="{{ old('father_nationality', $fatherdetails->nationality ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                            </div>
-                                            @endif
+                                    @if(in_array('Father’s Full Name', $permission))
+                                        <div>
+                                        <label for="father_name" class="font-semibold text-sm text-ternary/90">Father Name</label>
+                                        <input type="text" name="father_name" id="father_name" value="{{ old('father_name', $fatherdetails->name ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
 
-                                            @if(in_array('Father Place of Birth', $permission))
-                                            <div>
-                                            <label for="father_birth_place" class="font-semibold text-sm text-ternary/90">Place of Birth</label>
-                                            <input type="text" name="father_birth_place" id="father_birth_place" value="{{ old('father_birth_place', $fatherdetails->birth_place ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                            </div>
-                                            @endif
+                                        @if(in_array('Father Nationality', $permission))
+                                        <div>
+                                        <label for="father_nationality" class="font-semibold text-sm text-ternary/90">Nationality</label>
+                                        <input type="text" name="father_nationality" id="father_nationality" value="{{ old('father_nationality', $fatherdetails->nationality ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
 
-                                            @if(in_array('Father Previous Nationality', $permission))
-                                            <div>
-                                            <label for="father_previous_nationality" class="font-semibold text-sm text-ternary/90">Previous Nationality</label>
-                                            <input type="text" name="father_previous_nationality" id="father_previous_nationality" value="{{ old('father_previous_nationality', $fatherdetails->previous_nationality ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                            </div>
-                                            @endif
+                                        @if(in_array('Father Place of Birth', $permission))
+                                        <div>
+                                        <label for="father_birth_place" class="font-semibold text-sm text-ternary/90">Place of Birth</label>
+                                        <input type="text" name="father_birth_place" id="father_birth_place" value="{{ old('father_birth_place', $fatherdetails->birth_place ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
 
-                                            @if(in_array('Father Country of birth', $permission))
-                                            <div>
-                                            <label for="father_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
-                                            <input type="text" name="father_country_of_birth" id="father_country_of_birth" value="{{ old('father_country_of_birth', $fatherdetails->father_country_of_birth ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                            </div>
-                                            @endif
+                                        @if(in_array('Father Previous Nationality', $permission))
+                                        <div>
+                                        <label for="father_previous_nationality" class="font-semibold text-sm text-ternary/90">Previous Nationality</label>
+                                        <input type="text" name="father_previous_nationality" id="father_previous_nationality" value="{{ old('father_previous_nationality', $fatherdetails->previous_nationality ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
 
-                                            @if(in_array('Father’s DOB', $permission))
-                                            <div>
-                                            <label for="father_dob" class="font-semibold text-sm text-ternary/90">Date of Birth</label>
-                                            <input type="date" name="father_dob" id="father_dob" max="9999-12-31" value="{{ old('father_dob', isset($fatherdetails->father_dob) ? \Carbon\Carbon::parse($fatherdetails->father_dob)->format('Y-m-d') : '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                            </div>
-                                            @endif
+                                        @if(in_array('Father Country of birth', $permission))
+                                        <div>
+                                        <label for="father_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
+                                        <input type="text" name="father_country_of_birth" id="father_country_of_birth" value="{{ old('father_country_of_birth', $fatherdetails->country_of_birth ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
 
-                                            @if(in_array('Father Employment', $permission))
+                                        @if(in_array('Father’s DOB', $permission))
                                             <div>
-                                            <label for="father_employment" class="font-semibold text-sm text-ternary/90">Employment Status</label>
-                                            <input type="text" name="father_employment" id="father_employment" value="{{ old('father_employment', $fatherdetails->employementstatus ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                <label for="father_dob" class="font-semibold text-sm text-ternary/90">Date of Birth</label>
+                                                <input type="date" name="father_dob" id="father_dob"
+                                                    value="{{ old('father_dob', isset($fatherdetails->dob) ? \Carbon\Carbon::parse($fatherdetails->dob)->format('Y-m-d') : '') }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                             </div>
-                                            @endif
+                                        @endif
 
-                                            @if(in_array('Father Employment Address', $permission))
-                                            <div>
-                                            <label for="father_address" class="font-semibold text-sm text-ternary/90">Employment Address</label>
-                                            <input type="text" name="father_address" id="father_address" value="{{ old('father_address', $fatherdetails->address ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                            </div>
-                                            @endif
 
+                                        @if(in_array('Father Employment', $permission))
+                                        <div>
+                                        <label for="father_employment" class="font-semibold text-sm text-ternary/90">Employment Status</label>
+                                        <input type="text" name="father_employment" id="father_employment" value="{{ old('father_employment', $fatherdetails->employment ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
+                                        @if(in_array('Father Employment Address', $permission))
+                                        <div>
+                                        <label for="father_address" class="font-semibold text-sm text-ternary/90">Employment Address</label>
+                                        <input type="text" name="father_address" id="father_address" value="{{ old('father_address', $fatherdetails->address ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+                                     
                         
 
                             <!-- Employer Phone Number -->
@@ -1112,69 +1024,69 @@
                     @endphp
                     <div class="p-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    @if(in_array('Mother’s Full Name', $permission))
+                                     @if(in_array('Mother’s Full Name', $permission))
                                         <div>
-                                            <label for="mother_name" class="font-semibold text-sm text-ternary/90">Mother Name</label>
-                                            <input type="text" name="mother_name" id="mother_name" value="{{ old('mother_name', $motherdetails->name ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        <label for="mother_name" class="font-semibold text-sm text-ternary/90">Mother Name</label>
+                                        <input type="text" name="mother_name" id="mother_name" value="{{ old('mother_name', $motherdetails->name ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
+                                        @if(in_array('Mother Nationality', $permission))
+                                        <div>
+                                        <label for="mother_nationality" class="font-semibold text-sm text-ternary/90">Nationality</label>
+                                        <input type="text" name="mother_nationality" id="mother_nationality" value="{{ old('mother_nationality', $motherdetails->nationality ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
+                                        @if(in_array('Mother Place of Birth', $permission))
+                                        <div>
+                                        <label for="mother_birth_place" class="font-semibold text-sm text-ternary/90">Place of Birth</label>
+                                        <input type="text" name="mother_birth_place" id="mother_birth_place" value="{{ old('mother_birth_place', $motherdetails->birth_place ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
+                                        @if(in_array('Mother Previous Nationality', $permission))
+                                        <div>
+                                        <label for="mother_previous_nationality" class="font-semibold text-sm text-ternary/90">Previous Nationality</label>
+                                        <input type="text" name="mother_previous_nationality" id="mother_previous_nationality" value="{{ old('mother_previous_nationality', $motherdetails->previous_nationality ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
+                                        @if(in_array('Mother Country of birth', $permission))
+                                        <div>
+                                        <label for="mother_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
+                                        <input type="text" name="mother_country_of_birth" id="mother_country_of_birth" value="{{ old('mother_country_of_birth', $motherdetails->country_of_birth ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
+                                        @if(in_array('Mother’s DOB', $permission))
+                                        <div>
+                                        <label for="mother_dob" class="font-semibold text-sm text-ternary/90">Date of Birth</label>
+                                        <input type="date" name="mother_dob" id="mother_dob" value="{{ old('mother_dob', isset($motherdetails->dob) ? \Carbon\Carbon::parse($motherdetails->dob)->format('Y-m-d') : '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
+                                        @if(in_array('Mother Employment', $permission))
+                                        <div>
+                                        <label for="mother_employment" class="font-semibold text-sm text-ternary/90">Employment Status</label>
+                                        <input type="text" name="mother_employment" id="mother_employment" value="{{ old('mother_employment', $motherdetails->employment ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
+                                        @if(in_array('Employment Address', $permission))
+                                        <div>
+                                        <label for="mother_address" class="font-semibold text-sm text-ternary/90">Employment Address</label>
+                                        <input type="text" name="mother_address" id="mother_address" value="{{ old('mother_address', $motherdetails->address ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                     @endif
-
-                                    @if(in_array('Mother Nationality', $permission))
-                                        <div>
-                                            <label for="mother_nationality" class="font-semibold text-sm text-ternary/90">Nationality</label>
-                                            <input type="text" name="mother_nationality" id="mother_nationality" value="{{ old('mother_nationality', $motherdetails->nationality ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                        </div>
-                                    @endif
-
-                                    @if(in_array('Mother Place of Birth', $permission))
-                                        <div>
-                                            <label for="mother_birth_place" class="font-semibold text-sm text-ternary/90">Place of Birth</label>
-                                            <input type="text" name="mother_birth_place" id="mother_birth_place" value="{{ old('mother_birth_place', $motherdetails->birth_place ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                        </div>
-                                    @endif
-
-                                    @if(in_array('Mother Previous Nationality', $permission))
-                                        <div>
-                                            <label for="mother_previous_nationality" class="font-semibold text-sm text-ternary/90">Previous Nationality</label>
-                                            <input type="text" name="mother_previous_nationality" id="mother_previous_nationality" value="{{ old('mother_previous_nationality', $motherdetails->previous_nationality ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                        </div>
-                                    @endif
-
-                                    @if(in_array('Mother Country of birth', $permission))
-                                        <div>
-                                            <label for="mother_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
-                                            <input type="text" name="mother_country_of_birth" id="mother_country_of_birth" value="{{ old('mother_country_of_birth', $motherdetails->mother_country_of_birth ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                        </div>
-                                    @endif
-
-                                    @if(in_array('Mother’s DOB', $permission))
-                                        <div>
-                                            <label for="mother_dob" class="font-semibold text-sm text-ternary/90">Date of Birth</label>
-                                            <input type="date" name="mother_dob" id="mother_dob" max="9999-12-31" value="{{ old('mother_dob', isset($motherdetails->father_dob) ? \Carbon\Carbon::parse($motherdetails->father_dob)->format('Y-m-d') : '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                        </div>
-                                    @endif
-
-                                    @if(in_array('Mother Employment', $permission))
-                                        <div>
-                                            <label for="mother_employment" class="font-semibold text-sm text-ternary/90">Employment Status</label>
-                                            <input type="text" name="mother_employment" id="mother_employment" value="{{ old('mother_employment', $motherdetails->employementstatus ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                        </div>
-                                    @endif
-
-                                    @if(in_array('Employment Address', $permission))
-                                        <div>
-                                            <label for="mother_address" class="font-semibold text-sm text-ternary/90">Employment Address</label>
-                                            <input type="text" name="mother_address" id="mother_address" value="{{ old('mother_address', $motherdetails->address ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                        </div>
-                                @endif
                             <!-- Employer Phone Number -->
                         </div>
                     </div>
@@ -1198,65 +1110,66 @@
                 @endphp
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        @if(in_array('Spouse’s Full Name', $permission))
-                        <div class="w-full">
-                        <label for="spouse_name" class="font-semibold text-ternary/90 text-sm">Husband / Wife Name</label>
-                        <input type="text" name="spouse_name" id="spouse_name"
-                            value="{{ old('spouse_name', $spouse->name ?? '') }}"
-                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                        </div>
-                        @endif
+                                               @if(in_array('Spouse’s Full Name', $permission))
+                                                    <div class="w-full">
+                                                    <label for="spouse_name" class="font-semibold text-ternary/90 text-sm">Husband / Wife Name</label>
+                                                    <input type="text" name="spouse_name" id="spouse_name"
+                                                        value="{{ old('spouse_name', $spouse->name ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
 
-                        @if(in_array('Spouse’s Place of Birth', $permission))
-                        <div class="w-full">
-                        <label for="spouse_birth_place" class="font-semibold text-ternary/90 text-sm">Place of Birth</label>
-                        <input type="text" name="spouse_birth_place" id="spouse_birth_place"
-                            value="{{ old('spouse_birth_place', $spouse->birth_place ?? '') }}"
-                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                        </div>
-                        @endif
+                                                    @if(in_array('Spouse’s Place of Birth', $permission))
+                                                    <div class="w-full">
+                                                    <label for="spouse_birth_place" class="font-semibold text-ternary/90 text-sm">Place of Birth</label>
+                                                    <input type="text" name="spouse_birth_place" id="spouse_birth_place"
+                                                        value="{{ old('spouse_birth_place', $spouse->birth_place ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
 
-                        @if(in_array('Spouse’s Nationality', $permission))
-                        <div class="w-full">
-                        <label for="spouse_nationality" class="font-semibold text-ternary/90 text-sm">Nationality</label>
-                        <input type="text" name="spouse_nationality" id="spouse_nationality"
-                            value="{{ old('spouse_nationality', $spouse->nationality ?? '') }}"
-                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                        </div>
-                        @endif
-                        @if(in_array('Spouse’s Previous Nationality', $permission))
-                        <div class="w-full">
-                        <label for="spouse_previous_nationality" class="font-semibold text-ternary/90 text-sm">Previous Nationality</label>
-                        <input type="text" name="spouse_previous_nationality" id="spouse_previous_nationality"
-                            value="{{ old('spouse_previous_nationality', $spouse->previous_nationality ?? '') }}"
-                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                        </div>
-                        @endif
-                        @if(in_array('Spouse’s DOB', $permission))
-                        <div class="w-full">
-                        <label for="spouse_dob" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
-                        <input type="date" name="spouse_dob" max="9999-12-31" id="spouse_dob"
-                        value="{{ old('spouse_dob', isset($spouse->spouse_dob) ? \Carbon\Carbon::parse($spouse->spouse_dob)->format('Y-m-d') : '') }}"
-                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                        </div>
-                        @endif
-                        @if(in_array('Spouse’s Employment Status', $permission))
-                        <div class="w-full">
-                        <label for="spouse_employment" class="font-semibold text-ternary/90 text-sm">Employment Status</label>
-                        <input type="text" name="spouse_employment" id="spouse_employment"
-                            value="{{ old('spouse_employment', $spouse->employementstatus ?? '') }}"
-                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                        </div>
-                        @endif
-                        @if(in_array('Spouse’s Address', $permission))
-                        <div class="w-full">
-                        <label for="spouse_address" class="font-semibold text-ternary/90 text-sm">Address</label>
-                        <input type="text" name="spouse_address" id="spouse_address"
-                            value="{{ old('spouse_address', $spouse->address ?? '') }}"
-                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                        </div>
-                        @endif
-                        <!-- Employer Phone Number -->
+                                                    @if(in_array('Spouse’s Nationality', $permission))
+                                                    <div class="w-full">
+                                                    <label for="spouse_nationality" class="font-semibold text-ternary/90 text-sm">Nationality</label>
+                                                    <input type="text" name="spouse_nationality" id="spouse_nationality"
+                                                        value="{{ old('spouse_nationality', $spouse->nationality ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
+                                                    @if(in_array('Spouse’s Previous Nationality', $permission))
+                                                    <div class="w-full">
+                                                    <label for="spouse_previous_nationality" class="font-semibold text-ternary/90 text-sm">Previous Nationality</label>
+                                                    <input type="text" name="spouse_previous_nationality" id="spouse_previous_nationality"
+                                                        value="{{ old('spouse_previous_nationality', $spouse->previous_nationality ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
+                                                    @if(in_array('Spouse’s DOB', $permission))
+                                                    <div class="w-full">
+                                                    <label for="spouse_dob" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
+                                                    <input type="date" name="spouse_dob" id="spouse_dob"
+                                                    value="{{ old('spouse_dob', isset($spouse->dob) ? \Carbon\Carbon::parse($spouse->dob)->format('Y-m-d') : '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
+                                                    @if(in_array('Spouse’s Employment Status', $permission))
+                                                    <div class="w-full">
+                                                    <label for="spouse_employment" class="font-semibold text-ternary/90 text-sm">Employment Status</label>
+                                                    <input type="text" name="spouse_employment" id="spouse_employment"
+                                                        value="{{ old('spouse_employment', $spouse->employment ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
+                                                    @if(in_array('Spouse’s Address', $permission))
+                                                    <div class="w-full">
+                                                    <label for="spouse_address" class="font-semibold text-ternary/90 text-sm">Address</label>
+                                                    <input type="text" name="spouse_address" id="spouse_address"
+                                                        value="{{ old('spouse_address', $spouse->address ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
+                    
+                    <!-- Employer Phone Number -->
                     </div>
                 </div>
             </div>
@@ -1805,10 +1718,42 @@
                                         </div>
 
                                         <div class="mt-2" id="india-travel-details" style="{{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? '' : 'display:none;' }}">
-                                                    <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
-                                                    <textarea name="india_travel_details" id="india_travel_details"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previous_visas_held', $visahistory->india_travel_details ?? '') }}</textarea>
-                                        </div>
+                                        <div class="mt-2" id="india-travel-details" class="flex flex-wrap gap-4 mt-2" style="{{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                                <label class="block text-sm font-medium text-gray-700">Address where You stayed in
+                                                India:</label>
+                                                <textarea name="indiaaddressstay" id="addressstay"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('indiaaddressstay', $visahistory->indiaaddressstay ?? '') }}</textarea>
+                                    
+
+
+                                                <label class="block text-sm font-medium text-gray-700">Cities in India Visited:</label>
+                                                <input type="text" name="indiacityvisit" id="cityvisitindia" value="{{ old('indiacityvisit', $visahistory->indiacityvisit ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                  
+                                                <label class="block text-sm font-medium text-gray-700">Type of Visa:</label>
+                                                <input type="text" name="indiatypeofvisa" id="typeofvisa" value="{{ old('indiatypeofvisa', $visahistory->indiatypeofvisa ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                      
+                                         
+
+
+                                                <label class="block text-sm font-medium text-gray-700">Visa Number:</label>
+                                                <input type="text" name="indiavisanumber" id="visanumber" value="{{ old('indiavisanumber', $visahistory->indiavisanumber ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                     
+
+                                                <label class="block text-sm font-medium text-gray-700">Visa Issued Place:</label>
+                                                <input type="text" name="indiavisaissueplace" id="visaissueplace" value="{{ old('indiavisaissueplace', $visahistory->indiavisaissueplace ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                          
+                                    
+
+                                                <label class="block text-sm font-medium text-gray-700">Date of Issue:</label>
+                                                <input type="date" name="indiadateofissue" id="dateofissue" value="{{ old('indiadateofissue', $visahistory->indiadateofissue ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                          
+                                              
+                                    </div>
 
                             @endif
                             @if(in_array('Criminal History', $permission))                                 
@@ -2556,6 +2501,33 @@ $(document).ready(function() {
         return true;
     });
 });
+</script>
+<script>
+    function toggleTravelDetails(radioName, detailsId) {
+        const selected = $(`input[name="${radioName}"]:checked`).val();
+        $(`#${detailsId}`)[selected === 'yes' ? 'slideDown' : 'slideUp']();
+    }
+
+    
+    $(document).ready(function () {
+        // Define mapping of radio names to detail section IDs
+        const travelMappings = [
+            { name: 'has_previous_uktravel', id: 'uk-travel-details' },
+            { name: 'previousschengentravel', id: 'previousschengentravel_details' },
+            { name: 'previous_usa_travel', id: 'usa-travel-details' },
+            { name: 'previouschinatravel', id: 'china-travel-details' },
+            { name: 'previousrussiatravel', id: 'russia-travel-details' },
+            { name: 'previoustndiatravel', id: 'india-travel-details' },
+            { name: 'criminalhistory', id: 'criminal-history' },
+            { name: 'deniedentryanywhere', id: 'denied-entery-details' }
+        ];
+
+        // Initialize and bind change event
+        travelMappings.forEach(({ name, id }) => {
+            toggleTravelDetails(name, id);
+            $(`input[name="${name}"]`).on('change', () => toggleTravelDetails(name, id));
+        });
+    });
 </script>
 
 

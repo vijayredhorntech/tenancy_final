@@ -179,12 +179,44 @@
                                                 </div>
                                     </div>
 
-                                    <div class="mt-2" id="india-travel-details" style="{{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? '' : 'display:none;' }}">
-                                                <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
-                                                <textarea name="india_travel_details" id="india_travel_details"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previous_visas_held', $visahistory->india_travel_details ?? '') }}</textarea>
-                                    </div>
+                                    <div class="mt-2" id="india-travel-details" class="flex flex-wrap gap-4 mt-2" style="{{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                                <label class="block text-sm font-medium text-gray-700">Address where You stayed in
+                                                India:</label>
+                                                <textarea name="indiaaddressstay" id="addressstay"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('indiaaddressstay', $visahistory->indiaaddressstay ?? '') }}</textarea>
+                                    
 
+
+                                                <label class="block text-sm font-medium text-gray-700">Cities in India Visited:</label>
+                                                <input type="text" name="indiacityvisit" id="cityvisitindia" value="{{ old('indiacityvisit', $visahistory->indiacityvisit ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                  
+                                                <label class="block text-sm font-medium text-gray-700">Type of Visa:</label>
+                                                <input type="text" name="indiatypeofvisa" id="typeofvisa" value="{{ old('indiatypeofvisa', $visahistory->indiatypeofvisa ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                      
+                                         
+
+
+                                                <label class="block text-sm font-medium text-gray-700">Visa Number:</label>
+                                                <input type="text" name="indiavisanumber" id="visanumber" value="{{ old('indiavisanumber', $visahistory->indiavisanumber ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                     
+
+                                                <label class="block text-sm font-medium text-gray-700">Visa Issued Place:</label>
+                                                <input type="text" name="indiavisaissueplace" id="visaissueplace" value="{{ old('indiavisaissueplace', $visahistory->indiavisaissueplace ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                          
+                                    
+
+                                                <label class="block text-sm font-medium text-gray-700">Date of Issue:</label>
+                                                <input type="date" name="indiadateofissue" id="dateofissue" value="{{ old('indiadateofissue', $visahistory->indiadateofissue ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                          
+                                          
+                                            </div>
+
+                                    
                                 @endif
 
                                 @if(in_array('Criminal History', $permission))                                 
