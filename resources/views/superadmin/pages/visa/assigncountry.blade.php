@@ -14,6 +14,8 @@
             <form action="{{ route('superadmin.assignclientfieldcountry') }}" method="POST">
                 @csrf
                 <input type="hidden" name="assigncoutnry" value="{{$visadetails->id}}">
+                <input type="hidden" name="countryid" value="{{$visadetails->destinationcountry->id}}">
+
 
                 <div class="rounded bg-white px-8 py-12 shadow-lg border-2 border-gray-400/50">
                     @php 
@@ -25,6 +27,7 @@
                     <div class="flex flex-col gap-6">
                         @foreach ($groupedFields as $group)
                    
+
                             <div class="flex flex-col gap-3 p-4 bg-gray-50 rounded-lg">
                                 <label class="flex items-center gap-3 cursor-pointer">
                                     <input 

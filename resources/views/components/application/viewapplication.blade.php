@@ -566,11 +566,15 @@
                                     @enderror
                                 </div>
                                 @endif
-          
-                            @if(in_array('Previous Passport Number', $permission))
                                 @php
-                                $other_passport_details = json_decode($bookingData->clint->clientinfo->other_passport_details);
-                               @endphp
+                                $other_passport_details = isset($bookingData->clint->clientinfo->other_passport_details)
+                                    ? json_decode($bookingData->clint->clientinfo->other_passport_details)
+                                    : null;
+                                    
+
+                            @endphp
+                            @if(in_array('Previous Passport Number', $permission))
+                          
                                 <div class="mb-4">
                                     <label class="font-semibold text-sm text-ternary/90">Any Other Valid Passport/Identity Certificate held</label>
                                     <div class="flex gap-4 mt-1">
@@ -2446,9 +2450,15 @@ I
     </div>
 </div>
 </body>
+@php
+    $other_passport_details = optional($bookingData->clint->clientinfo)->other_passport_details
+        ? json_decode($bookingData->clint->clientinfo->other_passport_details)
+        : null;
+@endphp
 <script>
                     document.addEventListener('DOMContentLoaded', function () {
-                        const hasOtherPassport = {{ $other_passport_details ? 'true' : 'false' }};
+                        // const hasOtherPassport = {{ $other_passport_details ? 'true' : 'false' }};
+                        const hasOtherPassport = {{ isset($other_passport_details) && $other_passport_details ? 'true' : 'false' }};
                         
                         if (hasOtherPassport) {
                             togglePassportidentity(true);

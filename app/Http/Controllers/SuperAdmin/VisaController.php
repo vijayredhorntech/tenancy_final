@@ -184,7 +184,10 @@ class VisaController extends Controller
     public function hsrequiredClientFiled($id)
     {
         $visadetails = VisaServiceType::with('destinationcountry', 'VisaServices')->where('id', $id)->first();
-        $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
+        // dd($visadetails);
+        // $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
+        $assign = ClientInfoForCountry::where('destination_id', $visadetails->destinationcountry->id)->first();
+
     
         // Fetch all VisaSection records and decode fields
         $sections = VisaSection::all();
@@ -212,7 +215,7 @@ class VisaController extends Controller
     
 
    public function hsrequiredClientFiledStore(Request $request){
-    //dd($request->all());
+  
     $validated = $request->validate([
         'section_name' => 'required|array',
         'section_name.*' =>'string', // each element should be string
@@ -225,15 +228,13 @@ class VisaController extends Controller
 
     $jsonVisaFields = json_encode($validated['visa_fields']);
     $visadetails=VisaServiceType::with('destinationcountry','VisaServices')->where('id',$request->assigncoutnry)->first();
-    $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
+    $assign = ClientInfoForCountry::where('destination_id', $request->countryid)->first();
 
         if ($assign) {
             // Update existing record
             $assign->visa_id = $visadetails->visa_id;
-            $assign->visa_id = $visadetails->visa_id;
             $assign->section_name = $section_name; // Assuming you want to store it as a JSON array
             $assign->name_of_field = $jsonVisaFields;
-            $assign->destination_id = $visadetails->destination;
             $assign->save();
         } else {
             // Create new record
