@@ -16,33 +16,33 @@
 
 {{--        === this is code for form section ===--}}
              <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 hidden">
-             <form action="{{ route('leavestore') }}" method="POST" enctype="multipart/form-data"> 
-             @csrf
-                     <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
+                <form action="{{ route('leavestore') }}" method="POST" enctype="multipart/form-data"> 
+                    @csrf
+                            <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
 
-                         {{--               === text type input field ===--}}
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <label for="name" class="font-semibold text-ternary/90 text-sm">Leave Name</label>
-                             <div class="w-full relative">
-                                 <input type="text" name="leave_type" id="leave_type" placeholder="Leave Type name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                 <i class="fa fa-leave absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                             </div>
-                         </div>
+                                {{--               === text type input field ===--}}
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="name" class="font-semibold text-ternary/90 text-sm">Leave Name</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="leave_type" id="leave_type" placeholder="Leave Type name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                        <i class="fa fa-leave absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
 
-                         {{--               === number type input field ===--}}
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <label for="name" class="font-semibold text-ternary/90 text-sm">Total Day </label>
-                             <div class="w-full relative">
-                                 <input type="number" name="total_day" id="total_day" placeholder="Total Day....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                 <i class="fa fa-days absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                             </div>
-                         </div>
-                    </div>
-                     <div class="w-full flex justify-end px-4 pb-4 gap-2">
-                          <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">Cancel</button>
-                          <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Create Leave</button>
-                     </div>
-                 </form>
+                                {{--               === number type input field ===--}}
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="name" class="font-semibold text-ternary/90 text-sm">Total Day </label>
+                                    <div class="w-full relative">
+                                        <input type="number" name="total_day" id="total_day" placeholder="Total Day....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                        <i class="fa fa-days absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="w-full flex justify-end px-4 pb-4 gap-2">
+                                <button type="button" onclick="document.getElementById('formDiv').classList.toggle('hidden')" class="text-sm bg-ternary/10 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/10 hover:bg-ternary/30 hover:border-ternary/30 transition ease-in duration-2000">Cancel</button>
+                                <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Create Leave</button>
+                            </div>
+                    </form>
              </div>
 {{--        === form section code ends here===--}}
 
@@ -64,6 +64,10 @@
                                 <i class="fa fa-search mr-1"></i> Search
                            </button>
                     </div> -->
+             
+               <div class="w-full overflow-x-auto p-4">
+                <div class="w-full flex justify-between gap-2 items-center">
+                  
                 </div>
                 <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                     <tr>
@@ -78,21 +82,25 @@
 
                     @forelse($leaves as $leave)
       
-                        <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
+                                 <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$leave['leave_type']}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$leave['total_days']}}</td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                            @php
-                                $isActive = $leave['status'] === true;
-                                
-                            @endphp
-                                <span class="bg-{{$leave['status']==='true'?'danger':'success'}}/10 text-{{$leave['status']==='true'?'danger':'success'}} px-2 py-1 rounded-[3px] font-bold">{{ $isActive ? 'Active' : 'Active' }}</span>
-                            </td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                    @php
+                                        $isActive = $leave['status'] == 1;
+                                        $statusLabel = $isActive ? 'Active' : 'Inactive';
+                                        $statusColor = $isActive ? 'success' : 'danger';
+                                    @endphp
+                                    <span class="bg-{{ $statusColor }}/10 text-{{ $statusColor }} px-2 py-1 rounded-[3px] font-bold">
+                                        {{ $statusLabel }}
+                                    </span>
+                                </td>
+
                           
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
-                                    <a href="{{route('update.leave',['id' => $leave->id])}}" title="Remind for funds">
+                                    <a href="{{route('agency.update.leave',['id' => $leave->id,'type'=>'agency'])}}" title="Remind for funds">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-pencil"></i>
                                         </div>
@@ -118,6 +126,8 @@
 
                 </table>
             </div>
+            </div>
+              
 {{--        === table section code ends here===--}}
-        </div>
+     
 </x-front.layout>

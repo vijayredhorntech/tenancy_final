@@ -69,11 +69,12 @@ class InventoryController extends Controller
 
 
     /****Visa APplication Export **** */
-
     public function exportVisaBookingsPDF(Request $request)
         {
+            // dd($request->all());
             $request->merge(['export' => 'true']); // mark this request as export
             $bookings = $this->visaRepository->getSuperadminshotedapplication($request);
+            // dd($bookings);
             $title = "Booking Reports";
             return $this->generateVisaBookingPDF($title, $bookings);
         }

@@ -113,7 +113,7 @@
                             <div class="w-full relative group flex flex-col gap-1">
                                         <label for="date_of_birth" class="font-semibold text-ternary/90 text-sm">Date of Birth *</label>
                                         <div class="w-full relative">
-                                            <input type="date" name="date_of_birth" id="date_of_birth" requiresdd
+                                            <input type="date" name="date_of_birth" max="9999-12-31" id="date_of_birth" requiresdd
                                                 value="{{ old('date_of_birth', $bookingData->clint->clientinfo->date_of_birth ?? '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
                                                 @error('date_of_birth') border-red-500 @enderror">
@@ -631,7 +631,7 @@
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="passport_issue_date" class="font-semibold text-ternary/90 text-sm">Passport Issue Date *</label>
                                     <div class="w-full relative">
-                                        <input type="date" name="passport_issue_date" id="passport_issue_date" requiresdd
+                                        <input type="date" name="passport_issue_date" max="9999-12-31" id="passport_issue_date" requiresdd
                                             value="{{ old('passport_issue_date', $bookingData->clint->clientinfo->passport_issue_date ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
                                             @error('passport_issue_date') border-red-500 @enderror">
@@ -646,7 +646,7 @@
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="passport_expiry_date" class="font-semibold text-ternary/90 text-sm">Passport Expiry Date *</label>
                                     <div class="w-full relative">
-                                        <input type="date" name="passport_expiry_date" id="passport_expiry_date" requiresdd
+                                        <input type="date" name="passport_expiry_date" max="9999-12-31" id="passport_expiry_date" requiresdd
                                             value="{{ old('passport_expiry_date', $bookingData->clint->clientinfo->passport_expiry_date ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
                                             @error('passport_expiry_date') border-red-500 @enderror">
@@ -1065,7 +1065,7 @@
                                             @if(in_array('Father’s DOB', $permission))
                                             <div>
                                             <label for="father_dob" class="font-semibold text-sm text-ternary/90">Date of Birth</label>
-                                            <input type="date" name="father_dob" id="father_dob" value="{{ old('father_dob', isset($fatherdetails->father_dob) ? \Carbon\Carbon::parse($fatherdetails->father_dob)->format('Y-m-d') : '') }}"
+                                            <input type="date" name="father_dob" id="father_dob" max="9999-12-31" value="{{ old('father_dob', isset($fatherdetails->father_dob) ? \Carbon\Carbon::parse($fatherdetails->father_dob)->format('Y-m-d') : '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                             </div>
                                             @endif
@@ -1155,7 +1155,7 @@
                                     @if(in_array('Mother’s DOB', $permission))
                                         <div>
                                             <label for="mother_dob" class="font-semibold text-sm text-ternary/90">Date of Birth</label>
-                                            <input type="date" name="mother_dob" id="mother_dob" value="{{ old('mother_dob', isset($motherdetails->father_dob) ? \Carbon\Carbon::parse($motherdetails->father_dob)->format('Y-m-d') : '') }}"
+                                            <input type="date" name="mother_dob" id="mother_dob" max="9999-12-31" value="{{ old('mother_dob', isset($motherdetails->father_dob) ? \Carbon\Carbon::parse($motherdetails->father_dob)->format('Y-m-d') : '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                     @endif
@@ -1235,7 +1235,7 @@
                         @if(in_array('Spouse’s DOB', $permission))
                         <div class="w-full">
                         <label for="spouse_dob" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
-                        <input type="date" name="spouse_dob" id="spouse_dob"
+                        <input type="date" name="spouse_dob" max="9999-12-31" id="spouse_dob"
                         value="{{ old('spouse_dob', isset($spouse->spouse_dob) ? \Carbon\Carbon::parse($spouse->spouse_dob)->format('Y-m-d') : '') }}"
                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                         </div>

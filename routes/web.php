@@ -145,7 +145,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                       Route::controller(LeaveManagementController::class)->group(function () {
                         Route::get('/addleave','hs_addleave')->name('add.leave');
                         Route::post('/leave','hs_leavestore')->name('leavestore');
-                        Route::get('/leave/{id}','hs_update')->name('update.leave');
+                        Route::get('/leave/{id}','hs_update')->name('superadmin.update.leave');
                         Route::get('/updateleave/{id}','hs_actionUpdateLeave')->name('update.leavesuperadmin');
 
                         Route::post('/updateleave','hs_updatestore')->name('update.leavestore');
@@ -245,8 +245,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                                /*****Visa  Inventory *** */
                                Route::get('visa/booking','hsvisaApplication')->name('superadminvisa.booking');
-                               Route::get('/exportvisabooking','exportVisaBookingsExcel')->name('superadmin.visaexportexcel');
-                               Route::get('/visagenerate-pdf',  'exportVisaBookingsPDF')->name('superadmin.visaexportpdf');
+                            //    Route::get('/exportvisabooking','exportVisaBookingsExcel')->name('superadmin.visaexportexcel');
+                            //    Route::get('/visagenerate-pdf',  'exportVisaBookingsPDF')->name('superadmin.visaexportpdf');
 
 
                         });
