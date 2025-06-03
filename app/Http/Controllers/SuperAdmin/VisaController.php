@@ -728,29 +728,62 @@ class VisaController extends Controller
 
 
     /******Form Function *******/
+public function hsFromindex(Request $request)
+{
+    // dd($request->all());
+    $countries = Country::all();
 
-    public function hsFromindex(){
-        $countries=Country::get();
-        $forms = $this->visaRepository->allForms();
-        // $forms=Document::allForms();
-        return view('superadmin.pages.visa.form',compact('countries','forms'));
+    $query = Document::with('countries');
+
+    if ($request->filled('search')) {
+    $search = $request->search;
+    $query->where(function ($q) use ($search) {
+        $q->where('form_name', 'like', "%{$search}%")
+          ->orWhere('form_description', 'like', "%{$search}%");
+    });
     }
+
+    if ($request->filled('origin_id') && $request->filled('destination_id')) {
+        $originId = $request->origin_id;
+        $destinationId = $request->destination_id;
+
+        $query->whereHas('countries', function ($q) use ($originId, $destinationId) {
+            // Adjust this condition based on how origin_id and destination_id relate to your 'countries' relation
+            $q->where('origin_id', $originId)
+              ->where('destination_id', $destinationId);
+        });
+    }
+
+
+    // Per page or default 10
+    $perPage = $request->get('per_page', 10);
+
+    // Get paginated result
+    $forms = $query->paginate($perPage);
+
+    // Pass to view
+    // dd($forms);
+    return view('superadmin.pages.visa.form', compact('countries', 'forms'));
+}
 
 
 
     /*****Form Store ******/
 
     public function hsFromStore(Request $request){
+        
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'origincoutnry' => 'required|integer',
             'destination' => 'required|integer',
             'description' => 'nullable', // Fixed spelling & added comma
-            'form_uploade' => 'required|file|mimes:pdf|max:2048' // Allow only PDFs, max 2MB
+            'form_upload' => 'file|mimes:pdf|max:2048' // Allow only PDFs, max 2MB
         ]);
+        // dd('hello');
 
 
         $forms = $this->visaRepository->storeForms($request->all());
+        // dd($forms);
         return redirect()->route('visa.forms')->with('success', 'Booking successful');
     }
 

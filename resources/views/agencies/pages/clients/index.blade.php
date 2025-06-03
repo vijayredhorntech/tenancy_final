@@ -35,9 +35,9 @@
                                 <div>
                                     <label for="date_from" class="block text-sm font-medium text-gray-700">Date Range</label>
                                     <div class="flex gap-2">
-                                        <input type="date" name="date_from" id="date_from" value="{{ request('date_from') }}"
+                                        <input type="date" name="date_from" id="date_from" max="2099-12-31" value="{{ request('date_from') }}"
                                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                                        <input type="date" name="date_to" id="date_to" value="{{ request('date_to') }}"
+                                        <input type="date" name="date_to" id="date_to" max="2099-12-31" value="{{ request('date_to') }}"
                                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
                                     </div>
                                 </div>
@@ -74,14 +74,14 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <a href="{{ route('agencies.funddownloade') }}?{{ http_build_query(request()->all()) }}" 
+                                    <!-- <a href="{{ route('agencies.funddownloade') }}?{{ http_build_query(request()->all()) }}" 
                                     class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
                                         Export CSV
                                     </a>
                                     <a href="{{ route('agencies.exportfundpdf') }}?{{ http_build_query(request()->all()) }}"
                                         class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
                                             Export PDF
-                                        </a>
+                                        </a> -->
                                 </div>
                             </div>
                     </form>   

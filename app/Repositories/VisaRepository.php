@@ -772,20 +772,20 @@ public function getBookingByid($id, $type, $request)
         DB::beginTransaction(); // Start the transaction
     
         try {
-            // Debugging (optional, can be removed)
-            // dd($data);
-    
-            if (isset($data['form_uploade'])) {
+     
+       
+           $path="";
+            if (isset($data['form_upload'])) {
                 $authUserId = auth()->id();
                 
                 // Upload the file
                 $uploadedFilePath = $this->fileUploadService->uploadFile(
-                    $data['form_uploade'], 
+                    $data['form_upload'], 
                     'images/visa/forms/', 
                     $authUserId
                 );
                 $path = "images/visa/forms/" . $uploadedFilePath;
-    
+            }
                 // Save document
                 $new = new Document();
                 $new->form_name = $data['name'];
@@ -811,9 +811,7 @@ public function getBookingByid($id, $type, $request)
                 DB::commit(); // Commit transaction if everything is successful
     
                 return response()->json(['message' => 'Form saved successfully'], 200);
-            }
-    
-            return response()->json(['error' => 'No file uploaded'], 400);
+     
             
         } catch (\Exception $e) {
             dd($e);
