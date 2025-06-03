@@ -62,7 +62,7 @@
                     <!-- icard -->
                  
                       <!-- attendance -->
-                      <div id="leaveDiv" class="tab">
+                      <div id="leaveDiv" class="tab @if(session('show_add_leave_tab') || $errors->any()) hidden @endif">
                       
                       <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">              
                             <tr>
@@ -125,7 +125,7 @@
                       </div>
 
 
-                    <div id="addleaveapplication" class="tab hidden">
+                    <div id="addleaveapplication" class="tab @if(session('show_add_leave_tab') || $errors->any()) hidden @endif">
 
                     <!-- start table -->
 
@@ -137,75 +137,75 @@
                                     </div>
                                     <div class="mt-2 overflow-x-auto px-4 py-0.5">
                                     <!-- add form    -->
-                <form action="{{ route('agency.application_leave',['type','agency']) }}" method="POST" enctype="multipart/form-data"> 
-                   @csrf
-                     <div class="w-full grid xl:grid-cols-2 gap-2 px-4 py-6">
+                                            <form action="{{ route('agency.application_leave',['type','agency']) }}" method="POST" enctype="multipart/form-data"> 
+                                                @csrf
+                                                    <div class="w-full grid xl:grid-cols-2 gap-2 px-4 py-6">
 
-                     <div class="w-full relative group flex flex-col gap-1">
-                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Leave Type : </label>
-                             <div class="w-full relative">
-                                 <select  name="leave_type" id="leave_type"
-                                          class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                     <option value="">---Select---</option>
-                                     @forelse($user->leaves  as $leave)
-                                            <option value="{{ $leave->leave->id}}">{{ $leave->leave->leave_type }}</option>
-                                     @empty
-                                       <option value="">Select Leave</option>
-                                     @endforelse
-                                 </select>
-                                 <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
-                             </div>
-                         </div>
-
-
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">From : </label>
-                             <div class="w-full relative">
-                                 <input type="date" name="from" max="2099-12-31" id="from"
-                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                 <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
-                                    onclick="document.getElementById('from').showPicker();"></i>
-                             </div>
-                         </div>
+                                                    <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Leave Type : </label>
+                                                            <div class="w-full relative">
+                                                                <select  name="leave_type" id="leave_type"
+                                                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                                                    <option value="">---Select---</option>
+                                                                    @forelse($user->leaves  as $leave)
+                                                                            <option value="{{ $leave->leave->id}}">{{ $leave->leave->leave_type }}</option>
+                                                                    @empty
+                                                                    <option value="">Select Leave</option>
+                                                                    @endforelse
+                                                                </select>
+                                                                <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
+                                                            </div>
+                                                        </div>
 
 
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">To: </label>
-                             <div class="w-full relative">
-                                 <input type="date" name="to" id="to" max="2099-12-31"
-                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                 <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
-                                    onclick="document.getElementById('to').showPicker();"></i>
-                             </div>
-                         </div>
-
-                       
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <label for="name" class="font-semibold text-ternary/90 text-sm">Attachment</label>
-                             <div class="w-full relative">
-                                <input type="file" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-                                 <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
-                             </div>
-                         </div>
-                     
+                                                        <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="datePicker" class="font-semibold text-ternary/90 text-sm">From : </label>
+                                                            <div class="w-full relative">
+                                                                <input type="date" name="from" max="2099-12-31" id="from"
+                                                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                                                <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
+                                                                    onclick="document.getElementById('from').showPicker();"></i>
+                                                            </div>
+                                                        </div>
 
 
+                                                        <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="datePicker" class="font-semibold text-ternary/90 text-sm">To: </label>
+                                                            <div class="w-full relative">
+                                                                <input type="date" name="to" id="to" max="2099-12-31"
+                                                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                                                <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"
+                                                                    onclick="document.getElementById('to').showPicker();"></i>
+                                                            </div>
+                                                        </div>
 
-                         {{--               === textarea input field ===--}}
-                         <div class="w-full relative group flex flex-col gap-1">
-                             <label for="name" class="font-semibold text-ternary/90 text-sm">Message</label>
-                             <div class="w-full relative">
-                                 <textarea   name="reason" id="reason" rows="4" placeholder="Description....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"></textarea>
-                                 <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
-                             </div>
-                         </div>
+                                                    
+                                                        <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="name" class="font-semibold text-ternary/90 text-sm">Attachment</label>
+                                                            <div class="w-full relative">
+                                                                <input type="file" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                                                <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
+                                                            </div>
+                                                        </div>
+                                                    
 
-                     </div>
-                     <div class="w-full flex justify-end px-4 pb-4 gap-2">
-                          <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Send</button>
-                     </div>
-                 </form>
-                                    <!-- end form  -->
+
+
+                                                        {{--               === textarea input field ===--}}
+                                                        <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="name" class="font-semibold text-ternary/90 text-sm">Message</label>
+                                                            <div class="w-full relative">
+                                                                <textarea   name="reason" id="reason" rows="4" placeholder="Description....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"></textarea>
+                                                                <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="w-full flex justify-end px-4 pb-4 gap-2">
+                                                        <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-2000">Send</button>
+                                                    </div>
+                                            </form>
+                                                                    <!-- end form  -->
                                     </div>
                                 </div>
                             </div>

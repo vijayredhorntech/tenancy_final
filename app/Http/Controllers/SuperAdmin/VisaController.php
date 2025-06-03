@@ -791,7 +791,7 @@ public function hsFromindex(Request $request)
     /*****Form Delete ******/
     public function hsFormDelete($id){
         $form = $this->visaRepository->deleteForm($id);
-        return redirect()->route('visa.forms')->with('success', 'Booking successful');
+        return redirect()->route('visa.forms')->with('success', 'Deleted Successfully');
     }
 
 
@@ -813,7 +813,7 @@ public function hsFromindex(Request $request)
             'destination' => 'required|integer',
         ]);
         $forms = $this->visaRepository->assignCountrytoForms($request->form_id,$request->all());
-        return redirect()->route('visa.forms')->with('success', 'Booking successful');
+        return redirect()->route('visa.forms')->with('success', 'Country Assigned Successfully');
 
 
     }
@@ -830,7 +830,7 @@ public function hsFromindex(Request $request)
     public function hsFromDisConnectCountry($id){
         $forms = $this->visaRepository->disConnectCoutnryFormById($id);
         if($forms){
-            return redirect()->route('visa.forms')->with('success', 'Booking successful');
+            return redirect()->route('visa.forms')->with('success', 'Form is DisConnected Successfully');
         }
     }
 

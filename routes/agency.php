@@ -109,10 +109,10 @@ Route::group([
       Route::controller(LeaveManagementController::class)->group(function () {
         Route::get('{type?}/addleave','hs_addleave')->name('add.agency.leave');
         Route::post('/leave','hs_leavestore')->name('agency.leavestore');
-        Route::get('/leave/{id}','hs_update')->name('update.leave');
+        Route::get('/leave/{id}/{type?}','hs_update')->name('agency.update.leave');
         Route::get('/updateleave/{id}','hs_actionUpdateLeave')->name('update.leavesuperadmin');
 
-        Route::post('/updateleave','hs_updatestore')->name('update.leavestore');
+        Route::post('/updateleave','hs_updatestore')->name('agency.update.leavestore');
         Route::get('/{type?}/leaves','hs_leaves')->name('agecy.leaves');
         Route::post('{type?}/applyleave_store','hs_applyleave')->name('agency.application_leave');
         Route::get('{type?}/pending_leave','hs_pendingleave')->name('agency.pending.leave');
@@ -335,6 +335,11 @@ Route::controller(VisaController::class)->group(function () {
         
 });
 
+          Route::controller(InventoryController::class)->group(function () {
+                   Route::get('/visa/exportvisabooking','exportVisaBookingsExcel')->name('superadmin.visaexportexcel');
+                 Route::get('/visa/visagenerate-pdf',  'exportVisaBookingsPDF')->name('superadmin.visaexportpdf');
+                          
+          });
 
  
 

@@ -1,4 +1,4 @@
-<x-front.layout>
+<x-agency.layout>
     @section('title')Leave Management @endsection
 
 
@@ -16,13 +16,14 @@
 
 {{--        === this is code for form section ===--}}
              <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 ">
-             <form action="{{ route('update.leavestore') }}" method="POST" enctype="multipart/form-data"> 
+             <form action="{{ route('agency.update.leavestore') }}" method="POST" enctype="multipart/form-data"> 
              @csrf
                      <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
 
                          {{--               === text type input field ===--}}
                          <div class="w-full relative group flex flex-col gap-1">
                             <input type="hidden" name="id" value="{{$leave->id}}">
+                            <input type="hidden" name="type" value="agency">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Leave Name</label>
                              <div class="w-full relative">
                                  <input type="text" name="leave_type" id="leave_type" value="{{$leave->leave_type}}" placeholder="Leave Type name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
@@ -69,4 +70,4 @@
 {{--        === form section code ends here===--}}
 
         </div>
-</x-front.layout>
+</x-agency.layout>

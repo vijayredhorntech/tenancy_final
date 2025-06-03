@@ -15,6 +15,8 @@ use App\Models\ApplyUserLeave;
 use App\Models\LeaveBalance;
 use App\Traits\Leaves\ManageLeaveTrait;
 use App\Services\AgencyService;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 
 
 class LeaveManagementController extends Controller
@@ -32,12 +34,14 @@ class LeaveManagementController extends Controller
 
     public function hs_addleave($type = null){
         if (isset($type) && $type == "agency") {
+       
            $setConnection= $this->agencyService->setDatabaseConnection();  
            $leaves = Leave::on('user_database')->get();
         return view('agencies.pages.leavemanagment.leave',compact('leaves'));
 
         //    dd($leaves);
         }
+      
         $leaves=Leave::get(); 
         return view('superadmin.pages.leavemanagment.leave',compact('leaves'));
     }
@@ -110,8 +114,19 @@ class LeaveManagementController extends Controller
     
 
 
-    public function hs_update($id){
+    public function hs_update($id,$type = null){
+   
+
+         if (isset($type) && $type == "agency") {
+       
+           $setConnection= $this->agencyService->setDatabaseConnection();  
+            $leave = Leave::on('user_database')->where('id',$id)->first();
+             return view('agencies.pages.leavemanagment.updateleave',compact('leave'));
+
+        //    dd($leaves);
+        }
         $leave=Leave::find($id);
+        // dd($leave);
         return view('superadmin.pages.leavemanagment.updateleave',compact('leave'));
       
     }
@@ -119,87 +134,67 @@ class LeaveManagementController extends Controller
 
 
 
-    public function hs_updatestore(Request $request){
-       
-        $validatedData = $request->validate([
-            'leave_type' => 'required|string|max:255',
-            'total_day' => 'integer',
-        ]);
-
-        $leave=Leave::find($request->id);
-        $leave->leave_type=$request->leave_type; 
-        $leave->total_days=$request->total_day; 
-        $leave->status=$request->status; 
-        $leave->save();
-
-        return redirect()->route('add.leave')->with('message', 'Leave updated successfully.');
+    // public function hs_updatestore(Request $request){
+        
+    //     $validatedData = $request->validate([
+    //         'leave_type' => 'required|string|max:255',
+    //         'total_day' => 'integer',
+    //     ]);
+    //     //  dd($request->all());
+    //     if($)
+    //     $leave=Leave::find($request->id);
+    //     $leave->leave_type=$request->leave_type; 
+    //     $leave->total_days=$request->total_day; 
+    //     $leave->status=$request->status; 
+    //     $leave->save();
+      
+    //     return redirect()->route('add.leave')->with('message', 'Leave updated successfully.');
     
+    // }
+
+    
+    
+   public function hs_updatestore(Request $request)
+{
+
+    $validatedData = $request->validate([
+        'id' => 'required|integer', // Make sure leave ID is passed
+        'leave_type' => 'required|string|max:255',
+        'total_day' => 'nullable|integer',
+    ]);
+
+
+    $connection = 'mysql';
+    $redirectRoute = 'add.leave';
+    $routeParams = [];
+
+    if ($request->type === 'agency') {
+        $this->agencyService->setDatabaseConnection();
+        $connection = 'user_database';
+        $redirectRoute = 'add.agency.leave';
+        $routeParams = ['type' => 'agency'];
     }
+
+    // Find the existing leave record
+    $leave = Leave::on($connection)->find($validatedData['id']);
+
+    if (!$leave) {
+        return redirect()->back()->withErrors(['Leave record not found.']);
+    }
+
+    // Update the leave record
+    $leave->leave_type = $validatedData['leave_type'];
+    $leave->total_days = $validatedData['total_day'] ?? $leave->total_days;
+    $leave->status = $request->status ?? $leave->status;
+
+    $leave->save();
+
+    return redirect()->route($redirectRoute, $routeParams)->with('message', 'Leave updated successfully.');
+}
+
 
 
     /******Apply leave *******/
-//     public function hs_leaves($type = null){
-
-    
-//         if(isset($type) && $type == "agency") {
-       
-//             $loginuser= $this->agencyService->getCurrentLoginUser();
-//             $id=$loginuser->id;
-          
-           
-
-          
-          
-//             $user = User::on('user_database')->with([
-//                 'userdetails',
-//                 'passport',
-//                 'attendance',
-//                 'leaves.leave.Leavesbalance',
-//                 'applyLeaves' => function ($query) {
-//                     $query->orderByRaw("CASE 
-//                         WHEN status_of_leave = 'pending' THEN 1 
-//                         WHEN status_of_leave = 'cancel' THEN 2 
-//                         WHEN status_of_leave = 'approve' THEN 3 
-//                         ELSE 4 END");
-//                 },
-//                 'applyLeaves.leave', // Fetch leave name inside applyLeaves
-//             ])->where('id', $id)->first();  
-//             $date = Carbon::now()->toDateString();
-//             $attendance = Attendance::on('user_database')->where('user_id', $user->id)
-//                 ->where('date', $date) // Corrected 'data' to 'date'
-//                 ->first();
-//             $login_time = $attendance ? $attendance->login_time : null;
-//             return view('agencies.pages.leavemanagment.leavemanagment',compact('user','login_time'));
-//         }
-//         $id=Auth::id();
-     
-//         $user = User::with([
-//             'userdetails',
-//             'passport',
-//             'attendance',
-//             'leaves.leave.Leavesbalance',
-//             'applyLeaves' => function ($query) {
-//                 $query->orderByRaw("CASE 
-//                     WHEN status_of_leave = 'pending' THEN 1 
-//                     WHEN status_of_leave = 'cancel' THEN 2 
-//                     WHEN status_of_leave = 'approve' THEN 3 
-//                     ELSE 4 END");
-//             },
-//             'applyLeaves.leave', // Fetch leave name inside applyLeaves
-//         ])->where('id', $id)->first();  
-
-// // dd($user);
-//             $date = Carbon::now()->toDateString();
-//             $attendance = Attendance::where('user_id', $user->id)
-//                 ->where('date', $date) // Corrected 'data' to 'date'
-//                 ->first();
-
-
-//             $login_time = $attendance ? $attendance->login_time : null; 
-          
-//         return view('superadmin.pages.leavemanagment.leavemanagment', compact('user','login_time'));
-      
-//     }
 
         public function hs_leaves($type = null)
         {
@@ -251,13 +246,27 @@ class LeaveManagementController extends Controller
   
         // Validate the request data
 
-        $request->validate([
-            'leave_type' => 'required|integer',
+        // $request->validate([
+        //     'leave_type' => 'required|integer',
+        //     'from' => 'required|date',
+        //     'to' => 'required|date|after_or_equal:from',
+        //     'reason' => 'nullable|string|max:255',
+        // ]);
+
+         $validator = Validator::make($request->all(), [
+           'leave_type' => 'required|integer',
             'from' => 'required|date',
             'to' => 'required|date|after_or_equal:from',
             'reason' => 'nullable|string|max:255',
-        ]);
+    ]);
 
+    if ($validator->fails()) {
+     
+        return redirect()->back()
+            ->withErrors($validator)
+            ->withInput()
+            ->with('show_add_leave_tab', true);
+    }
         
     // Calculate the number of leave days
         $start_date = Carbon::parse($request->from);
@@ -372,6 +381,7 @@ class LeaveManagementController extends Controller
       
 
     public function hs_actionUpdateLeave($id){
+       
     
         $leave=ApplyUserLeave::with('leaveName','userName')->where('status_of_leave','Pending')->where('id',$id)->first();
         
