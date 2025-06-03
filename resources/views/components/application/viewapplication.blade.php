@@ -1717,7 +1717,7 @@
                                                     </div>
                                         </div>
 
-                                        <div class="mt-2" id="india-travel-details" style="{{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                    
                                         <div class="mt-2" id="india-travel-details" class="flex flex-wrap gap-4 mt-2" style="{{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? '' : 'display:none;' }}">
                                                 <label class="block text-sm font-medium text-gray-700">Address where You stayed in
                                                 India:</label>

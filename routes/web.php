@@ -34,6 +34,8 @@ use App\Http\Controllers\AgencyAdmin\AgencyRoleController;
 use App\Http\Controllers\AgencyAdmin\AgencyPermissionController;
 // use App\Http\Middleware\CheckUserSession;
 use App\Http\Controllers\FlightController;
+
+
 use App\Http\Controllers\Agencies\ClientController;
 use App\Http\Controllers\Agencies\DocumentController;
 
@@ -46,6 +48,7 @@ use App\Http\Controllers\ClientLoginController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\InvoiceController;
 
+use App\Http\Controllers\DocumentSignController;
 
 
 
@@ -405,11 +408,17 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/cencelinvoice','hs_SAcancelInvoice')->name('superadmin.cancelinvoice');
                         Route::get('/cencelinvoice/{id}','hs_SAcanceleditInvoice')->name('cancelinvoice.edit');
                         Route::post('/cencelstore  invoice','hsSAupdateinvoice')->name('superadmin.update.cancelinvoice');
-
-                       
-
                      
                     });
+
+
+                    Route::controller(DocumentSignController::class)->group(function () {
+                        Route::get('/docsignindex','haindexDocSign')->name('superadmin.docsign');
+                        Route::get('/cencelinvoice/{id}','hs_SAcanceleditInvoice')->name('cancelinvoice.edit');
+                        Route::post('/cencelstore  invoice','hsSAupdateinvoice')->name('superadmin.update.cancelinvoice');
+                     
+                    });
+
 
    });
 
