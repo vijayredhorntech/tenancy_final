@@ -10,6 +10,7 @@
             </div>
         </div>
 
+      
         <div class="w-full overflow-x-auto p-4">
             <form action="{{ route('superadmin.assignclientfieldcountry') }}" method="POST">
                 @csrf
@@ -20,14 +21,14 @@
                 <div class="rounded bg-white px-8 py-12 shadow-lg border-2 border-gray-400/50">
                     @php 
                         $alreadySelect = $assign && $assign->name_of_field ? json_decode($assign->name_of_field, true) : [];
-                  
+                   
                   
                     @endphp
 
                     <div class="flex flex-col gap-6">
                         @foreach ($groupedFields as $group)
                    
-
+                                
                             <div class="flex flex-col gap-3 p-4 bg-gray-50 rounded-lg">
                                 <label class="flex items-center gap-3 cursor-pointer">
                                     <input 
@@ -36,7 +37,7 @@
                                         data-category="{{ $group['slug'] }}"
                                         name="section_name[]"
                                         value="{{ $group['slug'] }}"
-                                        @if(count(array_intersect($group['filed'], $alreadySelect)) === count($group['filed'])) checked @endif>
+                                        @if(!empty(array_intersect($group['filed'], $alreadySelect))) checked @endif>
                                     <div class="w-5 h-5 border-2 border-gray-400 rounded flex items-center justify-center peer-checked:bg-secondary/60 peer-checked:border-secondary/90 transition">
                                         <svg class="w-3 h-3 text-white hidden peer-checked:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
