@@ -1,10 +1,11 @@
                     @php
                    $fatherdetails = $bookingData->clint->clientinfo->father_details ? json_decode($bookingData->clint->clientinfo->father_details) : null;
-                   $motherdetails = $bookingData->clint->clientinfo->father_details ? json_decode($bookingData->clint->clientinfo->father_details) : null;
+                   $motherdetails = $bookingData->clint->clientinfo->mother_details ? json_decode($bookingData->clint->clientinfo->mother_details) : null;
                    $spouse = $bookingData->clint->clientinfo->spouse_details ? json_decode($bookingData->clint->clientinfo->spouse_details) : null;
                            
                     @endphp
-                <form id="" class="ajax-form" method="post"> 
+                <form id="" class="ajax-form" method="post">        
+                    
                 @if(in_array('Father Section', $permission))
                 {{-- Father Section --}}
                     <div id="fathersection" class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-black/10 shadow-lg border border-secondary/40">
@@ -43,23 +44,25 @@
                                         @if(in_array('Father Country of birth', $permission))
                                         <div>
                                         <label for="father_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
-                                        <input type="text" name="father_country_of_birth" id="father_country_of_birth" value="{{ old('father_country_of_birth', $fatherdetails->father_country_of_birth ?? '') }}"
+                                        <input type="text" name="father_country_of_birth" id="father_country_of_birth" value="{{ old('father_country_of_birth', $fatherdetails->country_of_birth ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
 
                                         @if(in_array('Father’s DOB', $permission))
-                                        <div>
-                                        <label for="father_dob" class="font-semibold text-sm text-ternary/90">Date of Birth</label>
-                                        <input type="date" name="father_dob" id="father_dob" value="{{ old('father_dob', isset($fatherdetails->father_dob) ? \Carbon\Carbon::parse($fatherdetails->father_dob)->format('Y-m-d') : '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                        </div>
+                                            <div>
+                                                <label for="father_dob" class="font-semibold text-sm text-ternary/90">Date of Birth</label>
+                                                <input type="date" name="father_dob" id="father_dob"
+                                                    value="{{ old('father_dob', isset($fatherdetails->dob) ? \Carbon\Carbon::parse($fatherdetails->dob)->format('Y-m-d') : '') }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                            </div>
                                         @endif
+
 
                                         @if(in_array('Father Employment', $permission))
                                         <div>
                                         <label for="father_employment" class="font-semibold text-sm text-ternary/90">Employment Status</label>
-                                        <input type="text" name="father_employment" id="father_employment" value="{{ old('father_employment', $fatherdetails->employementstatus ?? '') }}"
+                                        <input type="text" name="father_employment" id="father_employment" value="{{ old('father_employment', $fatherdetails->employment ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
@@ -112,7 +115,7 @@
                                         @if(in_array('Mother Country of birth', $permission))
                                         <div>
                                         <label for="mother_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
-                                        <input type="text" name="mother_country_of_birth" id="mother_country_of_birth" value="{{ old('mother_country_of_birth', $motherdetails->mother_country_of_birth ?? '') }}"
+                                        <input type="text" name="mother_country_of_birth" id="mother_country_of_birth" value="{{ old('mother_country_of_birth', $motherdetails->country_of_birth ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
@@ -120,7 +123,7 @@
                                         @if(in_array('Mother’s DOB', $permission))
                                         <div>
                                         <label for="mother_dob" class="font-semibold text-sm text-ternary/90">Date of Birth</label>
-                                        <input type="date" name="mother_dob" id="mother_dob" value="{{ old('mother_dob', isset($motherdetails->father_dob) ? \Carbon\Carbon::parse($motherdetails->father_dob)->format('Y-m-d') : '') }}"
+                                        <input type="date" name="mother_dob" id="mother_dob" value="{{ old('mother_dob', isset($motherdetails->dob) ? \Carbon\Carbon::parse($motherdetails->dob)->format('Y-m-d') : '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
@@ -128,7 +131,7 @@
                                         @if(in_array('Mother Employment', $permission))
                                         <div>
                                         <label for="mother_employment" class="font-semibold text-sm text-ternary/90">Employment Status</label>
-                                        <input type="text" name="mother_employment" id="mother_employment" value="{{ old('mother_employment', $motherdetails->employementstatus ?? '') }}"
+                                        <input type="text" name="mother_employment" id="mother_employment" value="{{ old('mother_employment', $motherdetails->employment ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
@@ -185,7 +188,7 @@
                                                     <div class="w-full">
                                                     <label for="spouse_dob" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
                                                     <input type="date" name="spouse_dob" id="spouse_dob"
-                                                    value="{{ old('spouse_dob', isset($spouse->spouse_dob) ? \Carbon\Carbon::parse($spouse->spouse_dob)->format('Y-m-d') : '') }}"
+                                                    value="{{ old('spouse_dob', isset($spouse->dob) ? \Carbon\Carbon::parse($spouse->dob)->format('Y-m-d') : '') }}"
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
                                                     @endif
@@ -193,7 +196,7 @@
                                                     <div class="w-full">
                                                     <label for="spouse_employment" class="font-semibold text-ternary/90 text-sm">Employment Status</label>
                                                     <input type="text" name="spouse_employment" id="spouse_employment"
-                                                        value="{{ old('spouse_employment', $spouse->employementstatus ?? '') }}"
+                                                        value="{{ old('spouse_employment', $spouse->employment ?? '') }}"
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
                                                     @endif

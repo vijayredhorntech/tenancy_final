@@ -404,7 +404,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     Route::controller(InvoiceController::class)->group(function () {
                         Route::get('/cencelinvoice','hs_SAcancelInvoice')->name('superadmin.cancelinvoice');
                         Route::get('/cencelinvoice/{id}','hs_SAcanceleditInvoice')->name('cancelinvoice.edit');
-                        Route::post('/cencelstoreinvoice','hsSAupdateinvoice')->name('superadmin.update.cancelinvoice');
+                        Route::post('/cencelstore  invoice','hsSAupdateinvoice')->name('superadmin.update.cancelinvoice');
 
                        
 
