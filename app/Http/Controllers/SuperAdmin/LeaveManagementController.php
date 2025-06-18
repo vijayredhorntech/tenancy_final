@@ -261,7 +261,7 @@ class LeaveManagementController extends Controller
     ]);
 
     if ($validator->fails()) {
-     
+            
         return redirect()->back()
             ->withErrors($validator)
             ->withInput()

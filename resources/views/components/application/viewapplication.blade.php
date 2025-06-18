@@ -114,7 +114,7 @@
                             <div class="w-full relative group flex flex-col gap-1">
                                         <label for="date_of_birth" class="font-semibold text-ternary/90 text-sm">Date of Birth *</label>
                                         <div class="w-full relative">
-                                            <input type="date" name="date_of_birth" id="date_of_birth" requiresdd
+                                            <input type="date" name="date_of_birth" max="9999-12-31" id="date_of_birth" requiresdd
                                                  value="{{ old('date_of_birth', $bookingData->clint->date_of_birth ?? '') }}"class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
                                                 @error('date_of_birth') border-red-500 @enderror">
                                             <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
@@ -304,6 +304,19 @@
                                     </div>
                                   </div>
   
+                            @endif
+
+                            @if(in_array('Citizenship', $permission))
+        
+                            <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="identification_marks" class="font-semibold text-ternary/90 text-sm">Citizenship</label>
+                                                            <div class="w-full relative">
+                                                                <input type="text" name="citizenship_id" id="citizenship_id"
+                                                                    value="{{ old('citizenship_id', $bookingData->clint->clientinfo->citizenship_id ?? '') }}"
+                                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                                <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                            </div>
+                            </div>
                             @endif
                     </div>
                 </div>
@@ -702,7 +715,7 @@
                         <div class="w-full relative group flex flex-col gap-1">
                             <label for="other_passport_issue_date" class="font-semibold text-ternary/90 text-sm">Date of issue</label>
                             <div class="w-full relative">
-                                <input type="date" name="other_passport_issue_date" id="other_passport_issue_date" required
+                                <input type="date" name="other_passport_issue_date" max="9999-12-31"  id="other_passport_issue_date" required
                                        value="{{ old('other_passport_issue_date', $other_passport_details->issue_date ?? '') }}"
                                        class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
                                 <i class="fas fa-calendar-check absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
@@ -722,6 +735,7 @@
             </div>
             @endif
 
+         
             @if(in_array('employment_education_details', $alreadySelect))
             <!-- Profession/Occupation Details Section -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="profession">
@@ -848,6 +862,21 @@
                                     </div>
                                 </div>
                                 @endif
+
+                                   @if(in_array('Duty', $permission))
+                                <!-- Duty  -->
+                                 
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="duty" class="font-semibold text-ternary/90 text-sm">Duty</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="duty" id="duty"
+                                              value="{{ $bookingData->clint->clientinfo->duty ?? '' }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                
                                  @if(in_array('Duration of Study', $permission))
                                 <!-- Duration of Study  -->
                                 <div class="w-full relative group flex flex-col gap-1">
@@ -909,6 +938,115 @@
                                     </div>
                                 </div>
                               @endif  
+
+
+                              @if(in_array('A Date from Date to', $permission))
+                                <!-- Date Range -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label class="font-semibold text-ternary/90 text-sm">Date Range</label>
+                                    <div class="flex gap-2 w-full">
+                                        <div class="w-full relative">
+                                            <input type="date" name="date_from" id="date_from" max="9999-12-31"
+                                                value="{{ request('date_from') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                            <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+
+                                        <div class="w-full relative">
+                                            <input type="date" name="date_to" id="date_to" max="2099-12-31"
+                                                value="{{ request('date_to') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                            <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+
+                              @if(in_array('Military Status', $permission))
+                              @php
+                                $armsDetails = isset($bookingData->clint->clientinfo->arms_details)
+                                    ? json_decode($bookingData->clint->clientinfo->arms_details)
+                                    : null;
+                                   
+                            @endphp
+
+                            <div class="mb-4">
+                                <label class="font-semibold text-sm text-ternary/90">Are/were you in a Military/Semi-Military/Police/Security Organization?</label>
+                                <div class="flex gap-4 mt-1">
+                                    <label>
+                                        <input type="radio" name="military_status" value="1"
+                                            onclick="toggleMilitary(true)"
+                                            {{ $bookingData->clint->clientinfo->armed_permission ? 'checked' : '' }}> Yes
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="military_status" value="0"
+                                            onclick="toggleMilitary(false)"
+                                            {{ !$bookingData->clint->clientinfo->armed_permission ? 'checked' : '' }}> No
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="military_section" class="{{ $armsDetails ? '' : 'hidden' }} lg:col-span-4 md:col-span-4 grid lg:grid-cols-4 gap-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-1">
+                                {{-- Organization --}}
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="military_organization" class="font-semibold text-ternary/90 text-sm">Organization *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="military_organization" id="military_organization" 
+                                            value="{{ old('military_organization', $armsDetails->organization ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_organization') border-red-500 @enderror">
+                                        <i class="fa fa-building-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('military_organization')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                {{-- Designation --}}
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="military_designation" class="font-semibold text-ternary/90 text-sm">Designation *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="military_designation" id="military_designation" 
+                                            value="{{ old('military_designation', $armsDetails->designation ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_designation') border-red-500 @enderror">
+                                        <i class="fa fa-user-tie absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('military_designation')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                {{-- Rank --}}
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="military_rank" class="font-semibold text-ternary/90 text-sm">Rank *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="military_rank" id="military_rank" 
+                                            value="{{ old('military_rank', $armsDetails->rank ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_rank') border-red-500 @enderror">
+                                        <i class="fa fa-shield-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('military_rank')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                {{-- Place of Posting --}}
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="military_posting_place" class="font-semibold text-ternary/90 text-sm">Place of Posting *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="military_posting_place" id="military_posting_place" 
+                                            value="{{ old('military_posting_place', $armsDetails->posting_place ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_posting_place') border-red-500 @enderror">
+                                        <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('military_posting_place')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                        @endif
+                        
                     </div>
                 </div>
             </div>
@@ -994,6 +1132,14 @@
                                         </div>
                                         @endif
 
+                                        @if(in_array('Status in China', $permission))
+                                        <div>
+                                        <label for="father_status_in_china" class="font-semibold text-sm text-ternary/90">Status in China</label>
+                                        <input type="text" name="father_status_in_china" id="father_status_in_china" value="{{ old('father_status_in_china', $fatherdetails->status_in_china ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
                                         @if(in_array('Father Employment Address', $permission))
                                         <div>
                                         <label for="father_address" class="font-semibold text-sm text-ternary/90">Employment Address</label>
@@ -1071,7 +1217,7 @@
                                         @if(in_array('Mother’s DOB', $permission))
                                         <div>
                                         <label for="mother_dob" class="font-semibold text-sm text-ternary/90">Date of Birth</label>
-                                        <input type="date" name="mother_dob" id="mother_dob" value="{{ old('mother_dob', isset($motherdetails->dob) ? \Carbon\Carbon::parse($motherdetails->dob)->format('Y-m-d') : '') }}"
+                                        <input type="date" name="mother_dob" max="9999-12-31" id="mother_dob" value="{{ old('mother_dob', isset($motherdetails->dob) ? \Carbon\Carbon::parse($motherdetails->dob)->format('Y-m-d') : '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
@@ -1080,6 +1226,14 @@
                                         <div>
                                         <label for="mother_employment" class="font-semibold text-sm text-ternary/90">Employment Status</label>
                                         <input type="text" name="mother_employment" id="mother_employment" value="{{ old('mother_employment', $motherdetails->employment ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
+                                        @if(in_array('Status in China', $permission))
+                                        <div>
+                                        <label for="mother_status_in_china" class="font-semibold text-sm text-ternary/90">Status in China</label>
+                                        <input type="text" name="mother_status_in_china" id="mother_status_in_china" value="{{ old('mother_status_in_china', $motherdetails->status_in_china ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
@@ -1151,7 +1305,7 @@
                                                     @if(in_array('Spouse’s DOB', $permission))
                                                     <div class="w-full">
                                                     <label for="spouse_dob" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
-                                                    <input type="date" name="spouse_dob" id="spouse_dob"
+                                                    <input type="date" name="spouse_dob" max="9999-12-31" id="spouse_dob"
                                                     value="{{ old('spouse_dob', isset($spouse->dob) ? \Carbon\Carbon::parse($spouse->dob)->format('Y-m-d') : '') }}"
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
@@ -1173,12 +1327,99 @@
                                                     </div>
                                                     @endif
                     
+                                                     <!-- details of children -->
+        @if(in_array('Children Section', $permission))
+                    {{-- Childreen  Section --}}
+
+                   <div class="mb-4">
+                    <label class="font-semibold text-sm text-ternary/90">Do you have a child?</label>
+                    <div class="flex gap-4 mt-1">
+                        <label>
+                            <input type="radio" name="has_child" value="yes"
+                                {{ !empty($bookingData->clint->clientinfo->children) ? 'checked' : '' }}> Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="has_child" value="no"
+                                {{ empty($bookingData->clint->clientinfo->children) ? 'checked' : '' }}> No
+                        </label>
+                    </div>
+                   </div>
+<div class="w-full lg:col-span-2">
+                 @php
+                    $childrenJson = $bookingData->clint->clientinfo->children ?? '[]';
+                    $children = json_decode($childrenJson);
+                  
+                    $childsection = is_array($children) && count($children) > 0;
+                @endphp
+
+            <!-- Child Info Section -->
+            <!-- Children Section -->
+            <div id="childInfoSection" class="{{ !$childsection ? 'hidden' : '' }} mb-4">
+                <div id="childFieldsContainer" class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
+                    @if($childsection)
+                        @forelse($children as $child)
+                            <div class="child-fields border p-4 mb-4 rounded-[3px] rounded-tr-[8px] border-secondary/40 bg-white shadow-sm relative bg-black/10 shadow-lg shadow-black/10">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-6">
+                                    <div>
+                                        <label class="font-semibold text-sm text-ternary/90">Name</label>
+                                        <input type="text" name="child_name[]" value="{{ $child->name }}" class="w-full pl-2 pr-2 py-1 border rounded-[3px] border-secondary/40 focus:outline-none focus:border-secondary/70 transition ease-in duration-200">
+                                    </div>
+
+                                    <div>
+                                        <label class="font-semibold text-sm text-ternary/90">Date of Birth</label>
+                                        <input type="date" name="child_dob[]" value="{{ $child->dob }}" class="w-full pl-2 pr-2 py-1 border rounded-[3px] border-secondary/40 focus:outline-none focus:border-secondary/70 transition ease-in duration-200">
+                                    </div>
+
+                                    <div>
+                                        <label class="font-semibold text-sm text-ternary/90">Nationality</label>
+                                        <input type="text" name="child_nationality[]" value="{{ $child->nationality }}" class="w-full pl-2 pr-2 py-1 border rounded-[3px] border-secondary/40 focus:outline-none focus:border-secondary/70 transition ease-in duration-200">
+                                    </div>
+
+                                    <div class="col-span-full">
+                                        <label class="font-semibold text-sm text-ternary/90">Address</label>
+                                        <input type="text" name="child_address[]" value="{{ $child->address }}" class="w-full pl-2 pr-2 py-1 border rounded-[3px] border-secondary/40 focus:outline-none focus:border-secondary/70 transition ease-in duration-200">
+                                    </div>
+                                </div>
+
+                                <button type="button" class="removeChildBtn absolute top-2 right-2 text-red-500 hover:text-white text-xs border border-red-500 hover:bg-red-500 rounded px-2 py-[1px]">
+                                    Remove
+                                </button>
+                            </div>
+                        @empty
+                            <p>No children data found.</p>
+                        @endforelse
+                    @endif
+                </div>
+
+               @if(in_array('Relative Information', $permission))
+    <!-- Relative Information -->
+
+    <div class="w-full relative group flex flex-col gap-1 col-span-2">
+        <label for="relative_information" class="font-semibold text-ternary/90 text-sm">Relative Information</label>
+        <div class="w-full relative">
+            <textarea name="relative_information" id="relative_information"
+                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('relative_information', $bookingData->clint->clientinfo->relative_information ?? '') }}</textarea>
+            <i class="fa fa-info-circle absolute right-3 top-4 text-sm text-secondary/80"></i>
+        </div>
+    </div>
+@endif
+                  <!-- Add More Button -->
+                  <!-- <div class="w-full flex justify-start">
+                    <button type="button" class="bg-primary/30 text-ternary font-semibold border-[2px] border-primary/90 px-4 py-1 rounded-[3px] rounded-tr-[8px] hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200" id="addMoreChild">
+                        Add More
+                    </button>
+                </div> -->
+            </div>
+</div>
+            
+            @endif
+
+        <!-- end part  -->
                     <!-- Employer Phone Number -->
                     </div>
                 </div>
             </div>
           @endif
-
           @if(in_array('social_media_online_presence', $alreadySelect))
             <!-- Social Media Links Section -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="socialmedia">
@@ -1375,7 +1616,7 @@
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="expecteddate" class="font-semibold text-ternary/90 text-sm">Expected Date of Journey *</label>
                                     <div class="w-full relative">
-                                        <input type="date" name="expecteddate" id="expecteddate"  readonly="" requiresdd
+                                        <input type="date" name="expecteddate" max="9999-12-31"  id="expecteddate"  readonly="" requiresdd
                                              value="{{ old('country', $bookingData->dateofentry ?? '') }}" readonly=""
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
                                             @error('country') border-red-500 @enderror">
@@ -1562,6 +1803,7 @@
                                     </div>
                                 </div>
                                 @endif
+
                                
                                 @if(in_array('Countries Visited (Last 5 Years)', $permission)) 
                                 <div class="w-full relative group flex flex-col gap-1 ">
@@ -1753,7 +1995,7 @@
                                     
 
                                                 <label class="block text-sm font-medium text-gray-700">Date of Issue:</label>
-                                                <input type="date" name="indiadateofissue" id="dateofissue" value="{{ old('indiadateofissue', $visahistory->indiadateofissue ?? '') }}"
+                                                <input type="date" name="indiadateofissue" id="dateofissue" max="9999-12-31"  value="{{ old('indiadateofissue', $visahistory->indiadateofissue ?? '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                           
                                               
@@ -2476,6 +2718,26 @@ I
                         }
                     }
 </script>
+
+<script>
+                   function toggleMilitary(show) {
+                   
+                   const section = document.getElementById('military_section');
+                   if (section) {
+                       if (show === true || show === 1 || show === '1') {
+                           section.classList.remove('hidden');
+                       } else {
+                           section.classList.add('hidden');
+                       }
+                   }
+               }
+
+               document.addEventListener('DOMContentLoaded', function () {
+                   const hasMilitary = {{ $bookingData->clint->clientinfo->armed_permission ?? 0 }};
+                   toggleMilitary(hasMilitary);
+                   // Call the function to toggle the military section based on the valu
+               });
+                </script>
 <script>
 $(document).ready(function() {
     // Disable all inputs/selects/textareas inside only this form initially

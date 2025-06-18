@@ -25,7 +25,7 @@ return new class extends Migration
                 'previous_visa_number',
                 'previous_visa_place',
                 'previous_visa_issue_date',
-                'countries_visited_last_10_years'
+                'countries_visited_last_10_years',
             ]);
         });
     }

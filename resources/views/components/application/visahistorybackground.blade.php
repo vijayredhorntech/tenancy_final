@@ -40,10 +40,11 @@
                                     </div>
                                 </div>
                                 @endif
+                                
                                
-                                @if(in_array('Countries Visited (Last 5 Years)', $permission)) 
+                                @if(in_array('Countries Visited (Last 12 months)', $permission)) 
                                 <div class="w-full relative group flex flex-col gap-1 ">
-                                    <label for="countries_visited_last_10_years" class="font-semibold text-ternary/90 text-sm">Countries Visited in Last 10 Years</label>
+                                    <label for="countries_visited_last_10_years" class="font-semibold text-ternary/90 text-sm">Countries Visited in (Last 12 months)</label>
                                     <div class="w-full relative">
                                         <textarea name="countries_visited_last_10_years" id="countries_visited_last_10_years"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('countries_visited_last_10_years', $bookingData->visarequireddocument->countries_visited_last_10_years ?? '')  }}</textarea>
@@ -51,6 +52,7 @@
                                     </div>
                                 </div>
                                 @endif
+
                                 @if(in_array('Previous UK Travel', $permission)) 
                                     <div class="mb-4">
                                         <label class="font-semibold text-sm text-ternary/90">Previous UK Travel?</label>
@@ -264,6 +266,7 @@
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previous_visas_held', $visahistory->denied_entry_anywhere ?? '') }}</textarea>
                                     </div>
                                 @endif
+
 
 
                                 @if(in_array('Security Background Questions', $permission)) 

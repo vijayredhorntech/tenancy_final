@@ -1,7 +1,6 @@
 
 
                 <form id="" class="ajax-form grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4" method="post"> 
-
                            <!-- issueg authority country -->
                            @if(in_array('Passport Type', $permission))    
                                 <div class="w-full relative group flex flex-col gap-1">
@@ -108,7 +107,7 @@
                                 $other_passport_details = isset($bookingData->clint->clientinfo->other_passport_details)
                                     ? json_decode($bookingData->clint->clientinfo->other_passport_details)
                                     : null;
-                                    
+                                
 
                             @endphp
                                 <div class="mb-4">

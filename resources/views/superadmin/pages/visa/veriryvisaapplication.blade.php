@@ -19,12 +19,21 @@
               ← Back
            </a>
         </div>
-
         
         <div class="w-full ">
-                        @include('components.application.viewapplication', ['bookingData' => $bookingData])          
-                
-                    </div>
+
+              @if($bookingData->destination->countryName == 'China')
+                @include('components.application.chinaviewapplication', ['bookingData' => $bookingData])
+
+            @elseif($bookingData->visa->name == 'Schengen Visa')
+                    @include('components.application.Scheneganviewapplication', ['bookingData' => $bookingData])
+
+            @else
+                @include('components.application.viewapplication', ['bookingData' => $bookingData])
+
+            @endif
+
+           </div>
 
       
       

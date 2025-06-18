@@ -74,7 +74,7 @@
                     <input type="hidden" name="nextDetails" id="nextstep" >
 
      
-                    <div id="personal_details" class="datashow w-full">
+                    <div id="personal_details" class="datashow w-full ">
                         @include('components.application.persionalinfo', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])
                     </div>
 
@@ -97,7 +97,7 @@
                         @include('components.application.familydetails', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])             
                     </div>  
                     <!-- Work  details   details -->
-                    <div id="employment_education_details" class="datashow w-full  hidden">
+                    <div id="employment_education_details" class="datashow w-full hidden ">
                         @include('components.application.workdetails', ['agency' => $agency, 'bookingData' => $bookingData,'permission'=>$permission])             
                     </div>  
 
@@ -526,6 +526,25 @@ $(document).ready(function () {
 
 
     </script>
+     <script>
+                      function toggleMilitary(show) {
+                   
+                            const section = document.getElementById('military_section');
+                            if (section) {
+                                if (show === true || show === 1 || show === '1') {
+                                    section.classList.remove('hidden');
+                                } else {
+                                    section.classList.add('hidden');
+                                }
+                            }
+                        }
+
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const hasMilitary = {{ $bookingData->clint->clientinfo->armed_permission ?? 0 }};
+                            toggleMilitary(hasMilitary);
+                            // Call the function to toggle the military section based on the valu
+                        });
+                    </script>
 
  
     

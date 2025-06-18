@@ -17,12 +17,14 @@ class VisaSectionSeeder extends Seeder
         $visa_application_fields = [
             "Personal Details" => [
                 "Title", "Full Name", "Gender", "Date of Birth", "Place of Birth","Preview Name",
-                "Country of Citizenship", "Nationality at Birth", "Marital Status",
-                "Religion", "Visible Identification Marks", "Languages Spoken"
+                "Country of Citizenship", "Nationality at Birth", "Marital Status","Past Nationality",
+                "Religion", "Visible Identification Marks", "Languages Spoken" ,"Citizenship",
             ],
             "Contact Details" => [
                 "Current Residential Address", "City", "State", "Postal Code",
-                "Country of Residence", "Phone Number (Mobile)", "Phone Number (Landline)", "Email Address"
+                "Permanent Residential Address",
+                "Country of Residence", "Phone Number (Mobile)"
+                , "Phone Number (Landline)", "Email Address"
             ],
             "Passport Information" => [
                 "Passport Type", "Passport Number", "Place of Issue", "Date of Issue",
@@ -30,12 +32,12 @@ class VisaSectionSeeder extends Seeder
             ],
             "Family Information" => [
                    "Father Section","Father’s Full Name", "Father Place of Birth", "Father Nationality",
-                   "Father Previous Nationality","Father Country of birth","Father’s DOB","Father Employment",
+                   "Father Previous Nationality","Father Country of birth","Father’s DOB","Father Employment","Status in China",
                    //mother section
                    "Mother Section","Mother’s Full Name", "Mother Place of Birth", "Mother Nationality",
-                   "Mother Previous Nationality","Mother Country of birth","Mother’s DOB","Mother Employment",
+                   "Mother Previous Nationality","Mother Country of birth","Mother’s DOB","Mother Employment","Status in China",
                    "Spouse Section","Spouse’s Full Name", "Spouse’s Nationality", "Spouse’s Place of Birth",
-                   "Spouse’s Previous Nationality","Spouse’s DOB","Spouse’s Employment Status","Spouse’s Address",
+                   "Spouse’s Previous Nationality","Spouse’s DOB","Spouse’s Employment Status","Spouse’s Address","Relative Information",
                    "Children Section"
     // Additional Family Info
     // "Family Members Traveling",
@@ -46,9 +48,9 @@ class VisaSectionSeeder extends Seeder
 
             "Employment Education Details" => [
                 "Occupation", "Past Occupaton","Designation", "Employer Name", "Business Name", "School Name",
-                "Employer Address", "Employer Phone Number", "Duration of Employment",
+                "Employer Address", "Employer Phone Number", "Duration of Employment","Duty",
                 "Duration of Study", "Employment Monthly Income", "Educational Qualifications",
-                "Employment History", "Education History"
+                "Employment History", "Education History" , "Military Status", "A Date from Date to",
             ],
             
             "Social Media Online Presence" => [
@@ -65,10 +67,10 @@ class VisaSectionSeeder extends Seeder
 
             "Visa History Background" => [
                 "Previous Visas Held", "Visa Rejections", "Overstays",
-                "Countries Visited (Last 5 Years)", "Previous UK Travel", "Previous USA Travel",
+                "Countries Visited (Last 12 months)", "Previous UK Travel", "Previous USA Travel",
                 "Previous Schengen Travel", "Previous China Travel", "Previous Russia Travel",
                 "Previous India Travel", "Criminal History", "Denied Entry Anywhere",
-                "Security Background Questions"
+                "Security Background Questions","SAARC Visted",
             ],
             "Medical Visa Specifics" => [
                 "Patient Name", "Medical Diagnosis", "Hospital Name",

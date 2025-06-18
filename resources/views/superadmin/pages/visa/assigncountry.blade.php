@@ -21,7 +21,7 @@
                 <div class="rounded bg-white px-8 py-12 shadow-lg border-2 border-gray-400/50">
                     @php 
                         $alreadySelect = $assign && $assign->name_of_field ? json_decode($assign->name_of_field, true) : [];
-                   
+                      
                   
                     @endphp
 
