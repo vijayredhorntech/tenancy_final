@@ -1409,7 +1409,6 @@ public function getBookingByid($id, $type, $request)
         $visa->previous_visa_issued_place = $data['previous_visa_place'] ?? $visa->previous_visa_issued_place;
         $visa->previous_visa_issue_date = $data['previous_visa_issue_date'] ?? $visa->previous_visa_issue_date;
         $visa->countries_visited_last_10_years = $data['countries_visited_last_10_years'] ?? $visa->countries_visited_last_10_years;
-    
         $visa->otherdocument = $data['otherdocument'] ?? $visa->otherdocument;
         $visa->visa_refused_or_deported = $data['visa_refused_or_deported'] ?? $visa->visa_refused_or_deported;
     

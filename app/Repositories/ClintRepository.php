@@ -387,8 +387,9 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
 {
     if ($connection) {
         $info->setConnection($connection);
+        
     }
-
+     
     $info->clientid = $clientId;
     $info->previous_name = $data['previous_name'] ?? null;
     $info->passport_issue_date = $data['passport_issue_date'] ?? null;
@@ -405,9 +406,11 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
     $info->passport_ic_number = $data['passport_ic_number'] ?? null;
     $info->passport_expiry_date = $data['passport_expiry_date'] ?? null;
     $info->father_details = $data['father_name'] ?? null;
+    $info->relative_information = $data['relative_information'] ?? null;
     $info->mother_details = $data['mother_name'] ?? null;
     $info->spouse_details = $data['spouse_name'] ?? null;
     $info->children = $data['children'] ?? null;
+    $info->arms_details = $data['arms_details'] ?? null;
 
     $info->present_occupation = $data['present_occupation'] ?? null;
     $info->designation = $data['designation'] ?? null;
@@ -417,6 +420,9 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
     $info->past_occupation = $data['past_occupation'] ?? null;
     $info->reference_name = $data['reference_name'] ?? null;
     $info->reference_address = $data['reference_address'] ?? null;
+    $info->duty = $data['duty'] ?? null;
+    $info->date_from = $data['date_from'] ?? null;
+    $info->date_to = $data['date_to'] ?? null;
 
     $info->save();
 }
@@ -563,6 +569,7 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         $clientdetails->country_of_birth = $data['country_of_birth'] ?? '';
         $clientdetails->citizenship_id = $data['citizenship_id'] ?? '';
         $clientdetails->identification_marks = $data['identification_marks'] ?? '';
+        $clientdetails->arms_details = $data['arms_details'] ?? '';
 
         
         $clientdetails->educational_qualification = $data['educational_qualification'] ?? '';
@@ -589,6 +596,8 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
 
         
         $clientdetails->countries_visited_last_10_years = $data['countries_visited_last_10_years'] ?? '';
+        $clientdetails->countries_visited_last_12_months = $data['countries_visited_last_12_months'] ?? '';
+        $clientdetails->present_occupation = $data['present_occupation'] ?? '';
         $clientdetails->present_occupation = $data['present_occupation'] ?? '';
         $clientdetails->designation = $data['designation'] ?? '';
         $clientdetails->employer_name = $data['employer_name'] ?? '';
@@ -763,10 +772,11 @@ private function updateClientData(array $data, ClientDetails $client, string $co
 
 private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string $connection = null)
 {
+    // dd("heelo");
     if ($connection) {
         $info->setConnection($connection);
     }
-
+    // Step 4: Spouse Details
     
 
     // Step 5: Children
@@ -774,7 +784,8 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
 
     // Step 7: Father & Mother
     if (($data['step'] ?? null) == 7) {
-      
+
+
         $info->father_details = json_encode([
             'name' => $data['father_name'] ?? null,
             'nationality' => $data['father_nationality'] ?? null,
@@ -783,6 +794,7 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
             'country_of_birth' => $data['father_country_of_birth'] ?? null,
             'dob' => $data['father_dob'] ?? null,
             'employment' => $data['father_employment'] ?? null,
+            'status_in_china' => $data['father_status_in_china'] ?? null,
             'address' => $data['father_address'] ?? null,
         ]);
     
@@ -794,6 +806,7 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
             'country_of_birth' => $data['mother_country_of_birth'] ?? null,
             'dob' => $data['mother_dob'] ?? null,
             'employment' => $data['mother_employment'] ?? null,
+            'status_in_china' => $data['mother_status_in_china'] ?? null,
             'address' => $data['mother_address'] ?? null,
         ]);
     
@@ -807,7 +820,7 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
             'address' => $data['spouse_address'] ?? null,
         ]);
     
-        if (($data['has_child'] ?? null) === 'yes') {
+        if (($data['has_child'] ?? null) == 'yes') {
             $children = [];
             $childNames = $data['child_name'] ?? [];
             $childDobs = $data['child_dob'] ?? [];
@@ -824,6 +837,7 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
             }
     
             $info->children = json_encode($children);
+            
         }
 }
 
@@ -845,6 +859,10 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
         }
     }
 
+
+
+
+
     if(($data['step']?? null)=="socialmedia"){
         $socialMedia = [
             'facebook' => $data['facebook'] ?? null,
@@ -860,6 +878,7 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
     }
 
     if(($data['step'] ?? null)=="employment"){
+      
         $employmentEducationData = [
             'business_name' => $data['business_name'] ?? null,
             'school_name' => $data['school_name'] ?? null,
@@ -868,8 +887,23 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
             'employment_monthly_income' => $data['employment_monthly_income'] ?? null,
             'employment_history' => $data['employment_history'] ?? null,
             'education_history' => $data['education_history'] ?? null,
+            'name_of_your_employer' => $data['name_of_your_employer']?? null,
+            'date_from' => $data['date_from'] ?? null,
+            'date_to' => $data['date_to'] ?? null,
         ];
         $info->employment = json_encode($employmentEducationData);
+
+            if (($data['military_status'] ?? null) === 'yes') {
+                $militaryData = [
+                    'organization'    => $data['military_organization'] ?? '',
+                    'designation'     => $data['military_designation'] ?? '',
+                    'rank'            => $data['military_rank'] ?? '',
+                    'posting_place'   => $data['military_posting_place'] ?? '',
+                ];
+                $info->arms_details = json_encode($militaryData);
+            
+        }
+
 
     }
 
@@ -885,6 +919,7 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
     $info->educational_qualification = $data['educational_qualification'] ?? $info->educational_qualification;
     $info->nationality = $data['nationality'] ?? $info->nationality;
     $info->past_nationality = $data['past_nationality'] ?? $info->past_nationality;
+    $info->passport_type = $data['passport_type'] ?? $info->passport_type;
     $info->passport_country = $data['passport_country'] ?? $info->passport_country;
     $info->passport_issue_place = $data['passport_issue_place'] ?? $info->passport_issue_place;
     $info->passport_ic_number = $data['passport_ic_number'] ?? $info->passport_ic_number;
@@ -899,12 +934,20 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
     $info->reference_address = $data['reference_address'] ?? $info->reference_address;
     $info->title = $data['title'] ?? $info->title;
     $info->language_spoken = $data['languages_spoken'] ?? $info->language_spoken;
+    $info->armed_permission= $data['military_status']?? $info->armed_permission;
+    $info->arms_details = $info->arms_details ?? $info->arms_details;
 
     // family
     $info->father_details = $info->father_details ?? $info->father_details;
     $info->mother_details = $info->mother_details ?? $info->mother_details;
     $info->spouse_details = $info->spouse_details ?? $info->spouse_details;
     $info->children = $info->children ?? $info->children;
+    $info->relative_information = $data['relative_information'] ?? $info->relative_information;
+    $info->date_from = $data['date_from'] ?? $info->date_from;
+    $info->date_to = $data['date_to'] ?? $info->date_to;
+
+
+
 
 
 

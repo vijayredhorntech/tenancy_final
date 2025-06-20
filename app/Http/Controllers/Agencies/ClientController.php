@@ -231,6 +231,11 @@ class ClientController extends Controller
                 'past_occupation' => 'nullable|string|max:255',
                 'reference_name' => 'nullable|string|max:255',
                 'reference_address' => 'nullable|string|max:255',
+                'military_status' => 'nullable|in:yes,no',
+                'military_organization' => 'nullable|string|max:255',
+                'military_designation' => 'nullable|string|max:255',
+                'military_rank' => 'nullable|string|max:255',
+                'military_posting_place' => 'nullable|string|max:255',
             ]);
                 
                 $clients = $this->clintRepository->updateStoreclint($request->clint_id,$request->all());

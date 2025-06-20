@@ -197,7 +197,7 @@
                                     @enderror
     </div>
     @endif
-    @if(in_array('Nationality at Birth', $permission))
+    @if(in_array('Past Nationality', $permission))
     <!-- Past Nationality (if any) -->
     <div class="w-full relative group flex flex-col gap-1">
                                     <label for="past_nationality" class="font-semibold text-ternary/90 text-sm">Past Nationality (if any)</label>
@@ -228,6 +228,19 @@
                                     <div class="w-full relative">
                                         <input type="text" name="languages_spoken" id="languages_spoken"
                                               value="{{ old('languages_spoken', $bookingData->clint->clientinfo->language_spoken ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+    </div>
+    @endif
+
+    @if(in_array('Citizenship', $permission))
+    <!-- Languages Spoken  -->
+    <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="identification_marks" class="font-semibold text-ternary/90 text-sm">Citizenship</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="citizenship_id" id="citizenship_id"
+                                              value="{{ old('citizenship_id', $bookingData->clint->clientinfo->citizenship_id ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                         <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>

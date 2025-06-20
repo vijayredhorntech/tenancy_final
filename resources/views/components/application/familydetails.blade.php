@@ -74,6 +74,14 @@
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
+
+                                        @if(in_array('Status in China', $permission))
+                                        <div>
+                                        <label for="father_status_in_china" class="font-semibold text-sm text-ternary/90">Status in China</label>
+                                        <input type="text" name="father_status_in_china" id="father_status_in_china" value="{{ old('father_status_in_china', $fatherdetails->status_in_china ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
                     </div>
 
                     @endif
@@ -132,6 +140,14 @@
                                         <div>
                                         <label for="mother_employment" class="font-semibold text-sm text-ternary/90">Employment Status</label>
                                         <input type="text" name="mother_employment" id="mother_employment" value="{{ old('mother_employment', $motherdetails->employment ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
+                                        @if(in_array('Status in China', $permission))
+                                        <div>
+                                        <label for="mother_status_in_china" class="font-semibold text-sm text-ternary/90">Status in China</label>
+                                        <input type="text" name="mother_status_in_china" id="mother_status_in_china" value="{{ old('mother_status_in_china', $motherdetails->status_in_china ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
@@ -241,7 +257,7 @@
                     @if($childsection)
                         @forelse($children as $child)
                             <div class="child-fields border p-4 mb-4 rounded-[3px] rounded-tr-[8px] border-secondary/40 bg-white shadow-sm relative bg-black/10 shadow-lg shadow-black/10">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-6">
                                     <div>
                                         <label class="font-semibold text-sm text-ternary/90">Name</label>
                                         <input type="text" name="child_name[]" value="{{ $child->name }}" class="w-full pl-2 pr-2 py-1 border rounded-[3px] border-secondary/40 focus:outline-none focus:border-secondary/70 transition ease-in duration-200">
@@ -280,6 +296,22 @@
                 </div>
             </div>
             @endif
+
+          @if(in_array('Relative Information', $permission))
+    <!-- Relative Information -->
+
+    <div class="w-full relative group flex flex-col gap-1 col-span-2">
+        <label for="relative_information" class="font-semibold text-ternary/90 text-sm">Relative Information</label>
+        <div class="w-full relative">
+            <textarea name="relative_information" id="relative_information"
+                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('relative_information', $bookingData->clint->clientinfo->relative_information ?? '') }}</textarea>
+            <i class="fa fa-info-circle absolute right-3 top-4 text-sm text-secondary/80"></i>
+        </div>
+    </div>
+@endif
+
+
+
               
       
                                 <input type="hidden" name="previewstep" value="6">                            
