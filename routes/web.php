@@ -414,8 +414,9 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                     Route::controller(DocumentSignController::class)->group(function () {
                         Route::get('/docsignindex','haindexDocSign')->name('superadmin.docsign');
-                        Route::get('/cencelinvoice/{id}','hs_SAcanceleditInvoice')->name('cancelinvoice.edit');
-                        Route::post('/cencelstore  invoice','hsSAupdateinvoice')->name('superadmin.update.cancelinvoice');
+                        Route::get('/docsigncreate','hsCreateDocument')->name('add.signdocument');
+                        Route::post('/documentstore','hsDocumentStore')->name('superadmindocument.store');
+                     
                      
                     });
 

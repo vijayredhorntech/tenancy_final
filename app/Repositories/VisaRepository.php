@@ -1063,8 +1063,11 @@ public function getBookingByid($id, $type, $request)
     public function deleteVisa($id)
     {
         $visa=$this->getVisaById($id);
-        $visa->delete(); 
+        if ($visa) {
+            $visa->forceDelete(); // 🔥 Permanently deletes the record
+        }
     }
+
 
 
     public function assignUpdateBooking($id,$data){

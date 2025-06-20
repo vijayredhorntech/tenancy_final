@@ -70,6 +70,7 @@ class VisaBooking extends Model
     }
 
     public function clientrequiremtsinfo(){
+     
         return $this->hasOne(ClientInfoForCountry::class, 'destination_id','destination_id');
 
     }
@@ -79,4 +80,9 @@ class VisaBooking extends Model
 
     }
    
+
+   
+
+
+
 }

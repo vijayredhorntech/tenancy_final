@@ -4,14 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\Interfaces\DocumentSignRepositoryInterface;
+use App\Repositories\Interfaces\TermConditionRepositoryInterface;
+use App\Models\Agency;
+use App\Models\DocSignAudit;
+use App\Models\DocSignDocument;
+use App\Models\DocSignProcess;
+
+use Illuminate\Support\Str;
 
 
 class DocumentSignController extends Controller
 {
     
     protected $documentSignRepository;
-    public function __construct( DocumentSignRepositoryInterface $documentSignRepository) {
+    protected $termConditionRepo;
+
+  
+    public function __construct( DocumentSignRepositoryInterface $documentSignRepository,TermConditionRepositoryInterface $termConditionRepo) {
         $this->documentSignRepository = $documentSignRepository;
+        $this->termConditionRepo = $termConditionRepo;
  
 
     }
@@ -21,6 +32,19 @@ class DocumentSignController extends Controller
 
    public function haindexDocSign(Request $request){
         
+        return view('superadmin.pages.docsign.index');
+
+   }
+
+   public function hsCreateDocument(Request $request){
+         $agencies =Agency::all();
+         $termconditions = $this->termConditionRepo->allTeamTypes();
+   
+        return view('superadmin.pages.docsign.createdoc',compact('agencies','termconditions'));
+   }
+
+   public function hsDocumentStore(Request $request){
+    dd($request->all());
    }
 
        public function him_docsign(){

@@ -183,11 +183,20 @@ class VisaController extends Controller
     
     public function hsrequiredClientFiled($id)
     {
+        
         $visadetails = VisaServiceType::with('destinationcountry', 'VisaServices')->where('id', $id)->first();
         // dd($visadetails);
+        // dd($visadetails);
         // $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
-        $assign = ClientInfoForCountry::where('destination_id', $visadetails->destinationcountry->id)->first();
+        $checkbefore = ClientInfoForCountry::where('destination_id', $visadetails->destinationcountry->id)->
+        where('visa_id',$visadetails->visa_id)->first();
+        if(isset($checkbefore)){
+          $assign = $checkbefore;
+        }else{
+          $assign = ClientInfoForCountry::where('destination_id', $visadetails->destinationcountry->id)->first();
 
+        }
+          
     
         // Fetch all VisaSection records and decode fields
         $sections = VisaSection::all();
