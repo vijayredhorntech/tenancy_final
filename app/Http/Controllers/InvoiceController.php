@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Models\User;
+use Carbon\Carbon;
 use App\Models\Country;
 use App\Models\Deduction;
 use App\Models\CLientDetails;
@@ -12,11 +13,14 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Services\AgencyService;
 use App\Models\SupplierPaymentDetail;
 use App\Models\CancelInvoice;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 
 
 use Illuminate\Http\Request;
+
+use function React\Promise\all;
 
 class InvoiceController extends Controller
 {
@@ -30,6 +34,7 @@ class InvoiceController extends Controller
     /**
      * *Super admin Function 
      * */
+    
     public function hs_SAcancelInvoice(Request $request)
     {
        // Step 1: Validate and get filters
@@ -51,7 +56,7 @@ class InvoiceController extends Controller
             'hotelBooking',
             'hotelDetails',
             'cancelinvoice'
-        ])->where('invoicestatus', '1')
+        ])->where('invoicestatus', 'canceled')
         ->when($request->filled('search'), function ($query) use ($request) {
             $query->where(function ($q) use ($request) {
                 $q->where('invoice_number', 'like', '%' . $request->search . '%')
@@ -73,7 +78,7 @@ class InvoiceController extends Controller
     
         // Step 3: Fetch records with or without pagination
         $invoices = $perPage ? $invoicesQuery->paginate($perPage) : $invoicesQuery->get();
-
+ 
         // Step 4: Load dynamic data from user databases
         foreach ($invoices as $invoice) {
            
@@ -105,8 +110,8 @@ class InvoiceController extends Controller
             $services = Service::whereIn('id', [1, 2, 3])->get();  
     
 
+           
         // Step 5: Render view if type matches
-
             return view('superadmin.pages.invoicehandling.cancelindex', [
                 'countries' => $countries ?? [],
                 'invoices' => $invoices,
@@ -118,8 +123,8 @@ class InvoiceController extends Controller
         abort(404);
     }
 
-    public function hs_SAcanceleditInvoice($id){
-        $invoice = Deduction::with([
+    public function hs_SAcanceleditInvoice(){
+        $invoices = Deduction::with([
             'service_name', 
             'agency',
             'visaBooking', 
@@ -133,63 +138,150 @@ class InvoiceController extends Controller
             'hotelBooking',
             'hotelDetails',
             'cancelinvoice'
-        ])->where('id',$id)->first();
-     
-
-        if (!$invoice) {
-            abort(404); // Handle the case when the invoice is not found
-        }
-        $this->agencyService->setConnectionByDatabase($invoice->agency->database_name);
-
-     if($invoice->service == 3){
-        $clientFromUserDB = ClientDetails::on('user_database')
-        ->with('clientinfo') // You can add other nested relations if needed
-        ->where('id', $invoice->visaBooking->client_id)
-        ->first();
-    
-        $otherMember = AuthervisaApplication::on('user_database')
-        ->where('clint_id', $invoice->visaBooking->client_id)
-        ->where('booking_id', $invoice->visaBooking->id)
-        ->get();
-
-        $paymenthistory = SupplierPaymentDetail::on('user_database')
-        ->where('booking_id', $invoice->id)
-        ->orderByDesc('id')
-        ->get();
-
-        $invoice->setRelation('clint', $clientFromUserDB);
-        $invoice->setRelation('otherclients', $otherMember);
-        $invoice->setRelation('paymenthistory', $paymenthistory);
-
-     }
-
-        $countries = Country::all();
-        $services = Service::whereIn('id', [1, 2, 3])->get();
-
-     
-
-            return view('superadmin.pages.invoicehandling.cancelinvoice', compact('countries', 'invoice','services'));
+        ])->where('invoicestatus','canceled')->get();
        
+            return view('superadmin.pages.invoicehandling.cancelindex', compact('invoices'));
  
-         abort(404);
+    }
+    
+
+
+    public function hs_editInvoice($id){
+    $invoice = Deduction::with('service_name')->findOrFail($id);
+     
+    if ($invoice->invoicestatus === 'edited') {
+        return redirect()->route('superadmin.allinvoices')->with('error', 'This invoice can only be edited once.');
+    }
+
+    return view('superadmin.pages.invoicehandling.editinvoice', compact('invoice'));
+    } 
+    
+
+     public function hs_EditedInvoices()
+    {
+    $invoices = Deduction::where('invoicestatus', 'edited')
+        ->with(['service_name', 'agency', 'visaBooking'])
+        ->orderByDesc('updated_at')
+        ->get();
+
+    return view('superadmin.pages.invoicehandling.editindex', compact('invoices'));
     }
 
 
-   public function hsSAupdateinvoice(Request $request){
-    // dd($request->all());
-    $invoice=Deduction::where('id',$request->id)->first();
-    $invoice->invoicestatus='1';
-    $invoice->save();
- 
 
-    $cancelInvoice =CancelInvoice::where('invoice_id',$request->id)->first();
-    $cancelInvoice->status = 1;
+ public function hs_updateInvoice(Request $request, $id)
+{
+    $request->validate([
+        'amount' => 'required|numeric|min:0',
+    ]);
+
+    $invoice = Deduction::with('service_name')->findOrFail($id);
+    
+    $originalInvoiceNumber = $invoice->invoice_number;
+
+    
+    $serviceName = $invoice->service_name->name;
+    $prefix = strtoupper(substr($serviceName, 0, 3)); // e.g., "TOU"
+
+    
+    $newInvoiceNumber =  'EID'.'-'.$prefix . '-' . $originalInvoiceNumber;
+
+    if ($invoice->invoice_number !== $newInvoiceNumber) {
+        $invoice->oldinvoiceno = $originalInvoiceNumber;
+        $invoice->invoice_number = $newInvoiceNumber;
+        $invoice->invoicestatus = 'edited';
+    }
+
+    
+    $invoice->amount = $request->amount;
+
+    $invoice->save();
+
+    return redirect()->route('superadmin.allinvoices')->with('success', 'Invoice updated successfully.');
+}
+     
+  
+
+
+
+   public function hsSAupdateinvoice(Request $request,$id,$type){
+    // Validate inputs first
+    $request->validate([
+        'id' => 'required|exists:deductions,id',
+        'reason' => 'required|string',
+        'refundamount' => 'required|numeric|min:0',
+    ]);
+    
+       dd("hello");
+    // Step 1: Update main invoice
+    $invoice = Deduction::findOrFail($id);
+    $invoice->invoicestatus = 'canceled'; // Assuming 1 = canceled
+    $invoice->save();
+
+    // Step 2: Update or create CancelInvoice record
+    $cancelInvoice = CancelInvoice::firstOrNew([
+        'invoice_id' => $request->id
+    ]);
+
+    $cancelInvoice->status = 'canceled';
     $cancelInvoice->reason = $request->reason;
     $cancelInvoice->cancelled_by = Auth::id();
     $cancelInvoice->amount = $request->refundamount;
     $cancelInvoice->save();
-    return redirect()->back()->with('success', 'Invoice cancelled successfully.');  
-   }
+
+    if($type=="superadmin"){
+    return redirect()->route('superadmin.allinvoices')->with('success', 'Invoice cancelled successfully.');
+    }
+
+    return redirect()->back()->with('success', 'Invoice cancelled.');
+
+  }
+
+
+  public function hs_CancelInvoice(Request $request, $id)
+{
+    // Get the invoice with its related service name
+    $invoice = Deduction::findOrFail($id);
+
+    // Just return the view with the invoice details
+    return view('superadmin.pages.invoicehandling.cancelinvoice', compact('invoice'));
+}
+
+
+public function hs_CancelInvoiceSubmit(Request $request, $id)
+{
+    $request->validate([
+        'id' => 'required|exists:deductions,id',
+        'reason' => 'required|string',
+        'refundamount' => 'required|numeric|min:0',
+    ]);
+
+    $invoice = Deduction::findOrFail($request->id);
+    $invoice->invoicestatus = 'canceled'; // Assuming 1 = canceled
+    $invoice->save();
+
+    $cancelInvoice = CancelInvoice::firstOrNew([
+        'invoice_id' => $request->id,
+    ]);
+
+    $cancelInvoice->application_number = $deduction->application_number ?? 'APP-' . $invoice->id;
+    $cancelInvoice->type = 'manual';
+    $cancelInvoice->remark = null;
+    $cancelInvoice->reason = $request->reason;
+    $cancelInvoice->cancelled_by = Auth::id();
+    $cancelInvoice->status = 1;
+    $cancelInvoice->amount = $request->refundamount;
+    $cancelInvoice->cancelled_date = now();
+
+    $cancelInvoice->save();
+
+    return redirect()->route('superadmin.allinvoices')->with('success', 'Invoice cancelled successfully.');
+}
+
+
+
+
+ 
 
     /**
      * *Agency  Function 
@@ -198,7 +290,7 @@ class InvoiceController extends Controller
      /****Invoice Data ****/
     public function hs_invoice(Request $request, $type)
     {
-        
+     
         $agency=$this->agencyService->getAgencyData();
     
         // Step 1: Validate and get filters
@@ -288,7 +380,6 @@ class InvoiceController extends Controller
     /****Invoice Data ****/
     public function hs_viewInvoice(Request $request,$id){
 
-
         $invoice = Deduction::with([
             'service_name', 
             'agency',
@@ -302,7 +393,8 @@ class InvoiceController extends Controller
             'flightBooking',
             'hotelBooking',
             'hotelDetails',
-            'cancelinvoice'
+            'cancelinvoice',
+            'invoiceview'
         ])->where('invoice_number',$id)->first();
      
 
@@ -344,6 +436,40 @@ class InvoiceController extends Controller
  
          abort(404);
     }
+
+public function hs_allInvoices(Request $request)
+{
+    $perPage = $request->input('per_page', 10); // Default to 10 items per page
+
+$invoices = Deduction::with([
+    'service_name',
+    'agency',
+    'visaBooking.visa',
+    'visaBooking.origin',
+    'visaBooking.destination',
+    'visaBooking.visasubtype',
+    'visaBooking.clint',
+    'visaApplicant',
+    'flightBooking',
+    'hotelBooking',
+    'hotelDetails',
+    'cancelinvoice'
+    ])->where(function ($query) {
+    $query->whereNull('invoicestatus')
+          ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
+    })->paginate($perPage);
+
+
+    //  get data client information with the client database
+        $this->agencyService->getClientData($invoices);
+  
+        // Fetch filters or supporting data
+    $countries = Country::all();
+    $services = Service::whereIn('id', [1, 2, 3])->get();
+
+    return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices', 'countries', 'services'));
+}
+
 
 
     public function hs_payamountstore(Request $request)
@@ -422,36 +548,6 @@ class InvoiceController extends Controller
         return redirect()->route($route)->with('success', 'Supplier payment added successfully.');
     }
 
-    public function hs_cancelInvoice(Request $request)
-   {
-    // dd($request->all());
-    // Validate the request
-    $validator = Validator::make($request->all(), [
-        'id' => 'required|exists:deductions,id',
-        'remark' => 'required|string',
-    ]);
 
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->withErrors($validator)
-            ->withInput()
-            ->with('show_cancel_tab', true); // 👈 Add flag to show cancel tab
-    }
-
-    $invoice=Deduction::where('id',$request->id)->first();
-    $invoice->invoicestatus='1';
-    $invoice->save();
- 
-
-    $cancelInvoice = new CancelInvoice();
-    $cancelInvoice->invoice_id = $invoice->id;
-    $cancelInvoice->application_number = $invoice->invoice_number;
-    $cancelInvoice->type = "agency";
-    $cancelInvoice->status = 0;
-
-    $cancelInvoice->remark = $request->remark;
-    $cancelInvoice->save();
-    return redirect()->back()->with('success', 'Invoice cancelled successfully.');  
-   } 
 
 }

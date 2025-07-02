@@ -56,7 +56,7 @@ use App\Http\Controllers\DocumentSignController;
 
 use App\Events\MessageSent;
 
-
+use function PHPSTORM_META\type;
 
 Route::fallback(function() {
     return redirect('/login');
@@ -72,8 +72,7 @@ Route::get('/test',function (){
 
 
 Route::get('/viewtest',function (){
-    $data = session()->all();
-    dd($data);
+return view('forms.ANNEXURE-E');
 
 // return view('viewtest');
 }); 
@@ -405,17 +404,23 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         /*****Invoice and atoll **** */
 
                     Route::controller(InvoiceController::class)->group(function () {
-                        Route::get('/cencelinvoice','hs_SAcancelInvoice')->name('superadmin.cancelinvoice');
-                        Route::get('/cencelinvoice/{id}','hs_SAcanceleditInvoice')->name('cancelinvoice.edit');
-                        Route::post('/cencelstore  invoice','hsSAupdateinvoice')->name('superadmin.update.cancelinvoice');
-                     
+                        Route::get('/allinvoices', 'hs_allInvoices')->name('superadmin.allinvoices');  
+                        Route::get('/cancelindex', 'hs_SAcanceleditInvoice')->name('superadmin.cancelindex');      
+                        Route::get('/cancelinvoice/{id}','hs_CancelInvoice')->name('cancelinvoice');
+                        Route::post('/cancelinvoice/{id}', 'hs_CancelInvoiceSubmit')->name('cancelinvoice.submit');
+                        Route::get('/editinvoice/{id}','hs_editInvoice')->name('editinvoice');
+                        Route::get('/cencelstoreinvoice/{id}/{type}','hsSAupdateinvoice')->name('update.cancelinvoice');
+                        Route::post('/allinvoices/updateinvoice/{id}', 'hs_updateInvoice')->name('allinvoices.updateinvoice');
+                        Route::get('/editindex', 'hs_EditedInvoices')->name('superadmin.editindex');
+
+                        
                     });
 
 
                     Route::controller(DocumentSignController::class)->group(function () {
                         Route::get('/docsignindex','haindexDocSign')->name('superadmin.docsign');
-                        Route::get('/cencelinvoice/{id}','hs_SAcanceleditInvoice')->name('cancelinvoice.edit');
-                        Route::post('/cencelstore  invoice','hsSAupdateinvoice')->name('superadmin.update.cancelinvoice');
+                        Route::get('/cencelinvoice/{id}','hs_SAcanceleditInvoice')->name('cancelinvoicedocsign.edit');
+                        Route::post('/cencelstore  invoice','hsSAupdateinvoice')->name('superadmin.update.docsign');
                      
                     });
 

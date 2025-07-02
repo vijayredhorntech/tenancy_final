@@ -6,6 +6,7 @@
 </div>
 
 {{-- === Visa Forms Section === --}}
+
 <div class="w-full p-4 bg-gray-50 border-b-[2px] border-b-ternary/10">
     <div class="flex gap-4 overflow-x-auto">
         @foreach ($forms as $form)

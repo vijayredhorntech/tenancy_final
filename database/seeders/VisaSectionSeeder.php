@@ -37,7 +37,7 @@ class VisaSectionSeeder extends Seeder
                    "Mother Section","Mother’s Full Name", "Mother Place of Birth", "Mother Nationality",
                    "Mother Previous Nationality","Mother Country of birth","Mother’s DOB","Mother Employment","Status in China",
                    "Spouse Section","Spouse’s Full Name", "Spouse’s Nationality", "Spouse’s Place of Birth",
-                   "Spouse’s Previous Nationality","Spouse’s DOB","Spouse’s Employment Status","Spouse’s Address","Relative Information",
+                   "Spouse’s Previous Nationality","Spouse’s Country of birth","Spouse’s DOB","Spouse’s Employment Status","Spouse’s Address","Relative Information",
                    "Children Section"
     // Additional Family Info
     // "Family Members Traveling",
@@ -50,7 +50,7 @@ class VisaSectionSeeder extends Seeder
                 "Occupation", "Past Occupaton","Designation", "Employer Name", "Business Name", "School Name",
                 "Employer Address", "Employer Phone Number", "Duration of Employment","Duty",
                 "Duration of Study", "Employment Monthly Income", "Educational Qualifications",
-                "Employment History", "Education History" , "Military Status", "A Date from Date to",
+                "Employment History", "Education History" , "Military Status", "A Date from Date to","Refrence"
             ],
             
             "Social Media Online Presence" => [
@@ -59,10 +59,10 @@ class VisaSectionSeeder extends Seeder
             ],
 
             "Travel Information" => [
-                "Purpose of Travel", "Countries to Visit", "Main Destination Country",
+                "Purpose of Travel","Places likely to be visited", "Countries to Visit", "Main Destination Country",
                 "Number of Entries Requested", "Intended Arrival Date", "Intended Departure Date",
                 "Duration of Stay", "Port of Entry", "Port of Exit", "Travel Itinerary",
-                "Mode of Transport"
+                "Mode of Transport","Period of Visa","Visa type"
             ],
 
             "Visa History Background" => [

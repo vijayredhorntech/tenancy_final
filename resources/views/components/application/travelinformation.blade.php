@@ -16,9 +16,12 @@
                                     </div>
                                     @error('visatype')
                                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
+                                    @enderror   
                                 </div>
                                 @endif
+
+                        
+                                
                                 @if(in_array('Number of Entries Requested', $permission))
                                 <!-- noofentries -->
                                 <div class="w-full relative group flex flex-col gap-1">
@@ -31,10 +34,11 @@
                                     </div>
                                 </div>
                                 @endif
-                                @if(in_array('Period of Visa', $permission))
+
+                               @if(in_array('Period of Visa', $permission))
                                 <!-- periodofvisa -->
                                 <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="periodofvisa" class="font-semibold text-ternary/90 text-sm">Period of Visa ( Month) *</label>
+                                    <label for="periodofvisa" class="font-semibold text-ternary/90 text-sm">Duration of Visa ( Month) *</label>
                                             <div class="w-full relative">
                                                 <input type="text" name="periodofvisa" id="periodofvisa" requiresdd
                                                 
@@ -48,6 +52,7 @@
                                         </div>
                                 </div>
                                 @endif
+
                                 @if(in_array('Intended Arrival Date', $permission))
                                 <!-- expected date of journey -->
                                 <div class="w-full relative group flex flex-col gap-1">
@@ -181,6 +186,28 @@
                                 </div>
                                 @endif
 
+                                 @if(in_array('Places likely to be visited', $permission))
+                                <!-- Purpose of Visit * -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="country" class="font-semibold text-ternary/90 text-sm">Places likely to be visited *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="placeofvisit" id="placeofvisit" requiresdd
+                                              value="{{ old('placeofvisit', $bookingData->visarequireddocument->places_to_be_visited ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            @error('placeofvisit') border-red-500 @enderror">
+                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('placeofvisit')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @endif
+
+        
+
+
+
+
                               <input type="hidden" name="preview" value="detailsofvisasought">
                                 <input type="hidden" name="step" value="travelinfo">
                                 
@@ -188,7 +215,7 @@
                                 <div class="w-full flex justify-end  pb-4 gap-2 xl:col-span-4 lg:col-span-3 md:col-span-2 col-span-1">
                                             
                                         <button type="submit" data-current=5 data-previewtab=4 class="backbutton text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
-                                                                Back <i class="fa fa-arrow-right ml-1"></i>
+                                                                <i class="fa fa-arrow-left mr-1"></i> Back 
                                          </button>
                                    
                                         <button type="submit" class="text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">

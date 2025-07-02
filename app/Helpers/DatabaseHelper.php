@@ -9,41 +9,6 @@ use App\Models\Agency;
 
 class DatabaseHelper
 {
-    // public static function createDatabaseForUser($databaseName, $agency, $profile)
-    // {
-    //     // Validate database name
-    //     if (empty($databaseName)) {
-    //         throw new \Exception('Database name cannot be empty.');
-    //     }
-    
-    //      $databaseName = preg_replace('/[^a-zA-Z0-9_]/', '', $databaseName);
-    
-    //     // Create database
-    //     DB::statement("CREATE DATABASE `$databaseName`");
-    
-    //     // Update config to use the new database
-    //     config(['database.connections.tenant.database' => $databaseName]);
-    
-    //     // Reconnect to apply new database settings
-    //     DB::purge('tenant');
-    //     DB::reconnect('tenant');
-    
-    //     // Run migrations for the new database
-    //     Artisan::call('migrate', ['--database' => 'tenant', '--path' => 'database/migrations']);
-
-    //     Artisan::call('db:seed', [
-    //         '--database' => 'tenant',
-    //         '--class' => 'RoleSeeder' // Change to your actual seeder class
-    //     ]);
-    
-    //     // Insert user into the new database
-    //     DB::connection('tenant')->table('users')->insert([
-    //         'name' => $agency->name,
-    //         'email' => $agency->email,
-    //         'password' => Hash::make($agency->email),
-    //         'profile' => $profile,
-    //     ]);
-    // }
 
     public static function createDatabaseForUser($databaseName, $agency, $profile)
 {

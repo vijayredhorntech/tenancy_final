@@ -44,7 +44,7 @@
                                
                                 @if(in_array('Countries Visited (Last 12 months)', $permission)) 
                                 <div class="w-full relative group flex flex-col gap-1 ">
-                                    <label for="countries_visited_last_10_years" class="font-semibold text-ternary/90 text-sm">Countries Visited in (Last 12 months)</label>
+                                    <label for="countries_visited_last_10_years" class="font-semibold text-ternary/90 text-sm">Countries Visited in (Last 10 years)</label>
                                     <div class="w-full relative">
                                         <textarea name="countries_visited_last_10_years" id="countries_visited_last_10_years"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('countries_visited_last_10_years', $bookingData->visarequireddocument->countries_visited_last_10_years ?? '')  }}</textarea>
@@ -287,7 +287,7 @@
                                 <div class="w-full flex justify-end  pb-4 gap-2 xl:col-span-4 lg: md:col-span-2 col-span-1">
                                             
                                         <button type="submit" data-current=5 data-previewtab=4 class="backbutton text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
-                                                                Back <i class="fa fa-arrow-right ml-1"></i>
+                                                                <i class="fa fa-arrow-left mr-1"></i> Back 
                                          </button>
                                    
                                         <button type="submit" class="text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
