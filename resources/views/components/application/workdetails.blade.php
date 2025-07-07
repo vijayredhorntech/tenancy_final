@@ -208,28 +208,28 @@
 
 
                               @if(in_array('A Date from Date to', $permission))
-    <!-- Date Range -->
-    <div class="w-full relative group flex flex-col gap-1">
-        <label class="font-semibold text-ternary/90 text-sm">Date Range</label>
-        <div class="flex gap-2 w-full">
-            <!-- Date From -->
-            <div class="w-full relative">
-                <input type="date" name="date_from" id="date_from" max="9999-12-31"
-                    value="{{ old('date_from', isset($eduEmployData->date_from) ? \Carbon\Carbon::parse($eduEmployData->date_from)->format('Y-m-d') : '') }}"
-                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-            </div>
+                                    <!-- Date Range -->
+                                    <div class="w-full relative group flex flex-col gap-1">
+                                        <label class="font-semibold text-ternary/90 text-sm">Date Range</label>
+                                        <div class="flex gap-2 w-full">
+                                            <!-- Date From -->
+                                            <div class="w-full relative">
+                                                <input type="date" name="date_from" id="date_from" max="9999-12-31"
+                                                    value="{{ old('date_from', isset($eduEmployData->date_from) ? \Carbon\Carbon::parse($eduEmployData->date_from)->format('Y-m-d') : '') }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
 
-            <!-- Date To -->
-            <div class="w-full relative">
-                <input type="date" name="date_to" id="date_to" max="9999-12-31"
-                    value="{{ old('date_to', isset($eduEmployData->date_to) ? \Carbon\Carbon::parse($eduEmployData->date_to)->format('Y-m-d') : '') }}"
-                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-            </div>
-        </div>
-    </div>
-@endif
+                                            <!-- Date To -->
+                                            <div class="w-full relative">
+                                                <input type="date" name="date_to" id="date_to" max="9999-12-31"
+                                                    value="{{ old('date_to', isset($eduEmployData->date_to) ? \Carbon\Carbon::parse($eduEmployData->date_to)->format('Y-m-d') : '') }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
 
 
 

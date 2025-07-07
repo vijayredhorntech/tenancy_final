@@ -36,6 +36,7 @@
                     <tr>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md"> Document Name </td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Date/Time</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Client Details </td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice </td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sign Status </td>
@@ -43,40 +44,105 @@
                     </tr>
            
 
-            {{--        @forelse($leaves as $leave)
-      
-                            <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
+               @forelse($documents as $document)
+            
+                         @php
+                            $sign        = $document->sign;                     // may be null
+                            $isSent      = ! is_null($sign);                    // process row exists
+                            $isPending   =  $sign?->status === 'pending';
+                            $isSigned    =  $sign?->status === 'signed';        // adjust if you use ‘completed’
+                            $agency      = $document->agency;                   // may be null
+                        @endphp    
+                       <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$leave['leave_type']}}</td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$leave['total_days']}}</td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$document['name']}}</td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-sm">
+                                {{ $sign ? $sign->created_at->format('d M Y') : "Not Send yet" }}
+                            </td>
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                    @php
-                                        $isActive = $leave['status'] == 1;
-                                        $statusLabel = $isActive ? 'Active' : 'Inactive';
-                                        $statusColor = $isActive ? 'success' : 'danger';
-                                    @endphp
-                                    <span class="bg-{{ $statusColor }}/10 text-{{ $statusColor }} px-2 py-1 rounded-[3px] font-bold">
-                                        {{ $statusLabel }}
-                                    </span>
+                                <div class="mb-2 leading-tight">
+                                        <span class="font-semibold">{{ $document->agency->name }}</span><br>
+                                        <span class="text-xs">{{ $document->agency->phone }}</span><br>
+                                        <span class="text-xs">{{ $document->agency->email }}</span>
+                                    </div>
+                             </td>
+                                
+                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 text-sm">
+                                 {{-- first row: clip + count --}}
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <i class="fa fa-paperclip"></i>
+                                        {{ count($document->document_file ?? []) }}
+                                    </div>
+
+                                       {{-- each stored path --}}
+                                        @foreach ($document->document_file as $path)
+                                            @php
+                                                $url      = Storage::url($path);
+                                                $ext      = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+                                                $isImage  = in_array($ext, ['jpg','jpeg','png','gif','webp','bmp','svg']);
+                                            @endphp
+
+                                            @if ($isImage)
+                                                {{-- image thumbnail (click to open full) --}}
+                                                <a href="{{ $url }}" target="_blank" class="inline-block mb-1">
+                                                    <img src="{{ $url }}"
+                                                        alt="attachment {{ $loop->iteration }}"
+                                                        class="h-12 w-12 object-cover rounded border" />
+                                                </a>
+                                            @else
+                                                {{-- generic file link --}}
+                                                <a href="{{ $url }}"
+                                                target="_blank"
+                                                class="flex items-center gap-1 text-blue-600 underline mb-1">
+                                                    <i class="fa fa-file-alt"></i>
+                                                    File {{ $loop->iteration }}
+                                                </a>
+                                            @endif
+                                        @endforeach
+                            </td>
+
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-sm">
+                                    @switch(true)
+                                            @case($isSigned)
+                                                <span class="font-semibold text-green-600">Signed</span>
+                                                @break
+
+                                            @case($isPending)
+                                                <span class="font-semibold text-yellow-600">Pending</span>
+                                                @break
+
+                                            @default
+                                                <span class="font-semibold text-red-600">Not sent yet</span>
+                                        @endswitch
+                            </td>
+
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                 
+                              <div class="flex gap-3 items-center justify-center">
+                                        {{-- Edit Icon --}}
+                                        <a href=""
+                                        class="text-blue-600 hover:text-blue-800" title="Edit Document">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+
+                                        {{-- Email Icon --}}
+                                        <a href="{{ route('senddocdocument.email', $document->id) }}"
+                                            class="text-green-600 hover:text-green-800"
+                                            title="Send Email">
+                                                <i class="fas fa-envelope"></i>
+                                            </a>
+
+                                          
+                                            @if ($sign && $sign->signing_token)
+                                                <a href="{{ route('document.sign', $sign->signing_token) }}"
+                                                class="text-purple-600 hover:text-purple-800"
+                                                title="Sign Document">
+                                                    <i class="fas fa-pen-fancy"></i>
+                                                </a>
+                                            @endif
+                                    </div>
                                 </td>
 
-                          
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                <div class="flex gap-2 items-center">
-                                    <a href="{{route('agency.update.leave',['id' => $leave->id,'type'=>'agency'])}}" title="Remind for funds">
-                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-pencil"></i>
-                                        </div>
-                                    </a>
-                                    <!-- <a href="" title="View Dashboard">
-                                        <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-computer"></i>
-                                        </div>
-                                    </a> -->
-
-
-                                </div>
-                            </td>
                         </tr>
 
 
@@ -84,7 +150,7 @@
                         <tr>
                             <td colspan="9" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
                         </tr>
-                    @endforelse  --}}
+                    @endforelse 
 
 
                 </table>

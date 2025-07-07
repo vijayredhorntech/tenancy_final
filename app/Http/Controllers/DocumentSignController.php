@@ -9,7 +9,7 @@ use App\Models\Agency;
 use App\Models\DocSignAudit;
 use App\Models\DocSignDocument;
 use App\Models\DocSignProcess;
-
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 
@@ -30,22 +30,75 @@ class DocumentSignController extends Controller
 
        /****Doc Sign *****/
 
+
    public function haindexDocSign(Request $request){
         
-        return view('superadmin.pages.docsign.index');
+    $documents=$this->documentSignRepository->getAllDocuments();
+    // dd($documents);
+        return view('superadmin.pages.docsign.index',compact('documents'));
 
    }
 
    public function hsCreateDocument(Request $request){
-         $agencies =Agency::all();
-         $termconditions = $this->termConditionRepo->allTeamTypes();
+          
+           $agencies =Agency::all();
+           $termconditions = $this->termConditionRepo->allTeamTypes();
    
         return view('superadmin.pages.docsign.createdoc',compact('agencies','termconditions'));
    }
 
    public function hsDocumentStore(Request $request){
-    dd($request->all());
+
+    $validator = Validator::make($request->all(), [
+                    'name'               => 'required|string|max:255',
+                    'clientid'           => 'required|integer',
+                    'document_type'      => 'required|array|min:1',
+                    'document_type.*'    => 'required|string|max:50',
+                    'document_name'      => 'required|array|min:1',
+                    'document_name.*'    => 'required|string|max:255',
+                    'termandcondition'   => 'required|array|min:1',
+                    'termandcondition.*' => 'required|string|max:255',
+                    'document_file'      => 'required|array|min:1',
+                    'document_file.*'    => 'required|file|mimes:pdf,jpg,jpeg,png,gif,webp,bmp,svg',
+                    'termstype'          => 'required|array|min:1',
+                    'termstype.*'        => 'required|integer',
+                ]);
+         
+                if ($validator->fails()) {
+                    // 👇 Get all error messages
+                    $errors = $validator->errors()->all(); // array of strings
+                    logger()->error('Validation failed:', $errors);
+                  return back()
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+            $dataRequest = $this->documentSignRepository->signDocumentStore($request);
+            if($dataRequest){
+                return redirect()->route('superadmin.docsign')->with('success', 'Document created successfully.');
+            }else{
+                return redirect()->route('superadmin.docsign')->with('error', 'Document created successfully.');
+            }
    }
+
+   public function hsSendEmail(Request $request, int $id)
+    {
+        $this->documentSignRepository->sendEmailForSign($request, $id);
+        return back()->with('success', 'Signing request emailed successfully!');
+    }
+
+
+public function showSigningPage(Request $request,$token){
+            $signature = DocSignProcess::with('agency')->where('signing_token', $token)
+            ->firstOrFail();
+        
+            $signature->recordEvent('viewed', 'viewed', $request);
+        
+        dd($signature);
+
+        return view('superadmin.pages.docsign.document-signing', compact('signature'));
+
+}
+
 
        public function him_docsign(){
   
@@ -55,6 +108,7 @@ class DocumentSignController extends Controller
     public function hs_docIndex(Request $request)
     {
         $documents=$this->documentSignRepository->getAllDocuments();
+        dd($documents);
    
       return view('agencies.pages.docsign.index',compact('documents'));
     }

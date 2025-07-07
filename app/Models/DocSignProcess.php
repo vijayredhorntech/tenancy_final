@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
+use App\Models\DocSignAudit;
 
 class DocSignProcess extends Model
 {
@@ -12,7 +14,7 @@ class DocSignProcess extends Model
     protected $table = 'document_signatures';
 
     protected $fillable = [
-        'core_member_id',
+        'user_id',
         'document_id',
         'signing_token',
         'status',
@@ -30,8 +32,25 @@ class DocSignProcess extends Model
         'expires_at' => 'datetime',
     ];
 
+
+    public function agency(){
+        return $this->hasOne(Agency::class, 'id','user_id');
+        
+    }
+
     public function audits()
     {
         return $this->hasMany(DocSignAudit::class, 'document_signature_id');
     }
+
+    /***save Record *** */
+    public function recordEvent(string $event, string $details, Request $request): DocSignAudit
+{
+    return $this->audits()->create([
+        'event'      => $event,
+        'details'    => $details,
+        'ip_address' => $request->ip(),
+        'user_agent' => $request->userAgent(),
+    ]);
+}
 }

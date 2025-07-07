@@ -416,6 +416,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/docsignindex','haindexDocSign')->name('superadmin.docsign');
                         Route::get('/docsigncreate','hsCreateDocument')->name('add.signdocument');
                         Route::post('/documentstore','hsDocumentStore')->name('superadmindocument.store');
+                        Route::get('/send-document-email/{id}','hsSendEmail')->name('senddocdocument.email');
                      
                      
                     });
@@ -435,6 +436,11 @@ Route::middleware([LogUserActivity::class])->group(function () {
 /*****Client  */
 /*****Common Route ***** */
 
+
+Route::get('/documents/sign/{token}', [DocumentSignController::class, 'showSigningPage'])
+->name('document.sign');
+Route::post('/document/sign', [DocumentSignController::class, 'submitSigning'])
+->name('document.sign.submit');
 
 
 Route::middleware('auth')->group(function () {
