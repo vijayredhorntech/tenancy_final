@@ -1,10 +1,7 @@
 <x-front.layout>
     @section('title') Document Sign Management @endsection
 
-    @php
-        use Illuminate\Support\Facades\Storage;
-        use Illuminate\Support\Str;
-    @endphp
+
 
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
