@@ -29,6 +29,7 @@ use App\Models\ClientDetails;
 use App\Models\VisaServiceType;
 use App\Models\VisaBooking;
 use App\Models\VisaSection;
+use App\Models\TermType;
 
 use App\Models\ClientInfoForCountry;
 
@@ -119,9 +120,17 @@ class VisaController extends Controller
     public function hsVisa()
     {
         $allvisa = $this->visaRepository->getAllVisas();
+    
+        
         return view('superadmin.pages.visa.visaindex', compact('allvisa'));
     }
 
+    public function hsVisaView($id){
+        $visa = $this->visaRepository->getVisaById($id);
+        $clientData=[];
+        // dd($visa);
+        return view('superadmin.pages.visa.addsestion.visaview', compact('visa','clientData'));
+    }
 
 
 
@@ -137,58 +146,24 @@ class VisaController extends Controller
         return response()->json($visa);
     }
 
-
-    // public function hsrequiredClientFiled($id)
-    // {
-    //     // dd($id);
-        
-    //     $visadetails=VisaServiceType::with('destinationcountry','VisaServices')->where('id',$id)->first();
-    //     $client = ClientDetails::first();
-    //     $clientMore = ClientMoreInfo::first();
-    //     $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
-
     
-    //     // Combine both tables' data
-    //     $combined = array_merge(
-    //         $client ? $client->toArray() : [],
-    //         $clientMore ? $clientMore->toArray() : []
-    //     );
-    
-    
-    //     // Keep only these permission fields
-    //     $allowed = [
-    //         'personal_details_permission',
-    //         'other_details_permission',
-    //         'address_permission',
-    //         'passport_details_permission',
-    //         'additional_passport_info_permission',
-    //         'family_details_permission',
-    //         'wife_details_permission',
-    //         'occupation_details_permission',
-    //         'armed_force_details_permission',
-    //         'citizenship_id',
-    //        'children_permission',
-    //         'educational_qualification',
-    //         'identification_marks',
-    //         'nationality',    
-    //     ];
-  
-    //     $combined = collect($combined)
-    //         ->filter(function ($value, $key) use ($allowed) {
-    //             return in_array($key, $allowed);
-    //         })
-    //         ->toArray();
-    //     //    dd($combined);
-    //     return view('superadmin.pages.visa.assigncountry', compact('combined','visadetails','assign'));
-    // }
-    
+    //filed data 
     public function hsrequiredClientFiled($id)
     {
+        
         $visadetails = VisaServiceType::with('destinationcountry', 'VisaServices')->where('id', $id)->first();
         // dd($visadetails);
+        // dd($visadetails);
         // $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
-        $assign = ClientInfoForCountry::where('destination_id', $visadetails->destinationcountry->id)->first();
+        $checkbefore = ClientInfoForCountry::where('destination_id', $visadetails->destinationcountry->id)->
+        where('visa_id',$visadetails->visa_id)->first();
+        if(isset($checkbefore)){
+          $assign = $checkbefore;
+        }else{
+          $assign = ClientInfoForCountry::where('destination_id', $visadetails->destinationcountry->id)->first();
 
+        }
+          
     
         // Fetch all VisaSection records and decode fields
         $sections = VisaSection::all();
@@ -255,7 +230,7 @@ class VisaController extends Controller
   
       public function hsStore(Request $request)
      {
-
+    //    dd($request->all());
         $data = $request->validate([
             'name'         => 'required|string|max:255|unique:visa_types,name',
             'description'  => 'nullable|string', // Allows HTML content (Quill Editor)
@@ -405,18 +380,13 @@ class VisaController extends Controller
             'vid'            => 'required',
             'name'         => 'required|string|max:255',
             'description'  => 'nullable|string', // Allows HTML content (Quill Editor)
-            'subtype'      => 'nullable',
-            'subtype.*'    => 'nullable|string|', // Each subtype should be a string
-            'subtypeprice' => 'nullable|array',
-            'subtypeprice.*' => 'nullable', // Each price must be a number and positive
-            'commission'   => 'nullable',
-            'commission.*' => 'nullable|numeric', // Each commission should be 0-100%
+         
         ]);
 
         $visa = $this->visaRepository->updateVisa($request->vid,$data);
 
         // $visa = $this->visaRepository->updateVisa($id, $data);
-        return redirect()->route('visa.view')->with('success', 'Visa updated successfully!');
+        return redirect()->route('visa.view',['id' => $request->vid])->with('success', 'Visa updated successfully!');
     }
 
 
@@ -501,11 +471,14 @@ class VisaController extends Controller
     
 
     /******VIsa country get *****/
-    public function hsvisacoutnry(){
-
-        $visas= $this->visaRepository->allVisacoutnry();
-        // dd($visas);
-        return view('superadmin.pages.visa.visacoutnry',compact('visas'));
+    public function hsvisacoutnry(Request $request){
+ 
+       
+        $countries=Country::get();
+        $applyCountires= $this->visaRepository->allVisacoutnry($request);
+        $visas=VisaServices::get();
+        
+        return view('superadmin.pages.visa.visacoutnry',compact('applyCountires','countries','visas'));
     }
 
     /****Delete Visa**** */
@@ -672,12 +645,19 @@ class VisaController extends Controller
         if (isset($checkuser) && $checkuser->agency_id == $agency->id) {
         $clientData = $this->visaRepository->bookingDataById($id);
         // dd($clientData);
+        // dd($clientData);
         $origin_id=$clientData->origin_id;
         $destination_id=$clientData->destination_id;
         $forms=VisaServiceTypeDocument::with('from')->
         where('origin_id',$origin_id)->where('destination_id',$destination_id)->get();
+        $termconditon = TermType::with([
+            'terms' => function ($q) {
+                $q->where('display_invoice', 1);
+            },
+        ])->get();
+        // dd($clientData);
 
-        return view('superadmin.pages.visa.viewvisaapplication',compact('clientData','forms'));
+        return view('superadmin.pages.visa.viewvisaapplication',compact('clientData','forms','termconditon'));
         }
         return redirect()->route('agency.application', ['type' => 'all']);
 

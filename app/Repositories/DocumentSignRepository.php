@@ -12,6 +12,18 @@ use App\Repositories\Interfaces\VisaRepositoryInterface;
 use App\Models\DownloadCenter;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DocumentUploadRequestMail;
+use App\Models\DocSignAudit;
+use App\Models\DocSignDocument;
+use App\Models\DocSignProcess;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+    use App\Mail\DocSignRequestMail;
+use Illuminate\Support\Str;
+use App\Models\Deduction;
+
+
+
 
 
 class DocumentSignRepository implements DocumentSignRepositoryInterface
@@ -28,8 +40,75 @@ class DocumentSignRepository implements DocumentSignRepositoryInterface
     }
     public function getAllDocuments()
     {  
-        return SignedDocument::all();  // Retrieve all documents
+        return DocSignDocument::with('sign','agency')->get();  // Retrieve all documents
     }
+
+    public function signDocumentStore($data){
+  
+        $user = Auth::user();  
+        $roleNames = $user->getRoleNames();
+        $primaryRole = $roleNames->first(); 
+
+        $termsData = [];
+        foreach ($data['termstype'] ?? [] as $typeId) {
+           $key = 'terms_' . $typeId;
+           $termsData[$key] = $data[$key] ?? [];   // default to empty array if none checked
+       }
+      
+       // Handle file uploads and collect stored paths
+       $folder = 'documents/docsigned';           //  no trailing /
+
+       $paths = collect($data->file('document_file', []))
+           ->map(fn ($file) => $file->store($folder, 'public'))   // → storage/app/public/documents/docsigned/…
+           ->toArray();
+       
+      
+       $doc = DocSignDocument::create([
+           'name'             => $data['name'],
+           'document_type'    => $data['document_type'],    // array
+           'document_name'    => $data['document_name'],    // array
+           'termandcondition' => $data['termandcondition'], // array
+           'termstype'        => $data['termstype'],        // array
+           'terms_data'       => $termsData,
+           'document_file'    => $paths,          // array of file paths
+           'user_type'        =>$primaryRole, // or however you tag users
+           'user_id'          => $user->id,
+       ]);
+        return $doc;
+}
+
+/* -----------------------------------------------------------------
+   PUBLIC METHOD – call this from your controller or service layer
+   ----------------------------------------------------------------- */
+public function sendEmailForSign(Request $request, int $documentId): void
+{
+    DB::transaction(function () use ($request, $documentId) {
+
+        /* 1. Fetch document (+ agency relation) */
+        $document = DocSignDocument::with('agency')->findOrFail($documentId);
+
+        /* 2. Create a DocSignProcess row */
+        $process = DocSignProcess::create([
+            'user_id'              => $document->user_id,
+            'document_id'          => $document->id,
+            'signing_token'        => Str::uuid(),
+            'status'               => 'pending',
+            'message'              => $request->input('message', ''),
+            'signed_at'            => null,
+            'expires_at'           => now()->addDays(7),
+            'signature_hash'       => null,
+            'signed_document_path' => null,
+            'ip_address'           => $request->ip(),
+            'user_agent'           => $request->userAgent(),
+        ]);
+
+        $process->recordEvent('email_sent', 'Signing request email queued', $request);
+
+       /* 4. Send email (queued) */
+        // Mail::to($document->agency->email)
+        //     ->queue(new DocSignRequestMail($process));
+    });
+}
 
     public function getDocumentById($id)
     {
@@ -45,6 +124,50 @@ class DocumentSignRepository implements DocumentSignRepositoryInterface
         $data['agency_id'] = $agencyId;
         return SignedDocument::create($data);  // Create a new document record
     }
+
+    public function createDocumentAgency($id, $type)
+{
+    // 1. Fetch the booking with all needed relations
+    $invoice = Deduction::with([
+        'service_name',
+        'agency',
+        'visaBooking.visa',
+        'visaBooking.origin',
+        'visaBooking.destination',
+        'visaBooking.visasubtype',
+        'flightBooking',
+        'hotelBooking',
+        'hotelDetails',
+        'cancelinvoice',
+    ])->where('flight_booking_id', $id)->first();
+
+    $user = $this->agencyService->getCurrentLoginUser();
+     $clientInfo = $this->agencyService->getClientinfoById($invoice);
+    //  dd($clientInfo->id);
+
+    // 3. Build the array of columns you want to insert
+    $docData = [
+        'name'             => $clientInfo->visaBooking->visa->name,
+        'title'            => $clientInfo->visaBooking->visa->name,
+        'document_type'    => 'Invoice',
+        'document_name'    => 'Visa',
+        'termandcondition' => [],
+        'termstype'        => [],
+        'terms_data'       => [],
+        'document_file'    => [],
+        'client_id'        => $clientInfo->visaBooking->clientDetailsFromUserDB->id,
+        'agency_id'        => $clientInfo->agency->agency_id ?? null,
+        'related_id'       => $clientInfo->id,
+        'user_id'          => $user->id,
+        'type_of_document' => 'Auto',
+        'user_type'        => 'Agency',
+    ];
+
+    // 4. Pass the ARRAY to create(), not the model
+    $document = DocSignDocument::create($docData);
+
+    return $document;
+}
 
     public function updateDocument($id, array $data)
     {
@@ -147,33 +270,7 @@ class DocumentSignRepository implements DocumentSignRepositoryInterface
    }
 
    /*****Document Save *** */
-//    public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $clientId, $agencyId, $bookingType)
-//    {
-//        $merged = [];
-   
-//        foreach ($documents as $index => $docName) {
-//            $file = $files[$index];
-   
-//            $fileName = time() . '_' . $file->getClientOriginalName();
-//            $filePath = $file->storeAs('documents/clientuploadDocument', $fileName, 'public'); // Use forward slashes
-   
-//            $merged[] = [
-//                'name' => $docName,
-//                'file' => $filePath,
-//            ];
-//        }
-   
-//        // Insert data into your table
-//        DownloadCenter::create([
-//         'invoice_id' => $invoiceId,
-//         'client_id' => $clientId,
-//         'agency_id' => $agencyId,
-//         'booking_id' => $bookingId,
-//         'booking_type' => $bookingType,
-//         'documents' => json_encode($merged),
-//     ]);
-    
-//    }
+
    
 public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $clientId, $agencyId, $bookingType)
 {
@@ -218,6 +315,9 @@ public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $cl
         ]);
     }
 }
+
+
+
 
 
     

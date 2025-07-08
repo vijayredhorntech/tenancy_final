@@ -329,7 +329,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                         Route::controller(VisaController::class)->group(function () {
                                  Route::get('coutnry','hsCountry')->name('view.country');
-                                 Route::get('visa','hsVisa')->name('visa.view');
+                                 Route::get('visa','hsVisa')->name('allvisa.view');
+                                 Route::get('viewvisa/{id?}','hsVisaView')->name('visa.view');
                                  Route::get('visacreate','hsVisacreate')->name('visa.create');
                                  Route::post('visastore','hsStore')->name('visa.store');
                                  Route::get('/visa/assign/{id?}','hsassignVisa')->name('visa.assign');
@@ -415,12 +416,21 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/cencelstoreinvoice/{id}/{type}','hsSAupdateinvoice')->name('update.cancelinvoice');
                         Route::post('/allinvoices/updateinvoice/{id}', 'hs_updateInvoice')->name('allinvoices.updateinvoice');
                         Route::get('/editindex', 'hs_EditedInvoices')->name('superadmin.editindex');
+<<<<<<< HEAD
+=======
+                  
+
+>>>>>>> 533bfa9b58052ce9e914315519e4e1f9e179dc47
                         
                     });
 
 
                     Route::controller(DocumentSignController::class)->group(function () {
                         Route::get('/docsignindex','haindexDocSign')->name('superadmin.docsign');
+                        Route::get('/docsigncreate','hsCreateDocument')->name('add.signdocument');
+                        Route::post('/documentstore','hsDocumentStore')->name('superadmindocument.store');
+                        Route::get('/send-document-email/{id}','hsSendEmail')->name('senddocdocument.email');
+                     
                         Route::get('/cencelinvoice/{id}','hs_SAcanceleditInvoice')->name('cancelinvoicedocsign.edit');
                         Route::post('/cencelstore  invoice','hsSAupdateinvoice')->name('superadmin.update.docsign');
                      
@@ -446,12 +456,28 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
 
 
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+Route::get('/documents/sign/{token}', [DocumentSignController::class, 'showSigningPage'])
+->name('document.sign');
+Route::post('/document/sign', [DocumentSignController::class, 'submitSigning'])
+->name('document.sign.submit');
+Route::get('/documents/{path}', function ($path) {
+    $disk = 'documents';
+    $fullPath = Storage::disk($disk)->path($path);
+    
+    if (!Storage::disk($disk)->exists($path)) {
+        abort(404);
+    }
+    
+    return response()->file($fullPath);
+})->where('path', '.*')->name('documents.serve');
 
 require __DIR__.'/auth.php';
 

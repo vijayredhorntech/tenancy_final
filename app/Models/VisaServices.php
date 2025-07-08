@@ -30,6 +30,10 @@ class VisaServices extends Model
     }
 
 
+
+    public function visaAssignCountries(){
+        return $this->hasMany(VisaServiceType::class,'visa_id', 'id');
+    }
   
     public function VisavisaSubtype()
     {

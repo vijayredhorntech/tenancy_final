@@ -1,3 +1,30 @@
+<style>
+/* Hide everything by default in print */
+@media print {
+    body * {
+        visibility: hidden;        /* still occupies space but invisible */
+    }
+
+    /* Make the invoice and its children visible */
+    #viewInvoiceDiv,
+    #viewInvoiceDiv * {
+        visibility: visible;
+    }
+
+    /* Keep the invoice at the top‑left and use full width */
+    #viewInvoiceDiv {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    /* Optionally hide buttons or other screen‑only elements */
+    .no-print {
+        display: none !important;
+    }
+}
+</style>
 <div class="w-full relative">
         <img class="absolute -top-20 left-0 w-full opacity-20" style="z-index: -1" src="{{asset('assets/images/bgImage.png')}}" alt="">
 
@@ -28,33 +55,7 @@
 
                 {{-- Progress Steps --}}
                 <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
-                    <!-- <div class="flex justify-between items-center">
-                        <div class="flex flex-col items-center">
-                            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold">1</div>
-                            <span class="text-xs mt-1 text-gray-600">Application</span>
-                        </div>
-                        <div class="flex-1 h-1 bg-gray-200 mx-2">
-                            <div class="h-1 bg-primary" style="width: 100%"></div>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">2</div>
-                            <span class="text-xs mt-1 text-gray-600">Payment</span>
-                        </div>
-                        <div class="flex-1 h-1 bg-gray-200 mx-2">
-                            <div class="h-1 bg-gray-200" style="width: 0%"></div>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">3</div>
-                            <span class="text-xs mt-1 text-gray-600">Processing</span>
-                        </div>
-                        <div class="flex-1 h-1 bg-gray-200 mx-2">
-                            <div class="h-1 bg-gray-200" style="width: 0%"></div>
-                        </div>
-                        <div class="flex flex-col items-center">
-                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold">4</div>
-                            <span class="text-xs mt-1 text-gray-600">Completed</span>
-                        </div>
-                    </div> -->
+               
                 </div>
             </div>
 
@@ -219,3 +220,10 @@
             </div>
         </div>
     </div>
+
+    
+    <div class="flex justify-center mt-4">
+        <button onclick="window.print()" class="bg-[#28a745] text-white text-sm px-2 py-1 rounded-sm">
+            Print Invoice
+        </button>
+ </div>

@@ -73,7 +73,14 @@ class Deduction extends Model
         return $this->hasOne(CancelInvoice::class, 'invoice_id', 'id');
     }
     
+
+    public function invoice(){
+        return $this->hasOne(Invoice::class, 'bookingid', 'id');
+    }
     
+    public function docsign(){
+        return $this->hasOne(DocSignDocument::class, 'related_id', 'id');
+    }
 
   
 }

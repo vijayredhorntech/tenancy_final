@@ -1,4 +1,4 @@
-<x-front.layout>
+<x-agency.layout>
     @section('title')All Invoices @endsection
     <div class="w-full grid xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 mb-4">
 
@@ -20,23 +20,38 @@
                         <tr>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
-                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>            
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">receiver_name</td>            
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice Date</td>
+
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Type</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                         </tr>
 
-                        
+                 
                         @forelse($invoices as $invoice)
 
                                     <tr>
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>                         
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                    {{$invoice['invoice_number']}}  </td> 
-                                        <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->service_name['name']}}</td>
+                                         {{$invoice->invoiceDetails->invoice_number}}  </td> 
+                                        <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->receiver_name}}</td>
+                                        <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">Visa</td>
+                                        <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->invoice_date}}</td>
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$invoice['amount']}}</td>
+                                        <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->payment_type}}</td>
+
+
+                                        
+                               
                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                             <div class="flex gap-2 items-center">
                                                         <!-- Edit Button -->
+                                                        <a href="{{ route('viewinvoice', $invoice->id) }}"
+                                                            class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white">
+                                                            <i class="fa fa-eye"></i>
+                                                        </a>
                                                         <a href="{{ route('editinvoice', $invoice->id) }}"
                                                             class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white">
                                                             <i class="fa fa-pen"></i>
@@ -91,4 +106,4 @@
         </form>
 
     </div>
-</x-front.layout>
+</x-agency.layout>
