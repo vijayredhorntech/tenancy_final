@@ -494,7 +494,7 @@ public function updateVisaAssignment(array $data, int $id)
 
 
 public function getVisabySearch($origin,$destination){
-    return VisaServiceType::with('VisaServices','Subvisas')->where('origin',$origin)->where('destination',$destination)->get();
+    return VisaServiceType::with('VisaServices','Subvisas','origincountry','destinationcountry')->where('origin',$origin)->where('destination',$destination)->get();
     // $value= VisaServiceType::with('VisaServices','Subvisas')->where('origin',$origin)->where('destination',$destination)->get();
     // dd($value);
 

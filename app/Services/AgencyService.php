@@ -8,6 +8,10 @@ use App\Models\Agency;
 use Illuminate\Support\Facades\Config;
 use Auth;
 use App\Models\VisaApplicationAudit;
+use App\Models\ClientDetails;
+use App\Models\AuthervisaApplication;
+
+
 
 class AgencyService
 {
@@ -122,21 +126,6 @@ class AgencyService
 
      }
 
-    //  public function saveLog($applicationId, $applicationNumber, $userType, $auditName, $userId, $description = null)
-    //  {
-    //      $audit = new VisaApplicationAudit();
-    //      $audit->application_id     = $applicationId;
-    //      $audit->application_number = $applicationNumber;
-    //      $audit->user_id            = $userId;
-    //      $audit->user_type          = $userType;
-    //      $audit->audit_name         = $auditName;
-    //      $audit->description        = $description;
-    //      $audit->audit_date         = now()->toDateString();
-    //      $audit->audit_time         = now()->toTimeString();
-    //      $audit->save();
-     
-    //      return true;
-    //  }
   
      public function saveLog($booking, $user_type, $auditName, $userId, $description = null)
      {
@@ -153,5 +142,36 @@ class AgencyService
         return true;
     
      }
+
+     public function getClientData($invoices){
+          foreach ($invoices as $invoice) {
+        
+  
+         
+        if ($invoice->agency && $invoice->visaBooking) {
+            // Set dynamic DB connection
+            $this->setConnectionByDatabase($invoice->agency->database_name);
+
+            $clientId = $invoice->visaBooking->client_id;
+            $bookingId = $invoice->visaBooking->id;
+
+            // Fetch client from user DB
+            $clientFromUserDB = ClientDetails::on('user_database')
+                ->with('clientinfo')
+                ->find($clientId);
+        
+
+            // Fetch other visa applicants from user DB
+            $otherMembers = AuthervisaApplication::on('user_database')
+                ->where('clint_id', $clientId)
+                ->where('booking_id', $bookingId)
+                ->get();
+
+            // Attach to model relationships
+            $invoice->visaBooking->setRelation('clientDetailsFromUserDB', $clientFromUserDB);
+            $invoice->visaBooking->setRelation('otherMembersFromUserDB', $otherMembers);
+        }
+     }
      
+}
 }

@@ -74,6 +74,19 @@
 
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                     <!-- Last Name -->
+                        <div class="w-full relative group flex flex-col gap-1">
+                            <label for="last_name" class="font-semibold text-ternary/90 text-sm">Last Name</label>
+                            <div class="w-full relative">
+                                <input type="text" name="last_name" id="last_name"
+                                       value="{{ $bookingData->clint->last_name ?? '' }}"
+                                       class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
+                                <i class="fas fa-user absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                        </div>
+
+
                         <!-- First Name -->
                         <div class="w-full relative group flex flex-col gap-1">
                             <label for="first_name" class="font-semibold text-ternary/90 text-sm">First Name <span class="text-danger">*</span></label>
@@ -85,72 +98,24 @@
                             </div>
                         </div>
 
-                        <!-- Last Name -->
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="last_name" class="font-semibold text-ternary/90 text-sm">Last Name</label>
-                            <div class="w-full relative">
-                                <input type="text" name="last_name" id="last_name"
-                                       value="{{ $bookingData->clint->last_name ?? '' }}"
-                                       class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                <i class="fas fa-user absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                            </div>
-                        </div>
-
                         @if(in_array('Preview Name', $permission))
-                            <!-- Previous Name -->
-                            <div class="w-full relative group flex flex-col gap-1">
-                                <label class="font-semibold text-ternary/90 text-sm">Previous Name (if any)</label>
-                                <div class="w-full relative">
-                                    <input type="text"  name="previous_name" id="previous_name"
-                                    value="{{ $bookingData->clint->clientinfo->previous_name ?? '' }}"
-                                    class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
+                        @if($bookingData->clint->clientinfo->previous_name_status == 1)
+                            <!-- Show only if status is 1 and value exists -->
+                            <div class="w-full relative group flex flex-col gap-1 mb-4">
+                                <label class="font-semibold text-ternary/90 text-sm">Previous Name</label>
+                                <div class="w-full relative bg-gray-100 rounded-lg p-2 border border-gray-300">
+                                    <span class="text-sm text-gray-800">
+                                        {{ $bookingData->clint->clientinfo->previous_name }}
+                                    </span>
                                     <i class="fas fa-history absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                                 </div>
                             </div>
                         @endif
+                    @endif
 
-                        @if(in_array('Date of Birth', $permission))
-                            <!-- Date of Birth -->
-                            <div class="w-full relative group flex flex-col gap-1">
-                                        <label for="date_of_birth" class="font-semibold text-ternary/90 text-sm">Date of Birth *</label>
-                                        <div class="w-full relative">
-                                            <input type="date" name="date_of_birth" max="9999-12-31" id="date_of_birth" requiresdd
-                                                 value="{{ old('date_of_birth', $bookingData->clint->date_of_birth ?? '') }}"class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                @error('date_of_birth') border-red-500 @enderror">
-                                            <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                        </div>
-                                        @error('date_of_birth')
-                                        <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                        @enderror
-                            </div>
-                        @endif 
 
-                        <!-- Email -->
 
-                        @if(in_array('Email Address', $permission))
-                            <div class="w-full relative group flex flex-col gap-1">
-                                <label for="email" class="font-semibold text-ternary/90 text-sm">Email Address <span class="text-danger">*</span></label>
-                                <div class="w-full relative">
-                                    <input type="email" name="email" id="email"
-                                        value="{{ $bookingData->clint->email ?? '' }}"
-                                        required class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                    <i class="fas fa-envelope absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                </div>
-                            </div>
-                        @endif
 
-                        <!-- Phone Number -->
-                          @if(in_array('Phone Number', $permission))
-                            <div class="w-full relative group flex flex-col gap-1">
-                                <label for="phone_number" class="font-semibold text-ternary/90 text-sm">Phone Number</label>
-                                <div class="w-full relative">
-                                    <input type="tel" name="phone_number" id="phone_number"
-                                        value="{{ $bookingData->clint->phone_number ?? '' }}"
-                                        class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                    <i class="fas fa-phone absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                </div>
-                            </div>
-                         @endif
 
                         <!-- Gender -->
                         @if(in_array('Gender', $permission)) 
@@ -175,54 +140,22 @@
                             </div>
                         @endif
 
-                         @if(in_array('Marital Status', $permission))
-                             <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="marital_status" class="font-semibold text-ternary/90 text-sm">Marital Status *</label>
-                                            <div class="w-full relative">
-                                                <select name="marital_status" id="marital_status" requiresdd
-                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                        @error('marital_status') border-red-500 @enderror">
-                                                        @if(!$bookingData->clint->marital_status) 
-                                                           <option value="">Select Status</option>
-                                                       @endif
-                                                    <option value="single" {{ old('marital_status', $bookingData->clint->marital_status) == 'single' ? 'selected' : '' }}>Single</option>
-                                                    <option value="married" {{ old('marital_status', $bookingData->clint->marital_status) == 'married' ? 'selected' : '' }}>Married</option>
-                                                    <option value="divorced" {{ old('marital_status', $bookingData->clint->marital_status) == 'divorced' ? 'selected' : '' }}>Divorced</option>
-                                                    <option value="widowed" {{ old('marital_status', $bookingData->clint->marital_status) == 'widowed' ? 'selected' : '' }}>Widowed</option>
-                                                </select>
-                                                <i class="fa fa-heart absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                            </div>
-                                            @error('marital_status')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                            </div>
-                         @endif
-                         @if(in_array('Religion', $permission)) 
-                                <!-- religion -->
-                                  <div class="w-full relative group flex flex-col gap-1">
-                                                                    <label for="religion" class="font-semibold text-ternary/90 text-sm">Religion</label>
-                                                                    <div class="w-full relative">
-                                                                        <input type="text" name="religion" id="religion"
-                                                                            value="{{ old('religion', $bookingData->clint->clientinfo->religion ?? '') }}"
-                                                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                                                        <i class="fa fa-pray absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                                                    </div>
-                                </div>
-                        @endif
-
-
-                        @if(in_array('Mobile/Cell No ', $permission)) 
-                            <!-- Mobile/Cell No -->
+                        @if(in_array('Date of Birth', $permission))
+                            <!-- Date of Birth -->
                             <div class="w-full relative group flex flex-col gap-1">
-                                <label for="phone_number" class="font-semibold text-ternary/90 text-sm">Mobile/Cell No <span class="text-danger">*</span></label>
-                                <div class="w-full relative">
-                                    <input type="tel" name="phone_number" id="phone_number"
-                                        value="{{ $bookingData->clint->phone_number ?? '' }}"
-                                        required class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                    <i class="fas fa-mobile-alt absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                </div>
+                                        <label for="date_of_birth" class="font-semibold text-ternary/90 text-sm">Date of Birth *</label>
+                                        <div class="w-full relative">
+                                            <input type="date" name="date_of_birth" max="9999-12-31" id="date_of_birth" requiresdd
+                                                 value="{{ old('date_of_birth', $bookingData->clint->date_of_birth ?? '') }}"class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                @error('date_of_birth') border-red-500 @enderror">
+                                            <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+                                        @error('date_of_birth')
+                                        <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                        @enderror
                             </div>
-                        @endif
+                        @endif 
+
                         @if(in_array('Place of Birth', $permission))
                             <!-- Place of Birth -->
                             <div class="w-full relative group flex flex-col gap-1">
@@ -249,7 +182,60 @@
                             </div>
                         @endif
 
-                            @if(in_array('Nationality at Birth', $permission))
+                         @if(in_array('Citizenship', $permission))
+        
+                            <div class="w-full relative group flex flex-col gap-1">
+                                                            <label for="identification_marks" class="font-semibold text-ternary/90 text-sm">Citizenship</label>
+                                                            <div class="w-full relative">
+                                                                <input type="text" name="citizenship_id" id="citizenship_id"
+                                                                    value="{{ old('citizenship_id', $bookingData->clint->clientinfo->citizenship_id ?? '') }}"
+                                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                                <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                            </div>
+                            </div>
+                            @endif
+
+                        @if(in_array('Religion', $permission)) 
+                                <!-- religion -->
+                                  <div class="w-full relative group flex flex-col gap-1">
+                                                                    <label for="religion" class="font-semibold text-ternary/90 text-sm">Religion</label>
+                                                                    <div class="w-full relative">
+                                                                        <input type="text" name="religion" id="religion"
+                                                                            value="{{ old('religion', $bookingData->clint->clientinfo->religion ?? '') }}"
+                                                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                                        <i class="fa fa-pray absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                                    </div>
+                                </div>
+                        @endif
+
+
+                        @if(in_array('Visible Identification Marks', $permission))
+                                <!-- Identification Marks -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="identification_marks" class="font-semibold text-ternary/90 text-sm">Identification Marks</label>
+                                        <div class="w-full relative">
+                                            <input type="text" name="identification_marks" id="identification_marks"
+                                                value="{{ old('identification_marks', $bookingData->clint->clientinfo->identification_marks ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                            <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+                                </div>
+                        @endif
+
+                        @if(in_array('Educational Qualifications', $permission))
+                                    <!-- Educational Qualifications  -->
+                                    <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="educational_qualification" class="font-semibold text-ternary/90 text-sm">Educational Qualification</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="educational_qualification" id="educational_qualification"
+                                                    value="{{ $bookingData->clint->clientinfo->educational_qualification ?? '' }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                <i class="fa fa-graduation-cap absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                    </div>
+                        @endif
+
+                        @if(in_array('Nationality at Birth', $permission))
                                 <!-- Nationality -->
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="nationality" class="font-semibold text-ternary/90 text-sm">Nationality *</label>
@@ -264,9 +250,9 @@
                                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
-                            @endif
+                        @endif
 
-                            @if(in_array('Nationality at Birth', $permission))
+                         @if(in_array('Nationality at Birth', $permission))
                                 <!-- Past Nationality (if any) -->
                                 <div class="w-full relative group flex flex-col gap-1">
                                         <label for="past_nationality" class="font-semibold text-ternary/90 text-sm">Past Nationality (if any)</label>
@@ -277,20 +263,74 @@
                                             <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                         </div>
                                 </div>
-                            @endif
+                        @endif
 
-                            @if(in_array('Visible Identification Marks', $permission))
-                                <!-- Identification Marks -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                        <label for="identification_marks" class="font-semibold text-ternary/90 text-sm">Identification Marks</label>
-                                        <div class="w-full relative">
-                                            <input type="text" name="identification_marks" id="identification_marks"
-                                                value="{{ old('identification_marks', $bookingData->clint->clientinfo->identification_marks ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                            <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                        </div>
+
+
+                        <!-- Email -->
+                        @if(in_array('Email Address', $permission))
+                            <div class="w-full relative group flex flex-col gap-1">
+                                <label for="email" class="font-semibold text-ternary/90 text-sm">Email Address <span class="text-danger">*</span></label>
+                                <div class="w-full relative">
+                                    <input type="email" name="email" id="email"
+                                        value="{{ $bookingData->clint->email ?? '' }}"
+                                        required class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
+                                    <i class="fas fa-envelope absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                                 </div>
-                            @endif
+                            </div>
+                        @endif
+
+                        <!-- Phone Number -->
+                          @if(in_array('Phone Number', $permission))
+                            <div class="w-full relative group flex flex-col gap-1">
+                                <label for="phone_number" class="font-semibold text-ternary/90 text-sm">Phone Number</label>
+                                <div class="w-full relative">
+                                    <input type="tel" name="phone_number" id="phone_number"
+                                        value="{{ $bookingData->clint->phone_number ?? '' }}"
+                                        class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
+                                    <i class="fas fa-phone absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                </div>
+                            </div>
+                         @endif
+
+
+                         @if(in_array('Marital Status', $permission))
+                             <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="marital_status" class="font-semibold text-ternary/90 text-sm">Marital Status *</label>
+                                            <div class="w-full relative">
+                                                <select name="marital_status" id="marital_status" requiresdd
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                        @error('marital_status') border-red-500 @enderror">
+                                                        @if(!$bookingData->clint->marital_status) 
+                                                           <option value="">Select Status</option>
+                                                       @endif
+                                                    <option value="single" {{ old('marital_status', $bookingData->clint->marital_status) == 'single' ? 'selected' : '' }}>Single</option>
+                                                    <option value="married" {{ old('marital_status', $bookingData->clint->marital_status) == 'married' ? 'selected' : '' }}>Married</option>
+                                                    <option value="divorced" {{ old('marital_status', $bookingData->clint->marital_status) == 'divorced' ? 'selected' : '' }}>Divorced</option>
+                                                    <option value="widowed" {{ old('marital_status', $bookingData->clint->marital_status) == 'widowed' ? 'selected' : '' }}>Widowed</option>
+                                                </select>
+                                                <i class="fa fa-heart absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                            @error('marital_status')
+                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                            @enderror
+                            </div>
+                         @endif
+
+
+                        @if(in_array('Mobile/Cell No ', $permission)) 
+                            <!-- Mobile/Cell No -->
+                            <div class="w-full relative group flex flex-col gap-1">
+                                <label for="phone_number" class="font-semibold text-ternary/90 text-sm">Mobile/Cell No <span class="text-danger">*</span></label>
+                                <div class="w-full relative">
+                                    <input type="tel" name="phone_number" id="phone_number"
+                                        value="{{ $bookingData->clint->phone_number ?? '' }}"
+                                        required class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
+                                    <i class="fas fa-mobile-alt absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                </div>
+                            </div>
+                        @endif
+
 
                             @if(in_array('Languages Spoken', $permission))
                                 <!-- Languages Spoken  -->
@@ -305,170 +345,14 @@
                                   </div>
   
                             @endif
-
-                            @if(in_array('Citizenship', $permission))
-        
-                            <div class="w-full relative group flex flex-col gap-1">
-                                                            <label for="identification_marks" class="font-semibold text-ternary/90 text-sm">Citizenship</label>
-                                                            <div class="w-full relative">
-                                                                <input type="text" name="citizenship_id" id="citizenship_id"
-                                                                    value="{{ old('citizenship_id', $bookingData->clint->clientinfo->citizenship_id ?? '') }}"
-                                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                                                <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                                            </div>
-                            </div>
-                            @endif
                     </div>
                 </div>
             </div>
 
 
 
-            <!-- contact_details -->
-            @if(in_array('contact_details', $alreadySelect))
-                <!-- Other Details Section -->
-                <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="contact_details">
-                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                        <h2 class="text-xl font-bold text-gray-800 flex items-center">
-                            <i class="fas fa-info-circle text-primary mr-2"></i>
-                            Contact Details
-                        </h2>
-                        <button type="button" class="section-edit-btn text-primary hover:text-primary-dark text-sm font-medium" data-section="contact_details">
-                            <i class="fas fa-edit mr-1"></i> Edit
-                        </button>
-                    </div>
-                    <div class="p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          
-                                 <!-- email address -->
-                                   @if(in_array('Email Address', $permission))
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="email" class="font-semibold text-ternary/90 text-sm">Email Address *</label>
-                                            <div class="w-full relative">
-                                                <input type="email" name="email" id="email"
-                                                    value="{{ $bookingData->clint->email ?? '' }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                    @error('email') border-red-500 @enderror">
-                                                <i class="fa fa-envelope absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                            </div>
-                                            @error('email')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    @endif
-
-                                    <!-- phone number -->
-                                    @if(in_array('Phone Number (Mobile)', $permission))
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="phone_number" class="font-semibold text-ternary/90 text-sm">Phone Number *</label>
-                                            <div class="w-full relative">
-                                                <input type="text" name="phone_number" id="phone_number"
-                                                    value="{{ $bookingData->clint->phone_number ?? '' }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                    @error('phone_number') border-red-500 @enderror">
-                                                <i class="fa fa-phone-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                            </div>
-                                            @error('phone_number')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    @endif
-                        
-                                    <!-- address -->
-                                    @if(in_array('Postal Code', $permission))
-                                        <!-- zip code -->
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                                    <label for="zip_code" class="font-semibold text-ternary/90 text-sm">Zip/Postal Code</label>
-                                                    <div class="w-full relative flex items-center gap-2">
-                                                        <input type="text" name="zip_code" id="zip_code"
-                                                            value="{{ old('zip_code', $bookingData->clint->zip_code ?? '') }}"
-                                                            class="w-full pl-2 pr-2 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                                        <button type="button" id="searchAddress"
-                                                            class="px-3 py-1 bg-secondary text-white rounded hover:bg-secondary/80">
-                                                            <i class="fa fa-search"></i>
-                                                        </button>
-                                                    </div>
-                                        </div>
-                                    @endif
-
-                                    @if(in_array('Current Residential Address', $permission))
-                                    <!-- Select Address -->
-                                        <div class="w-full mt-2 hidden" id="address-wrapper">
-                                                    <label for="address-select" class="text-sm font-semibold text-ternary/90">Select Address</label>
-                                                    <select id="address-select" name="address"
-                                                        class="w-full px-2 py-1 border border-secondary/40 rounded focus:outline-none focus:border-secondary/70">
-                                                    </select>
-                                            </div>
-                                    @endif
-                                    @if(in_array('Current Residential Address', $permission))
-                                    <!-- Select Address -->
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="permanent_address" class="font-semibold text-ternary/90 text-sm">Permanent Address *</label>
-                                            <div class="w-full relative">
-                                                <textarea name="permanent_address" id="permanent_address" requiresdd
-                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                        @error('permanent_address') border-red-500 @enderror"> {{ old('permanent_address', $bookingData->clint->permanent_address ?? '') }}</textarea>
-                                                <i class="fa fa-home absolute right-3 top-4 text-sm text-secondary/80"></i>
-                                            </div>
-                                            @error('permanent_address')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    @endif
-                                    @if(in_array('City', $permission))
-                                    <!-- Street -->
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="street" class="font-semibold text-ternary/90 text-sm">Street</label>
-                                            <div class="w-full relative">
-                                                <input type="text" name="street" id="street"
-                                                    value="{{ old('street', $bookingData->clint->street ?? '') }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                                <i class="fa fa-road absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                            </div>
-                                        </div>
-                                    @endif
-                                    <!-- City -->
-                                    @if(in_array('State', $permission))
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="city" class="font-semibold text-ternary/90 text-sm">City *</label>
-                                            <div class="w-full relative">
-                                                <input type="text" name="city" id="city" requiresdd
-                                                
-                                                    value="{{ old('city', $bookingData->clint->city ?? '') }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                    @error('city') border-red-500 @enderror">
-                                                <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                            </div>
-                                            @error('city')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    @endif
-                                    <!-- country  -->
-                                    @if(in_array('Country of Residence', $permission))
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="country" class="font-semibold text-ternary/90 text-sm">Country *</label>
-                                            <div class="w-full relative">
-                                                <input type="text" name="country" id="country" requiresdd
-                                                    value="{{ old('country', $bookingData->clint->country ?? '') }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                    @error('country') border-red-500 @enderror">
-                                                <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                            </div>
-                                            @error('country')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    @endif
-                            
-                        </div>
-                    </div>
-                </div>
-             @endif
-
-     
-         @if(in_array('passport_information', $alreadySelect))
             <!-- Passport Details Section -->
+            @if(in_array('passport_information', $alreadySelect))
             <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="passport">
                 <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h2 class="text-xl font-bold text-gray-800 flex items-center">
@@ -482,7 +366,7 @@
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                       
-                          <!-- issueg authority country -->
+                          <!-- Passport Type -->
                           @if(in_array('Passport Type', $permission))    
                                 <div class="w-full relative group flex flex-col gap-1">
                                         <label for="passport_type" class="font-semibold text-ternary/90 text-sm">Passport Type *</label>
@@ -498,21 +382,26 @@
                                         @enderror
                                 </div>
                                 @endif
-                              @if(in_array('Issuing Authority', $permission))    
+
+
+
+                                    <!-- passport number  -->
+                                @if(in_array('Passport Number', $permission))
                                 <div class="w-full relative group flex flex-col gap-1">
-                                        <label for="passport_country" class="font-semibold text-ternary/90 text-sm">Passport Country *</label>
-                                        <div class="w-full relative">
-                                            <input type="text" name="passport_country" id="passport_country" requiresdd
-                                                value="{{ old('passport_country', $bookingData->clint->clientinfo->passport_country ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                @error('passport_country') border-red-500 @enderror">
-                                            <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                        </div>
-                                        @error('passport_country')
-                                        <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                        @enderror
+                                    <label for="passport_ic_number" class="font-semibold text-ternary/90 text-sm">Passport Number *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="passport_ic_number" id="passport_ic_number" requiresdd
+                                            value="{{ old('passport_ic_number', $bookingData->clint->clientinfo->passport_ic_number ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            @error('passport_ic_number') border-red-500 @enderror">
+                                        <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('passport_ic_number')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 @endif
+
                                 <!-- issue of place  -->
                                 @if(in_array('Place of Issue', $permission))
                                 <div class="w-full relative group flex flex-col gap-1">
@@ -526,23 +415,6 @@
                                         <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>
                                     @error('passport_issue_place')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                @endif
-
-                                <!-- passport number  -->
-                                @if(in_array('Passport Number', $permission))
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="passport_ic_number" class="font-semibold text-ternary/90 text-sm">Passport Number *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="passport_ic_number" id="passport_ic_number" requiresdd
-                                            value="{{ old('passport_ic_number', $bookingData->clint->clientinfo->passport_ic_number ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('passport_ic_number') border-red-500 @enderror">
-                                        <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('passport_ic_number')
                                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -564,6 +436,24 @@
                                     @enderror
                                 </div>
                                 @endif
+
+                                @if(in_array('Issuing Authority', $permission))    
+                                <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="passport_country" class="font-semibold text-ternary/90 text-sm">Passport Country *</label>
+                                        <div class="w-full relative">
+                                            <input type="text" name="passport_country" id="passport_country" requiresdd
+                                                value="{{ old('passport_country', $bookingData->clint->clientinfo->passport_country ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                @error('passport_country') border-red-500 @enderror">
+                                            <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+                                        @error('passport_country')
+                                        <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                        @enderror
+                                </div>
+                                @endif
+
+
                                 @if(in_array('Previous Passport Number', $permission))
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="passport_expiry_date" class="font-semibold text-ternary/90 text-sm">Passport Expiry Date *</label>
@@ -619,19 +509,6 @@
                                             </div>
 
                                             <div class="w-full relative group flex flex-col gap-1">
-                                                <label for="other_passport_issue_place" class="font-semibold text-ternary/90 text-sm">Passport Issue Place *</label>
-                                                <div class="w-full relative">
-                                                    <input type="text" name="other_passport_issue_place" id="other_passport_issue_place" requiredd
-                                                        value="{{ old('other_passport_issue_place', $other_passport_details->issue_place ?? '') }}"
-                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_issue_place') border-red-500 @enderror">
-                                                    <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                                </div>
-                                                @error('other_passport_issue_place')
-                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-
-                                            <div class="w-full relative group flex flex-col gap-1">
                                                 <label for="other_passport_ic_number" class="font-semibold text-ternary/90 text-sm">Passport/IC Number *</label>
                                                 <div class="w-full relative">
                                                     <input type="text" name="other_passport_ic_number" id="other_passport_ic_number" requireed
@@ -656,16 +533,29 @@
                                                 <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                                 @enderror
                                             </div>
+
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                                <label for="other_passport_issue_place" class="font-semibold text-ternary/90 text-sm">Passport Issue Place *</label>
+                                                <div class="w-full relative">
+                                                    <input type="text" name="other_passport_issue_place" id="other_passport_issue_place" requiredd
+                                                        value="{{ old('other_passport_issue_place', $other_passport_details->issue_place ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_issue_place') border-red-500 @enderror">
+                                                    <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                </div>
+                                                @error('other_passport_issue_place')
+                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                                 </div>
                             @endif
                         </div>
                 </div>
             </div>
-        @endif
+            @endif
 
-
-            @if(in_array('additional_passport_info_permission', $permission))
+    
             <!-- Other Passport/Identity Certificate Section -->
+            @if(in_array('additional_passport_info_permission', $permission))
             <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="otherpassport">
                 <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h2 class="text-xl font-bold text-gray-800 flex items-center">
@@ -686,17 +576,6 @@
                                        value="{{ old('other_passport_country', $other_passport_details->country ?? '') }}"
                                        class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
                                 <i class="fas fa-globe-americas absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                            </div>
-                        </div>
-
-                        <!-- Place of Issue -->
-                        <div class="w-full relative group flex flex-col gap-1">
-                            <label for="other_passport_issue_place" class="font-semibold text-ternary/90 text-sm">Place of Issue</label>
-                            <div class="w-full relative">
-                                <input type="text" name="other_passport_issue_place" id="other_passport_issue_place" required
-                                       value="{{ old('other_passport_issue_place', $other_passport_details->issue_place ?? '') }}"
-                                       class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                <i class="fas fa-map-marked absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                             </div>
                         </div>
 
@@ -722,6 +601,18 @@
                             </div>
                         </div>
 
+
+                        <!-- Place of Issue -->
+                        <div class="w-full relative group flex flex-col gap-1">
+                            <label for="other_passport_issue_place" class="font-semibold text-ternary/90 text-sm">Place of Issue</label>
+                            <div class="w-full relative">
+                                <input type="text" name="other_passport_issue_place" id="other_passport_issue_place" required
+                                       value="{{ old('other_passport_issue_place', $other_passport_details->issue_place ?? '') }}"
+                                       class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
+                                <i class="fas fa-map-marked absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                        </div>
+
                         <!-- Nationality/Status -->
                         <div class="w-full relative group flex flex-col gap-1">
                             <label class="font-semibold text-ternary/90 text-sm">Nationality/Status</label>
@@ -735,325 +626,156 @@
             </div>
             @endif
 
-         
-            @if(in_array('employment_education_details', $alreadySelect))
-            <!-- Profession/Occupation Details Section -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="profession">
-                <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
-                        <i class="fas fa-briefcase text-primary mr-2"></i>
-                        Profession/Occupation Details
-                    </h2>
-                    <button type="button" class="text-primary hover:text-primary-dark text-sm font-medium section-edit-btn" data-section="profession">
-                        <i class="fas fa-edit mr-1"></i> Edit
-                    </button>
-                </div>
-                <div class="p-6">
-                @php
-                    $eduEmployData = $bookingData->clint->clientinfo->employment  ? json_decode($bookingData->clint->clientinfo->employment) : null;
-                @endphp     
-         
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    @if(in_array('Occupation', $permission))   
-                         <!-- present Occupation -->
-                             <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="present_occupation" class="font-semibold text-ternary/90 text-sm">Present Occupation</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="present_occupation" id="present_occupation"
-                                            value="{{ old('present_occupation', $bookingData->clint->clientinfo->present_occupation ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-briefcase absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                             </div>
-                             @endif
-                              @if(in_array('Designation', $permission))
-               <!-- Designation -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="designation" class="font-semibold text-ternary/90 text-sm">Designation</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="designation" id="designation"
-                                            value="{{ old('designation', $bookingData->clint->clientinfo->designation ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-user-tie absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                 @if(in_array('Employer Name', $permission))
-               <!-- Employer Name -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="employer_name" class="font-semibold text-ternary/90 text-sm">Employer Name</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="employer_name" id="employer_name"
-                                           value="{{ old('employer_name', $bookingData->clint->clientinfo->employer_name ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-building absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                 @if(in_array('Employer Address', $permission))
-              <!-- Employer Address -->
-                                <div class="w-full relative group flex flex-col gap-1 col-span-2">
-                                    <label for="employer_address" class="font-semibold text-ternary/90 text-sm">Employer Address</label>
-                                    <div class="w-full relative">
-                                        <textarea name="employer_address" id="employer_address"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('employer_address', $bookingData->clint->clientinfo->employer_address ?? '') }}</textarea>
-                                        <i class="fa fa-map-pin absolute right-3 top-4 text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                 @if(in_array('Employer Phone Number', $permission))
-               <!-- Employer Phone Number -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="employer_phone" class="font-semibold text-ternary/90 text-sm">Employer Phone</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="employer_phone" id="employer_phone"
-                                           value="{{ old('employer_phone', $bookingData->clint->clientinfo->employer_phone ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-phone-square-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                
-                                 @if(in_array('Past Occupaton', $permission))
-                <!-- past Occupaton  -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Past Occupation</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="past_occupation" id="past_occupation"
-                                             value="{{ old('past_occupation', $bookingData->clint->clientinfo->past_occupation ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                 @if(in_array('Business Name', $permission))
-                                <!-- Business Name  -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Business Name</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="business_name" id="business_name"
-                                             value="{{ $eduEmployData->business_name ?? '' }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                 @if(in_array('School Name', $permission))
-                                <!-- School Name  -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="school_name" class="font-semibold text-ternary/90 text-sm">School Name</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="school_name" id="school_name"
-                                             value="{{ $eduEmployData->school_name ?? '' }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                 @if(in_array('Duration of Employment', $permission))
-                                <!-- Duration of Employment  -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="duration_of_employment" class="font-semibold text-ternary/90 text-sm">Duration of Employment</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="duration_of_employment" id="duration_of_employment"
-                                              value="{{ $eduEmployData->duration_of_study ?? '' }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
 
-                                   @if(in_array('Duty', $permission))
-                                <!-- Duty  -->
-                                 
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="duty" class="font-semibold text-ternary/90 text-sm">Duty</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="duty" id="duty"
-                                              value="{{ $bookingData->clint->clientinfo->duty ?? '' }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                
-                                 @if(in_array('Duration of Study', $permission))
-                                <!-- Duration of Study  -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="duration_of_study" class="font-semibold text-ternary/90 text-sm">Duration of Study</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="duration_of_study" id="duration_of_study"
-                                             value="{{ $eduEmployData->duration_of_study ?? '' }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                 @if(in_array('Employment Monthly Income', $permission))
-                               <!-- Monthly Income  -->
-                                 <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="employment_monthly_income" class="font-semibold text-ternary/90 text-sm">Employment Monthly Income</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="employment_monthly_income" id="employment_monthly_income"
-                                            value="{{ $eduEmployData->employment_monthly_income ?? '' }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                 @if(in_array('Educational Qualifications', $permission))
-                                <!-- Educational Qualifications  -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                        <label for="educational_qualification" class="font-semibold text-ternary/90 text-sm">Educational Qualification</label>
-                                        <div class="w-full relative">
-                                            <input type="text" name="educational_qualification" id="educational_qualification"
-                                                 value="{{ $bookingData->clint->clientinfo->educational_qualification ?? '' }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                            <i class="fa fa-graduation-cap absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                         </div>
-                                </div>
-                                @endif
-                                 @if(in_array('Employment History', $permission))
-                                <!-- Employment History  -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Employment History</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="employment_history" id="employment_history"
-                                             value="{{ $eduEmployData->employment_history ?? '' }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                 @if(in_array('Education History', $permission))
-
-                                <!-- Employment History  -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Education History</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="education_history" id="education_history"
-                                             value="{{ $eduEmployData->education_history ?? '' }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                              @endif  
+            <!-- contact_details -->
+            @if(in_array('contact_details', $alreadySelect))
+                <!-- Other Details Section -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="contact_details">
+                    <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                            <i class="fas fa-info-circle text-primary mr-2"></i>
+                            Contact Details
+                        </h2>
+                        <button type="button" class="section-edit-btn text-primary hover:text-primary-dark text-sm font-medium" data-section="contact_details">
+                            <i class="fas fa-edit mr-1"></i> Edit
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
 
-                              @if(in_array('A Date from Date to', $permission))
-                                <!-- Date Range -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label class="font-semibold text-ternary/90 text-sm">Date Range</label>
-                                    <div class="flex gap-2 w-full">
-                                        <div class="w-full relative">
-                                            <input type="date" name="date_from" id="date_from" max="9999-12-31"
-                                                value="{{ request('date_from') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                            <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                @if(in_array('City', $permission))
+                                    <!-- Street -->
+                                        <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="street" class="font-semibold text-ternary/90 text-sm">Street</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="street" id="street"
+                                                    value="{{ old('street', $bookingData->clint->street ?? '') }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                <i class="fa fa-road absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
                                         </div>
+                                    @endif
 
-                                        <div class="w-full relative">
-                                            <input type="date" name="date_to" id="date_to" max="2099-12-31"
-                                                value="{{ request('date_to') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                            <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    <!-- City -->
+                                    @if(in_array('State', $permission))
+                                        <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="city" class="font-semibold text-ternary/90 text-sm">City *</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="city" id="city" requiresdd
+                                                
+                                                    value="{{ old('city', $bookingData->clint->city ?? '') }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                    @error('city') border-red-500 @enderror">
+                                                <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                            @error('city')
+                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                            @enderror
                                         </div>
-                                    </div>
-                                </div>
-                            @endif
+                                    @endif
 
+                                    <!-- country  -->
+                                    @if(in_array('Country of Residence', $permission))
+                                        <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="country" class="font-semibold text-ternary/90 text-sm">Country *</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="country" id="country" requiresdd
+                                                    value="{{ old('country', $bookingData->clint->country ?? '') }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                    @error('country') border-red-500 @enderror">
+                                                <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                            @error('country')
+                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    @endif
 
-                              @if(in_array('Military Status', $permission))
-                              @php
-                                $armsDetails = isset($bookingData->clint->clientinfo->arms_details)
-                                    ? json_decode($bookingData->clint->clientinfo->arms_details)
-                                    : null;
-                                   
-                            @endphp
+                                    @if(in_array('Postal Code', $permission))
+                                        <!-- zip code -->
+                                        <div class="w-full relative group flex flex-col gap-1">
+                                                    <label for="zip_code" class="font-semibold text-ternary/90 text-sm">Zip/Postal Code</label>
+                                                    <div class="w-full relative flex items-center gap-2">
+                                                        <input type="text" name="zip_code" id="zip_code"
+                                                            value="{{ old('zip_code', $bookingData->clint->zip_code ?? '') }}"
+                                                            class="w-full pl-2 pr-2 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                        <button type="button" id="searchAddress"
+                                                            class="px-3 py-1 bg-secondary text-white rounded hover:bg-secondary/80">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                        </div>
+                                    @endif
 
-                            <div class="mb-4">
-                                <label class="font-semibold text-sm text-ternary/90">Are/were you in a Military/Semi-Military/Police/Security Organization?</label>
-                                <div class="flex gap-4 mt-1">
-                                    <label>
-                                        <input type="radio" name="military_status" value="1"
-                                            onclick="toggleMilitary(true)"
-                                            {{ $bookingData->clint->clientinfo->armed_permission ? 'checked' : '' }}> Yes
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="military_status" value="0"
-                                            onclick="toggleMilitary(false)"
-                                            {{ !$bookingData->clint->clientinfo->armed_permission ? 'checked' : '' }}> No
-                                    </label>
-                                </div>
-                            </div>
+                                    <!-- phone number -->
+                                    @if(in_array('Phone Number (Mobile)', $permission))
+                                        <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="phone_number" class="font-semibold text-ternary/90 text-sm">Phone Number *</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="phone_number" id="phone_number"
+                                                    value="{{ $bookingData->clint->phone_number ?? '' }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                    @error('phone_number') border-red-500 @enderror">
+                                                <i class="fa fa-phone-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                            @error('phone_number')
+                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    @endif
+                          
+                                 <!-- email address -->
+                                   @if(in_array('Email Address', $permission))
+                                        <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="email" class="font-semibold text-ternary/90 text-sm">Email Address *</label>
+                                            <div class="w-full relative">
+                                                <input type="email" name="email" id="email"
+                                                    value="{{ $bookingData->clint->email ?? '' }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                    @error('email') border-red-500 @enderror">
+                                                <i class="fa fa-envelope absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                            @error('email')
+                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    @endif
 
-                            <div id="military_section" class="{{ $armsDetails ? '' : 'hidden' }} lg:col-span-4 md:col-span-4 grid lg:grid-cols-4 gap-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-1">
-                                {{-- Organization --}}
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="military_organization" class="font-semibold text-ternary/90 text-sm">Organization *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="military_organization" id="military_organization" 
-                                            value="{{ old('military_organization', $armsDetails->organization ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_organization') border-red-500 @enderror">
-                                        <i class="fa fa-building-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('military_organization')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                {{-- Designation --}}
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="military_designation" class="font-semibold text-ternary/90 text-sm">Designation *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="military_designation" id="military_designation" 
-                                            value="{{ old('military_designation', $armsDetails->designation ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_designation') border-red-500 @enderror">
-                                        <i class="fa fa-user-tie absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('military_designation')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                {{-- Rank --}}
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="military_rank" class="font-semibold text-ternary/90 text-sm">Rank *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="military_rank" id="military_rank" 
-                                            value="{{ old('military_rank', $armsDetails->rank ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_rank') border-red-500 @enderror">
-                                        <i class="fa fa-shield-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('military_rank')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                {{-- Place of Posting --}}
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="military_posting_place" class="font-semibold text-ternary/90 text-sm">Place of Posting *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="military_posting_place" id="military_posting_place" 
-                                            value="{{ old('military_posting_place', $armsDetails->posting_place ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_posting_place') border-red-500 @enderror">
-                                        <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('military_posting_place')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-
-                        @endif
                         
+                                    @if(in_array('Current Residential Address', $permission))
+                                    <!-- Select Address -->
+                                        <div class="w-full mt-2 hidden" id="address-wrapper">
+                                                    <label for="address-select" class="text-sm font-semibold text-ternary/90">Select Address</label>
+                                                    <select id="address-select" name="address"
+                                                        class="w-full px-2 py-1 border border-secondary/40 rounded focus:outline-none focus:border-secondary/70">
+                                                    </select>
+                                            </div>
+                                    @endif
+                                    @if(in_array('Current Residential Address', $permission))
+                                    <!-- Select Address -->
+                                        <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="permanent_address" class="font-semibold text-ternary/90 text-sm">Permanent Address *</label>
+                                            <div class="w-full relative">
+                                                <textarea name="permanent_address" id="permanent_address" requiresdd
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                        @error('permanent_address') border-red-500 @enderror"> {{ old('permanent_address', $bookingData->clint->permanent_address ?? '') }}</textarea>
+                                                <i class="fa fa-home absolute right-3 top-4 text-sm text-secondary/80"></i>
+                                            </div>
+                                            @error('permanent_address')
+                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                    @endif
+                            
+                        </div>
                     </div>
                 </div>
-            </div>
             @endif
 
+
+         
              <!-- Father Details -->
-              
              @if(in_array('Father Section', $permission))
                 <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="father">
                     <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
@@ -1302,6 +1024,16 @@
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
                                                     @endif
+
+                                                    @if(in_array('Spouse’s Country of birth', $permission))
+                                                    <div>
+                                                    <label for="spouse_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
+                                                    <input type="text" name="spouse_country_of_birth" id="spouse_country_of_birth" value="{{ old('spouse_country_of_birth', $spouse->country_of_birth ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
+
+
                                                     @if(in_array('Spouse’s DOB', $permission))
                                                     <div class="w-full">
                                                     <label for="spouse_dob" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
@@ -1344,7 +1076,7 @@
                         </label>
                     </div>
                    </div>
-<div class="w-full lg:col-span-2">
+            <div class="w-full lg:col-span-2">
                  @php
                     $childrenJson = $bookingData->clint->clientinfo->children ?? '[]';
                     $children = json_decode($childrenJson);
@@ -1391,7 +1123,7 @@
                     @endif
                 </div>
 
-               @if(in_array('Relative Information', $permission))
+    @if(in_array('Relative Information', $permission))
     <!-- Relative Information -->
 
     <div class="w-full relative group flex flex-col gap-1 col-span-2">
@@ -1402,7 +1134,7 @@
             <i class="fa fa-info-circle absolute right-3 top-4 text-sm text-secondary/80"></i>
         </div>
     </div>
-@endif
+    @endif
                   <!-- Add More Button -->
                   <!-- <div class="w-full flex justify-start">
                     <button type="button" class="bg-primary/30 text-ternary font-semibold border-[2px] border-primary/90 px-4 py-1 rounded-[3px] rounded-tr-[8px] hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200" id="addMoreChild">
@@ -1410,8 +1142,7 @@
                     </button>
                 </div> -->
             </div>
-</div>
-            
+        </div>
             @endif
 
         <!-- end part  -->
@@ -1420,6 +1151,543 @@
                 </div>
             </div>
           @endif
+
+
+
+            @if(in_array('employment_education_details', $alreadySelect))
+            <!-- Profession/Occupation Details Section -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="profession">
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-briefcase text-primary mr-2"></i>
+                        Profession/Occupation Details
+                    </h2>
+                    <button type="button" class="text-primary hover:text-primary-dark text-sm font-medium section-edit-btn" data-section="profession">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </button>
+                </div>
+                <div class="p-6">
+                @php
+                    $eduEmployData = $bookingData->clint->clientinfo->employment  ? json_decode($bookingData->clint->clientinfo->employment) : null;
+                @endphp     
+         
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    @if(in_array('Occupation', $permission))   
+                         <!-- present Occupation -->
+                             <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="present_occupation" class="font-semibold text-ternary/90 text-sm">Present Occupation</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="present_occupation" id="present_occupation"
+                                            value="{{ old('present_occupation', $bookingData->clint->clientinfo->present_occupation ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-briefcase absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                             </div>
+                             @endif
+
+                             @if(in_array('Employer Name', $permission))
+                                <!-- Employer Name -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="employer_name" class="font-semibold text-ternary/90 text-sm">Employer Name</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="employer_name" id="employer_name"
+                                           value="{{ old('employer_name', $bookingData->clint->clientinfo->employer_name ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-building absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+
+                              @if(in_array('Designation', $permission))
+                                <!-- Designation -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="designation" class="font-semibold text-ternary/90 text-sm">Designation</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="designation" id="designation"
+                                            value="{{ old('designation', $bookingData->clint->clientinfo->designation ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-user-tie absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+
+                                 @if(in_array('Employer Address', $permission))
+                                <!-- Employer Address -->
+                                <div class="w-full relative group flex flex-col gap-1 col-span-2">
+                                    <label for="employer_address" class="font-semibold text-ternary/90 text-sm">Employer Address</label>
+                                    <div class="w-full relative">
+                                        <textarea name="employer_address" id="employer_address"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('employer_address', $bookingData->clint->clientinfo->employer_address ?? '') }}</textarea>
+                                        <i class="fa fa-map-pin absolute right-3 top-4 text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+
+                                 @if(in_array('Employer Phone Number', $permission))
+                                <!-- Employer Phone Number -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="employer_phone" class="font-semibold text-ternary/90 text-sm">Employer Phone</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="employer_phone" id="employer_phone"
+                                           value="{{ old('employer_phone', $bookingData->clint->clientinfo->employer_phone ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-phone-square-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                
+                                 @if(in_array('Past Occupaton', $permission))
+                                <!-- past Occupaton  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Past Occupation</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="past_occupation" id="past_occupation"
+                                             value="{{ old('past_occupation', $bookingData->clint->clientinfo->past_occupation ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                 @if(in_array('Business Name', $permission))
+                                <!-- Business Name  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Business Name</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="business_name" id="business_name"
+                                             value="{{ $eduEmployData->business_name ?? '' }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                 @if(in_array('School Name', $permission))
+                                <!-- School Name  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="school_name" class="font-semibold text-ternary/90 text-sm">School Name</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="school_name" id="school_name"
+                                             value="{{ $eduEmployData->school_name ?? '' }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                 @if(in_array('Duration of Employment', $permission))
+                                <!-- Duration of Employment  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="duration_of_employment" class="font-semibold text-ternary/90 text-sm">Duration of Employment</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="duration_of_employment" id="duration_of_employment"
+                                              value="{{ $eduEmployData->duration_of_study ?? '' }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+
+                                   @if(in_array('Duty', $permission))
+                                <!-- Duty  -->
+                                 
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="duty" class="font-semibold text-ternary/90 text-sm">Duty</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="duty" id="duty"
+                                              value="{{ $bookingData->clint->clientinfo->duty ?? '' }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                
+                                 @if(in_array('Duration of Study', $permission))
+                                <!-- Duration of Study  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="duration_of_study" class="font-semibold text-ternary/90 text-sm">Duration of Study</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="duration_of_study" id="duration_of_study"
+                                             value="{{ $eduEmployData->duration_of_study ?? '' }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                 @if(in_array('Employment Monthly Income', $permission))
+                               <!-- Monthly Income  -->
+                                 <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="employment_monthly_income" class="font-semibold text-ternary/90 text-sm">Employment Monthly Income</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="employment_monthly_income" id="employment_monthly_income"
+                                            value="{{ $eduEmployData->employment_monthly_income ?? '' }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+
+                                 @if(in_array('Employment History', $permission))
+                                <!-- Employment History  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Employment History</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="employment_history" id="employment_history"
+                                             value="{{ $eduEmployData->employment_history ?? '' }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+                                 @if(in_array('Education History', $permission))
+
+                                <!-- Employment History  -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Education History</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="education_history" id="education_history"
+                                             value="{{ $eduEmployData->education_history ?? '' }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                              @endif  
+
+
+                              @if(in_array('A Date from Date to', $permission))
+                                <!-- Date Range -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label class="font-semibold text-ternary/90 text-sm">Date Range</label>
+                                    <div class="flex gap-2 w-full">
+                                        <div class="w-full relative">
+                                            <input type="date" name="date_from" id="date_from" max="9999-12-31"
+                                                value="{{ request('date_from') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                            <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+
+                                        <div class="w-full relative">
+                                            <input type="date" name="date_to" id="date_to" max="2099-12-31"
+                                                value="{{ request('date_to') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                            <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+
+                              @if(in_array('Military Status', $permission))
+                              @php
+                                $armsDetails = isset($bookingData->clint->clientinfo->arms_details)
+                                    ? json_decode($bookingData->clint->clientinfo->arms_details)
+                                    : null;
+                                   
+                            @endphp
+
+                            <div class="mb-4">
+                                <label class="font-semibold text-sm text-ternary/90">Are/were you in a Military/Semi-Military/Police/Security Organization?</label>
+                                <div class="flex gap-4 mt-1">
+                                    <label>
+                                        <input type="radio" name="military_status" value="1"
+                                            onclick="toggleMilitary(true)"
+                                            {{ $bookingData->clint->clientinfo->armed_permission ? 'checked' : '' }}> Yes
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="military_status" value="0"
+                                            onclick="toggleMilitary(false)"
+                                            {{ !$bookingData->clint->clientinfo->armed_permission ? 'checked' : '' }}> No
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="military_section" class="{{ $armsDetails ? '' : 'hidden' }} lg:col-span-4 md:col-span-4 grid lg:grid-cols-4 gap-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-1">
+                                {{-- Organization --}}
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="military_organization" class="font-semibold text-ternary/90 text-sm">Organization *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="military_organization" id="military_organization" 
+                                            value="{{ old('military_organization', $armsDetails->organization ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_organization') border-red-500 @enderror">
+                                        <i class="fa fa-building-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('military_organization')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                {{-- Designation --}}
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="military_designation" class="font-semibold text-ternary/90 text-sm">Designation *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="military_designation" id="military_designation" 
+                                            value="{{ old('military_designation', $armsDetails->designation ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_designation') border-red-500 @enderror">
+                                        <i class="fa fa-user-tie absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('military_designation')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                {{-- Rank --}}
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="military_rank" class="font-semibold text-ternary/90 text-sm">Rank *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="military_rank" id="military_rank" 
+                                            value="{{ old('military_rank', $armsDetails->rank ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_rank') border-red-500 @enderror">
+                                        <i class="fa fa-shield-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('military_rank')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                {{-- Place of Posting --}}
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="military_posting_place" class="font-semibold text-ternary/90 text-sm">Place of Posting *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="military_posting_place" id="military_posting_place" 
+                                            value="{{ old('military_posting_place', $armsDetails->posting_place ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('military_posting_place') border-red-500 @enderror">
+                                        <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('military_posting_place')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                        @endif
+                        
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            @if(in_array('travel_information', $alreadySelect))
+            <!-- Travel Information -->
+            <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="travel">
+                <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
+                        <i class="fas fa-briefcase text-primary mr-2"></i>
+                        Travel Information
+                    </h2>
+                    <button type="button" class="text-primary hover:text-primary-dark text-sm font-medium section-edit-btn" data-section="travel">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </button>
+                </div>
+                @php
+                   $socicalmedia = $bookingData->clint->clientinfo->social_media ? json_decode($bookingData->clint->clientinfo->social_media) : null;
+              @endphp
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    @if(in_array('Visa type', $permission))
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="visatype" class="font-semibold text-ternary/90 text-sm"> Type Of Visa Required</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="visatype" id="visatype"
+                                            value="{{ old('visatype', $bookingData->visa->name?? '') }}"  readonly=""  class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                       {{-- <textarea name="visatype" id="visatype" requiresdd
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                @error('permanent_address') border-red-500 @enderror"> {{ old('permanent_address', $bookingData->clint->permanent_address ?? '') }}</textarea>--}}
+                                                <i class="fa fa-passport absolute right-3 top-4 text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('visatype')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @endif
+
+                                    @if(in_array('Places likely to be visited', $permission))
+                                <!-- Purpose of Visit * -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="country" class="font-semibold text-ternary/90 text-sm">Places likely to be visited *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="placeofvisit" id="placeofvisit" requiresdd
+                                              value="{{ old('placeofvisit', $bookingData->visarequireddocument->places_to_be_visited ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            @error('placeofvisit') border-red-500 @enderror">
+                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('placeofvisit')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @endif
+
+                                @if(in_array('Period of Visa', $permission))
+                                <!-- periodofvisa -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="periodofvisa" class="font-semibold text-ternary/90 text-sm">Duration of Visa ( Month) *</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="periodofvisa" id="periodofvisa" requiresdd
+                                                
+                                                    value="{{ old('periodofvisa', $bookingData->visarequireddocument->period_of_visa_month ?? '') }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                    @error('city') border-red-500 @enderror">
+                                                    <i class="fa fa-calendar-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            @error('city')
+                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                </div>
+                                @endif
+
+
+
+                                @if(in_array('Number of Entries Requested', $permission))
+                                <!-- noofentries -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="noofentries" class="font-semibold text-ternary/90 text-sm"> No of Entries</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="noofentries" id="noofentries"
+                                        value="{{ old('visatype', $bookingData->visasubtype->name?? '') }}" readonly=""
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                            <i class="fa fa-sign-in-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+
+                                @if(in_array('Purpose of Travel', $permission))
+                                            <!-- Purpose of Visit * -->
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                                <label for="country" class="font-semibold text-ternary/90 text-sm">  Purpose of Visit *</label>
+                                                <div class="w-full relative">
+                                                    <input type="text" name="purposeofvisit" id="purposeofvisit" requiresdd
+                                                        value="{{ old('purposeofvisit', $bookingData->visarequireddocument->purpose_of_visit ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                        @error('purposeofvisit') border-red-500 @enderror">
+                                                    <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                </div>
+                                                @error('purposeofvisit')
+                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                        @endif
+                               
+
+                                @if(in_array('Intended Arrival Date', $permission))
+                                <!-- expected date of journey -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="expecteddate" class="font-semibold text-ternary/90 text-sm">Expected Date of Journey *</label>
+                                    <div class="w-full relative">
+                                        <input type="date" name="expecteddate" max="9999-12-31"  id="expecteddate"  readonly="" requiresdd
+                                             value="{{ old('country', $bookingData->dateofentry ?? '') }}" readonly=""
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            @error('country') border-red-500 @enderror">
+                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('expecteddate')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @endif
+                                 @if(in_array('Port of Entry', $permission))
+                                <!-- port of arival -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="portofarrival" class="font-semibold text-ternary/90 text-sm">Port Of Arrival *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="portofarrival" id="portofarrival" requiresdd
+                                             value="{{ old('portofarrival', $bookingData->visarequireddocument->port_of_arrival ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            @error('country') border-red-500 @enderror">
+                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('country')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @endif
+                                @if(in_array('Port of Exit', $permission))
+                                <!-- port of exit -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="portofexit" class="font-semibold text-ternary/90 text-sm"> Port of Exit *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="portofexit" id="portofexit" requiresdd
+                                            value="{{ old('portofexit', $bookingData->visarequireddocument->port_of_exit ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            @error('country') border-red-500 @enderror">
+                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('portofexit')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @endif
+                                @if(in_array('Required Detail of', $permission))
+                                <!-- Required Detail of * -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Required Detail of *</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="requireddetailsof" id="requireddetailsof"  readonly="" requiresdd
+                                               value="{{ old('requireddetailsof', $bookingData->visa->name?? '') }}" 
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            @error('country') border-red-500 @enderror">
+                                            <i class="fa fa-plane-arrival absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('country')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @endif
+                                @if(in_array('Place of Visit', $permission)) 
+                                <!-- Places to be Visited * -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Places to be Visited *</label>
+                                    <div class="w-full relative">
+                                    
+                                        <input type="text" name="placeofvisit" id="placeofvisit" requiresdd
+                                               value="{{ old('placeofvisit', $bookingData->visarequireddocument->places_to_be_visited ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            @error('country') border-red-500 @enderror">
+                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('country')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @endif
+                                @if(in_array('Countries to Visit', $permission)) 
+                                <!-- Places to be Visited * -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Countries to Visit *</label>
+                                    <div class="w-full relative">
+                                    
+                                        <input type="text" name="countriesofvisit" id="countriesofvisit" requiresdd
+                                               value="{{ old('countriesofvisit', $bookingData->origin->countryName ?? '') }}" readonly=""
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            @error('country') border-red-500 @enderror">
+                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('country')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @endif
+
+                                @if(in_array('Main Destination Country', $permission)) 
+                                <!-- Main Destination Country * -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Main Destination Country *</label>
+                                    <div class="w-full relative">
+                                    
+                                        <input type="text" name="maindestinationcountry" id="maindestinationcountry" requiresdd
+                                               value="{{ old('maindestinationcountry', $bookingData->destination->countryName ?? '') }}" readonly=""
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                            @error('country') border-red-500 @enderror">
+                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('country')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                @endif
+                    </div>
+                </div>
+            </div>
+          @endif
+
+
+
           @if(in_array('social_media_online_presence', $alreadySelect))
             <!-- Social Media Links Section -->
             <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="socialmedia">
@@ -1549,207 +1817,6 @@
           @endif
 
 
-          @if(in_array('travel_information', $alreadySelect))
-            <!-- Social Media Links Section -->
-            <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="travel">
-                <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                    <h2 class="text-xl font-bold text-gray-800 flex items-center">
-                        <i class="fas fa-briefcase text-primary mr-2"></i>
-                        Travel Information
-                    </h2>
-                    <button type="button" class="text-primary hover:text-primary-dark text-sm font-medium section-edit-btn" data-section="travel">
-                        <i class="fas fa-edit mr-1"></i> Edit
-                    </button>
-                </div>
-                @php
-                   $socicalmedia = $bookingData->clint->clientinfo->social_media ? json_decode($bookingData->clint->clientinfo->social_media) : null;
-              @endphp
-                <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    @if(in_array('Visa type', $permission))
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="visatype" class="font-semibold text-ternary/90 text-sm"> Type Of Visa Required</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="visatype" id="visatype"
-                                            value="{{ old('visatype', $bookingData->visa->name?? '') }}"  readonly=""  class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                       {{-- <textarea name="visatype" id="visatype" requiresdd
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                @error('permanent_address') border-red-500 @enderror"> {{ old('permanent_address', $bookingData->clint->permanent_address ?? '') }}</textarea>--}}
-                                                <i class="fa fa-passport absolute right-3 top-4 text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('visatype')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                @endif
-                                @if(in_array('Number of Entries Requested', $permission))
-                                <!-- noofentries -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="noofentries" class="font-semibold text-ternary/90 text-sm"> No of Entries</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="noofentries" id="noofentries"
-                                        value="{{ old('visatype', $bookingData->visasubtype->name?? '') }}" readonly=""
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                            <i class="fa fa-sign-in-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
-                                @if(in_array('Period of Visa', $permission))
-                                <!-- periodofvisa -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="periodofvisa" class="font-semibold text-ternary/90 text-sm">Period of Visa ( Month) *</label>
-                                            <div class="w-full relative">
-                                                <input type="text" name="periodofvisa" id="periodofvisa" requiresdd
-                                                
-                                                    value="{{ old('periodofvisa', $bookingData->visarequireddocument->period_of_visa_month ?? '') }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                    @error('city') border-red-500 @enderror">
-                                                    <i class="fa fa-calendar-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                            @error('city')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                </div>
-                                @endif
-                                @if(in_array('Intended Arrival Date', $permission))
-                                <!-- expected date of journey -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="expecteddate" class="font-semibold text-ternary/90 text-sm">Expected Date of Journey *</label>
-                                    <div class="w-full relative">
-                                        <input type="date" name="expecteddate" max="9999-12-31"  id="expecteddate"  readonly="" requiresdd
-                                             value="{{ old('country', $bookingData->dateofentry ?? '') }}" readonly=""
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('country') border-red-500 @enderror">
-                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('expecteddate')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                @endif
-                                 @if(in_array('Port of Entry', $permission))
-                                <!-- port of arival -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="portofarrival" class="font-semibold text-ternary/90 text-sm">Port Of Arrival *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="portofarrival" id="portofarrival" requiresdd
-                                             value="{{ old('portofarrival', $bookingData->visarequireddocument->port_of_arrival ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('country') border-red-500 @enderror">
-                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('country')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                @endif
-                                @if(in_array('Port of Exit', $permission))
-                                <!-- port of exit -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="portofexit" class="font-semibold text-ternary/90 text-sm"> Port of Exit *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="portofexit" id="portofexit" requiresdd
-                                            value="{{ old('portofexit', $bookingData->visarequireddocument->port_of_exit ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('country') border-red-500 @enderror">
-                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('portofexit')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                @endif
-                                @if(in_array('Required Detail of', $permission))
-                                <!-- Required Detail of * -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Required Detail of *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="requireddetailsof" id="requireddetailsof"  readonly="" requiresdd
-                                               value="{{ old('requireddetailsof', $bookingData->visa->name?? '') }}" 
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('country') border-red-500 @enderror">
-                                            <i class="fa fa-plane-arrival absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('country')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                @endif
-                                @if(in_array('Place of Visit', $permission)) 
-                                <!-- Places to be Visited * -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Places to be Visited *</label>
-                                    <div class="w-full relative">
-                                    
-                                        <input type="text" name="placeofvisit" id="placeofvisit" requiresdd
-                                               value="{{ old('placeofvisit', $bookingData->visarequireddocument->places_to_be_visited ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('country') border-red-500 @enderror">
-                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('country')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                @endif
-                                @if(in_array('Countries to Visit', $permission)) 
-                                <!-- Places to be Visited * -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Countries to Visit *</label>
-                                    <div class="w-full relative">
-                                    
-                                        <input type="text" name="countriesofvisit" id="countriesofvisit" requiresdd
-                                               value="{{ old('countriesofvisit', $bookingData->origin->countryName ?? '') }}" readonly=""
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('country') border-red-500 @enderror">
-                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('country')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                @endif
-
-                                @if(in_array('Main Destination Country', $permission)) 
-                                <!-- Main Destination Country * -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Main Destination Country *</label>
-                                    <div class="w-full relative">
-                                    
-                                        <input type="text" name="maindestinationcountry" id="maindestinationcountry" requiresdd
-                                               value="{{ old('maindestinationcountry', $bookingData->destination->countryName ?? '') }}" readonly=""
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('country') border-red-500 @enderror">
-                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('country')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                @endif
-                                @if(in_array('Purpose of Travel', $permission))
-                                <!-- Purpose of Visit * -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Purpose of Visit *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="purposeofvisit" id="purposeofvisit" requiresdd
-                                              value="{{ old('purposeofvisit', $bookingData->visarequireddocument->purpose_of_visit ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('purposeofvisit') border-red-500 @enderror">
-                                        <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('purposeofvisit')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                                @endif
-                    </div>
-                </div>
-            </div>
-          @endif
-
-
-        
             
           @if(in_array('visa_history_background', $alreadySelect))
             <!-- Social Media Links Section -->
@@ -1781,6 +1848,8 @@
                                     </div>
                                 </div>
                                 @endif
+ 
+
                                 @if(in_array('Visa Rejections', $permission)) 
                                 <div class="w-full relative group flex flex-col gap-1 ">
                                     <label for="visarejections" class="font-semibold text-ternary/90 text-sm">Visa Rejections</label>
@@ -1805,16 +1874,6 @@
                                 @endif
 
                                
-                                @if(in_array('Countries Visited (Last 5 Years)', $permission)) 
-                                <div class="w-full relative group flex flex-col gap-1 ">
-                                    <label for="countries_visited_last_10_years" class="font-semibold text-ternary/90 text-sm">Countries Visited in Last 10 Years</label>
-                                    <div class="w-full relative">
-                                        <textarea name="countries_visited_last_10_years" id="countries_visited_last_10_years"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('countries_visited_last_10_years', $bookingData->visarequireddocument->countries_visited_last_10_years ?? '')  }}</textarea>
-                                        <i class="fa fa-globe-europe absolute right-3 top-4 text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                                @endif
                                 @if(in_array('Previous UK Travel', $permission)) 
                                     <div class="mb-4">
                                             <label class="font-semibold text-sm text-ternary/90">Previous UK Travel ?</label>
@@ -1964,44 +2023,78 @@
                                         </div>
 
                                     
-                                        <div class="mt-2" id="india-travel-details" class="flex flex-wrap gap-4 mt-2" style="{{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? '' : 'display:none;' }}">
-                                                <label class="block text-sm font-medium text-gray-700">Address where You stayed in
+                                        <div class="mt-2 lg:col-span-2 md:col-span-2 col-span-1" id="india-travel-details" style="{{ old('previoustndiatravel', $visahistory->previoustndiatravel ?? '') == 'yes' ? '' : 'display:none;' }}">
+                                        
+                                    <div class="w-full grid lg:grid-cols-3 gap-4 ">
+                                    <div>      
+                                        <label class="block text-sm font-medium text-gray-700">Address where You stayed in
                                                 India:</label>
                                                 <textarea name="indiaaddressstay" id="addressstay"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('indiaaddressstay', $visahistory->indiaaddressstay ?? '') }}</textarea>
-                                    
+                                        </div> 
 
-
+                                        <div >
                                                 <label class="block text-sm font-medium text-gray-700">Cities in India Visited:</label>
                                                 <input type="text" name="indiacityvisit" id="cityvisitindia" value="{{ old('indiacityvisit', $visahistory->indiacityvisit ?? '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                  
+                                        </div>
+
+                                        <div>
                                                 <label class="block text-sm font-medium text-gray-700">Type of Visa:</label>
                                                 <input type="text" name="indiatypeofvisa" id="typeofvisa" value="{{ old('indiatypeofvisa', $visahistory->indiatypeofvisa ?? '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                       
-                                         
+                                        </div>
 
-
-                                                <label class="block text-sm font-medium text-gray-700">Visa Number:</label>
-                                                <input type="text" name="indiavisanumber" id="visanumber" value="{{ old('indiavisanumber', $visahistory->indiavisanumber ?? '') }}"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                     
-
+                                        <div>
                                                 <label class="block text-sm font-medium text-gray-700">Visa Issued Place:</label>
                                                 <input type="text" name="indiavisaissueplace" id="visaissueplace" value="{{ old('indiavisaissueplace', $visahistory->indiavisaissueplace ?? '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                          
+                                        </div>
+
+
+                                        <div>
+                                                <label class="block text-sm font-medium text-gray-700">Visa Number:</label>
+                                                <input type="text" name="indiavisanumber" id="visanumber" value="{{ old('indiavisanumber', $visahistory->indiavisanumber ?? '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        </div>
+
                                     
+                                        <div>
 
                                                 <label class="block text-sm font-medium text-gray-700">Date of Issue:</label>
                                                 <input type="date" name="indiadateofissue" id="dateofissue" max="9999-12-31"  value="{{ old('indiadateofissue', $visahistory->indiadateofissue ?? '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                          
-                                              
-                                    </div>
+                                        </div>
+                            </div>
+                                   
+    
+                                         </div>
 
                             @endif
+
+
+                            @if(in_array('Countries Visited (Last 12 months)', $permission)) 
+                                <div class="w-full relative group flex flex-col gap-1 ">
+                                    <label for="countries_visited_last_10_years" class="font-semibold text-ternary/90 text-sm">Countries Visited in (Last 10 years)</label>
+                                    <div class="w-full relative">
+                                        <textarea name="countries_visited_last_10_years" id="countries_visited_last_10_years"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('countries_visited_last_10_years', $bookingData->visarequireddocument->countries_visited_last_10_years ?? '')  }}</textarea>
+                                        <i class="fa fa-globe-europe absolute right-3 top-4 text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
+
+                            @if(in_array('Countries Visited (Last 5 Years)', $permission)) 
+                                <div class="w-full relative group flex flex-col gap-1 ">
+                                    <label for="countries_visited_last_10_years" class="font-semibold text-ternary/90 text-sm">Countries Visited in Last 10 Years</label>
+                                    <div class="w-full relative">
+                                        <textarea name="countries_visited_last_10_years" id="countries_visited_last_10_years"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('countries_visited_last_10_years', $bookingData->visarequireddocument->countries_visited_last_10_years ?? '')  }}</textarea>
+                                        <i class="fa fa-globe-europe absolute right-3 top-4 text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+                                @endif
                             @if(in_array('Criminal History', $permission))                                 
                                         <div class="mb-4">
                                                 <label class="font-semibold text-sm text-ternary/90">Criminal History?</label>
@@ -2641,26 +2734,28 @@ I
                         <i class="fas fa-edit mr-1"></i> Edit
                     </button>
                 </div>
+
+                @php
+                    $ref = json_decode($bookingData->clint->clientinfo->reference_address ?? '{}', true);
+                @endphp
+                
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-
-
                         <div class="w-full relative group flex flex-col gap-1">
-                            <label for="employer_name" class="font-semibold text-ternary/90 text-sm">In India </label>
+                            <label for="employer_name" class="font-semibold text-ternary/90 text-sm">Reference in India(Name,Address,State,District,Phone)</label>
                             <div class="w-full relative">
-                            <textarea name="countries_visited_last_10_years" id="countries_visited_last_10_years"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200"></textarea>
+                            <textarea name="reference_address_1" id="reference_address_1"
+                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ $ref['reference_address_1'] ?? '' }}</textarea>
                                         <i class="fa fa-globe-europe absolute right-3 top-4 text-sm text-secondary/80"></i>
                             </div>
                         </div>
 
                         <div class="w-full relative group flex flex-col gap-1">
-                            <label for="employer_name" class="font-semibold text-ternary/90 text-sm">In United Kindone</label>
+                            <label for="employer_name" class="font-semibold text-ternary/90 text-sm">Reference in United Kingdom(Name,Address,Phone)</label>
                             <div class="w-full relative">
-                            <textarea name="countries_visited_last_10_years" id="countries_visited_last_10_years"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('permanent_address', $bookingData->clint->permanent_address ?? '') }}</textarea>
-                                        <i class="fa fa-globe-europe absolute right-3 top-4 text-sm text-secondary/80"></i>
+                            <textarea name="reference_address_2" id="reference_address_2"
+                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ $ref['reference_address_2'] ?? '' }}</textarea>
+                                <i class="fa fa-globe-europe absolute right-3 top-4 text-sm text-secondary/80"></i>
                             </div>
                         </div>
 
@@ -2801,7 +2896,26 @@ $(document).ready(function() {
         });
     });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('confirmform');
 
+        if (form) {
+            form.querySelectorAll('input, textarea').forEach(function (el) {
+                const excludedTypes = ['email', 'tel', 'date', 'hidden', 'number', 'password', 'checkbox', 'radio', 'file'];
+                const type = el.getAttribute('type');
 
+                if (!excludedTypes.includes(type)) {
+                    el.addEventListener('input', function () {
+                        this.value = this.value.toUpperCase();
+                    });
+
+                    // Make it appear uppercase as user types
+                    el.style.textTransform = 'uppercase';
+                }
+            });
+        }
+    });
+</script>
 
 </html>

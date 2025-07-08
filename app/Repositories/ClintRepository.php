@@ -411,6 +411,7 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
     $info->spouse_details = $data['spouse_name'] ?? null;
     $info->children = $data['children'] ?? null;
     $info->arms_details = $data['arms_details'] ?? null;
+    $info->reference_address = $data['reference_address'] ?? null;
 
     $info->present_occupation = $data['present_occupation'] ?? null;
     $info->designation = $data['designation'] ?? null;
@@ -570,6 +571,8 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         $clientdetails->citizenship_id = $data['citizenship_id'] ?? '';
         $clientdetails->identification_marks = $data['identification_marks'] ?? '';
         $clientdetails->arms_details = $data['arms_details'] ?? '';
+        $clientdetails->reference_address = $data['reference_address'] ?? '';
+
 
         
         $clientdetails->educational_qualification = $data['educational_qualification'] ?? '';
@@ -613,7 +616,7 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
 
     public function step1createclient($data)
 {
-    
+    // dd($data);
     // Assuming this gets visa booking data from default DB
     $visabooking = $this->visaRepository->bookingDataById($data['bookingid']);
     $agency = $this->agencyService->getAgencyData();
@@ -773,6 +776,7 @@ private function updateClientData(array $data, ClientDetails $client, string $co
 private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string $connection = null)
 {
     // dd("heelo");
+    // dd($data);
     if ($connection) {
         $info->setConnection($connection);
     }
@@ -815,6 +819,7 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
             'birth_place' => $data['spouse_birth_place'] ?? null,
             'nationality' => $data['spouse_nationality'] ?? null,
             'previous_nationality' => $data['spouse_previous_nationality'] ?? null,
+            'country_of_birth' => $data['spouse_country_of_birth'] ?? null,
             'dob' => $data['spouse_dob'] ?? null,
             'employment' => $data['spouse_employment'] ?? null,
             'address' => $data['spouse_address'] ?? null,
@@ -859,8 +864,12 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
         }
     }
 
+    
 
-
+if(($data['step']?? null)=="previewname_permission"){
+        
+    $data['previous_name_status'] = isset($data['has_previous_name']) && $data['has_previous_name'] === 'yes' ? 1 : 0;
+}
 
 
     if(($data['step']?? null)=="socialmedia"){
@@ -878,7 +887,6 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
     }
 
     if(($data['step'] ?? null)=="employment"){
-      
         $employmentEducationData = [
             'business_name' => $data['business_name'] ?? null,
             'school_name' => $data['school_name'] ?? null,
@@ -890,7 +898,17 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
             'name_of_your_employer' => $data['name_of_your_employer']?? null,
             'date_from' => $data['date_from'] ?? null,
             'date_to' => $data['date_to'] ?? null,
+            
         ];
+
+        $reference_address = json_encode([
+            'reference_address_1' => $data['reference_address_1'] ?? null,
+            'reference_address_2' => $data['reference_address_2'] ?? null,
+        ]);
+
+       $info->reference_address = $reference_address;
+    
+        
         $info->employment = json_encode($employmentEducationData);
 
             if (($data['military_status'] ?? null) === 'yes') {
@@ -901,14 +919,15 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
                     'posting_place'   => $data['military_posting_place'] ?? '',
                 ];
                 $info->arms_details = json_encode($militaryData);
-            
+                   
         }
-
+        
 
     }
 
-
     // Common info (applies to all steps)
+    $info->previous_name_status = $data['previous_name_status'] ?? $info->previous_name_status;
+
     $info->previous_name = $data['previous_name'] ?? $info->previous_name;
     $info->passport_issue_date = $data['passport_issue_date'] ?? $info->passport_issue_date;
     $info->religion = $data['religion'] ?? $info->religion;
@@ -936,6 +955,7 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
     $info->language_spoken = $data['languages_spoken'] ?? $info->language_spoken;
     $info->armed_permission= $data['military_status']?? $info->armed_permission;
     $info->arms_details = $info->arms_details ?? $info->arms_details;
+    $info->reference_address = $info->reference_address ?? $info->reference_address;
 
     // family
     $info->father_details = $info->father_details ?? $info->father_details;
@@ -943,6 +963,7 @@ private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string 
     $info->spouse_details = $info->spouse_details ?? $info->spouse_details;
     $info->children = $info->children ?? $info->children;
     $info->relative_information = $data['relative_information'] ?? $info->relative_information;
+    $info->reference_address = $data['reference_address'] ?? $info->reference_address;
     $info->date_from = $data['date_from'] ?? $info->date_from;
     $info->date_to = $data['date_to'] ?? $info->date_to;
 

@@ -3,8 +3,7 @@
                  
                 @php
                     $eduEmployData = $bookingData->clint->clientinfo->employment  ? json_decode($bookingData->clint->clientinfo->employment) : null;
-
-
+                    $ref = json_decode($bookingData->clint->clientinfo->reference_address ?? '{}', true);
                 @endphp     
          
                          <div class="w-full grid xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4">
@@ -116,10 +115,10 @@
                                     </div>
                                 </div>
                                 @endif
+    
 
                                 @if(in_array('Duty', $permission))
                                 <!-- Duty  -->
-                                 
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="duty" class="font-semibold text-ternary/90 text-sm">Duty</label>
                                     <div class="w-full relative">
@@ -180,19 +179,20 @@
                                          </div>
                                 </div>
                                 @endif
-                                 @if(in_array('Employment History', $permission))
+                                @if(in_array('Employment History', $permission))
                                 <!-- Employment History  -->
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Employment History</label>
                                     <div class="w-full relative">
-                                        <input type="text" name="employment_history" id="employment_history"
+                                        <input type="text" name="employment_hisy" id="employment_history"
                                              value="{{ $eduEmployData->employment_history ?? '' }}"
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                         <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>
                                 </div>
                                 @endif
-                                 @if(in_array('Education History', $permission))
+
+                                @if(in_array('Education History', $permission))
 
                                 <!-- Employment History  -->
                                 <div class="w-full relative group flex flex-col gap-1">
@@ -204,29 +204,32 @@
                                         <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>
                                 </div>
-                              @endif 
+                                @endif
+  
 
-
-                              @if(in_array('A Date from Date to', $permission))
-                                    <!-- Date Range -->
+                                
+                                <!--  -->
+                            
+                                @if(in_array('Refrence', $permission))
+                                    <!-- Reference: India -->
                                     <div class="w-full relative group flex flex-col gap-1">
-                                        <label class="font-semibold text-ternary/90 text-sm">Date Range</label>
-                                        <div class="flex gap-2 w-full">
-                                            <!-- Date From -->
-                                            <div class="w-full relative">
-                                                <input type="date" name="date_from" id="date_from" max="9999-12-31"
-                                                    value="{{ old('date_from', isset($eduEmployData->date_from) ? \Carbon\Carbon::parse($eduEmployData->date_from)->format('Y-m-d') : '') }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                                <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                            </div>
+                                        <label for="reference_address_1" class="font-semibold text-ternary/90 text-sm">Reference 1</label>
+                                        <div class="w-full relative">
+                                            <textarea name="reference_address_1" id="reference_address_1"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ $ref['reference_address_1'] ?? '' }}</textarea>
+                                            <i class="fa fa-history absolute right-3 top-[10px] text-sm text-secondary/80"></i>
+                                        </div>
+                                    </div>
+                                @endif
 
-                                            <!-- Date To -->
-                                            <div class="w-full relative">
-                                                <input type="date" name="date_to" id="date_to" max="9999-12-31"
-                                                    value="{{ old('date_to', isset($eduEmployData->date_to) ? \Carbon\Carbon::parse($eduEmployData->date_to)->format('Y-m-d') : '') }}"
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                                <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                            </div>
+                                @if(in_array('Refrence', $permission))
+                                    <!-- Reference: United Kingdom -->
+                                    <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="reference_address_2" class="font-semibold text-ternary/90 text-sm">Reference 2</label>
+                                        <div class="w-full relative">
+                                            <textarea name="reference_address_2" id="reference_address_2"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ $ref['reference_address_2'] ?? '' }}</textarea>
+                                            <i class="fa fa-history absolute right-3 top-[10px] text-sm text-secondary/80"></i>
                                         </div>
                                     </div>
                                 @endif
@@ -234,6 +237,29 @@
 
 
 
+                            @if(in_array('A Date from Date to', $permission))
+                                <!-- Date Range -->
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label class="font-semibold text-ternary/90 text-sm">Date Range</label>
+                                    <div class="flex gap-2 w-full">
+                                        <!-- Date From -->
+                                        <div class="w-full relative">
+                                          /  <input type="date" name="date_from" id="date_from" max="9999-12-31"
+                                                value="{{ old('date_from', isset($eduEmployData->date_from) ? \Carbon\Carbon::parse($eduEmployData->date_from)->format('Y-m-d') : '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                            <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+
+                                        <!-- Date To -->
+                                        <div class="w-full relative">
+                                            <input type="date" name="date_to" id="date_to" max="9999-12-31"
+                                                value="{{ old('date_to', isset($eduEmployData->date_to) ? \Carbon\Carbon::parse($eduEmployData->date_to)->format('Y-m-d') : '') }}"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                            <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
 
 
 
@@ -335,7 +361,7 @@
                             <div class="w-full flex justify-end  pb-4 gap-2 xl:col-span-4 lg:col-span-3 md:col-span-2 col-span-1 mt-4">
 
                                          <button type="submit" data-current=3 data-previewtab=2 class="backbutton text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
-                                                                Back <i class="fa fa-arrow-right ml-1"></i>
+                                                                <i class="fa fa-arrow-left mr-1"></i> Back 
                                          </button>
                                                 <button type="submit" class="next-step text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
                                                     Next: Contact Details <i class="fa fa-arrow-right ml-1"></i>

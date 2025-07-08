@@ -52,37 +52,38 @@
 
 
    <!-- preview details -->
-   @if(in_array('Preview Name', $permission))
-        <div class="mb-4">
-                                        <label class="font-semibold text-sm text-ternary/90">Do you have a previous name?</label>
-                                        <div class="flex gap-4 mt-1">
-                                            
-                                        <label>
-                                                <input type="radio" name="has_previous_name" value="yes" onclick="togglePreviousName(true)"
-                                                {{ $bookingData->clint->clientinfo->previous_name ? 'checked' : '' }}> Yes
-                                                
-                                                 </label>
-                                            <label>
-                                                <input type="radio" name="has_previous_name" value="no" onclick="togglePreviousName(false)"
-                                                {{ !$bookingData->clint->clientinfo->previous_name ? 'checked' : '' }}> No
-                                               
-                                            </label>
-                                        </div>
-        </div>
- 
-    <div id="previousNameSection" class="hidden group flex flex-col gap-2 mb-4" >
-                                            <!-- Previous First Name -->
-                                            <div class="w-full relative group flex flex-col gap-1">
-                                                <label for="previous_name" class="font-semibold text-ternary/90 text-sm">Previous Name (if any)</label>
-                                                <div class="w-full relative">
-                                                    <input type="text" name="previous_name" id="previous_name"
-                                                        value="{{ $bookingData->clint->clientinfo->previous_name ?? '' }}"
-                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                                    <i class="fa fa-user-tag absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                                </div>
-                                            </div>
-    </div>
-   @endif
+                    @if(in_array('Preview Name', $permission))
+                    <input type="hidden" name="previous_name" value="">
+                            <div class="mb-4">
+                                                            <label class="font-semibold text-sm text-ternary/90">Do you have a previous name?</label>
+                                                            <div class="flex gap-4 mt-1">
+                                                                
+                                                            <label>
+                                                                    <input type="radio" name="has_previous_name" value="yes" onclick="togglePreviousName(true)"
+                                                                    {{ $bookingData->clint->clientinfo->previous_name ? 'checked' : '' }}> Yes
+                                                                    
+                                                                    </label>
+                                                                <label>
+                                                                    <input type="radio" name="has_previous_name" value="no" onclick="togglePreviousName(false)"
+                                                                    {{ !$bookingData->clint->clientinfo->previous_name ? 'checked' : '' }}> No
+                                                                
+                                                                </label>
+                                                            </div>
+                            </div>
+                    
+                        <div id="previousNameSection" class="hidden group flex flex-col gap-2 mb-4" >
+                                                                <!-- Previous First Name -->
+                                                                <div class="w-full relative group flex flex-col gap-1">
+                                                                    <label for="previous_name" class="font-semibold text-ternary/90 text-sm">Previous Name (if any)</label>
+                                                                    <div class="w-full relative">
+                                                                        <input type="text" name="previous_name" id="previous_name"
+                                                                            value="{{ $bookingData->clint->clientinfo->previous_name ?? '' }}"
+                                                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                                        <i class="fa fa-user-tag absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                                                    </div>
+                                                                </div>
+                        </div>
+                    @endif
 
 
    @if(in_array('Gender', $permission)) 
@@ -257,4 +258,19 @@
             Next: Contact Details  <i class="fa fa-arrow-right ml-1"></i>
         </button>
     </div>
-</form>
+
+</form>          
+<script>
+    function togglePreviousName(show) {
+        const section = document.getElementById('previousNameSection');
+        const input = document.getElementById('previous_name');
+
+        if (show) {
+            section.style.display = 'block';
+        } else {
+            section.style.display = 'none';
+            input.value = ''; // Clear value so nothing is saved
+        }
+    }
+</script>
+                  

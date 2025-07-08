@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Models\Country;
+use Illuminate\Support\Facades\Log;
 use App\Models\Document;
 use App\Models\VisaServices;
 use App\Models\VisaSubtype;
@@ -740,7 +741,7 @@ class VisaController extends Controller
     /******Form Function *******/
 public function hsFromindex(Request $request)
 {
-    // dd($request->all());
+    //  dd($request->all());
     $countries = Country::all();
 
     $query = Document::with('countries');
@@ -945,10 +946,18 @@ public function hsFromindex(Request $request)
     //    dd($id);
        $agency = $this->agencyService->getAgencyData();
        $bookingData = $this->visaRepository->bookingDataById($id);
+    //    dd($bookingData);
+       if($bookingData->viewed_once==1){
+           return redirect()->route('verifyvisa.application', [
+            'id' => $id,
+            'type' => 'agency' // or use 'admin' if needed
+        ]);
+       }
        $sections = VisaSection::all();
    
        return view('agencies.pages.clients.clientapplication', compact('agency', 'bookingData','sections'));
-   }
+   
+       }
    
  public function hs_VisaStoreAjax(Request $request){
     // dd($request->all());s
@@ -983,16 +992,25 @@ public function hsFromindex(Request $request)
 
  }
 
- public function hs_veriryvisaapplication($id,$type){
-     $bookingData = $this->visaRepository->bookingDataById($id);
- 
-     if($type=='agency'){
-        return view('superadmin.pages.visa.veriryvisaapplication',compact('bookingData','type'));
+ public function hs_veriryvisaapplication($id, $type)
+{
+    $bookingData = $this->visaRepository->bookingDataById($id);
 
-     }
-    //  veriryvisaapplication
-     return view('superadmin.pages.visa.superadminveriryvisaapplication',compact('bookingData','type'));
- }
+    // ✅ First-time view: set flag and redirect to self
+    if (!$bookingData->viewed_once) {
+        $bookingData->update(['viewed_once' => true]);
+        return redirect()->route('verifyvisa.application', ['id' => $id, 'type' => $type]);
+    }
+
+    // ✅ Load correct view based on type
+    $view = $type === 'agency'
+        ? 'superadmin.pages.visa.veriryvisaapplication'
+        : 'superadmin.pages.visa.superadminveriryvisaapplication';
+
+    return view($view, compact('bookingData', 'type'));
+}
+
+
 
 
 

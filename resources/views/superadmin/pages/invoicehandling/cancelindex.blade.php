@@ -1,5 +1,5 @@
 <x-front.layout>
-    @section('title')Staff @endsection
+    @section('title')Cancel Invoices @endsection
     <div class="w-full grid xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 mb-4">
 
     </div>
@@ -9,7 +9,7 @@
 
            {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl"> Cancel Invoice Listing </span>
+                <span class="font-semibold text-ternary text-xl"> Cancel Listing</span>
             </div>
              {{--        === heading section code ends here===--}}
 
@@ -108,12 +108,12 @@
        
 
                 <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
-                <tr>
+                    <tr>
                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
                          <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>            
-                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md"> Amount</td>
-                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
+                         <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
+                        <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Reason</td>
                     </tr>
 
                     
@@ -124,18 +124,12 @@
                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                    {{$invoice['invoice_number']}}  </td> 
                                     <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->service_name['name']}}</td>
-                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{$invoice['amount']}}</td>
-                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                        <div class="flex gap-2 items-center">
-                                                <a href="{{route('cancelinvoice.edit',['id' => $invoice->id])}}" title="Edit">
-                                                    <div
-                                                        class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                                        <i class="fa fa-pen"></i>
-                                                    </div>
-                                                </a>
-                                        </div>
+                                    <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">£ {{ optional($invoice->cancelinvoice)->amount ?? '—' }}</td>
+                                    <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                        {{ optional($invoice->cancelinvoice)->reason ?? 'No reason provided' }}
                                     </td>
-                             </tr>
+
+                                </tr>
 
 
                             @empty

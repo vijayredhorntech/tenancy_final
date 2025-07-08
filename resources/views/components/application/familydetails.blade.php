@@ -175,14 +175,6 @@
                                                     </div>
                                                     @endif
 
-                                                    @if(in_array('Spouse’s Place of Birth', $permission))
-                                                    <div class="w-full">
-                                                    <label for="spouse_birth_place" class="font-semibold text-ternary/90 text-sm">Place of Birth</label>
-                                                    <input type="text" name="spouse_birth_place" id="spouse_birth_place"
-                                                        value="{{ old('spouse_birth_place', $spouse->birth_place ?? '') }}"
-                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                                    </div>
-                                                    @endif
 
                                                     @if(in_array('Spouse’s Nationality', $permission))
                                                     <div class="w-full">
@@ -192,6 +184,18 @@
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
                                                     @endif
+                                                    
+
+                                                    @if(in_array('Spouse’s Place of Birth', $permission))
+                                                    <div class="w-full">
+                                                    <label for="spouse_birth_place" class="font-semibold text-ternary/90 text-sm">Place of Birth</label>
+                                                    <input type="text" name="spouse_birth_place" id="spouse_birth_place"
+                                                        value="{{ old('spouse_birth_place', $spouse->birth_place ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
+
+
                                                     @if(in_array('Spouse’s Previous Nationality', $permission))
                                                     <div class="w-full">
                                                     <label for="spouse_previous_nationality" class="font-semibold text-ternary/90 text-sm">Previous Nationality</label>
@@ -200,6 +204,15 @@
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
                                                     @endif
+
+                                                    @if(in_array('Spouse’s Country of birth', $permission))
+                                                    <div>
+                                                    <label for="spouse_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
+                                                    <input type="text" name="spouse_country_of_birth" id="spouse_country_of_birth" value="{{ old('spouse_country_of_birth', $spouse->country_of_birth ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
+                                                    
                                                     @if(in_array('Spouse’s DOB', $permission))
                                                     <div class="w-full">
                                                     <label for="spouse_dob" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
@@ -321,7 +334,7 @@
                             <div class="w-full flex justify-end  pb-4 gap-2 xl:col-span-4 lg:col-span-3 md:col-span-2 col-span-1 mt-4">
 
                                          <button type="submit" data-current=3 data-previewtab=2 class="backbutton text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
-                                                                Back <i class="fa fa-arrow-right ml-1"></i>
+                                                               <i class="fa fa-arrow-left mr-1"></i> Back 
                                          </button>
                                                 <button type="submit" class="next-step text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
                                                     Next: Contact Details <i class="fa fa-arrow-right ml-1"></i>

@@ -13,6 +13,7 @@ class VisaBooking extends Model
 
     protected $table = 'visabookings';
     // Define relationships
+    protected $fillable = ['viewed_once'];
     
 
     

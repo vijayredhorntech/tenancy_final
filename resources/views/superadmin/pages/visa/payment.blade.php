@@ -4,14 +4,14 @@
           <img class="absolute -top-20 left-0  w-full opacity-20" style="z-index: -1" src="{{asset('assets/images/bgImage.png')}}" alt="">
 
 
-          <span class="text-secondary lg:text-3xl md:text-2xl text-xl font-semibold">Visa to United States of America</span>
+          <span class="text-secondary lg:text-3xl md:text-2xl text-xl font-semibold">Visa to {{$visas['0']->destinationcountry->countryName}}</span>
           @if ($errors->any())
               <div class="alert alert-danger">
                   <ul>
                       @foreach ($errors->all() as $error)
                           <li>{{ $error }}</li>
                       @endforeach
-                  </ul>
+                  </ul>     
               </div>
           @endif
 

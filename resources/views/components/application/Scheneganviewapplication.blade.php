@@ -2689,7 +2689,7 @@ I
                         </div>
 
                         <div class="w-full relative group flex flex-col gap-1">
-                            <label for="employer_name" class="font-semibold text-ternary/90 text-sm">In United Kindone</label>
+                            <label for="employer_name" class="font-semibold text-ternary/90 text-sm">In United Kingdom</label>
                             <div class="w-full relative">
                             <textarea name="countries_visited_last_10_years" id="countries_visited_last_10_years"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('permanent_address', $bookingData->clint->permanent_address ?? '') }}</textarea>
@@ -2830,7 +2830,25 @@ $(document).ready(function() {
         });
     });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('confirmform');
 
+        if (form) {
+            form.querySelectorAll('input, textarea').forEach(function (el) {
+                const excludedTypes = ['email', 'tel', 'date', 'hidden', 'number', 'password', 'checkbox', 'radio', 'file'];
+                const type = el.getAttribute('type');
 
+                if (!excludedTypes.includes(type)) {
+                    el.addEventListener('input', function () {
+                        this.value = this.value.toUpperCase();
+                    });
 
+                    // Make it appear uppercase as user types
+                    el.style.textTransform = 'uppercase';
+                }
+            });
+        }
+    });
+</script>
 </html>
