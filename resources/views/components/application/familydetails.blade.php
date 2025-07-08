@@ -25,18 +25,18 @@
                                         </div>
                                         @endif
 
-                                        @if(in_array('Father Place of Birth', $permission))
-                                        <div>
-                                        <label for="father_birth_place" class="font-semibold text-sm text-ternary/90">Place of Birth</label>
-                                        <input type="text" name="father_birth_place" id="father_birth_place" value="{{ old('father_birth_place', $fatherdetails->birth_place ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                        </div>
-                                        @endif
-
                                         @if(in_array('Father Previous Nationality', $permission))
                                         <div>
                                         <label for="father_previous_nationality" class="font-semibold text-sm text-ternary/90">Previous Nationality</label>
                                         <input type="text" name="father_previous_nationality" id="father_previous_nationality" value="{{ old('father_previous_nationality', $fatherdetails->previous_nationality ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
+                                        @if(in_array('Father Place of Birth', $permission))
+                                        <div>
+                                        <label for="father_birth_place" class="font-semibold text-sm text-ternary/90">Place of Birth</label>
+                                        <input type="text" name="father_birth_place" id="father_birth_place" value="{{ old('father_birth_place', $fatherdetails->birth_place ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
@@ -112,14 +112,6 @@
                                         </div>
                                         @endif
 
-                                        @if(in_array('Mother Previous Nationality', $permission))
-                                        <div>
-                                        <label for="mother_previous_nationality" class="font-semibold text-sm text-ternary/90">Previous Nationality</label>
-                                        <input type="text" name="mother_previous_nationality" id="mother_previous_nationality" value="{{ old('mother_previous_nationality', $motherdetails->previous_nationality ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                        </div>
-                                        @endif
-
                                         @if(in_array('Mother Country of birth', $permission))
                                         <div>
                                         <label for="mother_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
@@ -184,6 +176,15 @@
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
                                                     @endif
+
+                                                    @if(in_array('Spouse’s Previous Nationality', $permission))
+                                                    <div class="w-full">
+                                                    <label for="spouse_previous_nationality" class="font-semibold text-ternary/90 text-sm">Previous Nationality</label>
+                                                    <input type="text" name="spouse_previous_nationality" id="spouse_previous_nationality"
+                                                        value="{{ old('spouse_previous_nationality', $spouse->previous_nationality ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+                                                    @endif
                                                     
 
                                                     @if(in_array('Spouse’s Place of Birth', $permission))
@@ -191,16 +192,6 @@
                                                     <label for="spouse_birth_place" class="font-semibold text-ternary/90 text-sm">Place of Birth</label>
                                                     <input type="text" name="spouse_birth_place" id="spouse_birth_place"
                                                         value="{{ old('spouse_birth_place', $spouse->birth_place ?? '') }}"
-                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
-                                                    </div>
-                                                    @endif
-
-
-                                                    @if(in_array('Spouse’s Previous Nationality', $permission))
-                                                    <div class="w-full">
-                                                    <label for="spouse_previous_nationality" class="font-semibold text-ternary/90 text-sm">Previous Nationality</label>
-                                                    <input type="text" name="spouse_previous_nationality" id="spouse_previous_nationality"
-                                                        value="{{ old('spouse_previous_nationality', $spouse->previous_nationality ?? '') }}"
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
                                                     @endif

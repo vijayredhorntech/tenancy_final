@@ -938,12 +938,12 @@ public function hsFromindex(Request $request)
        $agency = $this->agencyService->getAgencyData();
        $bookingData = $this->visaRepository->bookingDataById($id);
     //    dd($bookingData);
-       if($bookingData->viewed_once==1){
-           return redirect()->route('verifyvisa.application', [
-            'id' => $id,
-            'type' => 'agency' // or use 'admin' if needed
-        ]);
-       }
+    //    if($bookingData->viewed_once==1){
+    //        return redirect()->route('verifyvisa.application', [
+    //         'id' => $id,
+    //         'type' => 'agency' // or use 'admin' if needed
+    //     ]);
+    //    }
        $sections = VisaSection::all();
    
        return view('agencies.pages.clients.clientapplication', compact('agency', 'bookingData','sections'));

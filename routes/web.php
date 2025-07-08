@@ -75,7 +75,9 @@ Route::get('/viewtest',function (){
 return view('forms.ANNEXURE-E');
 
 // return view('viewtest');
-}); 
+});
+
+
 
 Route::get('/migration',[AgencyAdminController::class,'migration']);
 
@@ -365,7 +367,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                 
 
                                  Route::get('/sendeail/{id}', 'hs_sendSAApplication')->name('superadminvisasendemail.application');
-                                 Route::get('/viewapplication/{id}', 'hs_viewSAApplication')->name('superadminvisa.applicationview');
+                                    Route::get('/viewapplication/{id}', 'hs_viewSAApplication')->name('superadminvisa.applicationview');
 
 
                                  
@@ -404,7 +406,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         /*****Invoice and atoll **** */
 
                     Route::controller(InvoiceController::class)->group(function () {
-                        Route::get('/allinvoices', 'hs_allInvoices')->name('superadmin.allinvoices');  
+                        Route::get('/allinvoices', 'hs_allInvoices')->name('superadmin.allinvoices');
+                        Route::get('/invoice', 'view_invoice')->name('invoice.create');
                         Route::get('/cancelindex', 'hs_SAcanceleditInvoice')->name('superadmin.cancelindex');      
                         Route::get('/cancelinvoice/{id}','hs_CancelInvoice')->name('cancelinvoice');
                         Route::post('/cancelinvoice/{id}', 'hs_CancelInvoiceSubmit')->name('cancelinvoice.submit');
@@ -412,7 +415,6 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/cencelstoreinvoice/{id}/{type}','hsSAupdateinvoice')->name('update.cancelinvoice');
                         Route::post('/allinvoices/updateinvoice/{id}', 'hs_updateInvoice')->name('allinvoices.updateinvoice');
                         Route::get('/editindex', 'hs_EditedInvoices')->name('superadmin.editindex');
-
                         
                     });
 
@@ -425,6 +427,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     });
 
 
+
    });
 
     
@@ -432,6 +435,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
 
 });
+
+
 
 /****** Route For agency *******/
 
