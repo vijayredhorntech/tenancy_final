@@ -22,5 +22,7 @@ interface DocumentSignRepositoryInterface
 
     public function signDocumentStore($data);
     public function sendEmailForSign(Request $request, int $documentId): void;
+    public function createDocumentAgency($id, $type);
+    
 
 }

@@ -174,4 +174,65 @@ class AgencyService
      }
      
 }
+
+public function getClientinfo($invoices){
+
+    foreach ($invoices as $invoice) {
+           
+        if ($invoice->agency && $invoice->visaBooking) {
+
+            $this->setConnectionByDatabase($invoice->agency->database_name);
+
+            $clientId = $invoice->visaBooking->client_id;
+            $bookingId = $invoice->visaBooking->id;
+
+            // Fetch related data from the user's database
+            $clientFromUserDB = ClientDetails::on('user_database')
+                ->with('clientinfo')
+                ->find($clientId);
+
+            $otherMembers = AuthervisaApplication::on('user_database')
+                ->where('clint_id', $clientId)
+                ->where('booking_id', $bookingId)
+                ->get();
+
+            // Attach dynamically loaded relations
+            $invoice->visaBooking->setRelation('clientDetailsFromUserDB', $clientFromUserDB);
+            $invoice->visaBooking->setRelation('otherMembersFromUserDB', $otherMembers);
+        }
+    }
+
+}
+
+    
+    public function getClientinfoById($invoice){
+
+   
+        
+        if ($invoice->agency && $invoice->visaBooking) {
+        
+            $this->setConnectionByDatabase($invoice->agency->database_name);
+
+            $clientId = $invoice->visaBooking->client_id;
+            $bookingId = $invoice->visaBooking->id;
+
+            // Fetch related data from the user's database
+            $clientFromUserDB = ClientDetails::on('user_database')
+                ->with('clientinfo')
+                ->find($clientId);
+
+            $otherMembers = AuthervisaApplication::on('user_database')
+                ->where('clint_id', $clientId)
+                ->where('booking_id', $bookingId)
+                ->get();
+
+            // Attach dynamically loaded relations
+            $invoice->visaBooking->setRelation('clientDetailsFromUserDB', $clientFromUserDB);
+            $invoice->visaBooking->setRelation('otherMembersFromUserDB', $otherMembers);
+            return $invoice; // Return the modified invoice objec
+        }
+        return false;
+    
+
+}
 }

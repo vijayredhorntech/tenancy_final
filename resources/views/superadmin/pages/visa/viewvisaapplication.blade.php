@@ -130,15 +130,23 @@
 
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
+
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-            <span class="font-semibold text-ternary text-xl"></span>
-            <span class="font-semibold text-ternary text-xl">
-              Application Number:=>  {{ $clientData->application_number ?? 'N/A' }} 
-                
+            <span class="font-semibold text-ternary text-lg">
+            {{ $clientData->application_number ?? 'N/A' }} 
+            </span>
 
-               </span>
+            <span class="font-semibold text-ternary text-lg">
+            {{ strtoupper($clientData->clint->client_name ?? 'N/A') }}
+        <span class="text-sm italic">( {{ $clientData->clint->email ?? 'N/A' }} , {{ $clientData->clint->phone_number ?? 'N/A' }}   )</span>
+            </span>
 
-            <span class="font-semibold text-ternary text-xl"></span>
+
+            <span class="font-semibold text-ternary text-lg">
+             {{ $clientData->origin->countryName ?? 'N/A' }}  To  {{ $clientData->destination->countryName ?? 'N/A' }}
+            </span>
+
+
 
             
         </div>
@@ -236,15 +244,46 @@
                 </div>
                </a>
                @endif
+
+
+             @if($clientData->visaInvoiceStatus->invoice==null)             
+                  <div  data-tid="generateInvoiceDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                  <i class="fas fa-file-alt"></i>
+                    Generate Invoice
+                </div>
+                @else
+                <div  data-tid="viewInvoiceDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                  <i class="fas fa-file-alt"></i>
+                    View Invoice
+                </div>
+               @endif
+
+             
+               @if($clientData->visaInvoiceStatus->docsign==null)    
+               <a href="{{ route('send.docsign', [
+                        'id'   => $clientData->id,
+                        'type' => $clientData->agency->agencytoken   {{-- or whatever value you intend --}}
+                    ]) }}">
+                    <div class="w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                        <i class="fas fa-file-alt"></i>
+                        Doc sign
+                    </div>
+                </a>
+                @else
+                <div  data-tid="viewDocSignDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                  <i class="fas fa-file-alt"></i>
+                    View Doc sign
+                </div>
+               @endif
+
                
 
               </div>
-
                 <div class="w-full mt-4 ">
             <!-- start joing letter  -->
 
                 <!-- view application  -->
-                <div id="ViewApplicationDiv" class="tab  ">
+                <div id="ViewApplicationDiv" class="tab ">
                     <x-common.viewapplication :clientData="$clientData" />
   
                 </div>
@@ -279,6 +318,22 @@
                       <div id="sendEmailDiv" class="tab hidden">
                         <x-common.sendemail :clientData="$clientData" :forms="$forms" />  
                     </div>       
+
+                    <div id="generateInvoiceDiv" class="tab hidden">
+                        <x-common.generateinvoice :clientData="$clientData" :forms="$forms" />  
+                    </div>    
+
+                    
+                    <div id="viewInvoiceDiv" class="tab hidden">
+                        <x-common.invoice.visa-invoice :booking="$clientData" :termconditon="$termconditon"  />  
+                    </div>    
+
+                    <div id="viewDocSignDiv" class="tab hidden">
+                        <x-common.invoice.visa-docSign :booking="$clientData" :document="$clientData->visaInvoiceStatus->docsign"  />  
+                    </div>  
+
+                    
+
                 </div>
 
             </div>

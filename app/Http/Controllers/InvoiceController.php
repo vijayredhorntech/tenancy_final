@@ -16,6 +16,7 @@ use App\Models\CancelInvoice;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
+use   App\Models\Invoice;
 
 
 use Illuminate\Http\Request;
@@ -34,7 +35,8 @@ class InvoiceController extends Controller
     /**
      * *Super admin Function 
      * */
-    
+
+   
     public function hs_SAcancelInvoice(Request $request)
     {
        // Step 1: Validate and get filters
@@ -441,23 +443,23 @@ public function hs_allInvoices(Request $request)
 {
     $perPage = $request->input('per_page', 10); // Default to 10 items per page
 
-$invoices = Deduction::with([
-    'service_name',
-    'agency',
-    'visaBooking.visa',
-    'visaBooking.origin',
-    'visaBooking.destination',
-    'visaBooking.visasubtype',
-    'visaBooking.clint',
-    'visaApplicant',
-    'flightBooking',
-    'hotelBooking',
-    'hotelDetails',
-    'cancelinvoice'
-    ])->where(function ($query) {
-    $query->whereNull('invoicestatus')
-          ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
-    })->paginate($perPage);
+        $invoices = Deduction::with([
+            'service_name',
+            'agency',
+            'visaBooking.visa',
+            'visaBooking.origin',
+            'visaBooking.destination',
+            'visaBooking.visasubtype',
+            'visaBooking.clint',
+            'visaApplicant',
+            'flightBooking',
+            'hotelBooking',
+            'hotelDetails',
+            'cancelinvoice'
+            ])->where(function ($query) {
+            $query->whereNull('invoicestatus')
+                ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
+            })->paginate($perPage);
 
 
     //  get data client information with the client database
@@ -547,6 +549,101 @@ $invoices = Deduction::with([
         $route = ($booking->service == 2) ? 'superadmin.flight' : 'superadmin.hotel';
         return redirect()->route($route)->with('success', 'Supplier payment added successfully.');
     }
+
+
+        public function hsGenerateInvoice(Request $request)
+{
+    // dd($request->all());
+    /* ---------- 1. Validate incoming data ---------- */
+    $validated = $request->validate([
+        'clientname'     => ['required', 'string', 'max:255'],
+        'invoicenumber'  => ['required', 'string', 'max:255'],
+        'bookingid'      => ['required', 'integer'],
+        'clientid'       => ['required', 'integer'],
+        'invoicedate'    => ['required', 'date', 'before_or_equal:today'],
+        'alternate_name' => ['nullable', 'string', 'max:255'],
+        'address'        => ['required', 'string', 'max:500'],
+        'paymentMethod'  => ['required'],
+        'totalInput'  => ['required'],
+    
+
+
+        
+    ]);
+
+    /* ---------- 2. Look up deduction (if any) ---------- */
+    $deduction = Deduction::where('invoice_number', $validated['invoicenumber'])->first();
+  
+    if (! $deduction) {
+        return back()->withErrors([
+            'invoicenumber' => 'No deduction found for that invoice number.',
+        ])->withInput();
+    }
+
+    /* ---------- 3. Assemble payload for Invoice ---------- */
+    $invoiceData = [
+        'receiver_name'  => $validated['clientname'],
+        'invoice_date'   => $validated['invoicedate'],
+        'due_date'       => $validated['invoicedate'],          // customise if needed (e.g. +14 days)
+        'different_name' => $validated['alternate_name'],       // nullable
+        'address'        => $validated['address'],
+        'bookingid'      => $deduction->id,
+        'visa_applicant' => 'self',
+        'service_id'     => $deduction->service,                                  // hard‑coded; change if dynamic
+        'billing_id'     => $validated['clientid'],
+        'applicant_id'   => $validated['clientid'],
+        'amount'         => $validated['totalInput'],
+        'discount'       =>  $request->discountInput,                                  // or calculate something
+        'payment_type'   => $validated['paymentMethod'],                             // or pull from request
+    ];
+
+    /* ---------- 4. Persist and respond ---------- */
+    Invoice::create($invoiceData);
+
+    return redirect()
+        ->back()
+        ->with('success', 'Invoice generated successfully.');
+
+}
+
+    public function hsAllinvoice(Request $request)
+    {
+        $perPage = $request->filled('per_page') && is_numeric($request->per_page)
+          ? (int) $request->per_page
+            : null;
+            
+            $invoices = Invoice::with([
+                'invoiceDetails.agency',
+                
+                'invoiceDetails.visaBooking',
+                
+            ])->get();
+
+            return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices'));
+   
+        // Step 2: Build query with eager loading
+    } 
+
+    public function hsviewInvoice(Request $request,$id){
+
+        $invoice = Invoice::with([
+            'invoiceDetails.agency',
+            'invoiceDetails.visaBooking',
+            'invoiceDetails.hotelBooking',
+            'invoiceDetails.flightBooking',
+            'invoiceDetails.visaApplicant',
+            'invoiceDetails.visaBooking.visasubtype',
+            'invoiceDetails.visaBooking.visa',
+            'invoiceDetails.visaBooking.origin',            
+        ])->first();
+
+       return view('superadmin.pages.invoicehandling.invoiceview', compact('invoice'));
+        // Step 3: Fetch records with or without pagination
+        // Step 4: Load dynamic data from user databases
+        // Step 5: Render view if type matches
+    }
+
+    
 
 
 

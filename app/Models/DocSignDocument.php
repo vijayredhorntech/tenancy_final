@@ -19,6 +19,10 @@ class DocSignDocument extends Model
         'document_file',
         'user_type',
         'user_id',
+        'client_id',
+        'agency_id',
+        'related_id',
+        'type_of_document',
     ];
 
     protected $casts = [

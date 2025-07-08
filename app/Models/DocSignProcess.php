@@ -38,6 +38,10 @@ class DocSignProcess extends Model
         
     }
 
+    public function document(){
+        return $this->hasOne(DocSignDocument::class, 'id','document_id');
+    }
+
     public function audits()
     {
         return $this->hasMany(DocSignAudit::class, 'document_signature_id');

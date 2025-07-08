@@ -80,6 +80,11 @@ class VisaBooking extends Model
         return $this->hasOne(VisaRelatedDocument::class, 'bookingid','id');
 
     }
+    public function visaInvoiceStatus(){
+        return $this->hasOne(Deduction::class, 'flight_booking_id','id');
+    }
+
+
    
 
    

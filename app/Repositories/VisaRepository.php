@@ -360,7 +360,7 @@ public function getSuperadminshotedapplication($request)
 
     public function getAllVisas()
     {
-        return VisaServices::paginate(10);
+        return VisaServices::with('visaAssignCountries')->paginate(10);
     }
 
 
@@ -546,6 +546,8 @@ public function updateVisa($id, array $data)
 
 
   public function allVisacoutnry(){
+
+
     return VisaServiceType::with('origincountry','destinationcountry','VisaServices','Subvisas')->get(); 
   }
 
@@ -683,63 +685,7 @@ public function checkBalance($id,$totalAmount){
   }
 
 
-// public function getBookingByid($id, $type)
-// {
-//     $query = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'agency']);
 
-//     if ($type === "all") {
-//         $query = $query
-//             ->with('downloadDocument')
-//             ->where('agency_id', $id)
-//             ->where('confirm_application', '1')
-//             ->orderBy('created_at', 'desc');
-//     } elseif ($type === "pending") {
-//         $query = $query
-//             ->where('agency_id', $id)
-//             ->where('confirm_application', '0')
-//             ->where('document_status', 'Pending')
-//             ->orderBy('created_at', 'desc');
-//     } else {
-//         return response()->json(['message' => 'Invalid type provided.'], 400);
-//     }
-
-//     $bookings = $query->paginate(10);
-
-//     foreach ($bookings as $viewbooking) {
-//         $database = $viewbooking->agency->database_name ?? null;
-
-//         if ($database) {
-//             // Set connection to user-specific database
-//             $this->agencyService->setConnectionByDatabase($database);
-
-//             // Load client and other members from user DB
-//             $clientFromUserDB = ClientDetails::on('user_database')
-//                 ->with('clientinfo')
-//                 ->where('id', $viewbooking->client_id)
-//                 ->first();
-
-//             $otherMember = AuthervisaApplication::on('user_database')
-//                 ->where('clint_id', $viewbooking->client_id)
-//                 ->where('booking_id', $viewbooking->id)
-//                 ->get();
-
-//             // Check and load other application details
-//             $otherapplicationDetails = null;
-//             if (!empty($viewbooking->otherclientid)) {
-//                 $otherapplicationDetails = AuthervisaApplication::on('user_database')
-//                     ->where('id', $viewbooking->otherclientid)
-//                     ->first();
-//             }
-
-//             // Set custom relations
-//             $viewbooking->setRelation('clint', $clientFromUserDB);
-//             $viewbooking->setRelation('otherclients', $otherMember);
-//             $viewbooking->setRelation('otherapplicationDetails', $otherapplicationDetails);
-//         }
-//     }
-
-//     return $bookings;
-// }
 
 public function getBookingByid($id, $type, $request)
 {
@@ -963,54 +909,6 @@ public function getBookingByid($id, $type, $request)
 
 
 
-    // public function bookingDataById($id){
-      
-    //    $viewbooking=VisaBooking::with(['visa', 'agency','origin', 'destination', 'visasubtype','clint.clientinfo','otherclients','clientapplciation','downloadDocument','clientrequestdocuments'])
-    //     ->where('id', $id)
-    //    ->first(); 
-    
-    //     $database=$viewbooking->agency->database_name
-    //     $this->agencyService->setDatabase($database);
-
-    //    $viewbooking->setRelation('clint.clientinfo',ClientDe::where('client_id', $data->id)->get());
-
-    //    return $viewbooking;
-      
-    // }
-
-    // public function bookingDataById($id)
-    // {
-    //     $viewbooking = VisaBooking::with([
-    //         'visa',
-    //         'agency',
-    //         'origin',
-    //         'destination',
-    //         'visasubtype',
-    //         'clint.clientinfo',
-    //         'otherclients',
-    //         'clientapplciation',
-    //         'downloadDocument',
-    //         'clientrequestdocuments'
-    //     ])->where('id', $id)->first();
-    
-    //     if (!$viewbooking) {
-    //         return null; // Or handle error as needed
-    //     }
-    
-    //     $database = $viewbooking->agency->database_name;
-    //     $this->agencyService->setConnectionByDatabase($database);
-    
-    //     // Set clientinfo manually from the user-specific database if needed
-    //     if ($viewbooking->clint) {
-           
-    //         $viewbooking->clint->setRelation(
-    //             'clint',
-    //             ClientDetails::on('user_database')->where('id', $viewbooking->client_id)->first()
-    //         );
-    //     }
-    
-    //     return $viewbooking;
-    // }
     public function bookingDataById($id)
 {
     // Load booking with everything except 'clint.clientinfo'
@@ -1026,7 +924,11 @@ public function getBookingByid($id, $type, $request)
         'clientrequestdocuments',
         'applicationlog',
         'clientrequiremtsinfo',
-        'visarequireddocument'
+        'visarequireddocument',
+        'visaInvoiceStatus.invoice',
+        'visaInvoiceStatus.docsign.sign'
+
+
     ])->where('id', $id)->first();
 
     if (!$viewbooking) {

@@ -35,7 +35,7 @@ use App\Http\Middleware\CheckUserSession;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\Agencies\ClientController;
 use App\Http\Controllers\Agencies\DocumentController;
-
+use App\Http\Controllers\DocumentSignController;
 /*******Controler for Hotel */
 
 use App\Http\Controllers\SearchController;
@@ -350,9 +350,16 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::get('/invoice/view/{id}', 'hs_viewInvoice')->name('invoice.view');
     Route::post('agency/amount/store', 'hs_payamountstore')->name('agencypay.invoice.ammount');   
     Route::get('agency/cancel', 'hs_cancelInvoice')->name('agencypay.invoice.cancel');   
-
-   
-
-
+    Route::post('generateinvoice', 'hsGenerateInvoice')->name('generateinvoice');
+    Route::get('/{type}/invoice', 'hsAllinvoice')->name('invoice.all');
+    Route::get('/viewinvoice/{id}','hsviewInvoice')->name('viewinvoice');
     
+});
+
+
+Route::controller(DocumentSignController::class)->group(function () {
+    Route::get('generateinvoice/{id}/{type}', 'hs_generateInvoice')
+         ->name('send.docsign');
+
+ 
 });

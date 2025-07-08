@@ -87,13 +87,14 @@ class DocumentSignController extends Controller
     }
 
 
+
 public function showSigningPage(Request $request,$token){
-            $signature = DocSignProcess::with('agency')->where('signing_token', $token)
+            $signature = DocSignProcess::with('agency','document')->where('signing_token', $token)
             ->firstOrFail();
-        
+      
             $signature->recordEvent('viewed', 'viewed', $request);
         
-        dd($signature);
+        // dd($signature);
 
         return view('superadmin.pages.docsign.document-signing', compact('signature'));
 
@@ -149,4 +150,12 @@ public function showSigningPage(Request $request,$token){
         return redirect()->route('document.index')->with('success', 'Document created successfully.');
 
     }
+
+    public function hs_generateInvoice($id, $type){
+        $documents = $this->documentSignRepository->createDocumentAgency($id, $type);
+        return redirect()
+        ->back()
+        ->with('success', 'Invoice generated successfully.');
+  
+   }
 }

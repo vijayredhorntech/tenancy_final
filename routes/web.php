@@ -327,7 +327,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                         Route::controller(VisaController::class)->group(function () {
                                  Route::get('coutnry','hsCountry')->name('view.country');
-                                 Route::get('visa','hsVisa')->name('visa.view');
+                                 Route::get('visa','hsVisa')->name('allvisa.view');
+                                 Route::get('viewvisa/{id?}','hsVisaView')->name('visa.view');
                                  Route::get('visacreate','hsVisacreate')->name('visa.create');
                                  Route::post('visastore','hsStore')->name('visa.store');
                                  Route::get('/visa/assign/{id?}','hsassignVisa')->name('visa.assign');
@@ -412,6 +413,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/cencelstoreinvoice/{id}/{type}','hsSAupdateinvoice')->name('update.cancelinvoice');
                         Route::post('/allinvoices/updateinvoice/{id}', 'hs_updateInvoice')->name('allinvoices.updateinvoice');
                         Route::get('/editindex', 'hs_EditedInvoices')->name('superadmin.editindex');
+                  
 
                         
                     });
@@ -444,10 +446,6 @@ Route::middleware([LogUserActivity::class])->group(function () {
 /*****Common Route ***** */
 
 
-Route::get('/documents/sign/{token}', [DocumentSignController::class, 'showSigningPage'])
-->name('document.sign');
-Route::post('/document/sign', [DocumentSignController::class, 'submitSigning'])
-->name('document.sign.submit');
 
 
 Route::middleware('auth')->group(function () {
@@ -456,6 +454,21 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
+Route::get('/documents/sign/{token}', [DocumentSignController::class, 'showSigningPage'])
+->name('document.sign');
+Route::post('/document/sign', [DocumentSignController::class, 'submitSigning'])
+->name('document.sign.submit');
+Route::get('/documents/{path}', function ($path) {
+    $disk = 'documents';
+    $fullPath = Storage::disk($disk)->path($path);
+    
+    if (!Storage::disk($disk)->exists($path)) {
+        abort(404);
+    }
+    
+    return response()->file($fullPath);
+})->where('path', '.*')->name('documents.serve');
 
 require __DIR__.'/auth.php';
 

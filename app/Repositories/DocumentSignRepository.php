@@ -20,6 +20,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
     use App\Mail\DocSignRequestMail;
 use Illuminate\Support\Str;
+use App\Models\Deduction;
+
+
 
 
 
@@ -122,6 +125,50 @@ public function sendEmailForSign(Request $request, int $documentId): void
         return SignedDocument::create($data);  // Create a new document record
     }
 
+    public function createDocumentAgency($id, $type)
+{
+    // 1. Fetch the booking with all needed relations
+    $invoice = Deduction::with([
+        'service_name',
+        'agency',
+        'visaBooking.visa',
+        'visaBooking.origin',
+        'visaBooking.destination',
+        'visaBooking.visasubtype',
+        'flightBooking',
+        'hotelBooking',
+        'hotelDetails',
+        'cancelinvoice',
+    ])->where('flight_booking_id', $id)->first();
+
+    $user = $this->agencyService->getCurrentLoginUser();
+     $clientInfo = $this->agencyService->getClientinfoById($invoice);
+    //  dd($clientInfo->id);
+
+    // 3. Build the array of columns you want to insert
+    $docData = [
+        'name'             => $clientInfo->visaBooking->visa->name,
+        'title'            => $clientInfo->visaBooking->visa->name,
+        'document_type'    => 'Invoice',
+        'document_name'    => 'Visa',
+        'termandcondition' => [],
+        'termstype'        => [],
+        'terms_data'       => [],
+        'document_file'    => [],
+        'client_id'        => $clientInfo->visaBooking->clientDetailsFromUserDB->id,
+        'agency_id'        => $clientInfo->agency->agency_id ?? null,
+        'related_id'       => $clientInfo->id,
+        'user_id'          => $user->id,
+        'type_of_document' => 'Auto',
+        'user_type'        => 'Agency',
+    ];
+
+    // 4. Pass the ARRAY to create(), not the model
+    $document = DocSignDocument::create($docData);
+
+    return $document;
+}
+
     public function updateDocument($id, array $data)
     {
         $document = SignedDocument::findOrFail($id);
@@ -223,33 +270,7 @@ public function sendEmailForSign(Request $request, int $documentId): void
    }
 
    /*****Document Save *** */
-//    public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $clientId, $agencyId, $bookingType)
-//    {
-//        $merged = [];
-   
-//        foreach ($documents as $index => $docName) {
-//            $file = $files[$index];
-   
-//            $fileName = time() . '_' . $file->getClientOriginalName();
-//            $filePath = $file->storeAs('documents/clientuploadDocument', $fileName, 'public'); // Use forward slashes
-   
-//            $merged[] = [
-//                'name' => $docName,
-//                'file' => $filePath,
-//            ];
-//        }
-   
-//        // Insert data into your table
-//        DownloadCenter::create([
-//         'invoice_id' => $invoiceId,
-//         'client_id' => $clientId,
-//         'agency_id' => $agencyId,
-//         'booking_id' => $bookingId,
-//         'booking_type' => $bookingType,
-//         'documents' => json_encode($merged),
-//     ]);
-    
-//    }
+
    
 public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $clientId, $agencyId, $bookingType)
 {

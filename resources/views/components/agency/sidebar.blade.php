@@ -146,15 +146,66 @@
 
         <!-- invoice data -->
         @if($user_data->getAllPermissions()->pluck('name')->intersect(['invoice', 'manage everything'])->isNotEmpty())
-            <a href="{{ route('invoice.index', ['type' => 'agencies']) }}">
-                <div class="{{Route::currentRouteName()===''?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                    <div class="flex items-center">
-                        <i class="fa fa-file-invoice mr-2 text-sm"></i>
-                        <span class="text-lg font-medium">Invoice </span>
-                    </div>
-                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+        <div class="">
+            <div onclick="document.getElementById('cancelinvoiceDiv').classList.toggle('hidden');document.getElementById('cancelArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='visa'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-file-invoice mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Invoice</span>
                 </div>
-            </a>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="cancelArrow"> </i>
+            </div>
+            <ul id="cancelinvoiceDiv" class="pl-10 mt-2 flex flex-col hidden">
+          
+
+
+            @php
+                    // detect “active” state for this link
+                    $isActive = Route::currentRouteNamed('invoice.all')
+                            && request('type') === 'agencies';  // match the same string you pass
+                @endphp
+
+                <li>
+                    <a href="{{ route('invoice.all', ['type' => 'agencies']) }}"
+                    class="{{ $isActive ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }}
+                            w-full flex justify-between items-center py-2 px-4 rounded-[3px]
+                            text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative
+                            hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-2000">
+
+                        <div class="flex items-center">
+                            <i class="fas fa-file-invoice mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">All Invoices</span>
+                        </div>
+
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-1/2 -translate-y-1/2"></i>
+                    </a>
+                </li>
+
+                <a href="{{ route('superadmin.editindex') }}">
+                    <li class="{{ Route::currentRouteName() === 'superadmin.editindex' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fas fa-edit mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Edited Invoices</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+
+                <a href="{{route('superadmin.cancelindex')}}">
+                    <li class="{{Route::currentRouteName()==='superadmin.cancelindex'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                              <i class="fas fa-times-circle mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Cancel Invoice</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+                
+
+
+
+            </ul>
+        </div>
        @endif
 
 
