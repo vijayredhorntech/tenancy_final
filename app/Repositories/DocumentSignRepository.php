@@ -25,7 +25,6 @@ use App\Models\Deduction;
 
 
 
-
 class DocumentSignRepository implements DocumentSignRepositoryInterface
 {
     protected $agencyService;
@@ -82,25 +81,57 @@ class DocumentSignRepository implements DocumentSignRepositoryInterface
    ----------------------------------------------------------------- */
 public function sendEmailForSign(Request $request, int $documentId): void
 {
+ 
     DB::transaction(function () use ($request, $documentId) {
+
+
 
         /* 1. Fetch document (+ agency relation) */
         $document = DocSignDocument::with('agency')->findOrFail($documentId);
 
+      $booking=Deduction::with([
+        'service_name',
+          'agency',
+          'visaBooking.visa',
+          'visaBooking.origin',
+          'visaBooking.destination',
+          'visaBooking.visasubtype',])->where('id', $document->related_id)->first();
+       
+          $data=$this->agencyService->getClientinfoById($booking);
+       
+        
+
         /* 2. Create a DocSignProcess row */
-        $process = DocSignProcess::create([
-            'user_id'              => $document->user_id,
-            'document_id'          => $document->id,
-            'signing_token'        => Str::uuid(),
-            'status'               => 'pending',
-            'message'              => $request->input('message', ''),
-            'signed_at'            => null,
-            'expires_at'           => now()->addDays(7),
-            'signature_hash'       => null,
-            'signed_document_path' => null,
-            'ip_address'           => $request->ip(),
-            'user_agent'           => $request->userAgent(),
-        ]);
+        // $process = DocSignProcess::create([
+        //     'user_id'              => $document->user_id,
+        //     'document_id'          => $document->id,
+        //     'signing_token'        => Str::uuid(),
+        //     'status'               => 'pending',
+        //     'message'              => $request->input('message', ''),
+        //     'signed_at'            => null,
+        //     'expires_at'           => now()->addDays(7),
+        //     'signature_hash'       => null,
+        //     'signed_document_path' => null,
+        //     'ip_address'           => $request->ip(),
+        //     'user_agent'           => $request->userAgent(),
+        // ]);
+        $process = DocSignProcess::updateOrCreate(
+            [
+                'user_id'     => $document->user_id,
+                'document_id' => $document->id,
+            ],
+            [
+                'signing_token'        => Str::uuid(),          // always refresh
+                'status'               => 'pending',
+                'message'              => $request->input('message', ''),
+                'signed_at'            => null,
+                'expires_at'           => now()->addDays(7),
+                'signature_hash'       => null,
+                'signed_document_path' => null,
+                'ip_address'           => $request->ip(),
+                'user_agent'           => $request->userAgent(),
+            ]
+        );
 
         $process->recordEvent('email_sent', 'Signing request email queued', $request);
 
@@ -316,11 +347,32 @@ public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $cl
     }
 }
 
-
-
-
-
-    
-
+public function checkSignDocument($id){
+   
+    // $document =DocSignDocument::where('id',$id)->first();
+   
+    $realted_id=$id;
+   $bookingData=Deduction::with('invoice','docsign')->where('id',$realted_id)->first(); 
+   $clientData=$this->visaRepository->bookingDataById($bookingData->flight_booking_id);
+   return $clientData;
 }
 
+
+public function getDataById($id){
+
+ 
+    $booking=Deduction::with([
+      'service_name',
+        'agency',
+        'visaBooking.visa',
+        'visaBooking.origin',
+        'visaBooking.destination',
+        'visaBooking.visasubtype',])->where('id', $id)->first();
+     
+  
+        $data=$this->agencyService->getClientinfoById($booking);
+     return $data;
+
+
+}
+}

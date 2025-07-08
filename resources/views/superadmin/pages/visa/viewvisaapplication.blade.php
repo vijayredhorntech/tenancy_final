@@ -151,7 +151,8 @@
             
         </div>
 
-        
+          
+
 
 
         <div class="w-full overflow-x-auto p-4">
@@ -245,7 +246,9 @@
                </a>
                @endif
 
+            
 
+            @if($clientData->applicationworkin_status == "Complete")
              @if($clientData->visaInvoiceStatus->invoice==null)             
                   <div  data-tid="generateInvoiceDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                   <i class="fas fa-file-alt"></i>
@@ -260,6 +263,7 @@
 
              
                @if($clientData->visaInvoiceStatus->docsign==null)    
+                @if($clientData->visaInvoiceStatus->invoice!=null)
                <a href="{{ route('send.docsign', [
                         'id'   => $clientData->id,
                         'type' => $clientData->agency->agencytoken   {{-- or whatever value you intend --}}
@@ -269,6 +273,7 @@
                         Doc sign
                     </div>
                 </a>
+                @endif
                 @else
                 <div  data-tid="viewDocSignDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                   <i class="fas fa-file-alt"></i>
@@ -276,6 +281,16 @@
                 </div>
                @endif
 
+               {{--
+               <a href="{{ route('download.application', ['id' => $clientData->id, 'token' => $clientData->agency->agencytoken]) }}">
+                        <div class="w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                            <i class="fas fa-file-alt"></i>
+                            Download Application
+                        </div>
+                    </a>
+
+                    --}}
+           @endif
                
 
               </div>

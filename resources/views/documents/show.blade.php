@@ -1,5 +1,5 @@
 
-    <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -78,7 +78,6 @@
     $termtype = $termconditon
         ? $termconditon->where('type', 'VISA APPLICATION')
         : collect();   // empty collection if $termconditon is null
-
 @endphp
 
     <div class="grid grid-cols-3 gap-2 mt-4">
@@ -250,14 +249,12 @@
         <strong>In case of Visa, Flight suspensions, cancellation or not operating in that case we will apply for a full
             refund from airline and we will only Deduct our Service charge and all other ATOL/IATA protections, cash
             handling fee, administration charges will be applied</strong>
-
-    
             @php
                     // null‑safe chain; returns null if any link is missing
                     $signature = $booking->visaInvoiceStatus?->docsign?->sign?->signature_data;
                 @endphp
 
-                @if($signature)
+            @if($signature)
                     <div class="my-4">
                         <img src="{{ $signature }}" alt="Signature" style="height: 100px;">
                     </div>
@@ -266,9 +263,7 @@
                 <span class="mt-20 text-right">Yours sincerely</span>
 
         <div class="flex justify-center mt-4">
-        <button onclick="window.print()" class="bg-[#28a745] text-white text-sm px-2 py-1 rounded-sm">
-            Print Invoice
-        </button>
+
         </div>
 
     </div>

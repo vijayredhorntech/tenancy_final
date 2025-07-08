@@ -17,6 +17,7 @@
                             $isSigned    =  $sign?->status === 'signed';        // adjust if you use ‘completed’
                                       // may be null
                         @endphp  
+                        
         <tr>
             <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">1</td>    
             <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $booking->application_number ?? '—' }}</td>      
@@ -38,7 +39,7 @@
             <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
                 <div class="flex gap-3 items-center justify-center">
                     {{-- View --}}
-                    <a href=""
+                    <a href="{{ route('documents.view', ['document' => $booking->visaInvoiceStatus->docsign->related_id]) }}"
                        class="text-blue-600 hover:text-blue-800"
                        title="View Document">
                         <i class="fas fa-eye"></i>

@@ -22,6 +22,7 @@ class DocSignProcess extends Model
         'signed_at',
         'expires_at',
         'signature_hash',
+        'signature_data',
         'signed_document_path',
         'ip_address',
         'user_agent',
@@ -39,6 +40,10 @@ class DocSignProcess extends Model
     }
 
     public function document(){
+        return $this->hasOne(DocSignDocument::class, 'id','document_id');
+    }
+    
+    public function bookingdetails(){
         return $this->hasOne(DocSignDocument::class, 'id','document_id');
     }
 
