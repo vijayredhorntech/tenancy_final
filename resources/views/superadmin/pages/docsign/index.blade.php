@@ -106,7 +106,7 @@
                         <!-- Actions -->
                         <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
                             <div class="flex gap-3 items-center justify-center">
-                                <a href="{{ route('documents.edit', $document->id) }}" class="text-blue-600 hover:text-blue-800" title="Edit Document">
+                                <a href="" class="text-blue-600 hover:text-blue-800" title="Edit Document">
                                     <i class="fas fa-edit"></i>
                                 </a>
 
