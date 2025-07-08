@@ -416,11 +416,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/cencelstoreinvoice/{id}/{type}','hsSAupdateinvoice')->name('update.cancelinvoice');
                         Route::post('/allinvoices/updateinvoice/{id}', 'hs_updateInvoice')->name('allinvoices.updateinvoice');
                         Route::get('/editindex', 'hs_EditedInvoices')->name('superadmin.editindex');
-<<<<<<< HEAD
-=======
                   
 
->>>>>>> 533bfa9b58052ce9e914315519e4e1f9e179dc47
                         
                     });
 

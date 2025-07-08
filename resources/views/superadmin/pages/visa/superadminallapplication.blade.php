@@ -1,5 +1,11 @@
 <x-front.layout>
 @section('title') Visa Application @endsection
+<!-- Include Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Include jQuery (required by Select2) and Select2 JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
 
@@ -18,14 +24,14 @@
 {{--        === this is code for table section ===--}}
         <div class="w-full overflow-x-auto p-4">
 
-        <form id="filter-form" method="GET" action="{{ route('superadminvisa.booking') }}" class="space-y-4">
+        <form id="filter-form" method="GET" action="{{ route('superadminview.allapplication') }}" class="space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                     <!-- Search -->
                                     <div>
                                         <label for="search" class="block text-sm font-medium text-gray-700">Search</label>
                                         <input type="text" name="search" id="search" value="{{ request('search') }}" 
                                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm"
-                                            placeholder="Name, Email, Transaction ID">
+                                            placeholder="Application Number">
                                     </div>
 
                             
@@ -44,10 +50,10 @@
 
                                     <div>
                                             <label for="origin_id" class="block text-sm font-medium text-gray-700">Country Range</label>
-                                            <div class="flex gap-2">
+                                            <div class="flex gap-2 mt-1">
                                                 <!-- Origin Country -->
                                                 <select name="origin_id" id="origin_id"
-                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                                    class="select2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
                                                     <option value="">Select Origin Country</option>
                                                     @foreach($countries as $country)
                                                         <option value="{{ $country->id }}" {{ request('origin_id') == $country->id ? 'selected' : '' }}>
@@ -58,7 +64,7 @@
 
                                                 <!-- Destination Country -->
                                                 <select name="destination_id" id="destination_id"
-                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                                    class="select2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
                                                     <option value="">Select Destination Country</option>
                                                     @foreach($countries as $country)
                                                         <option value="{{ $country->id }}" {{ request('destination_id') == $country->id ? 'selected' : '' }}>
@@ -76,8 +82,8 @@
                                             <label for="supplier" class="block text-sm font-medium text-gray-700">Application Status</label>
                                             <select name="application_status" id="application_status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
                                                 <option value="">All</option>
-                                                <option value="Complete" {{ request('supplier') == 'Complete' ? 'selected' : '' }}>Complete</option>
-                                                <option value="Pending" {{ request('supplier') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                                <option value="Complete" {{ request('application_status') == 'Complete' ? 'selected' : '' }}>Complete</option>
+                                                <option value="Pending" {{ request('application_status') == 'Pending' ? 'selected' : '' }}>Pending</option>
                                             </select>
                                         </div>
 
@@ -107,7 +113,7 @@
                                         <button type="submit" class="bg-success text-white px-4 py-2 rounded-md hover:bg-success/90">
                                             Apply Filters
                                         </button>
-                                        <a href="{{ route('superadminvisa.booking') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
+                                        <a href="{{ route('superadminview.allapplication') }}" class="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600">
                                             Clear Filters
                                         </a>
                                     </div>
@@ -331,6 +337,16 @@
 
         </div>
 
+ 
+        <script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            width: '100%', // keep full-width like Tailwind
+            placeholder: 'Select a country',
+            allowClear: true
+        });
+    });
+</script>
 
 
 </x-front.layout>

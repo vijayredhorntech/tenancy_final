@@ -23,7 +23,7 @@
             Invoice
         </h1>
         <div class="text-right">
-            <a href="{{route('superadmin.allinvoices')}}">
+            <a href="{{route('invoice.create')}}">
                 @can('Generate Invoice')
                     <button class="btn btn-success">Create Invoice</button>
                 @endcan
@@ -814,7 +814,7 @@
         </div>
     </div>
     <div class="text-center">
-        <a href="{{route('superadmin.allinvoices')}}">
+        <a href="{{route('invoice.create')}}">
             @can('Generate Invoice')
                 <button class="btn btn-success">Create Invoice</button>
             @endcan
