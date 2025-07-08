@@ -455,20 +455,41 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/documents/sign/{token}', [DocumentSignController::class, 'showSigningPage'])
-->name('document.sign');
-Route::post('/document/sign', [DocumentSignController::class, 'submitSigning'])
-->name('document.sign.submit');
-Route::get('/documents/{path}', function ($path) {
-    $disk = 'documents';
-    $fullPath = Storage::disk($disk)->path($path);
+Route::controller(DocumentSignController::class)->group(function () {
+
+    Route::get('/send-document-email/{id}','hsSendEmail')->name('senddocdocument.email');
+ 
+ 
+});
+// Route::get('/documents/sign/{token}', [DocumentSignController::class, 'showSigningPage'])
+// ->name('document.sign');
+
+// Route::post('/document/sign', [DocumentSignController::class, 'submitSigning'])
+// ->name('document.sign.submit');
+
+
+Route::get ('/documents/sign/{token}', [DocumentSignController::class, 'showSigningPage'])
+     ->name('document.sign');           // view
+
+Route::post('/documents/sign/{token}', [DocumentSignController::class, 'submitSigning'])
+     ->name('document.sign.submit');    // form POST
+
+
+// Route::get('/documents/{path}', function ($path) {
+//     $disk = 'documents';
+//     $fullPath = Storage::disk($disk)->path($path);
     
-    if (!Storage::disk($disk)->exists($path)) {
-        abort(404);
-    }
+//     if (!Storage::disk($disk)->exists($path)) {
+//         abort(404);
+//     }
     
-    return response()->file($fullPath);
-})->where('path', '.*')->name('documents.serve');
+//     return response()->file($fullPath);
+// })->where('path', '.*')->name('documents.serve');
+
+Route::get('/documents/view/{document}', [DocumentSignController::class, 'hsviewInvoice'])
+    ->name('documents.view');
+
+
 
 require __DIR__.'/auth.php';
 

@@ -283,7 +283,7 @@
             <!-- start joing letter  -->
 
                 <!-- view application  -->
-                <div id="ViewApplicationDiv" class="tab ">
+                <div id="ViewApplicationDiv" class="tab hidden">
                     <x-common.viewapplication :clientData="$clientData" />
   
                 </div>
@@ -328,7 +328,7 @@
                         <x-common.invoice.visa-invoice :booking="$clientData" :termconditon="$termconditon"  />  
                     </div>    
 
-                    <div id="viewDocSignDiv" class="tab hidden">
+                    <div id="viewDocSignDiv" class="tab ">
                         <x-common.invoice.visa-docSign :booking="$clientData" :document="$clientData->visaInvoiceStatus->docsign"  />  
                     </div>  
 

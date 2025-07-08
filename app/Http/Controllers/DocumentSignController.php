@@ -11,6 +11,8 @@ use App\Models\DocSignDocument;
 use App\Models\DocSignProcess;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use DB; 
+use Illuminate\Support\Facades\Log;
 
 
 class DocumentSignController extends Controller
@@ -26,6 +28,17 @@ class DocumentSignController extends Controller
  
 
     }
+
+    public function hsviewInvoice($id)
+{
+   
+  
+    $booking = $this->documentSignRepository->checkSignDocument($id);
+ 
+    $termconditon = $this->termConditionRepo->allTeamTypes();
+  
+    return view('documents.show', compact('booking','termconditon'));
+}
     //
 
        /****Doc Sign *****/
@@ -91,12 +104,19 @@ class DocumentSignController extends Controller
 public function showSigningPage(Request $request,$token){
             $signature = DocSignProcess::with('agency','document')->where('signing_token', $token)
             ->firstOrFail();
+            
+       
+        
+            $user= $this->documentSignRepository->getDataById($signature->document->related_id);
+         
+           if($signature->related_id)
+          
       
             $signature->recordEvent('viewed', 'viewed', $request);
         
         // dd($signature);
 
-        return view('superadmin.pages.docsign.document-signing', compact('signature'));
+        return view('superadmin.pages.docsign.document-signing', compact('signature','user'));
 
 }
 
@@ -157,5 +177,94 @@ public function showSigningPage(Request $request,$token){
         ->back()
         ->with('success', 'Invoice generated successfully.');
   
+   }
+
+   public function submitSigning(Request $request)
+   {
+     
+       $request->validate([
+           'signature_token' => 'required|string',
+           'signature_data' => 'required|string'
+       ]);
+
+       $signature = DocSignProcess::where('signing_token', $request->signature_token)
+           ->where('status', 'pending')
+           ->firstOrFail();
+        //    dd($signature);
+       DB::beginTransaction();
+       try {
+           // Log the received signature data
+           Log::info('Received signature data for token ' . $request->signature_token, [
+               'signature_data_length' => strlen($request->signature_data),
+               'signature_data_start' => substr($request->signature_data, 0, 100) // Log the beginning of the data
+           ]);
+
+           // Generate signature hash
+           $signatureHash = hash('sha256', $request->signature_data . $signature->signing_token);
+
+           // Update signature record
+           $signature->update([
+               'signature_data' => $request->signature_data,
+               'signature_hash' => $signatureHash,
+               'signed_at' => now(),
+               'signed_document_path' => $signature->document->path,
+               'status' => 'signed'
+           ]);
+
+           // Verify the data was saved
+           $signature->refresh();
+           Log::info('Signature data after save:', [
+               'signature_id' => $signature->id,
+               'has_signature_data' => !empty($signature->signature_data),
+               'signature_data_length' => strlen($signature->signature_data ?? ''),
+               'status' => $signature->status
+           ]);
+
+           // Record audit
+        //    $signature->recordAudit('processed', [
+        //        'document_path' => $signature->document->path,
+        //        'processing_completed' => true,
+        //        'signature_info' => [
+        //            'signed_by' => $signature->coreMember->user->name,
+        //            'signed_at' => $signature->signed_at->format('d M Y H:i:s'),
+        //            'signature_hash' => $signatureHash
+        //        ]
+        //    ]);
+
+           DB::commit();
+
+           // if ($request->ajax()) {
+            return back()->with('success', 'Document signed successfully.');
+           // }
+
+           // return redirect()
+           //     ->route('core-member.document.sign', $signature->signing_token)
+           //     ->with('success', 'Document signed successfully.');
+
+       } catch (Exception $e) {
+           DB::rollBack();
+           
+           // Record audit of failure
+        //    $signature->recordAudit('signing_failed', [
+        //        'error' => $e->getMessage()
+        //    ]);
+
+           Log::error('Failed to process document signing', [
+               'signature_id' => $signature->id,
+               'error' => $e->getMessage(),
+               'trace' => $e->getTraceAsString()
+           ]);
+
+           if ($request->ajax()) {
+               return response()->json([
+                   'success' => false,
+                   'message' => 'Failed to process document signing. Please try again.'
+               ], 500);
+           }
+
+           return redirect()
+               ->route('core-member.document.sign', $signature->signing_token)
+               ->with('error', 'Failed to process document signing. Please try again.');
+       }
    }
 }

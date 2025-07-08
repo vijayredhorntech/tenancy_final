@@ -78,7 +78,7 @@
                         </div>
                         <h3 class="text-xl font-bold text-gray-800 mb-3">Document Successfully Signed!</h3>
                         <p class="text-gray-600 mb-6">Thank you for completing the signing process. Your document is now being processed.</p>
-                        <div class="flex justify-center gap-4">
+                   {{--     <div class="flex justify-center gap-4">
                             <a href="{{ url('/members_profile') }}" class="px-4 py-2 bg-primary text-white rounded-lg flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -91,7 +91,7 @@
                                 </svg>
                                 Download Copy
                             </a>
-                        </div>
+                        </div>--}}
                     </div>
                 @else
                     {{-- Member Information --}}
@@ -104,6 +104,8 @@
                                 Signer Information
                             </h3>
                         </div>
+
+                    
                         <div class="p-6">
                             <div class="flex items-start">
                                 <div class="flex-shrink-0 h-12 w-12 rounded-full bg-primary flex items-center justify-center text-white font-bold text-xl mr-4">
@@ -111,10 +113,11 @@
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="flex justify-between items-start">
-                                        <div>
-                                            <p class="text-lg font-medium text-gray-900">{{ $signature->agnecy->name ?? 'Unknown User' }}</p>
-                                            <p class="text-sm text-gray-500">{{ $signature->assignedRole->name ?? '' }}</p>
-                                        </div>
+     
+                                         <p class="text-lg font-medium text-gray-900">
+                                                    {{ \Illuminate\Support\Str::upper($user->visaBooking?->clientDetailsFromUserDB?->client_name ?? 'UNKNOWN USER') }}
+                                                </p>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">       
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
@@ -129,7 +132,7 @@
                                             </svg>
                                             <div>
                                                 <p class="text-sm text-gray-500">Email</p>
-                                                <p class="text-sm font-medium text-gray-900">{{ $signature->agnecy->email ?? 'No email available' }}</p>
+                                                <p class="text-sm font-medium text-gray-900">{{ $user->visaBooking->clientDetailsFromUserDB->email ?? 'Unknown User' }}</p>
                                             </div>
                                         </div>
                                         <div class="flex items-start">
@@ -183,7 +186,7 @@
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-500 mb-1">Document Type</p>
-                                    <p class="text-base font-medium text-gray-900">Agreement</p>
+                                    <p class="text-base font-medium text-gray-900">Visa</p>
                                 </div>
                                 <div>
                                     <p class="text-sm text-gray-500 mb-1">Date Issued</p>
@@ -196,7 +199,6 @@
                             </div>
                         </div>
                     </div>
-
                     {{-- Document Preview --}}
                     <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
                         <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
@@ -208,7 +210,11 @@
                             </h3>
                         </div>
                         <div class="p-6">
-                            <iframe src="{{-- {{ route('documents.serve', ['path' => $document->path]) }} --}}" class="w-full h-96 border rounded-lg"></iframe>
+                          
+                        <iframe
+                                src="{{ route('documents.view', ['document' => $signature->document->related_id]) }}"
+                                class="w-full h-96 border rounded-lg">
+                            </iframe>
                             <div class="mt-4 bg-blue-50 rounded-lg p-4">
                                 <div class="flex items-start">
                                     <input type="checkbox" id="show-signature" class="mt-1 mr-3 h-5 w-5 text-primary rounded" required>
@@ -234,8 +240,10 @@
                             <div class="p-6">
                                 <p class="text-gray-600 mb-6">Please sign in the box below using your mouse or touchscreen</p>
                                 
-                                <form id="signatureForm" action="" method="POST">
-                                    @csrf
+                                <!-- <form id="signatureForm" action="{{ route('document.sign.submit', $signature->signing_token) }}" method="POST">
+                                    @csrf -->
+                                    <form id="signatureForm" action="{{ route('document.sign.submit', $signature->signing_token) }}" method="POST">
+                                        @csrf
                                     <input type="hidden" name="signature_token" value="{{ $signature->signing_token }}">
                                     <input type="hidden" name="signature_data" id="signature_data">
                                     
