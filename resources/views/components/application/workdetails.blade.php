@@ -244,7 +244,7 @@
                                     <div class="flex gap-2 w-full">
                                         <!-- Date From -->
                                         <div class="w-full relative">
-                                          /  <input type="date" name="date_from" id="date_from" max="9999-12-31"
+                                            <input type="date" name="date_from" id="date_from" max="9999-12-31"
                                                 value="{{ old('date_from', isset($eduEmployData->date_from) ? \Carbon\Carbon::parse($eduEmployData->date_from)->format('Y-m-d') : '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                             <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>

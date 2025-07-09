@@ -898,6 +898,7 @@ if(($data['step']?? null)=="previewname_permission"){
             'name_of_your_employer' => $data['name_of_your_employer']?? null,
             'date_from' => $data['date_from'] ?? null,
             'date_to' => $data['date_to'] ?? null,
+            'duty'=> $data['duty'] ?? null,
             
         ];
 
@@ -966,7 +967,7 @@ if(($data['step']?? null)=="previewname_permission"){
     $info->reference_address = $data['reference_address'] ?? $info->reference_address;
     $info->date_from = $data['date_from'] ?? $info->date_from;
     $info->date_to = $data['date_to'] ?? $info->date_to;
-
+    $info->duty = $data['duty'] ?? $info->duty;
 
 
 

@@ -73,38 +73,41 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- First Name -->
                         <div class="w-full relative group flex flex-col gap-1">
-                            <label for="first_name" class="font-semibold text-ternary/90 text-sm">Family Name <span class="text-danger">*</span></label>
-                            <div class="w-full relative">
-                                <input type="text" name="first_name" id="first_name"
-                                       value="{{ $bookingData->clint->first_name ?? '' }}"
-                                       required class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                <i class="fas fa-user absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                            </div>
+                                <label for="first_name" class="font-semibold text-ternary/90 text-sm">Family Name <span class="text-danger">*</span></label>
+                                <div class="w-full relative">
+                                    <input type="text" name="first_name" id="first_name"
+                                        value="{{ $bookingData->clint->first_name ?? '' }}"
+                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                     <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                 </div>
                         </div>
 
+            
 
                         <!-- Last Name -->
                         <div class="w-full relative group flex flex-col gap-1">
-                            <label for="last_name" class="font-semibold text-ternary/90 text-sm">Given Name</label>
-                            <div class="w-full relative">
-                                <input type="text" name="last_name" id="last_name"
-                                       value="{{ $bookingData->clint->last_name ?? '' }}"
-                                       class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                <i class="fas fa-user absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                            </div>
+                                <label for="last_name" class="font-semibold text-ternary/90 text-sm">Given Name<span class="text-danger">*</span></label>
+                                <div class="w-full relative">
+                                    <input type="text" name="last_name" id="last_name"
+                                        value="{{ $bookingData->clint->last_name ?? '' }}"
+                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                     <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                 </div>
                         </div>
 
                         @if(in_array('Preview Name', $permission))
+                            @if($bookingData->clint->clientinfo->previous_name_status == 1)
                             <!-- Previous Name -->
                             <div class="w-full relative group flex flex-col gap-1">
-                                <label class="font-semibold text-ternary/90 text-sm">Former Name (if any)</label>
+                                <label for="previous_name" class="font-semibold text-ternary/90 text-sm">Former Name (if any)</label>
                                 <div class="w-full relative">
-                                    <input type="text"  name="previous_name" id="previous_name"
-                                    value="{{ $bookingData->clint->clientinfo->previous_name ?? '' }}"
-                                    class="w-full pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition duration-200">
-                                    <i class="fas fa-history absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                                </div>
+                                    <input type="text" name="previous_name" id="previous_name"
+                                        value="{{ $bookingData->clint->clientinfo->previous_name ?? '' }}"
+                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                     <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                 </div>
                             </div>
+                            @endif
                         @endif
 
                         @if(in_array('Date of Birth', $permission))
@@ -217,6 +220,22 @@
                                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
+                            @endif
+
+                            @if(in_array('Current Residential Address', $permission))
+                                        <!-- Select Address -->
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                                <label for="permanent_address" class="font-semibold text-ternary/90 text-sm">Permanent Address *</label>
+                                                <div class="w-full relative">
+                                                    <textarea name="permanent_address" id="permanent_address" requiresdd
+                                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                            @error('permanent_address') border-red-500 @enderror"> {{ old('permanent_address', $bookingData->clint->permanent_address ?? '') }}</textarea>
+                                                    <i class="fa fa-home absolute right-3 top-4 text-sm text-secondary/80"></i>
+                                                </div>
+                                                @error('permanent_address')
+                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                             @endif
 
 
@@ -412,7 +431,7 @@
                                                     @endif
 
 
-                                                    @if(in_array('Previous Passport Number', $permission))
+                                                    @if(in_array('Date of Expiry', $permission))
                                                     <div class="w-full relative group flex flex-col gap-1">
                                                         <label for="passport_expiry_date" class="font-semibold text-ternary/90 text-sm">Passport Expiry Date *</label>
                                                         <div class="w-full relative">
@@ -584,8 +603,21 @@
                                     </div>
                                     @endif
 
+                                    @if(in_array('Number of Entries Requested', $permission))
+                                        <!-- noofentries -->
+                                        <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="noofentries" class="font-semibold text-ternary/90 text-sm"> No of Entries</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="noofentries" id="noofentries"
+                                                value="{{ old('visatype', $bookingData->visasubtype->name?? '') }}" readonly=""
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                    <i class="fa fa-sign-in-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                        </div>
+                                    @endif
 
-                        @if(in_array('Previous Visas Held', $permission))
+
+                                    @if(in_array('Previous Visas Held', $permission))
                                     <div class="w-full relative group flex flex-col gap-1 ">
                                         <label for="cities_visited" class="font-semibold text-ternary/90 text-sm">Previous Visas Held</label>
                                         <div class="w-full relative">
@@ -595,6 +627,7 @@
                                         </div>
                                     </div>
                                     @endif
+
                                     @if(in_array('Visa Rejections', $permission))
                                     <div class="w-full relative group flex flex-col gap-1 ">
                                         <label for="visarejections" class="font-semibold text-ternary/90 text-sm">Visa Rejections</label>
@@ -621,7 +654,7 @@
 
                                     @if(in_array('Countries Visited (Last 5 Years)', $permission))
                                     <div class="w-full relative group flex flex-col gap-1 ">
-                                        <label for="countries_visited_last_10_years" class="font-semibold text-ternary/90 text-sm">Countries Visited in Last 10 Years</label>
+                                        <label for="countries_visited_last_10_years" class="font-semibold text-ternary/90 text-sm">Countries Visited in Last 1 Years</label>
                                         <div class="w-full relative">
                                             <textarea name="countries_visited_last_10_years" id="countries_visited_last_10_years"
                                                     class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('countries_visited_last_10_years', $bookingData->visarequireddocument->countries_visited_last_10_years ?? '')  }}</textarea>
@@ -694,23 +727,6 @@
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previousschengentravel_details', $visahistory->previousschengentravel_details ?? '') }}</textarea>
 
                                         </div>
-                                    @endif
-                                    @if(in_array('Previous China Travel', $permission))
-                                    <div class="mb-4">
-                                            <label class="font-semibold text-sm text-ternary/90">Previous China Travel?</label>
-                                            <div class="flex gap-4 mt-1">
-
-                                            <label>
-                                                    <input type="radio" name="previouschinatravel" value="yes" {{ old('previouschinatravel', $visahistory->previouschinatravel ?? '') == 'yes' ? 'checked' : '' }}> Yes
-
-                                                     </label>
-                                                <label>
-                                                    <input type="radio" name="previouschinatravel" value="no" {{ old('previouschinatravel', $visahistory->previouschinatravel ?? '') == 'no' ? 'checked' : '' }}> No
-
-                                                </label>
-                                            </div>
-                                   </div>
-
                                     @endif
 
                                     @if(in_array('Previous China Travel', $permission))
@@ -986,16 +1002,17 @@
                                     </div>
                                     @endif
 
+
+
                                      @if(in_array('Duty', $permission))
                                     <!-- Duty  -->
-
                                     <div class="w-full relative group flex flex-col gap-1">
                                         <label for="duty" class="font-semibold text-ternary/90 text-sm">Duty</label>
                                         <div class="w-full relative">
                                             <input type="text" name="duty" id="duty"
                                                   value="{{ $bookingData->clint->clientinfo->duty ?? '' }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                            <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            <i class="fa fa-briefcase absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                         </div>
                                     </div>
                                     @endif
@@ -1371,21 +1388,6 @@
                                                 </div>
                                         @endif
 
-                                        @if(in_array('Current Residential Address', $permission))
-                                        <!-- Select Address -->
-                                            <div class="w-full relative group flex flex-col gap-1">
-                                                <label for="permanent_address" class="font-semibold text-ternary/90 text-sm">Permanent Address *</label>
-                                                <div class="w-full relative">
-                                                    <textarea name="permanent_address" id="permanent_address" requiresdd
-                                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                            @error('permanent_address') border-red-500 @enderror"> {{ old('permanent_address', $bookingData->clint->permanent_address ?? '') }}</textarea>
-                                                    <i class="fa fa-home absolute right-3 top-4 text-sm text-secondary/80"></i>
-                                                </div>
-                                                @error('permanent_address')
-                                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                                @enderror
-                                            </div>
-                                        @endif
 
                                         @if(in_array('City', $permission))
                                         <!-- Street -->
@@ -1813,12 +1815,17 @@
                                                         @if(in_array('Relative Information', $permission))
                                                 <!-- Relative Information -->
 
-                                                <div class="w-full relative group flex flex-col gap-1 col-span-2">
-                                                    <label for="relative_information" class="font-semibold text-ternary/90 text-sm">Relative Information</label>
+                                                <div class="w-full relative group flex flex-col gap-1 col-span-2 mb-4">
+                                                    <label for="relative_information" class="font-semibold text-ternary/90 text-sm">
+                                                        Relative Information
+                                                    </label>
                                                     <div class="w-full relative">
                                                         <textarea name="relative_information" id="relative_information"
-                                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('relative_information', $bookingData->clint->clientinfo->relative_information ?? '') }}</textarea>
-                                                        <i class="fa fa-info-circle absolute right-3 top-4 text-sm text-secondary/80"></i>
+                                                            oninput="autoResize(this)"
+                                                            class="auto-expand w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] 
+                                                            border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 
+                                                            transition ease-in duration-200 overflow-hidden resize-none">{{ old('relative_information', $bookingData->clint->clientinfo->relative_information ?? '') }}</textarea>
+                                                        <i class="fa fa-info-circle absolute right-3 top-4 text-sm text-secondary/80 pointer-events-none"></i>
                                                     </div>
                                                 </div>
                                             @endif
@@ -1850,51 +1857,6 @@
                             @endphp
                         <div class="p-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            @if(in_array('Visa type', $permission))
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="visatype" class="font-semibold text-ternary/90 text-sm"> Type Of Visa Required</label>
-                                            <div class="w-full relative">
-                                                <input type="text" name="visatype" id="visatype"
-                                                    value="{{ old('visatype', $bookingData->visa->name?? '') }}"  readonly=""  class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                            {{-- <textarea name="visatype" id="visatype" requiresdd
-                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                        @error('permanent_address') border-red-500 @enderror"> {{ old('permanent_address', $bookingData->clint->permanent_address ?? '') }}</textarea>--}}
-                                                        <i class="fa fa-passport absolute right-3 top-4 text-sm text-secondary/80"></i>
-                                            </div>
-                                            @error('visatype')
-                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        @endif
-                                        @if(in_array('Number of Entries Requested', $permission))
-                                        <!-- noofentries -->
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="noofentries" class="font-semibold text-ternary/90 text-sm"> No of Entries</label>
-                                            <div class="w-full relative">
-                                                <input type="text" name="noofentries" id="noofentries"
-                                                value="{{ old('visatype', $bookingData->visasubtype->name?? '') }}" readonly=""
-                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                                    <i class="fa fa-sign-in-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                            </div>
-                                        </div>
-                                        @endif
-                                        @if(in_array('Period of Visa', $permission))
-                                        <!-- periodofvisa -->
-                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="periodofvisa" class="font-semibold text-ternary/90 text-sm">Period of Visa ( Month) *</label>
-                                                    <div class="w-full relative">
-                                                        <input type="text" name="periodofvisa" id="periodofvisa" requiresdd
-
-                                                            value="{{ old('periodofvisa', $bookingData->visarequireddocument->period_of_visa_month ?? '') }}"
-                                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                            @error('city') border-red-500 @enderror">
-                                                            <i class="fa fa-calendar-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                                    @error('city')
-                                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-                                        </div>
-                                        @endif
 
                                         @if(in_array('Intended Arrival Date', $permission))
                                         <!-- expected date of journey -->
@@ -2459,6 +2421,7 @@
                                 <!-- <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i> -->
                                 </div>
                                 @endif
+                                
                                  @if(in_array('Hotel Name', $permission))
                                  <div class="relative mb-4">
                                     <label for="hotel _name" class="font-semibold text-ternary/90 text-sm">Hotel Name</label>
@@ -2647,7 +2610,7 @@
                     </div>
                 </div>
               @endif
-               <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="previewvisadetails">
+               <!-- <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="previewvisadetails">
                 <div class="bg-gradient-to-r from-gray-50 to- gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h2 class="text-xl font-bold text-gray-800 flex items-center">
                         <i class="fas fa-briefcase text-primary mr-2"></i>
@@ -2684,10 +2647,9 @@ I
 
 
 
-                        <!-- Employer Phone Number -->
                     </div>
                 </div>
-            </div>
+            </div> --!>
                <div class="flex justify-between mt-8">
                 <!-- <a href="{{ route('download.fillapplication', ['id' => $bookingData->id]) }}">
                     <button class="bg-success text-white px-6 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-success focus:ring-opacity-50">
@@ -2835,6 +2797,18 @@ $(document).ready(function() {
     });
 </script>
 
+<script>
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
 
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('textarea.auto-expand').forEach(textarea => {
+            autoResize(textarea);
+            textarea.addEventListener('input', () => autoResize(textarea));
+        });
+    });
+</script>
 
 </html>

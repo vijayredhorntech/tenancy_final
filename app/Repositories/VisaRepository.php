@@ -107,13 +107,19 @@ $query = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'age
         // Filters
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->whereHas('clint', function ($q) use ($search) {
-                $q->where('client_name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone_number', 'like', "%{$search}%");
+
+            $query->where(function ($q) use ($search) {
+                // Search inside the visa_bookings table
+                $q->where('application_number', 'like', "%{$search}%")
+                
+                // OR search inside the related 'clint' model
+                ->orWhereHas('clint', function ($q1) use ($search) {
+                    $q1->where('client_name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone_number', 'like', "%{$search}%");
+                });
             });
         }
-
         if ($request->filled('date_from')) {
             $query->whereDate('created_at', '>=', $request->date_from);
         }
