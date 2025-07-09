@@ -39,11 +39,20 @@
             <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
                 <div class="flex gap-3 items-center justify-center">
                     {{-- View --}}
+
+                    @if ($sign && $sign->signing_token && $isSigned)
+                    <a href="{{ route('document.sign', $sign->signing_token) }}"
+                       class="text-blue-600 hover:text-blue-800"
+                       title="View Document">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                    @else
                     <a href="{{ route('documents.view', ['document' => $booking->visaInvoiceStatus->docsign->related_id]) }}"
                        class="text-blue-600 hover:text-blue-800"
                        title="View Document">
                         <i class="fas fa-eye"></i>
                     </a>
+                    @endif
 
                             {{-- Email Icon --}}
                        <a href="{{ route('senddocdocument.email', $document->id) }}"
@@ -53,7 +62,7 @@
                         </a>
 
                                           
-                        @if ($sign && $sign->signing_token)
+                        @if ($sign && $sign->signing_token && $isPending)
                             <a href="{{ route('document.sign', $sign->signing_token) }}"
                              class="text-purple-600 hover:text-purple-800"
                             title="Sign Document">

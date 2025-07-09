@@ -301,8 +301,9 @@ class VisaController extends Controller
         ]);
        
         $visa = $this->visaRepository->assignVisaToCountry($data);
-
-        return redirect()->route('visa.view')->with('success', 'Visa created successfully');
+        // dd($visa);
+        // {{ route('visa.view', ['id' => $visa->id]) }}
+        return redirect()->route('visa.view', ['id' => $visa->visa_id])->with('success', 'Visa created successfully');
 
     }
 

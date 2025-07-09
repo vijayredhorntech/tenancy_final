@@ -78,6 +78,8 @@
                         </div>
                         <h3 class="text-xl font-bold text-gray-800 mb-3">Document Successfully Signed!</h3>
                         <p class="text-gray-600 mb-6">Thank you for completing the signing process. Your document is now being processed.</p>
+
+                 
                    {{--     <div class="flex justify-center gap-4">
                             <a href="{{ url('/members_profile') }}" class="px-4 py-2 bg-primary text-white rounded-lg flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -92,6 +94,27 @@
                                 Download Copy
                             </a>
                         </div>--}}
+
+                        
+                    </div>
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
+                        <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+                            <h3 class="text-lg font-bold text-gray-800 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                                Document Preview
+                            </h3>
+                        </div>
+                        <div class="p-6">
+                          
+                     
+                        <iframe
+                                src="{{ route('documents.view', ['document' => $signature->document->related_id]) }}"
+                                class="w-full h-96 border rounded-lg">
+                            </iframe>
+                          
+                        </div>
                     </div>
                 @else
                     {{-- Member Information --}}
@@ -211,76 +234,15 @@
                         </div>
                         <div class="p-6">
                           
+                     
                         <iframe
                                 src="{{ route('documents.view', ['document' => $signature->document->related_id]) }}"
                                 class="w-full h-96 border rounded-lg">
                             </iframe>
-                            <div class="mt-4 bg-blue-50 rounded-lg p-4">
-                                <div class="flex items-start">
-                                    <input type="checkbox" id="show-signature" class="mt-1 mr-3 h-5 w-5 text-primary rounded" required>
-                                    <label for="show-signature" class="text-sm text-gray-700">
-                                        I have reviewed and agree to the terms of this document
-                                    </label>
-                                </div>
-                            </div>
+                          
                         </div>
                     </div>
 
-                    @if($signature->status === 'pending')
-                        {{-- Signature Section --}}
-                        <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                            <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
-                                <h3 class="text-lg font-bold text-gray-800 flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                    </svg>
-                                    Digital Signature
-                                </h3>
-                            </div>
-                            <div class="p-6">
-                                <p class="text-gray-600 mb-6">Please sign in the box below using your mouse or touchscreen</p>
-                                
-                                <!-- <form id="signatureForm" action="{{ route('document.sign.submit', $signature->signing_token) }}" method="POST">
-                                    @csrf -->
-                                    <form id="signatureForm" action="{{ route('document.sign.submit', $signature->signing_token) }}" method="POST">
-                                        @csrf
-                                    <input type="hidden" name="signature_token" value="{{ $signature->signing_token }}">
-                                    <input type="hidden" name="signature_data" id="signature_data">
-                                    
-                                    <div id="signature-pad" class="mb-6 border border-gray-300 rounded-lg">
-                                        <canvas class="w-full h-48"></canvas>
-                                    </div>
-                                    
-                                    <div class="flex flex-wrap gap-3">
-                                        <button type="button" id="clear-signature" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg flex items-center hover:bg-gray-300">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                            Clear Signature
-                                        </button>
-                                        <button type="submit" id="submit-signature" class="flex-1 px-4 py-2 bg-primary text-white rounded-lg flex items-center justify-center hover:bg-primary-dark">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                            </svg>
-                                            Sign Document
-                                        </button>
-                                    </div>
-
-                                    <div class="mt-6 bg-blue-50 border-l-4 border-blue-400 p-4">
-                                        <div class="flex">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                            </svg>
-                                            <div>
-                                                <p class="font-medium text-blue-800">Your signature is secure and legally binding</p>
-                                                <p class="text-sm text-blue-600 mt-1">By signing, you acknowledge that your digital signature is the legal equivalent of your handwritten signature.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    @endif
                 @endif
             </div>
 
@@ -337,8 +299,126 @@
                                 </div>
                             </div>
                         </div>
+
+                        @if($signature->status === 'signed')
+                            <div class="mt-6">
+                            
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                            <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+                                <h3 class="text-lg font-bold text-gray-800 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                    </svg>
+                                    Digital Signature
+                                </h3>
+                            </div>
+                            <div class="p-6">
+                                
+                                        @php
+                                        // null‑safe chain; returns null if any link is missing
+                                 
+                                        $signatureimage = $signature->signature_data;
+                                    @endphp
+
+                                    <div class="mb-6 border border-gray-300 rounded-lg w-[400px] h-[200px]">
+                                        @if($signatureimage)
+                                           <img src="{{ $signatureimage }}" alt="Signature" style="height: 100px; width:200px">
+                                        @endif
+                                    </div>
+                            
+
+                            </div>
+                        </div>
                     </div>
+                    @endif
+
+
+
+                                  
+                    @if($signature->status === 'pending')
+                        {{-- Signature Section --}}
+                        <div class="mt-4 bg-blue-50 rounded-lg p-4">
+                                <div class="flex items-start">
+                                    <input type="checkbox" id="show-signature" class="mt-1 mr-3 h-5 w-5 text-primary rounded" required>
+                                    <label for="show-signature" class="text-sm text-gray-700">
+                                        I have reviewed and agree to the terms of this document
+                                    </label>
+                                </div>
+                            </div>
+
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                            <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
+                                <h3 class="text-lg font-bold text-gray-800 flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                    </svg>
+                                    Digital Signature
+                                </h3>
+                            </div>
+                            <div class="p-6">
+                                @if($signature->status !== 'pending')
+                                        @php
+                                        // null‑safe chain; returns null if any link is missing
+                                        $signature = $booking->visaInvoiceStatus?->docsign?->sign?->signature_data;
+                                    @endphp
+
+                                    <div class="mb-6 border border-gray-300 rounded-lg w-[400px] h-[200px]">
+                                        @if($signature)
+                                                <img src="{{ $signature }}" alt="Signature" style="height: 100px;">
+                                        @endif
+                                    </div>
+                                @endif
+
+                                   
+                                <p class="text-gray-600 mb-6">Please sign in the box below using your mouse or touchscreen</p>
+                                
+                                <!-- <form id="signatureForm" action="{{ route('document.sign.submit', $signature->signing_token) }}" method="POST">
+                                    @csrf -->
+                                    <form id="signatureForm" action="{{ route('document.sign.submit', $signature->signing_token) }}" method="POST">
+                                        @csrf
+                                    <input type="hidden" name="signature_token" value="{{ $signature->signing_token }}">
+                                    <input type="hidden" name="signature_data" id="signature_data">
+                                    
+                                    <div id="signature-pad" class="mb-6 border border-gray-300 rounded-lg w-max">
+                                        <canvas class="w-[400px] h-[200px]"></canvas>
+                                    </div>
+                                    
+
+                                    
+                                    <div class="flex flex-wrap gap-3">
+                                        <button type="button" id="clear-signature" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg flex items-center hover:bg-gray-300">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                            Clear Signature
+                                        </button>
+                                        <button type="submit" id="submit-signature" class=" w-max px-4 py-2 bg-primary text-white rounded-lg flex items-center justify-center hover:bg-primary-dark">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                            </svg>
+                                            Sign Document
+                                        </button>
+                                    </div>
+
+                                    <div class="mt-6 bg-blue-50 border-l-4 border-blue-400 p-4">
+                                        <div class="flex">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400 mt-0.5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                            </svg>
+                                            <div>
+                                                <p class="font-medium text-blue-800">Your signature is secure and legally binding</p>
+                                                <p class="text-sm text-blue-600 mt-1">By signing, you acknowledge that your digital signature is the legal equivalent of your handwritten signature.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
                 </div>
+
+
+
             </div>
         </div>
     </div>
