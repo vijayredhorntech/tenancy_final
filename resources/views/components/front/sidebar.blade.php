@@ -365,7 +365,7 @@
             </ul>
         </div>
         @endcanany
-
+{{--
         @canany(['supplier view', 'manage everything'])
         <div class="">
             <div onclick="document.getElementById('cancelinvoiceDiv').classList.toggle('hidden');document.getElementById('cancelArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='visa'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
@@ -416,7 +416,7 @@
             </ul>
         </div>
         @endcanany
-
+        --}}
         @canany(['supplier view', 'manage everything'])
         <div class="">
             <div onclick="document.getElementById('supplierDiv').classList.toggle('hidden');document.getElementById('supplierArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='visa'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
