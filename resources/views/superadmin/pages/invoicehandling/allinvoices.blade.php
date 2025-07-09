@@ -30,7 +30,7 @@
                         </tr>
 
                   
-                        @forelse($invoices->invoice as $invoice)
+                        @forelse($invoices as $invoice)
 
                                     <tr>
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>                         

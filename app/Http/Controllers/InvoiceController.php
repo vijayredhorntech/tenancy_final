@@ -627,6 +627,7 @@ public function hs_allInvoices(Request $request)
                 'invoiceDetails.visaBooking',
                 
             ])->get();
+      
 
             return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices'));
    

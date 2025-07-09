@@ -132,7 +132,7 @@
 
 
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-        <div>
+              <div>
             <span class="font-semibold  text-lg text-danger">
             Apl.No
             </span>
