@@ -1,5 +1,5 @@
 
-    <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -28,7 +28,7 @@
         top: 0;
         width: 100%;
     }
-
+    
     /* Optionally hide buttons or other screen‑only elements */
     .no-print {
         display: none !important;
@@ -156,7 +156,7 @@
 
             
         </div>
-        <table class="min-w-[500px] max-w-xs w-auto">
+        <table class="min-w-[700px] max-w-xs w-auto mt-7">
                 <tr class="bg-[#aed6f1] text-black  font-bold text-sm">
                     <td class="p-1 border-r-[1px] border-gray-100">PAYMENT MODE</td>
                     <td class="p-1 border-r-[1px] border-gray-100">AMOUNT</td>
@@ -186,89 +186,42 @@
                 @endforeach
             @endforeach
         </ul>
-        <strong class="mt-2">Notes:</strong>
-        <p>Reconfirmation of any onward / return journey is passengers’ responsibility.</p>
-        <p>Valid travel documentation such as valid passport, visa, and health precautions are passengers’
-            responsibility.</p>
-        <p>Timings are subject to change, please reconfirming with your airline operator before you fly.</p>
-        <p>Any reissue / revalidation / cancellation will incur a fee. Any passengers under 18 years on age travelling
-            to South Africa will be denied boarding if not carrying their original birth certificate. Any passengers who
-            hold an OCI who travel to INDIA without their original OCI card will be denied boarding.</p>
-
-
-        <strong>Your Financial Protection</strong>
-        <p>When you buy an ATOL protected fight or flight inclusive holiday from us you will receive an ATOL
-            Certificate. This lists what is financially protected, where you can get information on what this means for
-            you and who to contact is things go wrong.</p>
-
-
-        <strong>Travelling against the FCO’s advice</strong>
-        <p class="mt-2">Critically, you may invalidate your insurance cover, including healthcare protections, or be
-            unable to obtain it, if you’ve not yet bought any.</p>
-
-        <p class="mt-2">So, call your insurer/check the wording of your insurance policy if you’re planning to take this
-            risk. If you get ill while you’re travelling, you may not be able to get the treatment you need – or
-            treatment may end up being very delayed and incredibly costly.</p>
-        <p>Expect disruption to your travel arrangements, both:</p>
-        <ul class="list-disc pl-6 mt-4">
-            <li>while you’re in-country (many countries are operating Covid-19 screening procedures as a condition of
-                entry and, in some cases, quarantine measures preventing you from any contact with local resident at
-                your destination)
-            </li>
-            <li>on your return, including the risk that you may not be able to get back home if borders close and/or
-                that you may face quarantine and self-isolation obligations when you get back. This will mean being away
-                from your workplace, school/place of study and ensuring you have no social interactions for that period
-                of quarantine
-            </li>
-        </ul>
-
-        <strong class="mt-2">Passenger Notice:</strong>
-        <p>Carriage and other services provided by the carrier are subject to conditions of contract, which are hereby
-            incorporated by reference. These conditions may be obtained from the issuing carrier. The itinerary/receipt
-            constitutes the passenger ticket for the purposes of Article 3 of the Warsaw convention, except where the
-            carrier delivers to the passenger another document complying with the requirements of Article 3. If the
-            passenger's journey involves an ultimate destination or stop in a country other than the country of
-            departure the Warsaw Convention may be applicable, and the convention governs, and in most cases limits, the
-            liability of carriers for death or personal injury and in respect of loss of or damage to baggage. See also
-            notices headed Advice to International Passengers on limitation of liability and notice of baggage liability
-            limitations. Full conditions can be found at www.iata.org If you are travelling to USA, all qualified Visa
-            Waiver Program travellers will be required to obtain electronic travel authorization prior to boarding an
-            air or sea carrier to the United States.</p>
-        <p>Electronic System for Travel Authorization (ESTA) to USA</p>
-        <p>Travellers who do not receive travel authorization prior to their departure may be denied boarding,
-            experience delays or be denied admission into the United States. Applications may be submitted at any time
-            prior to travel, but no less than 72 hours prior to departure.</p>
-        <p>Travel Authorization is obtained through an online registration system known as the Electronic System for
-            <strong>Travel Authorization (ESTA).</strong></p>
-        <p>If your registration is successful, it will be valid for multiple applications for two years or until the
-            date on which your passport expires, whichever comes first.</p>
-        <p>Submit your ESTA Application at <a
-                href="https://cloud-travel.co.uk/software/public/invoice/view/www.iata.org" class="text-[#26ace2]">www.iata.org</a>
-        </p>
-        <strong class="mt-2">Note/Disclaimer: It is the sole responsibility of the passenger to ensure his/her
-            eligibility to enter the destination country. Cloud Travel accepts no liability in this regard.</strong>
-        <strong>In case of Visa, Flight suspensions, cancellation or not operating in that case we will apply for a full
-            refund from airline and we will only Deduct our Service charge and all other ATOL/IATA protections, cash
-            handling fee, administration charges will be applied</strong>
-
-    
+        
             @php
                     // null‑safe chain; returns null if any link is missing
                     $signature = $booking->visaInvoiceStatus?->docsign?->sign?->signature_data;
                 @endphp
 
-                @if($signature)
-                    <div class="my-4">
-                        <img src="{{ $signature }}" alt="Signature" style="height: 100px;">
-                    </div>
-                @endif
+                <div class="flex flex-col items-end">
+                    <div class="flex justify-end">
+                        @if($signature)
+                       
+                                <img src="{{ $signature }}" alt="Signature" style="height: 100px; width:200px">
+                           
+                        @endif
+                     </div>
+                     <div>
+                        <span class="mt-20 text-right">Yours sincerely</span>
+                   </div> 
+             </div>
 
-                <span class="mt-20 text-right">Yours sincerely</span>
+                <section class="footer">
+                    <div class="row" style="margin: 0px; padding: 0px; box-sizing: border-box; padding-left: 2%; padding-right: 2%; display: flex; justify-content: space-between;">
+                        <div class="col-md-6 col-sm-6 col-6 left-footer" style="margin: 0px; width: 50%; padding: 0px; box-sizing: border-box; display: flex; padding-left: 2%; align-items: center; height: 7vh; border-top: solid 1px rgb(45, 158, 195);">
+                            <img src="bottom.png" style="margin: 0px; padding: 0px; box-sizing: border-box; height: 5vh; width: auto;" alt="">
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-6 right-footer" style="margin: 0px; width: 50%; padding: 0px; box-sizing: border-box; display: flex; padding-right: 2%; justify-content: end; align-items: center; height: 7vh; border-top: solid 1px rgb(45, 158, 195);">
+                            <img src="https://seeklogo.com/images/I/information-commissioners-office-logo-1743AEAE1C-seeklogo.com.png" style="margin: 0px; padding: 0px; box-sizing: border-box; height: 5vh; width: auto;" alt="">
+                        </div>
+                    </div>
+               </section>   
 
         <div class="flex justify-center mt-4">
         <button onclick="window.print()" class="bg-[#28a745] text-white text-sm px-2 py-1 rounded-sm">
             Print Invoice
         </button>
+
+
         </div>
 
     </div>
