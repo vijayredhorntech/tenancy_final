@@ -145,18 +145,29 @@
 
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
-                                    <a href="{{ route('visa.editcountry', ['id' => $visa->id]) }}" title="Edit Country">
+
+                       
+                                    <a href="{{ route('visa.viewcountry', ['id' => $visa->id]) }}" title="Edit Country">
+                                        <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
+                                            <i class="fa fa-eye"></i>
+                                        </div>
+                                    </a>
+                               
+                                    {{--             <a href="{{ route('visa.editcountry', ['id' => $visa->id]) }}" title="Edit Country">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-pencil"></i>
                                         </div>
                                     </a>
+                               
 
                                     <a href="{{ route('requiredclient.field', ['id' => $visa->id]) }}" title="Assign  Country">
                                         <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-plus"></i>
                                         </div>
                                     </a>
-                             
+                                    
+                                    --}}
+                                    
 
                                     <!-- <a href="{{ route('visa.view', ['id' => $visa->id]) }}" title="Assign to Visa Request"> -->
                                     <!-- <a href="{{ route('visa.assigncountry', ['id' => $visa->id]) }}" title="Assign to Visa Request">
