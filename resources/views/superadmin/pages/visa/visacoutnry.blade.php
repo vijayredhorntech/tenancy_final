@@ -160,13 +160,15 @@
                                             <i class="fa fa-pencil"></i>
                                         </div>
                                     </a>
-                                    --}}
+                               
                                     <a href="{{ route('requiredclient.field', ['id' => $visa->id]) }}" title="Assign  Country">
                                         <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-plus"></i>
                                         </div>
                                     </a>
-                             
+                                    
+                                    --}}
+                                    
 
                                     <!-- <a href="{{ route('visa.view', ['id' => $visa->id]) }}" title="Assign to Visa Request"> -->
                                     <!-- <a href="{{ route('visa.assigncountry', ['id' => $visa->id]) }}" title="Assign to Visa Request">
