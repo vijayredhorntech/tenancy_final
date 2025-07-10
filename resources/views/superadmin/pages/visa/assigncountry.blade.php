@@ -2,13 +2,23 @@
     @section('title')Assign Visa Fields @endsection
 
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex flex-col gap-2 shadow-lg shadow-gray-300">
-        <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20">
-            <div class="text-sm text-gray-700">
-                <strong>Assign Country Field</strong><br>
-                Visa Name: {{$visadetails->VisaServices->name}} <br>
-                Country: {{$visadetails->destinationcountry->countryName}} 
-            </div>
+    <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-700 gap-2">
+        {{-- Left side: Info --}}
+        <div>
+            <strong class="block sm:inline">Assign Country Field</strong><br>
+            Visa Name: {{ $visadetails->VisaServices->name }} <br>
+            Country: {{ $visadetails->destinationcountry->countryName }}
         </div>
+
+        {{-- Right side: Back Button --}}
+        <a href="{{ url()->previous() }}"
+           class="text-sm bg-red-200 px-4 py-1 rounded-md font-semibold border border-red-400 text-red-800 hover:text-white hover:bg-red-500 hover:border-red-600 transition duration-300">
+            ⬅ Back
+        </a>
+    </div>
+</div>
+
 
       
         <div class="w-full overflow-x-auto p-4">
