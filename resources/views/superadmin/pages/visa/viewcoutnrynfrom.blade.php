@@ -73,11 +73,26 @@
                         <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$form->from->form_name}}</td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$form->origin->countryName}}</td>
-                           
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                            {{$form->destination->countryName}}
+                            <!-- Origin Country with Flag -->
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                <div class="flex items-center gap-2">
+                                    <img src="{{ asset('assets/flags/64x48/' . strtolower($form->origin->countryCode) . '.png') }}" 
+                                        alt="{{ $form->origin->countryCode }}" 
+                                        class="w-5 h-4 object-cover rounded-sm">
+                                    {{ $form->origin->countryName }}
+                                </div>
                             </td>
+
+                            <!-- Destination Country with Flag -->
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                <div class="flex items-center gap-2">
+                                    <img src="{{ asset('assets/flags/64x48/' . strtolower($form->destination->countryCode) . '.png') }}" 
+                                        alt="{{ $form->destination->countryCode }}" 
+                                        class="w-5 h-4 object-cover rounded-sm">
+                                    {{ $form->destination->countryName }}
+                                </div>
+                            </td>
+
                            
                             
                     
