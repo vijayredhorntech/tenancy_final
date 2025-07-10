@@ -1,6 +1,13 @@
 <x-agency.layout>
     @section('title') Visa Application @endsection
 
+<!-- Include Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Include jQuery (required by Select2) and Select2 JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
 
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
@@ -44,29 +51,35 @@
 
                                     <div>
                                             <label for="origin_id" class="block text-sm font-medium text-gray-700">Country Range</label>
-                                            <div class="flex gap-2">
-                                                <!-- Origin Country -->
-                                                <select name="origin_id" id="origin_id"
-                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                                                    <option value="">Select Origin Country</option>
-                                                    @foreach($countries as $country)
-                                                        <option value="{{ $country->id }}" {{ request('origin_id') == $country->id ? 'selected' : '' }}>
-                                                            {{ $country->countryName }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                           <div class="flex gap-2 mt-1">
+                                        <!-- Origin Country -->
+                                        <select name="origin_id" id="origin_id"
+                                            class="select2 mt-1 block w-full text-gray-200 rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                            <option value="">Select Origin Country</option>
+                                            @foreach($countries as $country)
+                                                <option 
+                                                    value="{{ $country->id }}" 
+                                                    data-flag="{{ $country->getFlagUrlAttribute() }}"
+                                                    {{ request('origin_id') == $country->id ? 'selected' : '' }}>
+                                                    {{ $country->countryName }}
+                                                </option>
+                                            @endforeach
+                                        </select>
 
-                                                <!-- Destination Country -->
-                                                <select name="destination_id" id="destination_id"
-                                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                                                    <option value="">Select Destination Country</option>
-                                                    @foreach($countries as $country)
-                                                        <option value="{{ $country->id }}" {{ request('destination_id') == $country->id ? 'selected' : '' }}>
-                                                            {{ $country->countryName }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                        <!-- Destination Country -->
+                                        <select name="destination_id" id="destination_id"
+                                            class="select2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                            <option value="">Select Destination Country</option>
+                                            @foreach($countries as $country)
+                                                <option 
+                                                    value="{{ $country->id }}" 
+                                                    data-flag="{{ $country->getFlagUrlAttribute() }}"
+                                                    {{ request('destination_id') == $country->id ? 'selected' : '' }}>
+                                                    {{ $country->countryName }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                         </div>
 
                          
@@ -312,6 +325,45 @@
 
             </div>
 
+                    <script>
+            $(document).ready(function() {
+                $('.select2').select2({
+                    width: '100%', // keep full-width like Tailwind
+                    placeholder: 'Select a country',
+                    allowClear: true
+                });
+            });
+        </script>
+<script>
+    $(document).ready(function () {
+        function formatCountry (country) {
+            if (!country.id) {
+                return country.text;
+            }
+
+            const flagUrl = $(country.element).data('flag');
+            const countryName = country.text;
+
+            if (flagUrl) {
+                return $(`
+                    <span class="flex items-center gap-2">
+                        <img src="${flagUrl}" class="w-5 h-4 object-cover rounded-sm" />
+                        <span>${countryName}</span>
+                    </span>
+                `);
+            }
+
+            return countryName;
+        }
+
+        // Initialize all select2 elements with flag template
+        $('.select2').select2({
+            templateResult: formatCountry,
+            templateSelection: formatCountry,
+            width: '100%'
+        });
+    });
+</script>
 
         
     </x-agency.layout>
