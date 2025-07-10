@@ -35,4 +35,12 @@ class Country extends Model
     {
         return $this->hasMany(City::class,'countryId','id');
     }
+
+    public function getFlagUrlAttribute()
+    {
+    return asset('assets/flags/64x48/' . strtolower($this->countryCode) . '.png');
+    }
+
+
+
 }

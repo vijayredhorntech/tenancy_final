@@ -19,6 +19,23 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
     <style>
+
+
+
+    .select2-container .select2-selection--single 
+{
+    height: 100% !important;
+    padding: 3px !important;
+    border: 1px solid #d1d5db !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow
+{
+    top: 5px !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #8a8a8a !important;
+}
+
         ::-webkit-scrollbar {
             width: 2px;
             height: 2px;

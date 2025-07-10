@@ -50,29 +50,35 @@
 
                                     <div>
                                             <label for="origin_id" class="block text-sm font-medium text-gray-700">Country Range</label>
-                                            <div class="flex gap-2 mt-1">
-                                                <!-- Origin Country -->
-                                                <select name="origin_id" id="origin_id"
-                                                    class="select2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                                                    <option value="">Select Origin Country</option>
-                                                    @foreach($countries as $country)
-                                                        <option value="{{ $country->id }}" {{ request('origin_id') == $country->id ? 'selected' : '' }}>
-                                                            {{ $country->countryName }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                           <div class="flex gap-2 mt-1">
+                                        <!-- Origin Country -->
+                                        <select name="origin_id" id="origin_id"
+                                            class="select2 mt-1 block w-full text-gray-200 rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                            <option value="">Select Origin Country</option>
+                                            @foreach($countries as $country)
+                                                <option 
+                                                    value="{{ $country->id }}" 
+                                                    data-flag="{{ $country->getFlagUrlAttribute() }}"
+                                                    {{ request('origin_id') == $country->id ? 'selected' : '' }}>
+                                                    {{ $country->countryName }}
+                                                </option>
+                                            @endforeach
+                                        </select>
 
-                                                <!-- Destination Country -->
-                                                <select name="destination_id" id="destination_id"
-                                                    class="select2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                                                    <option value="">Select Destination Country</option>
-                                                    @foreach($countries as $country)
-                                                        <option value="{{ $country->id }}" {{ request('destination_id') == $country->id ? 'selected' : '' }}>
-                                                            {{ $country->countryName }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                        <!-- Destination Country -->
+                                        <select name="destination_id" id="destination_id"
+                                            class="select2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                            <option value="">Select Destination Country</option>
+                                            @foreach($countries as $country)
+                                                <option 
+                                                    value="{{ $country->id }}" 
+                                                    data-flag="{{ $country->getFlagUrlAttribute() }}"
+                                                    {{ request('destination_id') == $country->id ? 'selected' : '' }}>
+                                                    {{ $country->countryName }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                         </div>
 
                          
@@ -145,13 +151,12 @@
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application Number</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Client Details</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Visa</th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Visa To </th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Document </th>
             
                
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Total</th> 
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Total Amount(£)</th> 
                   
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date  </th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application Submission Date  </th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Passport Submit</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application status</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</th>
@@ -191,13 +196,23 @@
                                     <span class="font-medium text-xs">{{ $email }}</span><br>
                                     <span class="font-medium text-xs">{{ $phone }}</span>
                                 </td>
-                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                             <span>{{$booking->visa->name }}</span><br>
-                            <span class="font-medium text-xs">{{$booking->visasubtype->name }}</span><br> 
-                          
+                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm whitespace-nowrap">
+                            <span class="text-sm text-ternary/80 font-medium flex items-center gap-2 mr-2">
+                                <img src="{{ asset('assets/flags/64x48/' . strtolower($booking->origin->countryCode) . '.png') }}" 
+                                    alt="{{ $booking->origin->countryCode }}" 
+                                    class="w-5 h-4 object-cover rounded-sm" />
+                                {{ $booking->origin->countryName }}
 
-                
-                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$booking->origin->countryName }} To {{$booking->destination->countryName }}</td>
+                                <span class="mx-1">to</span>
+
+                                <img src="{{ asset('assets/flags/64x48/' . strtolower($booking->destination->countryCode) . '.png') }}" 
+                                    alt="{{ $booking->destination->countryCode }}" 
+                                    class="w-5 h-4 object-cover rounded-sm" />
+                                {{ $booking->destination->countryName }}
+                            </span>
+                            <span>{{ $booking->visa->name }}</span><br>
+                            <span class="font-medium text-xs">{{ $booking->visasubtype->name }}</span><br>
+                        </td>
                       
                         <!-- <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
                         
@@ -347,6 +362,38 @@
         });
     });
 </script>
+<script>
+    $(document).ready(function () {
+        function formatCountry (country) {
+            if (!country.id) {
+                return country.text;
+            }
+
+            const flagUrl = $(country.element).data('flag');
+            const countryName = country.text;
+
+            if (flagUrl) {
+                return $(`
+                    <span class="flex items-center gap-2">
+                        <img src="${flagUrl}" class="w-5 h-4 object-cover rounded-sm" />
+                        <span>${countryName}</span>
+                    </span>
+                `);
+            }
+
+            return countryName;
+        }
+
+        // Initialize all select2 elements with flag template
+        $('.select2').select2({
+            templateResult: formatCountry,
+            templateSelection: formatCountry,
+            width: '100%'
+        });
+    });
+</script>
+
+
 
 
 </x-front.layout>

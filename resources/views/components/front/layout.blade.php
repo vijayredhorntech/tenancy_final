@@ -30,6 +30,10 @@
 {
     top: 5px !important;
 }
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #8a8a8a !important;
+}
+
 
         ::-webkit-scrollbar {
             width: 2px;

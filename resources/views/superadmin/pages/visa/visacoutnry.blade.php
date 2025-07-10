@@ -2,9 +2,9 @@
     @section('title') Visa   @endsection
 
 
-    <!-- In your Blade template head section -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<!-- Before closing body tag -->
+<!-- jQuery and Select2 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <!-- script for serach -->
@@ -27,7 +27,7 @@
                         <select name="visatype" id="visatype" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
                             <option value="">All Visa</option>
                             @foreach($visas as $visa)
-                                <option value="{{ $visa->id }}" {{ request('visatype') == $visa->id?'selected' : '' }}>
+                                <option value="{{ $visa->id }}" {{ request('department') == $visa->id?'selected' : '' }}>
                                     {{ $visa->name }}
                                 </option>
                             @endforeach
@@ -76,8 +76,8 @@
                         <label for="status" class="block text-sm font-medium text-gray-700">Required</label>
                         <select name="status" id="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
                             <option value="">All Status</option>
-                            <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Required</option>
-                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Not Required</option>
+                            <option value="1" {{ request('status') == '1' ? 'selected' : '' }}>Required</option>
+                            <option value="0" {{ request('status') == '0' ? 'selected' : '' }}>Not Required</option>
                         </select>
                     </div>
 
@@ -146,21 +146,20 @@
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
 
-                                <a href="{{ route('visa.viewcountry', ['id' => $visa->id]) }}" title="Edit Country">
+                       
+                                    <a href="{{ route('visa.viewcountry', ['id' => $visa->id]) }}" title="Edit Country">
                                         <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-eye"></i>
                                         </div>
                                     </a>
-
-
-
                                
-                               {{--     <a href="{{ route('visa.editcountry', ['id' => $visa->id]) }}" title="Edit Country">
+                                    {{--             <a href="{{ route('visa.editcountry', ['id' => $visa->id]) }}" title="Edit Country">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-pencil"></i>
                                         </div>
                                     </a>
                                
+
                                     <a href="{{ route('requiredclient.field', ['id' => $visa->id]) }}" title="Assign  Country">
                                         <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-plus"></i>
@@ -198,11 +197,7 @@
 
 
                 </table>
-                
-                <div class="mt-4">
-                {{ $applyCountires->withQueryString()->links() }}
-
-                </div>
+                {{--  {{ $visas->onEachSide(0)->links() }}--}}
 
 
             </div>
