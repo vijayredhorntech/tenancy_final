@@ -34,6 +34,7 @@
     color: #8a8a8a !important;
 }
 
+
         ::-webkit-scrollbar {
             width: 2px;
             height: 2px;
