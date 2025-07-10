@@ -509,7 +509,7 @@ public function getVisabySearch($origin,$destination){
 
 
 public function getVisabySearchcoutnry($id){
-    return VisaServiceType::with('Subvisas')->where('id',$id)->first();
+    return VisaServiceType::with('Subvisas','origincountry','destinationcountry')->where('id',$id)->first();
 }
 
 
@@ -551,11 +551,35 @@ public function updateVisa($id, array $data)
 }
 
 
-  public function allVisacoutnry(){
+//   public function allVisacoutnry($request){
+//     return VisaServiceType::with('origincountry','destinationcountry','VisaServices','Subvisas')->get(); 
+//   }
 
-
-    return VisaServiceType::with('origincountry','destinationcountry','VisaServices','Subvisas')->get(); 
-  }
+public function allVisacoutnry($request)
+{
+ 
+    $query = VisaServiceType::with(['origincountry', 'destinationcountry', 'VisaServices', 'Subvisas']);
+    if (!empty($request->visatype)) {
+        $query->where('visa_id', $request->visatype);
+    }
+    if (!empty($request->origincountry)) {
+        $query->where('origin', $request->origincountry);
+    }
+    if (!empty($request->destinationcountry)) {
+        $query->where('destination', $request->destinationcountry);
+    }
+    if (!empty($request->status)) {
+        $query->where('required', $request->status);
+    }
+    if (!empty($request->date_from)) {
+        $query->whereDate('created_at', '>=', $request->date_from);
+    }
+    if (!empty($request->date_to)) {
+        $query->whereDate('created_at', '<=', $request->date_to);
+    }
+    $perPage = $request->per_page ?? 10;
+    return $query->paginate($perPage);
+}
 
 
 

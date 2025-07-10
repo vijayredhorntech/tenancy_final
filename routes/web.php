@@ -346,15 +346,15 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                  Route::get('/requred/{id}','hsrequiredClientFiled')->name('requiredclient.field');
                                  Route::post('/visa/requiredstore','hsrequiredClientFiledStore')->name('superadmin.assignclientfieldcountry');
                                  
-
-                                 
-
-                                
                                  Route::get('/editvisa/{id}','hseditvisa')->name('visa.edit');
                                  Route::post('/editvisastore','hsestorevisa')->name('visa.editstore');
+
                                  Route::get('/visacoutnry','hsvisacoutnry')->name('visa.country');
                                  Route::get('/editcoutnry/{id}','hseditvisacoutnry')->name('visa.editcountry');
+                                 Route::get('/countrySection/{id}','hsViewEditSection')->name('visa.viewcountry');
                                  Route::get('/viewvisacoutnry/{id}','hseditvisacoutnry')->name('visa.assigncountry');
+                                 
+
                                  Route::get('/allform','hsFromindex')->name('visa.forms');
                                  Route::post('/formstore','hsFromStore')->name('visaform.store');
                                  Route::get('/deleteform/{id}','hsFormDelete')->name('form.delete');

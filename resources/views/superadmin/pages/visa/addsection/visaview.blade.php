@@ -201,6 +201,35 @@
         </div>
 
         <script>
+            jQuery(document).ready(function () {
+                // Show tab based on session
+                var activeTabFromSession = "{{ session('active_tab') }}";
+
+                if (activeTabFromSession) {
+                    // Remove active styles from all tabs
+                    jQuery(".agency_tab").removeClass("bg-secondary/40 border-[2px] border-secondary/60");
+                    // Add active class to correct tab button
+                    jQuery("[data-tid='" + activeTabFromSession + "']").addClass("bg-secondary/40 border-[2px] border-secondary/60");
+                    // Hide all tab content
+                    jQuery(".tab").hide();
+                    // Show the selected tab
+                    jQuery("#" + activeTabFromSession).show();
+                }
+
+                // On tab click
+                jQuery(document).on("click", ".agency_tab", function () {
+                    var id = jQuery(this).data('tid');
+                    jQuery(".agency_tab").removeClass("bg-secondary/40 border-[2px] border-secondary/60");
+                    jQuery(this).addClass("bg-secondary/40 border-[2px] border-secondary/60");
+
+                    // Hide all tabs and show the selected one
+                    jQuery(".tab").hide();
+                    jQuery("#" + id).show();
+                });
+            });
+</script>
+
+        <!-- <script>
         jQuery(document).ready(function () {
             jQuery(document).on("click", ".agency_tab", function () {
                                 var id = jQuery(this).data('tid');
@@ -213,6 +242,6 @@
                             });
                 });
 
-        </script>
+        </script> -->
 
         </x-front.layout>

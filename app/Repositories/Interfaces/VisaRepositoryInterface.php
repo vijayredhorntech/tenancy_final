@@ -12,7 +12,7 @@ interface VisaRepositoryInterface
     public function getAllCountry(); 
     public function assignVisaToCountry(array $data);
     public function getVisabySearch($orgin,$destination); 
-    public function allVisacoutnry(); 
+    public function allVisacoutnry($request); 
     public function getVisabySearchcoutnry($id); 
     public function saveBooking(array $data); 
     public function getBookingByid($id,$type,$request); 

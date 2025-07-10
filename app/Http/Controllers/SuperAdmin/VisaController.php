@@ -129,7 +129,7 @@ class VisaController extends Controller
         $visa = $this->visaRepository->getVisaById($id);
         $clientData=[];
         // dd($visa);
-        return view('superadmin.pages.visa.addsestion.visaview', compact('visa','clientData'));
+        return view('superadmin.pages.visa.addsection.visaview', compact('visa','clientData'));
     }
 
 
@@ -230,27 +230,11 @@ class VisaController extends Controller
   
       public function hsStore(Request $request)
      {
-    //    dd($request->all());
         $data = $request->validate([
             'name'         => 'required|string|max:255|unique:visa_types,name',
-            'description'  => 'nullable|string', // Allows HTML content (Quill Editor)
-            // 'subtype'      => 'required|array|min:1',
-            // 'subtype.*'    => 'string|max:255', // Each subtype should be a string
-            // 'subtypeprice' => 'required|array|min:1',
-            // 'subtypeprice.*' => 'numeric|min:0', // Each price must be a number and positive
-            // 'commission'   => 'required|array|min:1',
-            // 'commission.*' => 'numeric|min:0', // Each commission should be 0-100%
-            // 'validity'      => 'required|array|min:1',
-            // 'validity.*'    => 'string|max:255',
-            // 'processing'      => 'required|array|min:1',
-            // 'processing.*'    => 'string|max:255',
-            // 'gstin'   => 'required|array|min:1',
-            // 'gstin.*' => 'numeric|min:0',
+            'description'  => 'nullable|string', 
         ]);
-
-        // Store Visa Data Using Repository
         $visa = $this->visaRepository->createVisa($data);
-        
         return redirect()->route('visa.view')->with('success', 'Visa created successfully');
     }
 
@@ -375,20 +359,44 @@ class VisaController extends Controller
 
 
 
-    public function hsestorevisa(Request $request)
-    {
-        $data = $request->validate([
-            'vid'            => 'required',
-            'name'         => 'required|string|max:255',
-            'description'  => 'nullable|string', // Allows HTML content (Quill Editor)
+    // public function hsestorevisa(Request $request)
+    // {
+    //     $data = $request->validate([
+    //         'vid'            => 'required',
+    //         'name'         => 'required|string|max:255',
+    //         'description'  => 'nullable|string', // Allows HTML content (Quill Editor)
          
+    //     ]);
+
+    //     $visa = $this->visaRepository->updateVisa($request->vid,$data);
+
+    //     // $visa = $this->visaRepository->updateVisa($id, $data);
+    //     return redirect()->route('visa.view',['id' => $request->vid])->with('success', 'Visa updated successfully!');
+    // }
+    public function hsestorevisa(Request $request)
+{
+    try {
+        $data = $request->validate([
+            'vid'         => 'required',
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string',
         ]);
 
-        $visa = $this->visaRepository->updateVisa($request->vid,$data);
+        $visa = $this->visaRepository->updateVisa($request->vid, $data);
 
-        // $visa = $this->visaRepository->updateVisa($id, $data);
-        return redirect()->route('visa.view',['id' => $request->vid])->with('success', 'Visa updated successfully!');
+        return redirect()
+            ->route('visa.view', ['id' => $request->vid])
+            ->with('success', 'Visa updated successfully!');
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        //  dd($e);
+        return redirect()
+            ->back()
+            ->withErrors($e->validator)
+            ->withInput()
+            ->with('active_tab', 'editDiv'); // Ensure the Edit tab opens on error
     }
+}
+
 
 
     /****Visa Sub Type *****/
@@ -474,6 +482,7 @@ class VisaController extends Controller
     /******VIsa country get *****/
     public function hsvisacoutnry(Request $request){
  
+        //   dd($request->all());
        
         $countries=Country::get();
         $applyCountires= $this->visaRepository->allVisacoutnry($request);
@@ -488,6 +497,13 @@ class VisaController extends Controller
         $this->visaRepository->deleteVisa($id);
         return response()->json(['message' => 'Visa deleted successfully']);
     }
+
+/****View Visa Coutnry *****/
+public function hsViewEditSection($id){
+    $sectedcountry=$this->visaRepository->getVisabySearchcoutnry($id);
+   return view('superadmin.pages.visa.addsection.viewassignvisa',compact('sectedcountry'));
+}
+    
 
 
     public function hseditvisacoutnry($id){
