@@ -10,6 +10,7 @@ use App\Repositories\Interfaces\VisaRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Services\AgencyService;
+use App\Models\VisaServiceType;
 
 
 class DocumentController extends Controller
@@ -56,9 +57,49 @@ class DocumentController extends Controller
 
     }
 
+
+    /*****Required Document ******/
+    public function hsrequiredDocument(Request $request)
+    {
+        try {
+            // Put validation inside try block
+            $validated = $request->validate([
+                'combinationId' =>'required|integer',
+                'documents' =>'required|array|min:1',
+                'documents.*' =>'required|string|max:255',
+            ]);
+    
+
+    
+            $visa = VisaServiceType::findOrFail($request->combinationId);
+            $visa->required_document = json_encode($request->documents); 
+            $visa->save();
+    
+            return redirect()
+                ->back()
+                ->with('success', 'Documents assigned successfully.');
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Validation failed
+            return redirect()
+                ->back()
+                ->withErrors($e->validator)
+                ->withInput()
+                ->with('active_tab', 'VisaImportantDocumentDiv');
+        } catch (\Exception $e) {
+            // Any other exception
+            \Log::error('Error saving documents: '.$e->getMessage());
+            return redirect()
+                ->back()
+                ->with('error', 'An error occurred while saving.')
+                ->with('active_tab', 'VisaImportantDocumentDiv');
+        }
+    }
+    
     /*****Store Application Document *** */
     public function hs_storeDocument(Request $request){
      
+        //  dd($request->all());
         $request->validate([
             'bookingid' => 'required|integer|exists:visabookings,id', // or just 'required|integer' if no DB check
             'documents' => 'required|array|min:1',

@@ -18,4 +18,8 @@ class VisaSubtype extends Model
     {
         return $this->belongsTo(VisaType::class);
     }
+
+    public function countryData(){
+        return $this->hasOne(VisaServiceType::class, 'id', 'country_type_id');
+    }
 }

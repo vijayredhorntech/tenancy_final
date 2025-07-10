@@ -30,6 +30,7 @@ use App\Models\VisaServiceType;
 use App\Models\VisaBooking;
 use App\Models\VisaSection;
 use App\Models\TermType;
+use App\Models\ClientApplicationDocument;
 
 use App\Models\ClientInfoForCountry;
 
@@ -152,9 +153,6 @@ class VisaController extends Controller
     {
         
         $visadetails = VisaServiceType::with('destinationcountry', 'VisaServices')->where('id', $id)->first();
-        // dd($visadetails);
-        // dd($visadetails);
-        // $assign = ClientInfoForCountry::where('assignid', $visadetails->id)->first();
         $checkbefore = ClientInfoForCountry::where('destination_id', $visadetails->destinationcountry->id)->
         where('visa_id',$visadetails->visa_id)->first();
         if(isset($checkbefore)){
@@ -163,13 +161,9 @@ class VisaController extends Controller
           $assign = ClientInfoForCountry::where('destination_id', $visadetails->destinationcountry->id)->first();
 
         }
-          
-    
         // Fetch all VisaSection records and decode fields
         $sections = VisaSection::all();
-  
-        $groupedFields = [];
-    
+          $groupedFields = [];
         foreach ($sections as $section) {
             $fields = $section->fields;
         
@@ -180,11 +174,7 @@ class VisaController extends Controller
                     'filed' => $fields
                 ];
             }}
-        // dd($groupedFields);
-    
-       // For debugging
-        // dd($groupedFields); // For debugging
-    
+        
         return view('superadmin.pages.visa.assigncountry', compact('groupedFields', 'visadetails', 'assign'));
     }
     
@@ -501,6 +491,7 @@ class VisaController extends Controller
 /****View Visa Coutnry *****/
 public function hsViewEditSection($id){
     $sectedcountry=$this->visaRepository->getVisabySearchcoutnry($id);
+  
    return view('superadmin.pages.visa.addsection.viewassignvisa',compact('sectedcountry'));
 }
     
@@ -606,6 +597,7 @@ public function hsViewEditSection($id){
     // pay
 
     public function him_visaApplicationPay(Request $request, $id){
+
         $request->validate([
             'bookingid'    => 'required',
             'selfapply'    => 'required_without:othermember',
@@ -613,12 +605,12 @@ public function hsViewEditSection($id){
         ]);
    
         $agency = $this->agencyService->getAgencyData();
+        // dd($agency);
          if(isset($request->selfapply)){
             $this->visaRepository->updateClientBooking($id,$request->all());
          }else{
               $this->visaRepository->createClientBooking($id,$request->all());
-           
-         }
+        }
 
         $clientData = $this->visaRepository->bookingDataById($id);
         if (isset($clientData) && $clientData->agency_id == $agency->id) {
@@ -935,12 +927,12 @@ public function hsFromindex(Request $request)
        $agency = $this->agencyService->getAgencyData();
        $bookingData = $this->visaRepository->bookingDataById($id);
     //    dd($bookingData);
-    //    if($bookingData->viewed_once==1){
-    //        return redirect()->route('verifyvisa.application', [
-    //         'id' => $id,
-    //         'type' => 'agency' // or use 'admin' if needed
-    //     ]);
-    //    }
+       if($bookingData->viewed_once==1){
+           return redirect()->route('verifyvisa.application', [
+            'id' => $id,
+            'type' => 'agency' // or use 'admin' if needed
+        ]);
+       }
        $sections = VisaSection::all();
    
        return view('agencies.pages.clients.clientapplication', compact('agency', 'bookingData','sections'));
@@ -970,7 +962,30 @@ public function hsFromindex(Request $request)
     if($request->type=='superadmin'){
         return redirect()->route('superadminvisa.applicationview', ['id' => $request->bookingid]);
     }else{
-        $booking = VisaBooking::where('id', $request->bookingid)->first();
+        
+        $booking = VisaBooking::with('visasubtype.countryData')->where('id', $request->bookingid)->first();
+        if (isset($booking) && $booking->visasubtype->countryData->required_document) {
+            $documents = json_decode($booking->visasubtype->countryData->required_document, true);
+        
+            if (is_array($documents)) {
+                foreach ($documents as $docName) {
+                    $exists = \App\Models\ClientApplicationDocument::where('application_id', $booking->id)
+                        ->where('document_name', $docName)
+                        ->exists();
+        
+                    if (!$exists) {
+                        $insertDocument = new ClientApplicationDocument();
+                        $insertDocument->application_id = $booking->id;
+                        $insertDocument->application_number = $booking->application_number;
+                        $insertDocument->agency_id = $booking->agency_id;
+                        $insertDocument->document_name = $docName;
+                        $insertDocument->document_status = 0;
+                        $insertDocument->save();
+                    }
+                }
+            }
+        }
+        // dd($booking);
         $booking->sendtoadmin=3;
         $booking->save();
         // dd($bookingData);

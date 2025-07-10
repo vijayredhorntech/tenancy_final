@@ -131,9 +131,20 @@
 
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
             <span class="font-semibold text-ternary text-xl"></span>
-                    <span class="font-semibold text-ternary text-xl">
-                        {{$sectedcountry->origincountry->countryName}}  To   {{$sectedcountry->destinationcountry->countryName}}
-                    </span>
+            <span class="font-semibold text-ternary text-xl flex items-center gap-2">
+                    {{-- Origin Country Flag + Name --}}
+                    <img src="{{ $sectedcountry->origincountry->getFlagUrlAttribute() }}" 
+                        alt="Flag" class="w-6 h-4 object-cover rounded-sm border" />
+                    {{ $sectedcountry->origincountry->countryName }}
+
+                    <span class="mx-2">to</span>
+
+                    {{-- Destination Country Flag + Name --}}
+                    <img src="{{ $sectedcountry->destinationcountry->getFlagUrlAttribute() }}" 
+                        alt="Flag" class="w-6 h-4 object-cover rounded-sm border" />
+                    {{ $sectedcountry->destinationcountry->countryName }}
+                </span>
+
            <span class="font-semibold text-ternary text-xl"></span>
 
             
@@ -145,7 +156,7 @@
         <div class="w-full overflow-x-auto p-4">
                 <div class="w-full flex flex-wrap ">
 
-                <div data-tid="VisaDeatilsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] bg-secondary/40 border-[2px] border-secondary/60 border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                <div data-tid="VisaCountryDeatilsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] bg-secondary/40 border-[2px] border-secondary/60 border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-eye text-ternary"></i>
                        View
                 </div>
@@ -164,7 +175,7 @@
                     </a>
                 </div>
 
-                <div data-tid="editDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                <div data-tid="VisaImportantDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                  
                 <i class="fa fa-document text-ternary"></i>
                     Assign Document 
@@ -179,12 +190,14 @@
            
                 <!-- view application  -->
                 <div id="VisaCountryDeatilsDiv" class="tab  ">
-                <x-visa.view_countrydetails :countries="$sectedcountry"/> 
+                <x-visa.view_countrydetails :visaServiceType="$sectedcountry"/> 
                 </div>
 
                 <!-- end applicatoin  -->
 
-                <div id="editDiv" class="tab hidden">           
+                <div id="VisaImportantDocumentDiv" class="tab hidden">    
+                   <x-visa.important_document :visaServiceType="$sectedcountry"/> 
+
                 </div>
 
       <!-- end joing letter  -->

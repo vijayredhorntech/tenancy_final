@@ -381,6 +381,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                 Route::get('/client/document/view/{id}', 'hs_SAAViewDocuments')->name('client.document.view');
                                 Route::get('/editdocument/{id}', 'hs_editSAUploadedApplication')->name('superadminvisaeditdocument.application');
                                 Route::post('/updatedocument', 'hs_storeUpdateDocument')->name('updateclient.document');
+                                Route::post('/required_document','hsrequiredDocument')->name('requestdocuments.store');
                                
                                 Route::get('/document/application/{id}','hsshowUploadForm')->name('superadminaad.document.upload');
                                 Route::post('/document/upload','hsuploadDocument')->name('upload.document');
@@ -426,6 +427,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/docsignindex','haindexDocSign')->name('superadmin.docsign');
                         Route::get('/docsigncreate','hsCreateDocument')->name('add.signdocument');
                         Route::post('/documentstore','hsDocumentStore')->name('superadmindocument.store');
+
+
                         Route::get('/send-document-email/{id}','hsSendEmail')->name('senddocdocument.email');
                      
                         Route::get('/cencelinvoice/{id}','hs_SAcanceleditInvoice')->name('cancelinvoicedocsign.edit');

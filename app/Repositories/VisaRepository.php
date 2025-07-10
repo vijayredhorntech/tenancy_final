@@ -509,7 +509,7 @@ public function getVisabySearch($origin,$destination){
 
 
 public function getVisabySearchcoutnry($id){
-    return VisaServiceType::with('Subvisas','origincountry','destinationcountry')->where('id',$id)->first();
+    return VisaServiceType::with('Subvisas','origincountry','destinationcountry','VisaServices')->where('id',$id)->first();
 }
 
 
