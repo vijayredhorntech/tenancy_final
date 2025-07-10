@@ -99,8 +99,9 @@
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                     </li>
                 </a>
+       
                 @if($user_data->getAllPermissions()->pluck('name')->intersect(['notification', 'manage everything'])->isNotEmpty())
-             <li>  <a href="{{route('agency.notification')}}">
+                {{--    <li>  <a href="{{route('agency.notification')}}">
                 <div class="{{Route::currentRouteName()==='agency.notification'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                     <div class="flex items-center">
                         <i class="fas fa-bell mr-2 text-sm"></i>
@@ -109,11 +110,11 @@
                     <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                 </div>
             </a>
-         </li>
+         </li> --}}
             @endif
             @if($user_data->getAllPermissions()->pluck('name')->intersect(['downloadcenter', 'manage everything'])->isNotEmpty())
 
-           <li>
+        {{--   <li>
              <a href="{{route('agency.document.download')}}">
                 <div class="{{Route::currentRouteName()==='agency.document.download'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                     <div class="flex items-center">
@@ -123,8 +124,8 @@
                     <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                 </div>
             </a>
-         </li>
-            @endif
+         </li>--}}
+            @endif 
 
             </ul>
         </div>
@@ -145,6 +146,7 @@
         @endif
 
         <!-- invoice data -->
+         
         @if($user_data->getAllPermissions()->pluck('name')->intersect(['invoice', 'manage everything'])->isNotEmpty())
         <div class="">
             <div onclick="document.getElementById('cancelinvoiceDiv').classList.toggle('hidden');document.getElementById('cancelArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='visa'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
@@ -207,6 +209,7 @@
             </ul>
         </div>
        @endif
+       
 
 
         @if($user_data->getAllPermissions()->pluck('name')->intersect(['booking view', 'manage everything'])->isNotEmpty())

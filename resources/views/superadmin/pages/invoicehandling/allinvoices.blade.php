@@ -29,7 +29,7 @@
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                         </tr>
 
-                 
+                  
                         @forelse($invoices as $invoice)
 
                                     <tr>

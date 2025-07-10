@@ -132,19 +132,34 @@
 
 
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-            <span class="font-semibold text-ternary text-lg">
-            {{ $clientData->application_number ?? 'N/A' }} 
+              <div>
+            <span class="font-semibold  text-lg text-danger">
+            Apl.No
             </span>
+         <span class="text-sm italic ">
+          {{ $clientData->application_number ?? 'N/A' }} 
+            </span>
+       </div>
+       
 
-            <span class="font-semibold text-ternary text-lg">
+
+       <div>
+          <span class="font-semibold  text-lg text-danger"> Contact Information </span>
+            <span class="text-sm italic ">
             {{ strtoupper($clientData->clint->client_name ?? 'N/A') }}
-        <span class="text-sm italic">( {{ $clientData->clint->email ?? 'N/A' }} , {{ $clientData->clint->phone_number ?? 'N/A' }}   )</span>
+        <span class="text-sm italic ">( {{ $clientData->clint->email ?? 'N/A' }} , {{ $clientData->clint->phone_number ?? 'N/A' }}   )</span>
             </span>
+      </div>
 
-
-            <span class="font-semibold text-ternary text-lg">
+      <div>
+          <span class="font-semibold  text-lg text-danger">
+            Visa From
+            </span>
+            <span class="text-sm italic ">
              {{ $clientData->origin->countryName ?? 'N/A' }}  To  {{ $clientData->destination->countryName ?? 'N/A' }}
             </span>
+    </div>
+
 
 
 

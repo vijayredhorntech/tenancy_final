@@ -332,10 +332,12 @@ public function hs_CancelInvoiceSubmit(Request $request, $id)
         })->when($request->filled('serviceid'), function ($query) use ($request) {
             $query->where('service', $request->serviceid);
         });
-    
+  
         // Step 3: Fetch records with or without pagination
         $invoices = $perPage ? $invoicesQuery->paginate($perPage) : $invoicesQuery->get();
     
+        $invoices=$this->agencyService->getClientinfo($invoices);
+        
         // Step 4: Load dynamic data from user databases
         foreach ($invoices as $invoice) {
             if ($invoice->agency && $invoice->visaBooking) {
@@ -455,7 +457,9 @@ public function hs_allInvoices(Request $request)
             'flightBooking',
             'hotelBooking',
             'hotelDetails',
-            'cancelinvoice'
+            'cancelinvoice',
+            'invoice',
+            'docsign'
             ])->where(function ($query) {
             $query->whereNull('invoicestatus')
                 ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
@@ -464,10 +468,14 @@ public function hs_allInvoices(Request $request)
 
     //  get data client information with the client database
         $this->agencyService->getClientData($invoices);
-  
+
+    
+
         // Fetch filters or supporting data
     $countries = Country::all();
     $services = Service::whereIn('id', [1, 2, 3])->get();
+
+    
 
     return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices', 'countries', 'services'));
 }
@@ -608,6 +616,7 @@ public function hs_allInvoices(Request $request)
 
     public function hsAllinvoice(Request $request)
     {
+        // dd("heelo");
         $perPage = $request->filled('per_page') && is_numeric($request->per_page)
           ? (int) $request->per_page
             : null;
@@ -618,6 +627,7 @@ public function hs_allInvoices(Request $request)
                 'invoiceDetails.visaBooking',
                 
             ])->get();
+      
 
             return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices'));
    
