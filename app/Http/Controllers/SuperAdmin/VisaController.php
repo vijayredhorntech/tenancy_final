@@ -836,6 +836,7 @@ public function hsFromindex(Request $request)
                 'document_status' => 'in:Pending,Done',
                 'application_status' => 'required|in:Under Process,Pending,Complete,Rejected',
                 'description' => 'nullable|string',
+                'rejection_reason' => 'nullable|string|max:255',
             ]);
 
             $booking = $this->visaRepository->assignUpdateBooking($request->applciationid, $request->all());
@@ -856,6 +857,7 @@ public function hsFromindex(Request $request)
                 'paymentstatus' => 'required|in:Paid,Pending',
                 'document_status' => 'required|in:Pending,Handed Over',
                 'description' => 'nullable|string',
+                'rejection_reason' => 'nullable|string|max:255',
             ]);
             $forms = $this->visaRepository->assignUpdateBooking($request->applciationid,$request->all());
             // Route::get('/viewapplication/{type}', 'hs_visaApplication')->name('agency.application');
