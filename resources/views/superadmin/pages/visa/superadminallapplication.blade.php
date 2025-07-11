@@ -150,7 +150,7 @@
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application Number</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Client Details</th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap w-full ">Visa</th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap ">Visa</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Document </th>
             
                
@@ -196,23 +196,24 @@
                                     <span class="font-medium text-xs">{{ $email }}</span><br>
                                     <span class="font-medium text-xs">{{ $phone }}</span>
                                 </td>
-                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm whitespace-nowrap w-max">
-                            <span class="text-sm text-ternary/80 font-medium flex items-center gap-2 mr-6">
-                                <img src="{{ asset('assets/flags/64x48/' . strtolower($booking->origin->countryCode) . '.png') }}" 
-                                    alt="{{ $booking->origin->countryCode }}" 
-                                    class="w-5 h-4 object-cover rounded-sm" />
-                                {{ $booking->origin->countryName }}
+                        <td class="border-[2px] border-secondary/40 px-4 py-0.5 text-ternary/80 font-medium text-sm ">
+    <span class="text-sm text-ternary/80 font-medium flex items-center gap-2 mr-6">
+        <img src="{{ asset('assets/flags/64x48/' . strtolower($booking->origin->countryCode) . '.png') }}" 
+            alt="{{ $booking->origin->countryCode }}" 
+            class="w-5 h-4 object-cover rounded-sm" />
+        {{ $booking->origin->countryName }}
 
-                                <span class="mx-1">to</span>
+        <span class="mx-1">to</span>
 
-                                <img src="{{ asset('assets/flags/64x48/' . strtolower($booking->destination->countryCode) . '.png') }}" 
-                                    alt="{{ $booking->destination->countryCode }}" 
-                                    class="w-5 h-4 object-cover rounded-sm" />
-                                {{ $booking->destination->countryName }}
-                            </span>
-                            <span>{{ $booking->visa->name }}</span><br>
-                            <span class="font-medium text-xs">{{ $booking->visasubtype->name }}</span><br>
-                        </td>
+        <img src="{{ asset('assets/flags/64x48/' . strtolower($booking->destination->countryCode) . '.png') }}" 
+            alt="{{ $booking->destination->countryCode }}" 
+            class="w-5 h-4 object-cover rounded-sm" />
+        {{ $booking->destination->countryName }}
+    </span>
+    <span class="block leading-tight text-sm">{{ $booking->visa->name }}</span>
+    <span class="block font-medium text-xs leading-tight">{{ $booking->visasubtype->name }}</span>
+</td>
+
                       
                         <!-- <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
                         

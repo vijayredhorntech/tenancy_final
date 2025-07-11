@@ -1010,7 +1010,10 @@ public function getBookingByid($id, $type, $request)
             $visabooking->application_status=$data['application_status'];
             $visabooking->applicationworkin_status=$data['application_status'];
         }
+         $visabooking->rejection_reason = $data['rejection_reason'] ?? null;
+
         $visabooking->save(); 
+        
         return $visabooking;
    
     }

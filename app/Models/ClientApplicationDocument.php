@@ -17,6 +17,7 @@ class ClientApplicationDocument extends Model
         'agency_id',
         'user_id',
         'document_file',
+        'rejection_reason'
     ];
 
     protected $casts = [

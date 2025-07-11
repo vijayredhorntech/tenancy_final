@@ -179,11 +179,60 @@
                     Payment Receipt
                 </div>
 
+                
 
+                @if($clientData->sendtoadmin == 3)  
+
+                    <a href="{{ route('verifyvisa.application', ['id' => $clientData->id, 'type' => 'agency']) }}">
+                            <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                                    <i class="fas fa-file-alt"></i>
+                                    View Application
+                            </div>
+                    </a>
+
+                    <a href="{{ route('visa.sendtoadmin', ['id' => $clientData->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
+                                <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                                    <i class="fa fa-paper-plane"></i>
+                                    Send to Admin 
+                                </div>
+                    </a>
+                    
+                    @elseif($clientData->sendtoadmin == 1)
+                    <a href="{{ route('verifyvisa.application', ['id' => $clientData->id, 'type' => 'agency']) }}">
+                        <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                        <i class="fas fa-file-alt"></i>
+                            View Application
+                        </div>
+                    </a>
+                    
+
+                    @else
+                    <a href="{{ route('application.client', ['id' => $clientData->id, 'token' => $clientData->agency->agencytoken]) }}">
+                        <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                        <i class="fas fa-file-alt"></i>
+                            Fill  Application
+                        </div>
+                    </a>
+                @endif
+
+                
                 <div data-tid="uploadeDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                  <i class="fas fa-arrow-up-from-bracket text-ternary"></i>
                     Upload Document
                 </div>
+
+                <div data-tid="sendEmailDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-envelope text-ternary"></i>
+                    Send Email
+                </div>
+
+                <a href="{{ route('agencychat.client', ['id' => $clientData->client_id, 'token' => $clientData->agency->agencytoken]) }}">
+                  <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-comments text-ternary"></i>
+                    Conversation
+                </div>
+               </a>
+
 
                 @if($clientData->applicationworkin_status !== "Complete")   
                     <div data-tid="editApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
@@ -214,7 +263,7 @@
                @endif
 
              
-               @if($clientData->visaInvoiceStatus->docsign==null)    
+                @if($clientData->visaInvoiceStatus->docsign==null)    
                     @if($clientData->visaInvoiceStatus->invoice!=null)
                         <a href="{{ route('send.docsign', [
                                     'id'   => $clientData->id,
@@ -243,18 +292,7 @@
 
                         --}}
                 @endif
-                <div data-tid="sendEmailDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-envelope text-ternary"></i>
-                    Send Email
-                </div>
-
-                <a href="{{ route('agencychat.client', ['id' => $clientData->client_id, 'token' => $clientData->agency->agencytoken]) }}">
-                  <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-comments text-ternary"></i>
-                    Conversation
-                </div>
-               </a>
-
+            
 
                 <!-- <div data-tid="formsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-file-alt text-ternary"></i>
@@ -306,40 +344,7 @@
 
               
 
-               @if($clientData->sendtoadmin == 3)  
-
-               <a href="{{ route('verifyvisa.application', ['id' => $clientData->id, 'type' => 'agency']) }}">
-                    <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                            <i class="fas fa-file-alt"></i>
-                            View Application
-                    </div>
-               </a>
-
-               <a href="{{ route('visa.sendtoadmin', ['id' => $clientData->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
-                        <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                            <i class="fa fa-paper-plane"></i>
-                            Send to Admin 
-                        </div>
-               </a>
-            
-               @elseif($clientData->sendtoadmin == 1)
-               <a href="{{ route('verifyvisa.application', ['id' => $clientData->id, 'type' => 'agency']) }}">
-                  <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                  <i class="fas fa-file-alt"></i>
-                    View Application
-                </div>
-               </a>
-               
-
-               @else
-               <a href="{{ route('application.client', ['id' => $clientData->id, 'token' => $clientData->agency->agencytoken]) }}">
-                  <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                  <i class="fas fa-file-alt"></i>
-                    Fill  Application
-                </div>
-               </a>
-               @endif
-
+        
             
 
             @if($clientData->applicationworkin_status == "Complete")
