@@ -129,11 +129,13 @@
 
 
                             {{-- === Select Input for Application Status === --}}
-                            <div class="w-full relative group flex flex-col gap-1">
+                           <div class="w-full relative group flex flex-col gap-1">
                                 <label for="application_status" class="font-semibold text-ternary/90 text-sm">Application Status</label>
                                 <div class="w-full relative">
-                                    <select name="application_status" id="application_status" @if(isset($status)) disabled @endif
-                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 transition ease-in duration-200">
+                                    <select name="application_status" id="application_status" 
+                                        @if(isset($status)) disabled @endif
+                                        class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 transition ease-in duration-200"
+                                        onchange="toggleRejectionReason(this.value)">
                                         <option value="Pending" {{ old('application_status', $clientData->applicationworkin_status) == 'Pending' ? 'selected' : '' }}>Pending</option>
                                         <option value="Under Process" {{ old('application_status', $clientData->applicationworkin_status) == 'Under Process' ? 'selected' : '' }}>Under Process</option>
                                         <option value="Complete" {{ old('application_status', $clientData->applicationworkin_status) == 'Complete' ? 'selected' : '' }}>Complete</option>
@@ -142,6 +144,21 @@
                                     <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
                                 </div>
                             </div>
+
+                            {{-- Hidden input for rejection reason --}}
+                            <div class="w-full relative group flex flex-col gap-1" id="rejection_reason_container" style="display: none;">
+                                <label for="rejection_reason" class="font-semibold text-ternary/90 text-sm">Reason for Rejection:</label>
+                                <div class="w-full relative">
+                                    <input type="text" name="rejection_reason" id="rejection_reason"
+                                        value="{{ old('rejection_reason', $clientData->rejection_reason ?? '') }}"
+                                        placeholder="Enter rejection reason..."
+                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                    <!-- Optional icon:
+                                    <i class="fa fa-exclamation-circle absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    -->
+                                </div>
+                            </div>
+
 
                          {{--               === textarea input field ===--}}
                          <!-- <div class="w-full relative group flex flex-col gap-1">
@@ -165,3 +182,18 @@
              </div>
 
                 </div>
+<script>
+    function toggleRejectionReason(value) {
+        const reasonContainer = document.getElementById('rejection_reason_container');
+        if (value === 'Rejected') {
+            reasonContainer.style.display = 'block';
+        } else {
+            reasonContainer.style.display = 'none';
+        }
+    }
+
+    // Run on page load (to show field if already selected as 'Rejected')
+    document.addEventListener('DOMContentLoaded', function () {
+        toggleRejectionReason(document.getElementById('application_status').value);
+    });
+</script>

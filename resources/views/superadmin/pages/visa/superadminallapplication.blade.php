@@ -150,11 +150,11 @@
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application Number</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Client Details</th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Visa</th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap w-full ">Visa</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Document </th>
             
                
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Total Amount(£)</th> 
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Total Amount(£)</th> 
                   
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application Submission Date  </th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Passport Submit</th>
@@ -196,8 +196,8 @@
                                     <span class="font-medium text-xs">{{ $email }}</span><br>
                                     <span class="font-medium text-xs">{{ $phone }}</span>
                                 </td>
-                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm whitespace-nowrap">
-                            <span class="text-sm text-ternary/80 font-medium flex items-center gap-2 mr-2">
+                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm whitespace-nowrap w-max">
+                            <span class="text-sm text-ternary/80 font-medium flex items-center gap-2 mr-6">
                                 <img src="{{ asset('assets/flags/64x48/' . strtolower($booking->origin->countryCode) . '.png') }}" 
                                     alt="{{ $booking->origin->countryCode }}" 
                                     class="w-5 h-4 object-cover rounded-sm" />

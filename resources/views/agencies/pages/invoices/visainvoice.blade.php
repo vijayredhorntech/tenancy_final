@@ -16,7 +16,7 @@
                 <div class="bg-gradient-to-r from-primary to-primaryDarkColor px-8 py-6">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
                         <div>
-                            <h1 class="text-2xl md:text-3xl font-bold text-white">VISA APPLICATION INVOICE</h1>
+                            <h1 class="text-2xl md:text-3xl font-bold text-white">VISA APPLICATION RECEIPT</h1>
                             <div class="flex items-center mt-2 text-white/90">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -229,7 +229,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                         </svg>
-                        Print Invoice
+                        Print Receipt
                     </button>
                     <button class="bg-secondary hover:bg-secondary/90 text-white px-6 py-2 rounded-lg transition flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
