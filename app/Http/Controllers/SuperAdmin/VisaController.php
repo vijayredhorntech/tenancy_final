@@ -966,9 +966,16 @@ public function hsFromindex(Request $request)
     }else{
         
         $booking = VisaBooking::with('visasubtype.countryData')->where('id', $request->bookingid)->first();
-        if (isset($booking) && $booking->visasubtype->countryData->required_document) {
-            $documents = json_decode($booking->visasubtype->countryData->required_document, true);
+        // dd($booking);
+        $checkDocument = VisaServiceType::where('origin', $booking->origin_id)
+        ->where('destination', $booking->destination_id)
+        ->where('visa_id', $booking->visa_id)
+        ->first();
+        //  dd($checkDocument);
+        if (isset($booking) && $checkDocument) {
+            $documents = json_decode($checkDocument->required_document, true);
         
+           
             if (is_array($documents)) {
                 foreach ($documents as $docName) {
                     $exists = \App\Models\ClientApplicationDocument::where('application_id', $booking->id)

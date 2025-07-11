@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use DB; 
 use Illuminate\Support\Facades\Log;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class DocumentSignController extends Controller
@@ -120,6 +121,20 @@ public function showSigningPage(Request $request,$token){
 
 }
 
+
+public function hsDownloadeSignDocument($id){
+
+    $booking = $this->documentSignRepository->checkSignDocument($id);
+    $termconditon = $this->termConditionRepo->allTeamTypes();
+    // return view('documents.download_invoice', compact('booking','termconditon'));
+    $pdf = Pdf::loadView('documents.download_invoice', [
+        'booking' => $booking,
+        'termconditon' => $termconditon,
+    ]);
+
+    return $pdf->download('SignedDocument.pdf');
+    
+}
 
        public function him_docsign(){
   

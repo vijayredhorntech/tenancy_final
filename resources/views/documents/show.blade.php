@@ -1,19 +1,16 @@
-
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Invoice</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
 /* Hide everything by default in print */
 @media print {
-    body * {
-        visibility: hidden;        /* still occupies space but invisible */
-    }
+    /* body * {
+        visibility: hidden;        
+    } */
 
     /* Make the invoice and its children visible */
     #ViewApplicationDiv,
@@ -35,23 +32,190 @@
     }
 }
 </style>
-
+    <style>
+        /* Base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            position: relative;
+            padding-bottom: 15vh;
+            padding-top: 20px;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+        }
+        
+        /* Decorative corner elements */
+        .top-left, .top-right, .bottom-left, .bottom-right {
+            height: 20px;
+            background-color: rgb(45, 158, 195);
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .top-left {
+            width: 30%;
+            border-bottom-right-radius: 3rem;
+            top: 0;
+            left: 0;
+        }
+        .top-right {
+            width: 20%;
+            top: 0;
+            right: 0;
+        }
+        .bottom-left {
+            width: 60%;
+            bottom: 0;
+            left: 0;
+        }
+        .bottom-right {
+            width: 20%;
+            border-top-left-radius: 3rem;
+            bottom: 0;
+            right: 0;
+        }
+        
+        /* Header styles */
+        .header {
+            width: 100%;
+            height: 10vh;
+        }
+        .header .row {
+            padding: 0 2%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .left-header, .right-header {
+            width: 50%;
+            height: 10vh;
+            border-bottom: solid 1px rgb(45, 158, 195);
+            display: flex;
+            align-items: center;
+            margin: 0;
+            padding: 0 2%;
+            box-sizing: border-box;
+        }
+        .right-header {
+            justify-content: flex-end;
+        }
+        .header img {
+            height: 7vh;
+            width: auto;
+        }
+        
+        /* Content styles */
+        section {
+            margin: 0;
+            box-sizing: border-box;
+            padding: 10px;
+        }
+        
+        /* Signature line */
+        .sign-line {
+            width: 150px;
+            height: 2px;
+            background-color: rgb(45, 158, 195);
+        }
+        
+        /* Footer styles */
+        .footer {
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            height: 7vh;
+            width: 100%;
+        }
+        .footer .row {
+            padding: 0 2%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .left-footer, .right-footer {
+            width: 50%;
+            height: 7vh;
+            border-top: solid 1px rgb(45, 158, 195);
+            display: flex;
+            align-items: center;
+            margin: 0;
+            padding: 0 2%;
+            box-sizing: border-box;
+        }
+        .right-footer {
+            justify-content: flex-end;
+        }
+        .footer img {
+            height: 5vh;
+            width: auto;
+        }
+        
+        /* Print styles */
+        @media print {
+            /* Hide decorative elements */
+            .top-left, .top-right, .bottom-left, .bottom-right {
+                display: none !important;
+            }
+            
+            /* Fix header and footer positions */
+            .header {
+                position: fixed;
+                top: 0;
+                width: 100%;
+                background: white;
+            }
+            
+            .footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                background: white;
+            }
+            
+            /* Adjust body padding to avoid content overlap */
+            body {
+                padding-top: 10vh !important;
+                padding-bottom: 10vh !important;
+            }
+            
+            /* Prevent page breaks inside important sections */
+            section {
+                page-break-inside: avoid;
+            }
+            
+            /* Add page margins */
+            @page {
+                margin: 1cm;
+            }
+        }
+    </style>
 </head>
 
+<body>
+    <!-- Decorative corner elements -->
+    <div class="top-left"></div>
+    <div class="top-right"></div>
+    <div class="bottom-left"></div>
+    <div class="bottom-right"></div>
 
-<body class="bg-gray-200 flex justify-center">
-<div class="bg-white shadow-md rounded-lg p-6 max-w-7xl">
-    <div class="flex items-center  flex-col justify-between">
-        <div class="flex items-center border-b-[2px] border-gray-700 w-full">
-        @if(isset($booking->agency->profile_picture))
-        <img src="{{ asset('images/agencies/logo/' . $booking->agency->profile_picture) }}" alt="{{$booking->agency->name}}" class="h-16 w-auto" class="h-24 mr-4" />
-        @else
-        <img src="{{asset('assets/images/logo.png')}}" class="h-16 w-auto" alt="">
-        @endif
-      
-            <!-- <img src="https://cloud-travel.co.uk/software/public/images/logo.png" alt="" class="h-24 mr-4"/> -->
+    <!-- Header section -->
+    <section class="header">
+        <div class="row">
+            <div class="left-header">
+            @if(isset($booking->agency->profile_picture))
+                <img src="{{ asset('images/agencies/logo/' . $booking->agency->profile_picture) }}" alt="{{$booking->agency->name}}" class="h-16 w-auto" class="h-24 mr-4" />
+                @else
+                <img src="{{asset('assets/images/logo.png')}}" class="h-16 w-auto" alt="">
+                @endif
+            </div>
+            <div class="right-header">
+                <!-- <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS96s_5RFcK7qero5zH0q8hhOOa3H4b83GBTbcnTyE&s" alt="Partner Logo"> -->
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Main content -->
+    <section>
     @php
     use Carbon\Carbon;       // Carbon alias
     use Illuminate\Support\Str;
@@ -173,17 +337,24 @@
             </table>
 </div>
 
+    </section>
 
-    <div class="flex flex-col mt-4">
-        <span>Terms and Conditions</span>
+    <!-- Repeat sections as needed -->
+
+    
+    
+    <span>Terms and Conditions</span>
         <strong>Notes:</strong>
         <ul class="list-disc pl-6 mt-4">
             @foreach ($termtype as $type)                 {{-- each TermType --}}
+            
                 @foreach ($type->terms as $term)      {{-- its related TermsCondition rows --}}
+                <section>
                     <li>
                         <strong>{{ $term->heading }}</strong>
                     </li>
                 @endforeach
+          </section>
             @endforeach
         </ul>
         
@@ -193,36 +364,38 @@
                 @endphp
 
                 <div class="flex flex-col items-end">
+                    {{--
                     <div class="flex justify-end">
                         @if($signature)
                        
                         <img src="{{ $signature }}" alt="Signature" style="height: 100px; width:200px">
                            
                         @endif
-                     </div>
+                     </div>--}}
                      <div>
                         <span class="mt-20 text-right">Yours sincerely</span>
                    </div> 
              </div>
+         
+    <!-- Signature line -->
+    <section style="display: flex; justify-content: flex-end; padding-right: 10vh; padding-top: 2vh; padding-bottom: 2vh;">
+        <div class="sign-line"></div>
+    </section>
 
-                <section class="footer">
-                    <div class="row" style="margin: 0px; padding: 0px; box-sizing: border-box; padding-left: 2%; padding-right: 2%; display: flex; justify-content: space-between;">
-                        <div class="col-md-6 col-sm-6 col-6 left-footer" style="margin: 0px; width: 50%; padding: 0px; box-sizing: border-box; display: flex; padding-left: 2%; align-items: center; height: 7vh; border-top: solid 1px rgb(45, 158, 195);">
-                            <img src="bottom.png" style="margin: 0px; padding: 0px; box-sizing: border-box; height: 5vh; width: auto;" alt="">
-                        </div>
-                        <div class="col-md-6 col-sm-6 col-6 right-footer" style="margin: 0px; width: 50%; padding: 0px; box-sizing: border-box; display: flex; padding-right: 2%; justify-content: end; align-items: center; height: 7vh; border-top: solid 1px rgb(45, 158, 195);">
-                            <img src="https://seeklogo.com/images/I/information-commissioners-office-logo-1743AEAE1C-seeklogo.com.png" style="margin: 0px; padding: 0px; box-sizing: border-box; height: 5vh; width: auto;" alt="">
-                        </div>
-                    </div>
-               </section>   
-
-
-    </div>
-
-
-</div>
-
+    <!-- Footer section -->
+    <section class="footer">
+        <div class="row">
+            <div class="left-footer">
+                 @if(isset($booking->agency->profile_picture))
+                <img src="{{ asset('images/agencies/logo/' . $booking->agency->profile_picture) }}" alt="{{$booking->agency->name}}" class="h-16 w-auto" class="h-24 mr-4" />
+                @else
+                <img src="{{asset('assets/images/logo.png')}}" class="h-16 w-auto" alt="">
+                @endif
+            </div>
+            <div class="right-footer">
+                <img src="https://seeklogo.com/images/I/information-commissioners-office-logo-1743AEAE1C-seeklogo.com.png" alt="Certification Logo">
+            </div>
+        </div>
+    </section>
 </body>
-
-
 </html>

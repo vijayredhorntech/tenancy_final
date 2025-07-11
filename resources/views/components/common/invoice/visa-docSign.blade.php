@@ -68,6 +68,12 @@
                             title="Sign Document">
                              <i class="fas fa-pen-fancy"></i>
                             </a>
+                         @else
+                            <a href="{{ route('downloade.signdocument', ['document' => $booking->visaInvoiceStatus->docsign->related_id]) }}"
+                                class="text-purple-600 hover:text-purple-800"
+                                title="Sign Document">
+                                <i class="fas fa-download"></i>
+                            </a>   
                         @endif
                 </div>
             </td>
