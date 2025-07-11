@@ -293,6 +293,8 @@ public function sendEmailForSign(Request $request, int $documentId): void
 }
 
 
+
+
    /****Document Data **** */ 
    public function uploadeDocumentById($id){
   

@@ -467,6 +467,8 @@ Route::middleware('auth')->group(function () {
 Route::controller(DocumentSignController::class)->group(function () {
 
     Route::get('/send-document-email/{id}','hsSendEmail')->name('senddocdocument.email');
+    Route::get('/downloadesigndocument/{document}','hsDownloadeSignDocument')->name('downloade.signdocument');
+
  
  
 });

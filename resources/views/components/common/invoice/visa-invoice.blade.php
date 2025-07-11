@@ -176,16 +176,18 @@
 
     <div class="flex flex-col mt-4">
         <span>Terms and Conditions</span>
-        <strong>Notes:</strong>
+    
         <ul class="list-disc pl-6 mt-4">
-            @foreach ($termtype as $type)                 {{-- each TermType --}}
-                @foreach ($type->terms as $term)      {{-- its related TermsCondition rows --}}
-                    <li>
-                        <strong>{{ $term->heading }}</strong>
-                    </li>
+                @foreach ($termtype as $type) {{-- each TermType --}}
+                    @foreach ($type->terms as $term) {{-- its related TermsCondition rows --}}
+                        <li>
+                            <strong>{{ $term->heading }}</strong><br>
+                            {{ $term->description }}
+                        </li>
+                    @endforeach
                 @endforeach
-            @endforeach
-        </ul>
+            </ul>
+
         
             @php
                     // null‑safe chain; returns null if any link is missing
@@ -193,13 +195,14 @@
                 @endphp
 
                 <div class="flex flex-col items-end">
+                    {{--
                     <div class="flex justify-end">
                         @if($signature)
                        
                                 <img src="{{ $signature }}" alt="Signature" style="height: 100px; width:200px">
                            
                         @endif
-                     </div>
+                     </div>--}}
                      <div>
                         <span class="mt-20 text-right">Yours sincerely</span>
                    </div> 
