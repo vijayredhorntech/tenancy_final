@@ -172,15 +172,88 @@
 
         <div class="w-full overflow-x-auto p-4">
                 <div class="w-full flex flex-wrap ">
+                    
 
                 <div data-tid="ViewApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] bg-secondary/40 border-[2px] border-secondary/60 border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-file-alt text-ternary"></i>
-                    Application
+                    Payment Receipt
                 </div>
+
+
                 <div data-tid="uploadeDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                  <i class="fas fa-arrow-up-from-bracket text-ternary"></i>
                     Upload Document
                 </div>
+
+                @if($clientData->applicationworkin_status !== "Complete")   
+                    <div data-tid="editApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                        <i class="fas fa-edit text-ternary"></i>
+                        Edit Application
+                    </div>
+                @else
+                    <div data-tid="downaloadDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                        <i class="fas fa-file-download text-ternary"></i>
+                                Download Document
+                    </div>
+
+                    <div  data-tid="generateInvoiceDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                        <i class="fas fa-file-alt"></i>
+                            Generate Invoice
+                    </div>
+
+                    @if($clientData->visaInvoiceStatus->invoice==null)             
+                        <div  data-tid="generateInvoiceDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                        <i class="fas fa-file-alt"></i>
+                            Generate Invoice
+                        </div>
+                @else
+                        <div  data-tid="viewInvoiceDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                        <i class="fas fa-file-alt"></i>
+                            View Invoice
+                        </div>
+               @endif
+
+             
+               @if($clientData->visaInvoiceStatus->docsign==null)    
+                    @if($clientData->visaInvoiceStatus->invoice!=null)
+                        <a href="{{ route('send.docsign', [
+                                    'id'   => $clientData->id,
+                                    'type' => $clientData->agency->agencytoken   {{-- or whatever value you intend --}}
+                                ]) }}">
+                                <div class="w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                                    <i class="fas fa-file-alt"></i>
+                                    Doc sign
+                                </div>
+                            </a>
+                    @endif
+                    @else
+                        <div  data-tid="viewDocSignDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                        <i class="fas fa-file-alt"></i>
+                            View Doc sign
+                        </div>
+                @endif
+
+                {{--
+                <a href="{{ route('download.application', ['id' => $clientData->id, 'token' => $clientData->agency->agencytoken]) }}">
+                            <div class="w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                                <i class="fas fa-file-alt"></i>
+                                Download Application
+                            </div>
+                        </a>
+
+                        --}}
+                @endif
+                <div data-tid="sendEmailDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-envelope text-ternary"></i>
+                    Send Email
+                </div>
+
+                <a href="{{ route('agencychat.client', ['id' => $clientData->client_id, 'token' => $clientData->agency->agencytoken]) }}">
+                  <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-comments text-ternary"></i>
+                    Conversation
+                </div>
+               </a>
 
 
                 <!-- <div data-tid="formsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
@@ -195,31 +268,31 @@
                     Upload Document
                 </div> -->
 
-                <div data-tid="visaRequestDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                <!-- <div data-tid="visaRequestDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                 <i class="fas fa-file-download text-ternary"></i>
                      Download Document
-                </div> 
+                </div>  -->
              @endif
 
              
 
-                <div data-tid="editApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-edit text-ternary"></i>
-                    Edit Application
-                </div>
             
              @else           
                   <!-- <div data-tid="uploadDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                         <i class="fas fa-upload text-ternary"></i>
                         Upload Document
                     </div> -->
-                    <div data-tid="downaloadDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                <i class="fas fa-file-download text-ternary"></i>
-                     Download Document
-                </div>
+                    
+            @if($clientData->applicationworkin_status == "Complete")
+       
+                    <!-- <div data-tid="downaloadDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                       <i class="fas fa-file-download text-ternary"></i>
+                            Download Document
+                </div> -->
+                @endif
              
             @endif 
-            <div data-tid="sendEmailDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+            <!-- <div data-tid="sendEmailDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-envelope text-ternary"></i>
                     Send Email
                 </div>
@@ -229,25 +302,26 @@
                     <i class="fas fa-comments text-ternary"></i>
                     Conversation
                 </div>
-               </a>
+               </a> -->
 
               
 
                @if($clientData->sendtoadmin == 3)  
 
-               <a href="{{ route('visa.sendtoadmin', ['id' => $clientData->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
-             
-                  <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fa fa-paper-plane"></i>
-                    Send to Admin 
-                </div>
-               </a>
                <a href="{{ route('verifyvisa.application', ['id' => $clientData->id, 'type' => 'agency']) }}">
-                  <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                  <i class="fas fa-file-alt"></i>
-                    View Application
-                </div>
+                    <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                            <i class="fas fa-file-alt"></i>
+                            View Application
+                    </div>
                </a>
+
+               <a href="{{ route('visa.sendtoadmin', ['id' => $clientData->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
+                        <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                            <i class="fa fa-paper-plane"></i>
+                            Send to Admin 
+                        </div>
+               </a>
+            
                @elseif($clientData->sendtoadmin == 1)
                <a href="{{ route('verifyvisa.application', ['id' => $clientData->id, 'type' => 'agency']) }}">
                   <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
@@ -269,47 +343,7 @@
             
 
             @if($clientData->applicationworkin_status == "Complete")
-             @if($clientData->visaInvoiceStatus->invoice==null)             
-                  <div  data-tid="generateInvoiceDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                  <i class="fas fa-file-alt"></i>
-                    Generate Invoice
-                </div>
-                @else
-                <div  data-tid="viewInvoiceDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                  <i class="fas fa-file-alt"></i>
-                    View Invoice
-                </div>
-               @endif
-
-             
-               @if($clientData->visaInvoiceStatus->docsign==null)    
-                @if($clientData->visaInvoiceStatus->invoice!=null)
-               <a href="{{ route('send.docsign', [
-                        'id'   => $clientData->id,
-                        'type' => $clientData->agency->agencytoken   {{-- or whatever value you intend --}}
-                    ]) }}">
-                    <div class="w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                        <i class="fas fa-file-alt"></i>
-                        Doc sign
-                    </div>
-                </a>
-                @endif
-                @else
-                <div  data-tid="viewDocSignDiv" class="agency_tab  w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                  <i class="fas fa-file-alt"></i>
-                    View Doc sign
-                </div>
-               @endif
-
-               {{--
-               <a href="{{ route('download.application', ['id' => $clientData->id, 'token' => $clientData->agency->agencytoken]) }}">
-                        <div class="w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                            <i class="fas fa-file-alt"></i>
-                            Download Application
-                        </div>
-                    </a>
-
-                    --}}
+            
            @endif
                
 
