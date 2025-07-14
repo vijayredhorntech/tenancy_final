@@ -617,9 +617,11 @@ public function hsViewEditSection($id){
             // $pay=$this->visaRepository->payment($clientData);
             // dd($clientData);
             Mail::to($clientData->clint->email)->send(new VisaBookingInProcessMail($clientData, $agency));
+            return redirect()->back()->with('success', 'Visa application confirmed successfully.');
 
             return view('agencies.pages.invoices.visainvoice',compact('clientData'));
         }
+        return redirect()->back()->with('error', 'Unable to confirm application.');
         return view('agency.pages.visa.payment',compact('clientData'));
        }
 

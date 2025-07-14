@@ -1137,8 +1137,8 @@ public function getBookingByid($id, $type, $request)
      
         $price=$visabooking->visasubtype->price+$visabooking->visasubtype->commission;
         $visabooking->total_amount=$price;
-        $visabooking->payment_status="Paid";
-        $visabooking->confirm_application=1;
+        $visabooking->payment_status="Pending";
+        $visabooking->confirm_application=2;
         $visabooking->save(); 
         $this->payment($visabooking);
 
@@ -1165,14 +1165,14 @@ public function getBookingByid($id, $type, $request)
     
         $price = $visabooking->visasubtype->price + $visabooking->visasubtype->commission;
         $visabooking->total_amount = $price;
-        $visabooking->payment_status = "Paid";
+        $visabooking->payment_status = "Pending";
         
         // Set first member as otherclientid in original booking
         if (!empty($data['othermember']) && is_array($data['othermember'])) {
             $visabooking->otherclientid = array_shift($data['othermember']); // Take first and remove from array
         }
     
-        $visabooking->confirm_application = 1;
+        $visabooking->confirm_application = 2;
         $visabooking->save();
     
         $this->payment($visabooking);

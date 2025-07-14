@@ -126,8 +126,8 @@ public function hsDownloadeSignDocument($id){
 
     $booking = $this->documentSignRepository->checkSignDocument($id);
     $termconditon = $this->termConditionRepo->allTeamTypes();
-    // return view('documents.download_invoice', compact('booking','termconditon'));
-    $pdf = Pdf::loadView('documents.download_invoice', [
+    // return view('documents.download-invoice', compact('booking','termconditon'));
+    $pdf = Pdf::loadView('documents.download-invoice', [
         'booking' => $booking,
         'termconditon' => $termconditon,
     ]);
@@ -188,6 +188,8 @@ public function hsDownloadeSignDocument($id){
 
     public function hs_generateInvoice($id, $type){
         $documents = $this->documentSignRepository->createDocumentAgency($id, $type);
+        
+        
         return redirect()
         ->back()
         ->with('success', 'Invoice generated successfully.');

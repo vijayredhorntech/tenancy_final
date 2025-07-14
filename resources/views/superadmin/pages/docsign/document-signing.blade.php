@@ -339,12 +339,15 @@
                         {{-- Signature Section --}}
                         <div class="mt-4 bg-blue-50 rounded-lg p-4">
                                 <div class="flex items-start">
-                                    <input type="checkbox" id="show-signature" class="mt-1 mr-3 h-5 w-5 text-primary rounded" required>
+                                    <input type="checkbox" id="show-signature" class="mt-1 mr-3 h-5 w-5 text-primary rounded" required   onchange="handleCheckbox(this)">
                                     <label for="show-signature" class="text-sm text-gray-700">
                                         I have reviewed and agree to the terms of this document
                                     </label>
                                 </div>
+                                <input type="hidden" id="accept-termcondition" value="false">
                             </div>
+
+                            
 
                         <div class="bg-white rounded-xl shadow-md overflow-hidden">
                             <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
@@ -372,8 +375,7 @@
                                    
                                 <p class="text-gray-600 mb-6">Please sign in the box below using your mouse or touchscreen</p>
                                 
-                                <!-- <form id="signatureForm" action="{{ route('document.sign.submit', $signature->signing_token) }}" method="POST">
-                                    @csrf -->
+                           
                                     <form id="signatureForm" action="{{ route('document.sign.submit', $signature->signing_token) }}" method="POST">
                                         @csrf
                                     <input type="hidden" name="signature_token" value="{{ $signature->signing_token }}">
@@ -416,13 +418,70 @@
                         </div>
                     @endif
                 </div>
-
+ 
+                <div id="termsModal" class="hidden fixed inset-0 bg-black/80 flex justify-center z-50 p-6" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                    <div class="bg-white p-6 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-auto">
+                        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                            <div class="sm:flex sm:items-start">
+                                <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                                    <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                        Terms and Conditions
+                                    </h3>
+                                    <div class="mt-4 ">
+                                        <div class="text-sm text-gray-500">
+                                            <h4 class="font-bold mb-2">1. Agreement to Terms</h4>
+                                            <p class="mb-4">By signing this document, you agree to be bound by these terms and conditions. If you do not agree with any part of these terms, you must not sign this document.</p>
+                                            
+                                            <h4 class="font-bold mb-2">2. Legal Binding</h4>
+                                            <p class="mb-4">Your digital signature on this document is legally binding and has the same legal effect as a handwritten signature. You acknowledge that you are authorized to sign this document and that all information provided is accurate.</p>
+                                            
+                                            <h4 class="font-bold mb-2">3. Document Review</h4>
+                                            <p class="mb-4">You confirm that you have reviewed the entire document and understand its contents before signing. If you have any questions about the document, you should seek legal advice before signing.</p>
+                                            
+                                            <h4 class="font-bold mb-2">4. Data Privacy</h4>
+                                            <p class="mb-4">We collect and process your personal data in accordance with our privacy policy. By signing this document, you consent to the processing of your personal data as described in our privacy policy.</p>
+                                            
+                                            <h4 class="font-bold mb-2">5. Electronic Signature Consent</h4>
+                                            <p class="mb-4">You consent to use electronic signatures, contracts, and records, and to electronic delivery of notices, policies, and records of transactions initiated or completed through our services.</p>
+                                            
+                                            <h4 class="font-bold mb-2">6. Governing Law</h4>
+                                            <p class="mb-4">This agreement shall be governed by and construed in accordance with the laws of the jurisdiction in which our organization is based, without regard to its conflict of law provisions.</p>
+                                            
+                                            <h4 class="font-bold mb-2">7. Entire Agreement</h4>
+                                            <p class="mb-4">This document constitutes the entire agreement between you and our organization regarding the subject matter herein and supersedes all prior or contemporaneous communications and proposals, whether electronic, oral, or written.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                            <button type="button"
+                                        id="accept-terms"
+                                        onclick="acceptTerms()"
+                                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:ml-3 sm:w-auto sm:text-sm">
+                                    I Accept
+                                </button>
+                            <button type="button" onclick="closeModal()"  id="close-terms" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
 
             </div>
         </div>
     </div>
+
+    
 </div>
+
+
+{{-- POUP  --}}
+
+
+<!-- Terms and Conditions Modal -->
+
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -438,6 +497,7 @@
                 throttle: 16
             });
 
+       
             // Handle window resize
             function resizeCanvas() {
                 const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -469,6 +529,11 @@
                     return;
                 }
 
+                if (document.getElementById('accept-termcondition').value !== 'true') {
+                        alert('Please confirm that you have accepted the terms and conditions.');
+                        return;
+                    }
+
                 if (signaturePad.isEmpty()) {
                     alert('Please provide your signature before submitting.');
                     return;
@@ -497,6 +562,22 @@
                 }
             }
         });
+
+        function handleCheckbox(checkbox) {
+        if (checkbox.checked) {
+            document.getElementById('termsModal').classList.remove('hidden');
+        }
+    }
+
+    function closeModal() {
+        document.getElementById('termsModal').classList.add('hidden');
+        // document.getElementById('show-signature').checked = false;
+    }
+    function acceptTerms() {
+                        document.getElementById('accept-termcondition').value = 'true';
+                        // document.getElementById('show-signature').checked = true;
+                        closeModal(); 
+           }
     </script>
 </body>
 </html>
