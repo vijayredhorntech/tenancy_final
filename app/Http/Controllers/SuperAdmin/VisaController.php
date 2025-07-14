@@ -928,6 +928,7 @@ public function hsFromindex(Request $request)
     //    dd($id);
        $agency = $this->agencyService->getAgencyData();
        $bookingData = $this->visaRepository->bookingDataById($id);
+       
     //    dd($bookingData);
        if($bookingData->viewed_once==1){
            return redirect()->route('verifyvisa.application', [

@@ -206,6 +206,10 @@
             </div>
         </div>
 
+        @php
+            $ref = json_decode($clientData->clint->clientinfo->reference_address ?? '{}', true);
+        @endphp
+
         <div class="section">
             <div class="field">
                 10. References (Two responsible persons who can vouch for the applicant):<br>
@@ -214,13 +218,13 @@
                         (1) Name, Address & Tel. No.<br>
                         <input type="text" name="reference1_name" class="editable" value="{{ $clientData->clint->clientinfo->reference_name ?? '' }}" test="Reference 1 name">
                         <br>
-                        <textarea name="reference1_address" class="editable" test="Reference 1 address">{{ $clientData->clint->clientinfo->reference_address ?? '' }}</textarea>
+                        <textarea name="reference_address_1" class="editable" test="Reference 1 address">{{ $ref['reference_address_1'] ?? '' }}</textarea>
                     </div>
                     <div class="column">
                         (2) Name, Address & Tel. No.<br>
                         <input type="text" name="reference2_name" class="editable" value="{{ $clientData->clint->clientinfo->reference2_name ?? '' }}" test="Reference 2 name">
                         <br>
-                        <textarea name="reference2_address" class="editable" test="Reference 2 address">{{ $clientData->clint->clientinfo->reference2_address ?? '' }}</textarea>
+                        <textarea name="reference_address_2" class="editable" test="Reference 2 address">{{ $ref['reference_address_2'] ?? '' }}</textarea>
                     </div>
                 </div>
             </div>

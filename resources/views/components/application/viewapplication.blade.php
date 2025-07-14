@@ -2812,18 +2812,20 @@ I
 
 
              <!-- Buttons Section -->
-        <div class="flex justify-between mt-8">
-        <!-- <a href="{{ route('download.fillapplication', ['id' => $bookingData->id]) }}">
-            <button class="bg-success text-white px-6 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-success focus:ring-opacity-50">
-                Download
-            </button>
-        </a> -->
-
-        
-            <button class="bg-success text-white px-6 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-success focus:ring-opacity-50">
-                Submit
-            </button>
+        <div class="flex justify-end mt-4">
+            @if(isset($type) && $type === 'superadmin')
+                <button type="button" onclick="window.print()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+                    Print
+                </button>
+            @elseif(isset($type) && $type === 'agency')
+                <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">
+                    Submit Application
+                </button>
+            @endif
         </div>
+
+
+
         </form>
     </div>
 </div>
