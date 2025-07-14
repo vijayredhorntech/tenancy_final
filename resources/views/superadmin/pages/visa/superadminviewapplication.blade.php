@@ -172,24 +172,20 @@
         <div class="w-full overflow-x-auto p-4">
                 <div class="w-full flex flex-wrap ">
 
-                <div data-tid="ViewApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] bg-secondary/40 border-[2px] border-secondary/60 border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                <!-- <div data-tid="ViewApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] bg-secondary/40 border-[2px] border-secondary/60 border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-file-alt text-ternary"></i>
                     Payment Receipt
-                </div>
+                </div> -->
 
-            <a href="{{ route('verifyvisa.application', ['id' => $clientData->id, 'type' => 'superadmin']) }}">
-                <div  class="w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-eye text-ternary"></i>
-                    View Application  
-                </div>
-            </a>
+        <div 
+            data-tid="viewFilledApplicationDiv"
+            class="agency_tab w-max font-semibold text-ternary border-b-[2px] {{ request()->routeIs('verifyvisa.application') ? 'border-secondary text-secondary' : 'border-ternary/60' }} text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+            <i class="fas fa-eye text-ternary"></i>
+            View Application
+        </div>
 
-                <div data-tid="formsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-file-alt text-ternary"></i>
-                    Forms
-                </div>
 
-            @if($clientData->applicationworkin_status !== "Complete")      
+             @if($clientData->applicationworkin_status !== "Complete")      
                 <div data-tid="requestDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-file-signature text-ternary"></i>
                     Request Document
@@ -214,10 +210,12 @@
                     </div>
              
             @endif 
-            <div data-tid="sendEmailDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-envelope text-ternary"></i>
-                    Send Email
+
+                <div data-tid="formsDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-file-alt text-ternary"></i>
+                    Forms
                 </div>
+
 
                 <a href="{{ route('superadminvisachat.client', ['id' => $clientData->client_id, 'token' => $clientData->agency->agencytoken]) }}">
                   <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
@@ -229,6 +227,11 @@
                <div data-tid="logDataDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-eye text-ternary"></i>
                     Log Data 
+                </div>
+
+                <div data-tid="sendEmailDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-envelope text-ternary"></i>
+                    Send Email
                 </div>
 
                 <!-- <div data-tid="applicationDataDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
@@ -244,9 +247,19 @@
 
         
                 <!-- view application  -->
-                <div id="ViewApplicationDiv" class="tab  ">
-                    <x-common.viewapplication :clientData="$clientData" />
-  
+                <div id="viewFilledApplicationDiv" class="tab  ">
+                    
+                    @if($clientData->destination->countryName == 'China')
+                                    @include('components.application.chinaviewapplication', ['bookingData' => $clientData])
+
+                                @elseif($clientData->visa->name == 'Schengen Visa')
+                                        @include('components.application.Scheneganviewapplication', ['bookingData' => $clientData])
+
+                                @else
+                                    @include('components.application.viewapplication', ['bookingData' => $clientData])
+
+                                @endif
+
                 </div>
 
                 <!-- end applicatoin  -->
@@ -327,6 +340,7 @@
         jQuery(document).ready(function () {
             jQuery(document).on("click", ".agency_tab", function () {
                                 var id = jQuery(this).data('tid');
+                                // alert(id);
                                   jQuery(".agency_tab").removeClass("bg-secondary/40 border-[2px] border-secondary/60");
                                 jQuery(this).addClass("bg-secondary/40 border-[2px] border-secondary/60");
 
