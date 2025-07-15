@@ -499,6 +499,11 @@ Route::post('/documents/sign/{token}', [DocumentSignController::class, 'submitSi
 
 Route::get('/documents/view/{document}', [DocumentSignController::class, 'hsviewInvoice'])
     ->name('documents.view');
+
+    Route::get('/documents/downloade/{document}', [DocumentSignController::class, 'hsdownloadeInvoice'])
+    ->name('documents.downloade');
+
+
     Route::get('/application/download/{id}/{token}', 
     [ApplicationController::class, 'download'])
     ->name('download.application');

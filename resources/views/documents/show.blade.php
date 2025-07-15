@@ -191,7 +191,8 @@
     </style>
 </head>
 
-<body>
+<body style="display:flex ; justify-content:center; max-width:768px; margin:0px auto; border:1px solid black">
+    <div style="">
     <!-- Decorative corner elements -->
     <div class="top-left"></div>
     <div class="top-right"></div>
@@ -400,5 +401,6 @@
             </div>
         </div>
     </section>
+</div>
 </body>
 </html>

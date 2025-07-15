@@ -42,6 +42,17 @@ class DocumentSignController extends Controller
   
     return view('documents.show', compact('booking','termconditon'));
 }
+
+
+public function hsdownloadeInvoice($id)
+{
+   
+  
+    $booking = $this->documentSignRepository->checkSignDocument($id);
+ 
+    $termconditon = $this->termConditionRepo->allTeamTypes();
+    return view('components.common.invoice.visa-invoice', compact('booking', 'termconditon'));
+}
     //
 
        /****Doc Sign *****/

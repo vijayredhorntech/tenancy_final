@@ -11,9 +11,9 @@
     <style>
 /* Hide everything by default in print */
 @media print {
-    body * {
-        visibility: hidden;        /* still occupies space but invisible */
-    }
+    /* body * {
+        visibility: hidden;       
+    } */
 
     /* Make the invoice and its children visible */
     #ViewApplicationDiv,
@@ -56,12 +56,13 @@
     use Carbon\Carbon;       // Carbon alias
     use Illuminate\Support\Str;
 
+    // dd($booking->clint);
     /* 1. Safely grab the Invoice model (may be null) */
-    $invoice = $booking->visaInvoiceStatus?->invoice;
+    $invoice = $booking;
 
     /* 2. Split “TO” address if it exists, otherwise empty array */
-    $toParts = $invoice && $invoice->address
-        ? array_filter(array_map('trim', explode(',', $invoice->address)))
+    $toParts = $invoice && $invoice->clint->permanent_address
+        ? array_filter(array_map('trim', explode(',', $invoice->clint->permanent_address)))
         : [];
 
     /* 3. Split “ISSUED BY” address if it exists, otherwise empty array */
@@ -70,8 +71,8 @@
         : [];
 
     /* 4. Human‑readable date or ‘N/A’ */
-    $date = $invoice && $invoice->invoice_date
-        ? Carbon::parse($invoice->invoice_date)->format('d F Y')
+    $date = $invoice && $invoice->date
+        ? Carbon::parse($invoice->date)->format('d F Y')
         : 'N/A';
 
     /* 5. Filter term‑conditions collection if present */
@@ -80,6 +81,7 @@
         : collect();   // empty collection if $termconditon is null
 
 @endphp
+
 
     <div class="grid grid-cols-3 gap-2 mt-4">
 
@@ -112,14 +114,15 @@
         <div class="w-full ">
             <h2 class="text-lg font-bold text-[#26ace2]">TO</h2>
             <p class="text-sm">
-            {{ !empty($invoice->different_name) ? $invoice->different_name : (!empty($invoice->receiver_name) ? $invoice->receiver_name : '') }}
-
+                {{ strtoupper(!empty($invoice->clint->client_name) ? $invoice->clint->client_name : '') }}
             </p>
             @foreach($toParts as $line)
                 <p class="text-sm">{{ strtoupper($line) }}</p>
             @endforeach
 
-            <p class="text-sm"><strong>TEL:</strong> {{ $invoice->phone ?? 'N/A' }}</p>
+            <p class="text-sm"><strong>TEL:</strong> {{ $invoice->clint->phone_number ?? 'N/A' }}</p>
+            <p class="text-sm"><strong>Email:</strong> {{ $invoice->clint->email ?? 'N/A' }}</p>
+
         
         </div>
 
@@ -179,11 +182,14 @@
     
         <ul class="list-disc pl-6 mt-4">
                 @foreach ($termtype as $type) {{-- each TermType --}}
+                
                     @foreach ($type->terms as $term) {{-- its related TermsCondition rows --}}
+                    @if($term->display_invoice==1)
                         <li>
                             <strong>{{ $term->heading }}</strong><br>
                             {{ $term->description }}
                         </li>
+                    @endif
                     @endforeach
                 @endforeach
             </ul>

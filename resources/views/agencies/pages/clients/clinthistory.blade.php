@@ -119,15 +119,18 @@
     </style>
 
 
+
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-            <span class="font-semibold text-ternary text-xl">{{ $user->name ?? 'N/A' }}</span>
+            <span class="font-semibold text-ternary text-xl uppercase">
+                {{ isset($client->client_name) ? strtoupper($client->client_name) : 'N/A' }}
+            </span>
             <span class="font-semibold text-ternary text-xl">
-                {{ $user->status ?? 'N/A' }} 
-                @if (!empty($login_time) && $user->status == 'online')
-                <i class="fa fa-clock font-semibold text-ternary text-xl"></i> Logged in {{ \Carbon\Carbon::createFromFormat('H:i:s',  $login_time)->format('h:i:s A') }}
-            @endif
+                {{ $client->email ?? 'N/A' }} 
+           </span>
+        <span class="font-semibold text-ternary text-xl">
+            {{ $client->phone_number ?? 'N/A' }}
         </span>
 
             <span class="font-semibold text-ternary text-xl"></span>

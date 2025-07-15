@@ -48,20 +48,25 @@
             </td>
 
             <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
-                <div class="flex gap-3 items-center justify-center">
-            
-                        <a href=""
-                           class="text-blue-600 hover:text-blue-800"
-                           title="View Document">
-                            <i class="fas fa-eye"></i>
-                        </a>
-           
+                <div class="flex gap-3 items-center justify-center" onclick="showPopupFUnction($invoice->flight_booking_id)">
+                    {{-- <a href="{{ route('documents.view', ['document' => $invoice->flight_booking_id]) }}"
+                        class="text-blue-600 hover:text-blue-800"
+                        title="View Document">
+                         <i class="fas fa-eye"></i>
+                     </a> --}}
+                     <a href="{{ route('documents.downloade', ['document' => $invoice->flight_booking_id]) }}"
+                        class="text-blue-600 hover:text-blue-800"
+                        title="View Document">
+                         <i class="fas fa-eye"></i>
+                     </a>
+        
+                   
 
-                        <a href=""
+                        {{-- <a href="{{ route('documents.view', ['document' => $invoice->flight_booking_id]) }}"
                            class="text-purple-600 hover:text-purple-800"
                            title="Sign Document">
                             <i class="fas fa-pen-fancy"></i>
-                        </a>
+                        </a> --}}
               
                 </div>
             </td>
@@ -75,4 +80,7 @@
     </tr>
 @endif
 
+
 </table>
+
+
