@@ -84,6 +84,10 @@ class VisaBooking extends Model
         return $this->hasOne(Deduction::class, 'flight_booking_id','id');
     }
 
+    public function visaDocSign(){
+        return $this->hasOne(DocSignDocument::class, 'servicerelatedtableid','id');
+    }
+
     // public function combinationId(){
     //     return $this->hasOne(VisaCombination::class, 'id','combination_id');
     // }

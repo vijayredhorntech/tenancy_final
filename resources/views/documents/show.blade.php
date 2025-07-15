@@ -220,12 +220,13 @@
     use Carbon\Carbon;       // Carbon alias
     use Illuminate\Support\Str;
 
+    // dd($booking->clint);
     /* 1. Safely grab the Invoice model (may be null) */
-    $invoice = $booking->visaInvoiceStatus?->invoice;
+    $invoice = $booking;
 
     /* 2. Split “TO” address if it exists, otherwise empty array */
-    $toParts = $invoice && $invoice->address
-        ? array_filter(array_map('trim', explode(',', $invoice->address)))
+    $toParts = $invoice && $invoice->clint->permanent_address
+        ? array_filter(array_map('trim', explode(',', $invoice->clint->permanent_address)))
         : [];
 
     /* 3. Split “ISSUED BY” address if it exists, otherwise empty array */
@@ -261,29 +262,31 @@
             <div class="flex justify-end items-center">
                 <h1 class="font-bold text-sm ">Invoice No:</h1>
                 <!-- CLDI0006044 -->
-                <span class="font-normal text-sm ml-2">{{$booking->visaInvoiceStatus->invoice_number}}</span>
+                <span class="font-normal text-sm ml-2">{{$booking->application_number}}</span>
             </div>
             <div class="flex justify-end items-center">
                 <h1 class="font-bold text-sm ">Client ID:</h1>
                 <!-- CLDI0006044 -->
-                <span class="font-normal text-sm ml-2">{{$invoice->billing_id ??''}}</span>
+                <span class="font-normal text-sm ml-2">{{$booking->clint->id ??''}}</span>
             </div>
 
 
         </div>
     </div>
+    
     <div class="mt-4 grid grid-cols-2 ">
         <div class="w-full ">
             <h2 class="text-lg font-bold text-[#26ace2]">TO</h2>
             <p class="text-sm">
-            {{ !empty($invoice->different_name) ? $invoice->different_name : (!empty($invoice->receiver_name) ? $invoice->receiver_name : '') }}
-
+                {{ strtoupper(!empty($invoice->clint->client_name) ? $invoice->clint->client_name : '') }}
             </p>
             @foreach($toParts as $line)
                 <p class="text-sm">{{ strtoupper($line) }}</p>
             @endforeach
 
-            <p class="text-sm"><strong>TEL:</strong> {{ $invoice->phone ?? 'N/A' }}</p>
+            <p class="text-sm"><strong>TEL:</strong> {{ $invoice->clint->phone_number ?? 'N/A' }}</p>
+            <p class="text-sm"><strong>Email:</strong> {{ $invoice->clint->email ?? 'N/A' }}</p>
+
         
         </div>
 

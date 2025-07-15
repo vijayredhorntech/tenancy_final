@@ -240,17 +240,48 @@
                                         </svg>
                                         Pay Now
                                     </a> --}}
-
-                             
-                              
-                                     @if($clientData->confirm_application==2)
                                    
-                                     @if($clientData->visaInvoiceStatus->docsign==null)    
-                                 
-                                        <a href="{{ route('send.docsign', [
-                                            'id' => $clientData->id,
-                                            'type' => $clientData->agency->agencytoken
-                                                ]) }}"
+                                  
+                                    @if(isset($clientData->visaDocSign->docsign) && $clientData->visaDocSign->docsign->status=="signed")
+                                      <button type="submit" class="block w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-4 rounded-lg text-center transition duration-200 flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                                        </svg>
+                                        Pay Now
+                                    </button>
+                                    @else
+
+                                    @if(!isset($clientData->visaDocSign->docsign))
+                                    <a href="{{ route('send.docsign', [
+                                        'id' => $clientData->id,
+                                        'type' => 'Visa'
+                                            ]) }}"
+                                            class="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center text-center"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12l2 2l4-4m5 2a9 9 0 11-18 0a9 9 0 0118 0z" />
+                                            </svg>
+                                            Generate Doc Sign
+                                        </a>
+                                    @else
+                                    <a href="{{ route('senddocdocument.email', $clientData->visaDocSign->docsign->id) }}">
+                                            <button type="button"
+                                                    class="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center text-center">
+                                                
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                    d="M9 12l2 2l4-4m5 2a9 9 0 11-18 0a9 9 0 0118 0z" />
+                                                            </svg>
+                                                    Resend Email 
+                                            </button>
+                                    </a>
+                     
+                                    
+                                        <button type="button"
+                                                onclick="copyToClipboard('{{ route('document.sign', $clientData->visaDocSign->docsign->signing_token) }}')"
                                                 class="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center text-center"
                                             >
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
@@ -258,57 +289,15 @@
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M9 12l2 2l4-4m5 2a9 9 0 11-18 0a9 9 0 0118 0z" />
                                                 </svg>
-                                                Generate Doc Sign
-                                            </a>
-                                        @else
-                                         <a href="{{ route('senddocdocument.email', $clientData->visaInvoiceStatus->docsign->id) }}">
-                                                <button type="button"
-                                                class="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center text-center">
-                                                
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                                                        viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                            d="M9 12l2 2l4-4m5 2a9 9 0 11-18 0a9 9 0 0118 0z" />
-                                                    </svg>
-                                                Send Email
-                                            </button>
-                                     </a>
-                             
-                                     <button
-                                     type="button"
-                                     onclick="copyToClipboard('{{ route('document.sign', $clientData->visaInvoiceStatus->docsign->sign->signing_token) }}')"
-                                     class="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center text-center"
-                                 >
-                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                                         viewBox="0 0 24 24" stroke="currentColor">
-                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                             d="M9 12l2 2l4-4m5 2a9 9 0 11-18 0a9 9 0 0118 0z" />
-                                     </svg>
-                                     Copy URL
-                                 </button>
+                                                Copy URL
+                                        </button>
 
-                                     @endif
-                                     
-                               
-                                 
-                              
-                                 
-                                @else
-                                <input type="hidden" name="applicationtype" value="confirmApplication">
+                     
 
-                                <button type="submit"
-                                class="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center text-center">
-                                
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 12l2 2l4-4m5 2a9 9 0 11-18 0a9 9 0 0118 0z" />
-                                    </svg>
-                            
-                                Confirm Application
-                            </button>
-                                @endif
-                                
+                                    @endif
+               
+                                        @endif
+                           
                                 @else
                                     <button class="w-full bg-gray-400 cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg text-center flex items-center justify-center">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -338,9 +327,10 @@
             navigator.clipboard.writeText(text).then(function () {
                 alert('URL copied to clipboard!');
             }, function (err) {
-                alert('Failed to copy URL');
-                console.error('Clipboard copy failed: ', err);
+                console.error('Could not copy text: ', err);
+                alert('Failed to copy URL.');
             });
         }
     </script>
+    
 </x-agency.layout>

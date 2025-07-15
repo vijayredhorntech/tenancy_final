@@ -193,9 +193,13 @@
     $termtype = $termconditon
         ? $termconditon->where('type', 'VISA APPLICATION')
         : collect();   // empty collection if $termconditon is null
+      
   
                     // null‑safe chain; returns null if any link is missing
-                    $signature = $booking->visaInvoiceStatus?->docsign?->sign?->signature_data;
+                    // $signature = $booking->visaInvoiceStatus?->docsign?->sign?->signature_data;
+                    // dd($booking);
+                    $signature = $booking->visaDocSign?->docsign?->signature_data;
+          
                 
     @endphp
     <!-- Repeat sections as needed -->
@@ -204,10 +208,13 @@
     <ul class="list-disc pl-6 mt-4">
                 @foreach ($termtype as $type) {{-- each TermType --}}
                     @foreach ($type->terms as $term) {{-- its related TermsCondition rows --}}
+                 
+                       @if($term->display_invoice==1)
                         <li>
                             <strong>{{ $term->heading }}</strong><br>
                             {{ $term->description }}
                         </li>
+                    @endif
                     @endforeach
                 @endforeach
             </ul>
@@ -222,7 +229,7 @@
                  </div>
                  <div style="display: flex; flex-direction:column; align-items:end; margin-top:10px">
                     <span>{{ \Illuminate\Support\Str::upper($booking->clint->client_name) }}</span>
-                    <span>{{$booking->visaInvoiceStatus->docsign->sign->signed_at}}</span>
+                    <span>{{$booking->visaDocSign->docsign->signed_at}}</span>
                  </div>
     </section>
 
@@ -233,7 +240,7 @@
                 <!-- <img src="bottom.png" alt="Footer Logo"> -->
             </div>
             <div class="right-footer">
-                <img src="https://seeklogo.com/images/I/information-commissioners-office-logo-1743AEAE1C-seeklogo.com.png" alt="Certification Logo">
+                {{-- <img src="https://seeklogo.com/images/I/information-commissioners-office-logo-1743AEAE1C-seeklogo.com.png" alt="Certification Logo"> --}}
             </div>
         </div>
     </section>

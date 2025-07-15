@@ -18,9 +18,10 @@ use App\Models\DocSignProcess;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-    use App\Mail\DocSignRequestMail;
+use App\Mail\DocSignRequestMail;
 use Illuminate\Support\Str;
 use App\Models\Deduction;
+
 
 
 
@@ -35,6 +36,7 @@ class DocumentSignRepository implements DocumentSignRepositoryInterface
     {
             $this->agencyService = $agencyService;
             $this->visaRepository = $visaRepository;
+
 
     }
     public function getAllDocuments()
@@ -102,19 +104,6 @@ public function sendEmailForSign(Request $request, int $documentId): void
         
 
         /* 2. Create a DocSignProcess row */
-        // $process = DocSignProcess::create([
-        //     'user_id'              => $document->user_id,
-        //     'document_id'          => $document->id,
-        //     'signing_token'        => Str::uuid(),
-        //     'status'               => 'pending',
-        //     'message'              => $request->input('message', ''),
-        //     'signed_at'            => null,
-        //     'expires_at'           => now()->addDays(7),
-        //     'signature_hash'       => null,
-        //     'signed_document_path' => null,
-        //     'ip_address'           => $request->ip(),
-        //     'user_agent'           => $request->userAgent(),
-        // ]);
         $process = DocSignProcess::updateOrCreate(
             [
                 'user_id'     => $document->user_id,
@@ -158,47 +147,90 @@ public function sendEmailForSign(Request $request, int $documentId): void
 
     public function createDocumentAgency($id, $type)
 {
-    // 1. Fetch the booking with all needed relations
-    $invoice = Deduction::with([
-        'service_name',
-        'agency',
-        'visaBooking.visa',
-        'visaBooking.origin',
-        'visaBooking.destination',
-        'visaBooking.visasubtype',
-        'flightBooking',
-        'hotelBooking',
-        'hotelDetails',
-        'cancelinvoice',
-    ])->where('flight_booking_id', $id)->first();
 
     $user = $this->agencyService->getCurrentLoginUser();
-     $clientInfo = $this->agencyService->getClientinfoById($invoice);
-    //  dd($clientInfo->id);
+
+    if($type=="Visa"){
+       $data=$this->getVisaInformation($id);
+    //    dd($data->agency_id);
+    //    dd($data);
+
+    }
+    // 1. Fetch the booking with all needed relations
+
+    //  dd($data);
 
     // 3. Build the array of columns you want to insert
     $docData = [
-        'name'             => $clientInfo->visaBooking->visa->name,
-        'title'            => $clientInfo->visaBooking->visa->name,
-        'document_type'    => 'Invoice',
-        'document_name'    => 'Visa',
+        'name'             => $data->visa->name,
+        'title'            => $data->visa->name,
+        'document_type'    => "Invoice",
+        'document_name'    => "Visa",
         'termandcondition' => [],
         'termstype'        => [],
         'terms_data'       => [],
         'document_file'    => [],
-        'client_id'        => $clientInfo->visaBooking->clientDetailsFromUserDB->id,
-        'agency_id'        => $clientInfo->agency->agency_id ?? null,
-        'related_id'       => $clientInfo->id,
+        'client_id'        => $data->client->id,
+        'agency_id'        => $data->agency_id ?? null,
+        'related_id'       => $data->visaInvoiceStatus->id ?? null,
+        'servicerelatedtableid'       => $data->id,
         'user_id'          => $user->id,
         'type_of_document' => 'Auto',
         'user_type'        => 'Agency',
     ];
 
+    // dd($docData);
     // 4. Pass the ARRAY to create(), not the model
     $document = DocSignDocument::create($docData);
+    $fakeRequest = request();
+    $saveDocument=$this->saveDocumentForSign($document,$fakeRequest);
+    // dd($document);
 
     return $document;
 }
+
+protected function getVisaInformation($id){
+   return  $this->visaRepository->getBookingBySingleId($id);
+
+}
+
+
+protected function saveDocumentForSign($document, $request)
+{
+    $process = DocSignProcess::updateOrCreate(
+        [
+            'user_id'     => $document->user_id,
+            'document_id' => $document->id,
+        ],
+        [
+            'signing_token'        => Str::uuid(), // always generate a fresh token
+            'status'               => 'pending',
+            'message'              => $request->input('message', ''),
+            'signed_at'            => null,
+            'expires_at'           => now()->addDays(7),
+            'signature_hash'       => null,
+            'signed_document_path' => null,
+            'ip_address'           => $request->ip(),
+            'user_agent'           => $request->userAgent(),
+        ]
+    );
+
+    // Log or record the email_sent event
+    $process->recordEvent('email_sent', 'Signing request email queued', $request);
+
+    // Optionally send email (you can uncomment if ready to use)
+    // Mail::to($document->agency->email)->queue(new DocSignRequestMail($process));
+
+    // ✅ FIX: You had an undefined $id — retrieve ID from the document or related field
+    if (isset($document->related_id)) {
+        return $this->visaRepository->getBookingBySingleId($document->related_id);
+    }
+
+    return null;
+}
+
+ 
+
 
     public function updateDocument($id, array $data)
     {
@@ -353,9 +385,9 @@ public function checkSignDocument($id){
    
     // $document =DocSignDocument::where('id',$id)->first();
    
-    $realted_id=$id;
-   $bookingData=Deduction::with('invoice','docsign')->where('id',$realted_id)->first(); 
-   $clientData=$this->visaRepository->bookingDataById($bookingData->flight_booking_id);
+//     $realted_id=$id;
+//    $bookingData=Deduction::with('invoice','docsign')->where('id',$realted_id)->first(); 
+   $clientData=$this->visaRepository->bookingDataById($id);
    return $clientData;
 }
 
@@ -363,16 +395,19 @@ public function checkSignDocument($id){
 public function getDataById($id){
 
  
-    $booking=Deduction::with([
-      'service_name',
-        'agency',
-        'visaBooking.visa',
-        'visaBooking.origin',
-        'visaBooking.destination',
-        'visaBooking.visasubtype',])->where('id', $id)->first();
-     
+    // $booking=Deduction::with([
+    //   'service_name',
+    //     'agency',
+    //     'visaBooking.visa',
+    //     'visaBooking.origin',
+    //     'visaBooking.destination',
+    //     'visaBooking.visasubtype',])->where('id', $id)->first();
+
+    $bookingApplication = VisaBooking::with('agency')->where('id', $id)->first();
+ 
+    
   
-        $data=$this->agencyService->getClientinfoById($booking);
+        $data=$this->agencyService->getClientinfoVisaBookingById($bookingApplication);
      return $data;
 
 

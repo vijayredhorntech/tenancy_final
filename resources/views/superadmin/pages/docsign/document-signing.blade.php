@@ -23,6 +23,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
                     <div>
                         <h1 class="text-2xl md:text-3xl font-bold text-white">Document Signing Portal</h1>
+                  
                         <div class="flex items-center mt-2 text-white/90">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -68,6 +69,7 @@
 
                 @if($signature->status === 'signed')
                     {{-- Completion View --}}
+ 
                     <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6 text-center py-8">
                         <div class="flex justify-center mb-4">
                             <div class="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
@@ -76,6 +78,7 @@
                                 </svg>
                             </div>
                         </div>
+                        
                         <h3 class="text-xl font-bold text-gray-800 mb-3">Document Successfully Signed!</h3>
                         <p class="text-gray-600 mb-6">Thank you for completing the signing process. Your document is now being processed.</p>
 
@@ -97,6 +100,7 @@
 
                         
                     </div>
+
                     <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6">
                         <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
                             <h3 class="text-lg font-bold text-gray-800 flex items-center">
@@ -107,10 +111,8 @@
                             </h3>
                         </div>
                         <div class="p-6">
-                          
-                     
                         <iframe
-                                src="{{ route('documents.view', ['document' => $signature->document->related_id]) }}"
+                                src="{{ route('documents.view', ['document' => $signature->bookingdetails->servicerelatedtableid]) }}"
                                 class="w-full h-96 border rounded-lg">
                             </iframe>
                           
@@ -138,7 +140,7 @@
                                     <div class="flex justify-between items-start">
      
                                          <p class="text-lg font-medium text-gray-900">
-                                                    {{ \Illuminate\Support\Str::upper($user->visaBooking?->clientDetailsFromUserDB?->client_name ?? 'UNKNOWN USER') }}
+                                                    {{ \Illuminate\Support\Str::upper($user->client->client_name ?? 'UNKNOWN USER') }}
                                                 </p>
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">       
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
@@ -154,8 +156,9 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                             </svg>
                                             <div>
+
                                                 <p class="text-sm text-gray-500">Email</p>
-                                                <p class="text-sm font-medium text-gray-900">{{ $user->visaBooking->clientDetailsFromUserDB->email ?? 'Unknown User' }}</p>
+                                                <p class="text-sm font-medium text-gray-900">{{ $user->client->email ?? 'Unknown User' }}</p>
                                             </div>
                                         </div>
                                         <div class="flex items-start">
@@ -236,7 +239,7 @@
                           
                      
                         <iframe
-                                src="{{ route('documents.view', ['document' => $signature->document->related_id]) }}"
+                                src="{{ route('documents.view', ['document' => $signature->bookingdetails->servicerelatedtableid]) }}"
                                 class="w-full h-96 border rounded-lg">
                             </iframe>
                           
@@ -429,26 +432,33 @@
                                     </h3>
                                     <div class="mt-4 ">
                                         <div class="text-sm text-gray-500">
-                                            <h4 class="font-bold mb-2">1. Agreement to Terms</h4>
-                                            <p class="mb-4">By signing this document, you agree to be bound by these terms and conditions. If you do not agree with any part of these terms, you must not sign this document.</p>
+
+                                            @php 
+                                            $termtype = $termconditon
+                                                ? $termconditon->where('type', 'VISA APPLICATION')
+                                                : collect();   // empty collection if $termconditon is null
+                                          
+                                                            // null‑safe chain; returns null if any link is missing
+                                                       
+                                                        
+                                            @endphp
+                                            <!-- Repeat sections as needed -->
+                                          
+                                                        @foreach ($termtype as $type) {{-- each TermType --}}
+                                                            @foreach ($type->terms as $term) {{-- its related TermsCondition rows --}}
+                                                                        @if($term->display_invoice==1)
+                                                                        <h4 class="font-bold mb-2">{{ $term->heading }}</h4>
+                                                                        <p class="mb-4"> {{ $term->description }}</p>
+                                                                        
+                                                                    @endif
+                                                     
+                                                            @endforeach
+                                                        @endforeach
+                                          
                                             
-                                            <h4 class="font-bold mb-2">2. Legal Binding</h4>
-                                            <p class="mb-4">Your digital signature on this document is legally binding and has the same legal effect as a handwritten signature. You acknowledge that you are authorized to sign this document and that all information provided is accurate.</p>
                                             
-                                            <h4 class="font-bold mb-2">3. Document Review</h4>
-                                            <p class="mb-4">You confirm that you have reviewed the entire document and understand its contents before signing. If you have any questions about the document, you should seek legal advice before signing.</p>
-                                            
-                                            <h4 class="font-bold mb-2">4. Data Privacy</h4>
-                                            <p class="mb-4">We collect and process your personal data in accordance with our privacy policy. By signing this document, you consent to the processing of your personal data as described in our privacy policy.</p>
-                                            
-                                            <h4 class="font-bold mb-2">5. Electronic Signature Consent</h4>
-                                            <p class="mb-4">You consent to use electronic signatures, contracts, and records, and to electronic delivery of notices, policies, and records of transactions initiated or completed through our services.</p>
-                                            
-                                            <h4 class="font-bold mb-2">6. Governing Law</h4>
-                                            <p class="mb-4">This agreement shall be governed by and construed in accordance with the laws of the jurisdiction in which our organization is based, without regard to its conflict of law provisions.</p>
-                                            
-                                            <h4 class="font-bold mb-2">7. Entire Agreement</h4>
-                                            <p class="mb-4">This document constitutes the entire agreement between you and our organization regarding the subject matter herein and supersedes all prior or contemporaneous communications and proposals, whether electronic, oral, or written.</p>
+                                      
+                                       
                                         </div>
                                     </div>
                                 </div>

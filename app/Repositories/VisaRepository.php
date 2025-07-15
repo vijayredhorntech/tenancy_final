@@ -656,7 +656,7 @@ public function allVisacoutnry($request)
 
   public function payment($data){
 
-
+       
     $balance = Balance::where('agency_id', $data['agency_id'])->first();
     $totalAmount=$data['total_amount'];
   
@@ -683,13 +683,37 @@ public function allVisacoutnry($request)
     $deduction->invoice_number =  $data['application_number'];
     $deduction->flight_booking_id = $data['id'];
     $deduction->amount = $data['total_amount'];
-    $deduction->create_userid = $data['total_amount'];
-    $deduction->client_id = $data['total_amount'];
+    $deduction->create_userid = $data['client_id'];
+    $deduction->client_id = $data['client_id'];
     $deduction->displaynotification = 3;
     $deduction->date = now();
     $deduction->save();
     return $deduction;
+
   }
+
+
+//   public function generateInvoice($deduction){
+//     $invoiceData = [
+//         'receiver_name'  => $validated['clientname'],
+//         'invoice_date'   => $validated['invoicedate'],
+//         'due_date'       => $validated['invoicedate'],          // customise if needed (e.g. +14 days)
+//         'different_name' => $validated['alternate_name'],       // nullable
+//         'address'        => $validated['address'],
+//         'bookingid'      => $deduction->id,
+//         'visa_applicant' => 'self',
+//         'service_id'     => $deduction->service,                                  // hard‑coded; change if dynamic
+//         'billing_id'     => $validated['clientid'],
+//         'applicant_id'   => $validated['clientid'],
+//         'amount'         => $validated['totalInput'],
+//         'discount'       =>  $request->discountInput,                                  // or calculate something
+//         'payment_type'   => $validated['paymentMethod'],                             // or pull from request
+//     ];
+
+//     /* ---------- 4. Persist and respond ---------- */
+//     Invoice::create($invoiceData);
+//     return $invoiceData;
+//   }
 
 public function checkBalance($id,$totalAmount){
     $balance = Balance::where('agency_id', $id)->first();
@@ -810,7 +834,7 @@ public function getBookingByid($id, $type, $request)
     if ($type === "pending") {
         $bookings = $query
             ->where('agency_id', $id)
-            ->where('confirm_application', '0')
+            ->whereIn('confirm_application', ['0', '2'])
             ->where('document_status', 'Pending')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -956,10 +980,12 @@ public function getBookingByid($id, $type, $request)
         'clientrequiremtsinfo',
         'visarequireddocument',
         'visaInvoiceStatus.invoice',
-        'visaInvoiceStatus.docsign.sign'
+        'visaInvoiceStatus.docsign.sign',
+        'visaDocSign.docsign'
 
 
     ])->where('id', $id)->first();
+    // dd($viewbooking);
 
     if (!$viewbooking) {
         return null;
@@ -1125,9 +1151,12 @@ public function getBookingByid($id, $type, $request)
     }
 
     public function getBookingBySingleId($id){
-        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint.clientinfo','otherclients','downloadDocument'])
+        $bookingData= VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','otherclients','downloadDocument'])
         ->where('id', $id)
         ->first();
+        
+     $clientInfo = $this->agencyService->getClientinfoVisaBookingById($bookingData);
+     return $clientInfo;
     }
 
     public function updateClientBooking($id,$data){
@@ -1137,8 +1166,8 @@ public function getBookingByid($id, $type, $request)
      
         $price=$visabooking->visasubtype->price+$visabooking->visasubtype->commission;
         $visabooking->total_amount=$price;
-        $visabooking->payment_status="Pending";
-        $visabooking->confirm_application=2;
+        $visabooking->payment_status="Paid";
+        $visabooking->confirm_application=1;
         $visabooking->save(); 
         $this->payment($visabooking);
 
@@ -1165,14 +1194,14 @@ public function getBookingByid($id, $type, $request)
     
         $price = $visabooking->visasubtype->price + $visabooking->visasubtype->commission;
         $visabooking->total_amount = $price;
-        $visabooking->payment_status = "Pending";
+        $visabooking->payment_status = "Paid";
         
         // Set first member as otherclientid in original booking
         if (!empty($data['othermember']) && is_array($data['othermember'])) {
             $visabooking->otherclientid = array_shift($data['othermember']); // Take first and remove from array
         }
     
-        $visabooking->confirm_application = 2;
+        $visabooking->confirm_application = 1;
         $visabooking->save();
     
         $this->payment($visabooking);

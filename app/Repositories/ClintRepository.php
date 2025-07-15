@@ -27,6 +27,7 @@ use App\Mail\ClientWelcomeEmail;
 use App\Models\ClientApplicationDocument;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
 use App\Traits\ClientTrait;
+use App\Models\DocSignDocument;
 
 
 
@@ -431,79 +432,6 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
 
 
 
-// private function saveClientData(array $data, $client, string $clientID, int $agencyid, string $connection = null)
-// {
-//     // $client = new ClientDetails();
-
-//     if ($connection) {
-//         $client->setConnection($connection);
-//     }
-
-//     $client->client_name = ($data['first_name'] ?? '') . ' ' . ($data['last_name'] ?? '');
-//     $client->clientuid = $clientID;
-//     $client->agency_id = $agencyid;
-//     $client->first_name = $data['first_name'] ?? '';
-//     $client->last_name = $data['last_name'] ?? '';
-//     $client->gender = $data['gender'] ?? null;
-//     $client->marital_status = $data['marital_status'] ?? null;
-//     $client->date_of_birth = $data['date_of_birth'] ?? null;
-//     $client->phone_number = $data['phone_number'] ?? null;
-//     $client->email = $data['email'] ?? '';
-//     $client->zip_code = $data['zip_code'] ?? null;
-//     $client->address = $data['address'] ?? null;
-//     $client->street = $data['street'] ?? null;
-//     $client->city = $data['city'] ?? null;
-//     $client->country = $data['country'] ?? null;
-//     $client->permanent_address = $data['permanent_address'] ?? null;
-//     $client->save();
-
-//     return $client;
-// }
-
-// private function saveMoreClientInfo(int $clientId,$info, array $data, string $connection = null)
-// {
-//     // $info = new ClientMoreInfo();
-
-//     if ($connection) {
-//         $info->setConnection($connection);
-//     }
-
-//     $info->clientid = $clientId;
-//     $info->previous_name = $data['previous_name'] ?? null;
-//     $info->passport_issue_date = $data['passport_issue_date'] ?? null;
-//     $info->religion = $data['religion'] ?? null;
-//     $info->place_of_birth = $data['place_of_birth'] ?? null;
-//     $info->country_of_birth = $data['country_of_birth'] ?? null;
-//     $info->citizenship_id = $data['citizenship_id'] ?? null;
-//     $info->identification_marks = $data['identification_marks'] ?? null;
-//     $info->educational_qualification = $data['educational_qualification'] ?? null;
-//     $info->nationality = $data['nationality'] ?? null;
-//     $info->past_nationality = $data['past_nationality'] ?? null;
-//     $info->passport_country = $data['passport_country'] ?? null;
-//     $info->passport_issue_place = $data['passport_issue_place'] ?? null;
-//     $info->passport_ic_number = $data['passport_ic_number'] ?? null;
-//     $info->passport_expiry_date = $data['passport_expiry_date'] ?? null;
-//     $info->father_details = $data['father_name'] ?? null;
-//     $info->mother_details = $data['mother_name'] ?? null;
-//     $info->spouse_details = $data['spouse_name'] ?? null;
-//     $info->children = $data['children'] ?? null;
-//     $info->previous_visa_number = $data['previous_visa_number'] ?? '';
-//     $info->previous_visa_place = $data['previous_visa_place'] ?? '';
-//     $info->previous_visa_issue_date = $data['previous_visa_issue_date'] ?? null;
-//     $info->cities_visited = $data['cities_visited'] ?? '';
-//     $info->countries_visited_last_10_years = $data['countries_visited_last_10_years'] ?? null;
-//     $info->present_occupation = $data['present_occupation'] ?? '';
-//     $info->designation = $data['designation'] ?? '';
-//     $info->employer_name = $data['employer_name'] ?? '';
-//     $info->employer_address = $data['employer_address'] ?? '';
-//     $info->employer_phone = $data['employer_phone'] ?? '';
-//     $info->past_occupation = $data['past_occupation'] ?? '';
-//     $info->reference_name = $data['reference_name'] ?? '';
-//     $info->reference_address = $data['reference_address'] ?? '';
-//     $info->save();
-// }
-
-
  
 
     /****View Clint detials**** */
@@ -515,6 +443,7 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
             
             if(!$agency){
             $agency = $this->agencyService->setConnectionByDatabase($database);
+            
             
             
             }
@@ -529,6 +458,20 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         // Now manually load clientchats from default database
                 if ($data) {
                 $data->setRelation('clientchats',Message::where('client_id', $data->id)->get());
+            }   
+            if ($data) {
+                 
+                $docusing = DocSignDocument::with('docsign','visaBookingApplication')->where('client_id', $id)
+                ->where('agency_id', $data->agency_id)
+                ->get();
+                //   dd($docusing);
+                $data->setRelation('docsign',$docusing);
+            }   
+            if ($data) {
+                $invoices = Deduction::with('service_name')->where('client_id', $id)
+                ->where('agency_id', $data->agency_id)
+                ->get();
+                $data->setRelation('invoice',$invoices);
             }   
                 // $data=ClientDetails::on('user_database')->with('clientinfo','clientchats')->where('id',$id)->first();
                 return $data;

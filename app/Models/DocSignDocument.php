@@ -11,6 +11,7 @@ class DocSignDocument extends Model
 
     protected $fillable = [
         'name',
+        'servicerelatedtableid',
         'document_type',
         'document_name',
         'termandcondition',
@@ -44,4 +45,15 @@ class DocSignDocument extends Model
     {
         return $this->hasOne(DocSignProcess::class, 'document_id','id');
     }
+
+    public function docsign()
+    {
+        return $this->hasOne(DocSignProcess::class, 'document_id','id');
+    }
+
+    public function visaBookingApplication()
+    {
+        return $this->hasOne(VisaBooking::class, 'id','servicerelatedtableid');
+    }
+    
 }

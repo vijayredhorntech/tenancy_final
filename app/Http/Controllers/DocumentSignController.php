@@ -9,7 +9,9 @@ use App\Models\Agency;
 use App\Models\DocSignAudit;
 use App\Models\DocSignDocument;
 use App\Models\DocSignProcess;
+use App\Models\Deduction;
 use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Support\Str;
 use DB; 
 use Illuminate\Support\Facades\Log;
@@ -103,21 +105,26 @@ class DocumentSignController extends Controller
 
 
 public function showSigningPage(Request $request,$token){
-            $signature = DocSignProcess::with('agency','document')->where('signing_token', $token)
+
+            $signature = DocSignProcess::with('agency','document','bookingdetails')->where('signing_token', $token)
             ->firstOrFail();
+         
+              
             
        
-        
-            $user= $this->documentSignRepository->getDataById($signature->document->related_id);
-         
-           if($signature->related_id)
-          
-      
-            $signature->recordEvent('viewed', 'viewed', $request);
-        
-        // dd($signature);
+            $termconditon = $this->termConditionRepo->allTeamTypes();
+            if($signature->bookingdetails->servicerelatedtableid){
+                $user= $this->documentSignRepository->getDataById($signature->bookingdetails->servicerelatedtableid);
+                // dd($user);
+                $signature->recordEvent('viewed', 'viewed', $request);
 
-        return view('superadmin.pages.docsign.document-signing', compact('signature','user'));
+            }
+          
+           
+        //    $term =TermCondition::where(find($signature->termstype);
+   // dd($signature);
+
+        return view('superadmin.pages.docsign.document-signing', compact('signature','user','termconditon'));
 
 }
 
@@ -196,6 +203,7 @@ public function hsDownloadeSignDocument($id){
   
    }
 
+   /****Submit Sign **** */
    public function submitSigning(Request $request)
    {
      
@@ -204,10 +212,42 @@ public function hsDownloadeSignDocument($id){
            'signature_data' => 'required|string'
        ]);
 
-       $signature = DocSignProcess::where('signing_token', $request->signature_token)
+       $signature = DocSignProcess::with('document')->where('signing_token', $request->signature_token)
            ->where('status', 'pending')
            ->firstOrFail();
-        //    dd($signature);
+           if(isset($signature->document->servicerelatedtableid)){
+            
+            $url = route('verify.application', ['id' => $signature->document->servicerelatedtableid]);
+            // $booking = Deduction::with([
+            //     'service_name',
+            //     'agency',
+            
+            //     // Include all 3 possible booking types and their nested relations
+            //     'flightBooking',
+            
+            //     'visaBooking',
+            //     'visaBooking.visa',
+            //     'visaBooking.origin',
+            //     'visaBooking.destination',
+            //     'visaBooking.visasubtype',
+            //     'visaBooking.clint',
+            //     'visaApplicant',
+            
+            //     'hotelBooking',
+            //     'hotelDetails'
+            // ])
+            // ->where('id',$signature->document->related_id)->first();
+     
+            // if ($booking && $booking->service == 3) {
+            //     // dd("heelo");
+          
+            // }
+            
+           
+            
+        }
+    
+      
        DB::beginTransaction();
        try {
            // Log the received signature data
@@ -250,6 +290,10 @@ public function hsDownloadeSignDocument($id){
 
            DB::commit();
 
+
+           if ($url) {
+            return redirect($url)->with('success', 'Document signed and redirected successfully.');
+        }
            // if ($request->ajax()) {
             return back()->with('success', 'Document signed successfully.');
            // }

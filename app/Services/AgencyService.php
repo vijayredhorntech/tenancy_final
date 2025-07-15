@@ -206,21 +206,14 @@ public function getClientinfo($invoices){
 
     
     public function getClientinfoById($invoice){
-
-   
-        
-        if ($invoice->agency && $invoice->visaBooking) {
-        
+     if ($invoice->agency && $invoice->visaBooking) {
             $this->setConnectionByDatabase($invoice->agency->database_name);
-
             $clientId = $invoice->visaBooking->client_id;
             $bookingId = $invoice->visaBooking->id;
-
             // Fetch related data from the user's database
             $clientFromUserDB = ClientDetails::on('user_database')
                 ->with('clientinfo')
                 ->find($clientId);
-
             $otherMembers = AuthervisaApplication::on('user_database')
                 ->where('clint_id', $clientId)
                 ->where('booking_id', $bookingId)
@@ -232,7 +225,31 @@ public function getClientinfo($invoices){
             return $invoice; // Return the modified invoice objec
         }
         return false;
-    
+ }
+
+ /***Get Booking by Visacontroller **** */
+ public function getClientinfoVisaBookingById($invoice){
+    if ($invoice->agency ) {
+        //   dd($invoice);
+           $this->setConnectionByDatabase($invoice->agency->database_name);
+           $clientId = $invoice->client_id;
+           $bookingId = $invoice->id;
+           // Fetch related data from the user's database
+           $clientFromUserDB = ClientDetails::on('user_database')
+               ->with('clientinfo')
+               ->find($clientId);
+           $otherMembers = AuthervisaApplication::on('user_database')
+               ->where('clint_id', $clientId)
+               ->where('booking_id', $bookingId)
+               ->get();
+
+           // Attach dynamically loaded relations
+           $invoice->setRelation('client', $clientFromUserDB);
+           $invoice->setRelation('otherclients', $otherMembers);
+           return $invoice; // Return the modified invoice objec
+       }
+       return false;
+   
 
 }
 }
