@@ -367,8 +367,11 @@ Route::middleware([LogUserActivity::class])->group(function () {
                                  Route::get('/editapplicatoin/{id}', 'hs_editSAApplication')->name('superadminvisaedit.application');
                                 
 
-                                 Route::get('/sendeail/{id}', 'hs_sendSAApplication')->name('superadminvisasendemail.application');
-                                    Route::get('/viewapplication/{id}', 'hs_viewSAApplication')->name('superadminvisa.applicationview');
+                                Route::get('/sendeail/{id}', 'hs_sendSAApplication')->name('superadminvisasendemail.application');
+                                Route::get('/viewapplication/{id}', 'hs_viewSAApplication')->name('superadminvisa.applicationview');
+                                Route::get('/visa-invoice/view/{id}',  'showFromInvoice')->name('superadminvisa.invoice.view');
+
+
 
 
                                  
@@ -413,10 +416,9 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/cancelindex', 'hs_SAcanceleditInvoice')->name('superadmin.cancelindex');      
                         Route::get('/cancelinvoice/{id}','hs_CancelInvoice')->name('cancelinvoice');
                         Route::post('/cancelinvoice/{id}', 'hs_CancelInvoiceSubmit')->name('cancelinvoice.submit');
-                        Route::get('/editinvoice/{id}','hs_editInvoice')->name('editinvoice');
                         Route::get('/cencelstoreinvoice/{id}/{type}','hsSAupdateinvoice')->name('update.cancelinvoice');
-                        Route::post('/allinvoices/updateinvoice/{id}', 'hs_updateInvoice')->name('allinvoices.updateinvoice');
-                        Route::get('/editindex', 'hs_EditedInvoices')->name('superadmin.editindex');
+                       
+                        
                   
 
                         

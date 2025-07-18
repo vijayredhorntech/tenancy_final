@@ -346,13 +346,16 @@ Route::controller(VisaController::class)->group(function () {
 
 
 Route::controller(InvoiceController::class)->group(function () {
-    Route::get('{type}/invoice', 'hs_invoice')->name('invoice.index');
+    Route::get('{type}/invoice/', 'hs_invoice')->name('invoice.index');
     Route::get('/invoice/view/{id}', 'hs_viewInvoice')->name('invoice.view');
     Route::post('agency/amount/store', 'hs_payamountstore')->name('agencypay.invoice.ammount');   
     Route::get('agency/cancel', 'hs_cancelInvoice')->name('agencypay.invoice.cancel');   
     Route::post('generateinvoice', 'hsGenerateInvoice')->name('generateinvoice');
     Route::get('/{type}/invoice', 'hsAllinvoice')->name('invoice.all');
     Route::get('/viewinvoice/{id}','hsviewInvoice')->name('viewinvoice');
+    Route::get('/editinvoice/{id}','hs_editInvoice')->name('editinvoice');
+    Route::get('/editindex', 'hsEditedInvoices')->name('editindex');
+    Route::post('/allinvoices/updateinvoice/{id}', 'hs_updateInvoice')->name('allinvoices.updateinvoice');
     
 });
 

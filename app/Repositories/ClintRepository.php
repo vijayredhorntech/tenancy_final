@@ -295,13 +295,12 @@ class ClintRepository implements ClintRepositoryInterface
 // }
 public function getStoreclint(array $data)
 {
-
-  
     $dataset = $this->agencyService->getAgencyData();
-    if(!$dataset){
-       $databasename=Agency::where('id',$data['agency_id'])->first();
-       $dataset = $this->agencyService->setConnectionByDatabase($databasename->database_name);
- }  
+    if (!$dataset) {
+        $databasename = Agency::where('id', $data['agency_id'])->first();
+        $dataset = $this->agencyService->setConnectionByDatabase($databasename->database_name);
+    }
+
     $userDb = DB::connection('user_database');
     $defaultDb = DB::connection();
 
@@ -312,9 +311,18 @@ public function getStoreclint(array $data)
         $agencyid = $data['agency_id'] ?? $this->agencyService->getAgencyData()->id;
         $agency = $this->agencyService->getAgencyData();
 
+        // Prepare prefixes for clientuid
+        $agencyName = $agency->name ?? 'AGY';
+        $agencyPrefix = strtoupper(substr(preg_replace('/\s+/', '', $agencyName), 0, 3));
+
+        $clientName = ($data['first_name'] ?? '') . ($data['last_name'] ?? '');
+        $clientPrefix = strtoupper(substr(preg_replace('/\s+/', '', $clientName), 0, 2));
+
+
         // Generate Unique Client ID
         do {
-            $clientID = strtoupper(Str::random(4));
+            $randomNumber = rand(1000, 9999);
+            $clientID = "{$agencyPrefix}-{$clientPrefix}-{$randomNumber}";
         } while (ClientDetails::where('clientuid', $clientID)->exists());
 
         // Save in user database
@@ -331,17 +339,13 @@ public function getStoreclint(array $data)
         $moreInfoDefault = new ClientMoreInfo();
         $this->saveMoreClientInfo($clientDefault->id, $moreInfoDefault, $data, 'mysql');
 
-
         // Commit both transactions
         $userDb->commit();
         $defaultDb->commit();
 
         // Send welcome email
         try {
-           
-            // Mail::to($data['email'])->queue(new ClientWelcomeEmail($client, $agency));
             Mail::to($data['email'])->send(new ClientWelcomeEmail($client, $agency));
-
         } catch (\Exception $e) {
             \Log::error('Failed to send welcome email: ' . $e->getMessage());
         }
@@ -355,6 +359,7 @@ public function getStoreclint(array $data)
         throw $e;
     }
 }
+
 
 private function saveClientData(array $data, ClientDetails $client, string $clientID, int $agencyid, string $connection = null)
 {

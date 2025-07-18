@@ -185,22 +185,23 @@
         </div>
 
 
-             @if($clientData->applicationworkin_status !== "Complete")      
-                <div data-tid="requestDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-file-signature text-ternary"></i>
-                    Request Document
-                </div>
+             @if($clientData->applicationworkin_status !== "Complete")
 
                 <div data-tid="visaRequestDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-eye text-ternary"></i>
                     View Request Document
                 </div>
 
+
+                <div data-tid="requestDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-file-signature text-ternary"></i>
+                    Request Document
+                </div>
              
 
                 <div data-tid="editApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-edit text-ternary"></i>
-                    Edit Application
+                    Application Status 
                 </div>
             
              @else           
@@ -250,13 +251,13 @@
                 <div id="viewFilledApplicationDiv" class="tab  ">
                     
                     @if($clientData->destination->countryName == 'China')
-                                    @include('components.application.chinaviewapplication', ['bookingData' => $clientData])
+                                    @include('components.application.chinaviewapplication', ['bookingData' => $clientData,'type'=>'superadmin'])
 
                                 @elseif($clientData->visa->name == 'Schengen Visa')
-                                        @include('components.application.Scheneganviewapplication', ['bookingData' => $clientData])
+                                        @include('components.application.Scheneganviewapplication', ['bookingData' => $clientData,'type'=>'superadmin'])
 
                                 @else
-                                    @include('components.application.viewapplication', ['bookingData' => $clientData])
+                                    @include('components.application.viewapplication', ['bookingData' => $clientData,'type'=>'superadmin'])
 
                                 @endif
 

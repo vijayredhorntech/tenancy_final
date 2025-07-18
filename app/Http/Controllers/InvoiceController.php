@@ -149,25 +149,37 @@ class InvoiceController extends Controller
 
 
     public function hs_editInvoice($id){
+        
     $invoice = Deduction::with('service_name')->findOrFail($id);
+    
      
     if ($invoice->invoicestatus === 'edited') {
-        return redirect()->route('superadmin.allinvoices')->with('error', 'This invoice can only be edited once.');
+        return redirect()->route('invoice.all')->with('error', 'This invoice can only be edited once.');
     }
 
     return view('superadmin.pages.invoicehandling.editinvoice', compact('invoice'));
     } 
     
 
-     public function hs_EditedInvoices()
-    {
+public function hs_EditedInvoices(Request $request)
+{
+    // Get the current agency (returns null if superadmin)
+    $agency = $this->agencyService->getAgencyData();
+
     $invoices = Deduction::where('invoicestatus', 'edited')
+        ->when($agency, function ($query) use ($agency) {
+            $query->whereHas('visaBooking', function($q) use ($agency) {
+                $q->where('agency_id', $agency->id);
+            });
+        })
         ->with(['service_name', 'agency', 'visaBooking'])
         ->orderByDesc('updated_at')
         ->get();
 
     return view('superadmin.pages.invoicehandling.editindex', compact('invoices'));
-    }
+}
+
+
 
 
 
@@ -445,6 +457,7 @@ public function hs_allInvoices(Request $request)
 {
     $perPage = $request->input('per_page', 10); // Default to 10 items per page
 
+
         $invoices = Deduction::with([
             'service_name',
             'agency',
@@ -476,9 +489,12 @@ public function hs_allInvoices(Request $request)
     $services = Service::whereIn('id', [1, 2, 3])->get();
 
     
+    
 
     return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices', 'countries', 'services'));
 }
+
+
 
 
 
@@ -615,24 +631,78 @@ public function hs_allInvoices(Request $request)
 }
 
     public function hsAllinvoice(Request $request)
-    {
-        // dd("heelo");
-        $perPage = $request->filled('per_page') && is_numeric($request->per_page)
-          ? (int) $request->per_page
-            : null;
-            
-            $invoices = Invoice::with([
-                'invoiceDetails.agency',
-                
-                'invoiceDetails.visaBooking',
-                
-            ])->get();
-      
+{
+    $perPage = $request->filled('per_page') && is_numeric($request->per_page)
+        ? (int) $request->per_page
+        : null;
 
-            return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices'));
-   
-        // Step 2: Build query with eager loading
+    $agency = $this->agencyService->getAgencyData(); // returns null for superadmin, and agency model for agency users
+
+    $invoicesQuery = Deduction::with([
+        'service_name',
+        'agency',
+        'visaBooking.visa',
+        'visaBooking.origin',
+        'visaBooking.destination',
+        'visaBooking.visasubtype',
+        'visaBooking.clint',
+        'visaApplicant',
+        'flightBooking',
+        'hotelBooking',
+        'hotelDetails',
+        'cancelinvoice',
+        'invoice',
+        'docsign'
+    ])
+    ->where(function ($q) {
+        $q->whereNull('invoicestatus')
+          ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
+    });
+
+    // ✅ Filter by agency if agency is logged in
+    if ($agency) {
+        $invoicesQuery->where('agency_id', $agency->id);
+    }
+
+    $invoices = $perPage ? $invoicesQuery->paginate($perPage) : $invoicesQuery->get();
+
+    return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices'));
+}
+ 
+
+    public function hseditInvoice($id){
+        
+    $invoice = Deduction::with('service_name')->findOrFail($id);
+    
+     
+    if ($invoice->invoicestatus === 'edited') {
+        return redirect()->route('invoice.all')->with('error', 'This invoice can only be edited once.');
+    }
+
+    return view('superadmin.pages.invoicehandling.editinvoice', compact('invoice'));
     } 
+
+
+
+    public function hsEditedInvoices(Request $request)
+{
+    // Get the current agency (returns null if superadmin)
+    $agency = $this->agencyService->getAgencyData();
+
+    $invoices = Deduction::where('invoicestatus', 'edited')
+        ->when($agency, function ($query) use ($agency) {
+            $query->whereHas('visaBooking', function($q) use ($agency) {
+                $q->where('agency_id', $agency->id);
+            });
+        })
+        ->with(['service_name', 'agency', 'visaBooking'])
+        ->orderByDesc('updated_at')
+        ->get();
+
+    return view('superadmin.pages.invoicehandling.editindex', compact('invoices'));
+}
+
+
 
     public function hsviewInvoice(Request $request,$id){
 

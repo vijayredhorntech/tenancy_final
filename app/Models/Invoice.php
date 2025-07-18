@@ -42,7 +42,15 @@ class Invoice extends Model
     public function invoicedetails()
     {
         return $this->hasOne(Deduction::class,'id','bookingid');
-    }
+    }   
+
+    public function deductions()
+{
+    return $this->hasMany(Deduction::class, 'invoice_number', 'invoice_number');
+
+
+}
+
     
     /* ───── Optional relationships ─────
    

@@ -31,6 +31,7 @@ use App\Models\VisaBooking;
 use App\Models\VisaSection;
 use App\Models\TermType;
 use App\Models\ClientApplicationDocument;
+use App\Models\TermsCondition;
 
 use App\Models\ClientInfoForCountry;
 
@@ -828,27 +829,46 @@ public function hsFromindex(Request $request)
     }
 
     /*****Update Application ******/
-    public function hsupdateapplication(Request $request){
+    public function hsupdateapplication(Request $request)
+{
+    if (isset($request->type) && $request->type === 'superadmin') {
+        $data = $request->validate([
+            'applciationid' => 'required',
+            'paymentstatus' => 'in:Paid,Pending',
+            'document_status' => 'in:Pending,Done',
+            'application_status' => 'required|in:Under Process,Pending,Complete,Rejected',
+            'description' => 'nullable|string',
+            'rejection_reason' => 'nullable|string|max:255',
+        ]);
 
+        $booking = VisaBooking::find($request->applciationid);
+        $original = $booking->only([
+            'paymentstatus',
+            'document_status',
+            'application_status',
+            'description',
+            'rejection_reason',
+        ]);
 
-        if (isset($request->type) && $request->type === 'superadmin') {
-            $data = $request->validate([
-                'applciationid' => 'required', // Consider adding: |exists:applications,id
-                'paymentstatus' => 'in:Paid,Pending',
-                'document_status' => 'in:Pending,Done',
-                'application_status' => 'required|in:Under Process,Pending,Complete,Rejected',
-                'description' => 'nullable|string',
-                'rejection_reason' => 'nullable|string|max:255',
-            ]);
+        // Now update the booking
+        $updatedBooking = $this->visaRepository->assignUpdateBooking($request->applciationid, $request->all());
 
-            $booking = $this->visaRepository->assignUpdateBooking($request->applciationid, $request->all());
-          $save=$this->agencyService->saveLog($booking,'Super Admin','Finish Application', Auth::id(), $request->application_status);
-
-            // dd($booking->agency->name);
-            Mail::to($booking->agency->email)->send(new DocumentDownloadedNotificationMail($booking));
-            // dd($booking);
-            return redirect()->route('superadminview.allapplication');
+        $changes = [];
+        foreach ($original as $key => $value) {
+            if ($updatedBooking->$key !== $value) {
+                $changes[] = ucfirst(str_replace('_', ' ', $key)) . " changed from '$value' to '" . $updatedBooking->$key . "'";
+            }
         }
+
+        $description = count($changes) ? implode('; ', $changes) : 'No changes made';
+
+        // Save log with details of what was changed
+        $this->agencyService->saveLog($updatedBooking, 'Super Admin', 'Finish Application', Auth::id(), $description);
+
+        Mail::to($updatedBooking->agency->email)->send(new DocumentDownloadedNotificationMail($updatedBooking));
+
+        return redirect()->route('superadminview.allapplication');
+    }
 
         $agency = $this->agencyService->getAgencyData();
         $clientData = $this->visaRepository->bookingDataById($request->applciationid);
@@ -959,7 +979,7 @@ public function hsFromindex(Request $request)
  }
 
 
- public function hsconfirmApplication(Request $request){
+  public function hsconfirmApplication(Request $request){
     //  dd($request->all());
     $this->clintRepository->step1createclient($request->all());
     $this->visaRepository->visadocumentstore($request->all());
@@ -968,6 +988,7 @@ public function hsFromindex(Request $request)
         return redirect()->route('superadminvisa.applicationview', ['id' => $request->bookingid]);
     }else{
         
+        //   dd($request->all());
         $booking = VisaBooking::with('visasubtype.countryData')->where('id', $request->bookingid)->first();
         // dd($booking);
         $checkDocument = VisaServiceType::where('origin', $booking->origin_id)
@@ -1023,6 +1044,14 @@ public function hsFromindex(Request $request)
         : 'superadmin.pages.visa.superadminveriryvisaapplication';
 
     return view($view, compact('bookingData', 'type'));
+}
+
+public function showFromInvoice($id)
+{
+    $booking = VisaBooking::with(['agency', 'clint', 'visa', 'visaInvoiceStatus', 'visaInvoiceStatus.docsign.sign'])->findOrFail($id);
+    $termconditon = TermsCondition::with('termType')->get();
+
+    return view('components.common.invoice.Superadminvisa-invoice', compact('booking', 'termconditon'));
 }
 
 

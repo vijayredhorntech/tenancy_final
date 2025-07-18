@@ -477,7 +477,7 @@ public function updateVisaAssignment(array $data, int $id)
         $assign->description = $data['description'] ?? null;
         $assign->required = $data['required'];
         $assign->save();
-
+        
         // Add new subtypes only
         foreach ($data['subtype'] as $key => $subtypeName) {
             VisaSubtype::create([
@@ -583,76 +583,73 @@ public function allVisacoutnry($request)
 
 
 
-  public function saveBooking(array $data)
-  {
-    
-    
-     // Correcting function call
-            $getCode = $this->getCountryCode($data['origin'], $data['destination']);
 
-            // Access values
-            $originCode = $getCode['origin_code'];
-            $destinationCode = $getCode['destination_code'];
 
-            $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
-            $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
-            //   $application = Str::uuid();
-            $application = strtolower(now()->format('ymdHis') . '-' . Str::random(3));
+public function saveBooking(array $data)
+{
+    // Existing logic
+    $getCode = $this->getCountryCode($data['origin'], $data['destination']);
 
-            $agency = $this->agencyService->getAgencyData();
-            $user=$this->agencyService->getCurrentLoginUser();
+    $originCode = $getCode['origin_code'];
+    $destinationCode = $getCode['destination_code'];
 
-  
+    $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
+    $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
 
-    if(isset($data['passengerfirstname'])){
-    
-        $passengerCount = count($data['passengerfirstname'])+1;
-     
-        $totalAmount=$totalAmount*$passengerCount; 
+    $agency = $this->agencyService->getAgencyData();
+    $user = $this->agencyService->getCurrentLoginUser();
+    $client = ClientDetails::where('id', $data['clientId'])->firstOrFail();
+
+    // ✅ Custom Application Number Format
+    $agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
+    $agencyId = $agency->id;
+    $clientUidPrefix = strtoupper(substr($client->clientuid, 0, 2));   // First 2 letters of client UID
+
+    // Generate unique application number
+    do {
+        $random = mt_rand(1000, 9999); // 4-digit number
+        $application = "CLD-{$agencyInitial}{$agencyId}-{$clientUidPrefix}{$random}";
+    } while (VisaBooking::where('application_number', $application)->exists());
+
+    // ✅ Passenger count-based total amount
+    if (isset($data['passengerfirstname'])) {
+        $passengerCount = count($data['passengerfirstname']) + 1;
+        $totalAmount *= $passengerCount;
     }
 
-
-  
+    // ✅ Save booking
     $booking = new VisaBooking();
-      $booking->origin_id = $data['origin'];
-      $booking->destination_id = $data['destination'];
-      $booking->visa_id = $data['typeof'];
-      $booking->subtype_id = $data['category'];
-      $booking->agency_id=$agency->id; 
-      $booking->user_id = $user->id; // Current logged-in user
-      $booking->client_id = $data['clientId']; // Assuming same as user
-      $booking->application_number = $application;
-      $booking->total_amount = $totalAmount;
-      $booking->dateofentry = $data['dateofentry'];
-      $booking->save(); // Save booking first
-   
-  
-      if (isset($data['passengerfirstname'])) {
-        $user = $this->agencyService->getCurrentLoginUser();  
-       
+    $booking->origin_id = $data['origin'];
+    $booking->destination_id = $data['destination'];
+    $booking->visa_id = $data['typeof'];
+    $booking->subtype_id = $data['category'];
+    $booking->agency_id = $agencyId;
+    $booking->user_id = $user->id;
+    $booking->client_id = $data['clientId'];
+    $booking->application_number = $application;
+    $booking->total_amount = $totalAmount;
+    $booking->dateofentry = $data['dateofentry'];
+    $booking->save();
+
+    // ✅ Save passenger details
+    if (isset($data['passengerfirstname'])) {
         foreach ($data['passengerfirstname'] as $index => $firstname) {
             $authapplication = new AuthervisaApplication();
             $authapplication->setConnection('user_database');
-        
-
             $authapplication->booking_id = $booking->id;
-            $authapplication->clint_id = $data['clientId']; // Change this if clint_id is different
-            $authapplication->name = $firstname; // Assign first name dynamically
+            $authapplication->clint_id = $data['clientId'];
+            $authapplication->name = $firstname;
             $authapplication->lastname = $data['passengerlastname'][$index];
             $authapplication->passport_number = $data['passengerpassportn'][$index];
             $authapplication->passport_issue_date = $data['passportissuedate'][$index];
             $authapplication->passport_expire_date = $data['passportexpiredate'][$index];
-            $authapplication->place_of_issue = $data['passengerplace'][$index]; // Assign last name dynamically
+            $authapplication->place_of_issue = $data['passengerplace'][$index];
             $authapplication->save();
         }
     }
-    
-  return $booking;
 
-      // Fetch agency based on the current user
-    //   $agency = Agency::where('id', Auth::id())->firstOrFail(); 
-    // Return the saved booking object
-  }
+    return $booking;
+}
 
   public function payment($data){
 

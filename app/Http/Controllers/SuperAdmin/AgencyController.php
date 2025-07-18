@@ -607,6 +607,9 @@ class AgencyController extends Controller
         }
     }
 
+
+    
+
     public function hs_agency_delete($id){
         $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])->find($id);
         // dd($agency->database_name);

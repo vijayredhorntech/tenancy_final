@@ -2659,16 +2659,12 @@ I
 
 
            <div class="flex justify-end mt-4">
-            @if(isset($type) && $type === 'superadmin')
-                <button type="button" onclick="window.print()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-                    Print
-                </button>
-            @elseif(isset($type) && $type === 'agency')
                 <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">
-                    Submit Application
+                    Submit
                 </button>
-            @endif
-        </div>
+            </div>
+
+            
         </div>
         </form>
     </div>

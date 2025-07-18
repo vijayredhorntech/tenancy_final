@@ -53,7 +53,7 @@
                             }
                      @endphp
 
-                        
+                  
         <!-- Main Form Content -->
         <form action="{{ route('comfirm.application') }}" method="POST" id="confirmform" class="space-y-6">
             @csrf
@@ -2812,17 +2812,12 @@ I
 
 
              <!-- Buttons Section -->
-        <div class="flex justify-end mt-4">
-            @if(isset($type) && $type === 'superadmin')
-                <button type="button" onclick="window.print()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
-                    Print
-                </button>
-            @elseif(isset($type) && $type === 'agency')
+            <div class="flex justify-end mt-4">
                 <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700 transition">
-                    Submit Application
+                    Submit
                 </button>
-            @endif
-        </div>
+            </div>
+
 
 
 

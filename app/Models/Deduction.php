@@ -82,5 +82,7 @@ class Deduction extends Model
         return $this->hasOne(DocSignDocument::class, 'related_id', 'id');
     }
 
+
+
     
 }

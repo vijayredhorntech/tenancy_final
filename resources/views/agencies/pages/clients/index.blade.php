@@ -7,7 +7,7 @@
 
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">ClientList </span>
+                <span class="font-semibold text-ternary text-xl">ClientList</span>
 
                 <button onclick="copyUrl()">Copy URL</button>
 
@@ -105,6 +105,7 @@
                             
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$client['clientuid']}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$client['client_name']}}</td>
+                            
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">    
                                 <div class="flex flex-col">
                                 <span><i class="fa fa-envelop text-sm mr-1 text-secondary"></i> {{$client['email']}}</span>

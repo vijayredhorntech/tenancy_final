@@ -21,7 +21,8 @@ export default {
 
 
                 primary: '#26ace2',
-                secondary: '#ff4216',
+                // secondary: '#ff4216',
+                secondary: '#2289b2ff',
                 ternary: '#172432',
                 white: '#ffffff',
                 black: '#000000',
