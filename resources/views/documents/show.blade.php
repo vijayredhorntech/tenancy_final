@@ -316,7 +316,7 @@
                 <tr class="text-black text-sm border-b-[1px] border-blue-100">
                     <td class="p-1">1</td>
                     <td class="p-1">{{$booking->visa->name}}</td>
-                    <td class="p-1">{{$invoice->amount??''}}</td>
+                    <td class="p-1">{{$booking->total_amount??''}}</td>
 
                 </tr>
             </table>

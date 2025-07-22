@@ -338,10 +338,13 @@ Route::controller(VisaController::class)->group(function () {
           Route::controller(InventoryController::class)->group(function () {
                    Route::get('/visa/exportvisabooking','exportVisaBookingsExcel')->name('superadmin.visaexportexcel');
                  Route::get('/visa/visagenerate-pdf',  'exportVisaBookingsPDF')->name('superadmin.visaexportpdf');
+        Route::get('visa/booking','hsvisaApplication')->name('agencyvisa.booking');
+
                           
           });
 
  
+          
 
 
 

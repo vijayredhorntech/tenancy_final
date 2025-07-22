@@ -97,7 +97,7 @@ class VisaRepository implements VisaRepositoryInterface
 
 public function getSuperadminAllApplication($request){
     // dd("heelo");
-$query = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'agency']);
+   $query = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'agency']);
 
         // Base query
         $query->with(['downloadDocument', 'clientapplciation']) // clint will be overridden manually
@@ -269,6 +269,100 @@ public function getSuperadminshotedapplication($request)
         'clientapplciation'
     ])
     ->where('sendtoadmin', '1')
+    ->orderBy('created_at', 'desc');
+
+    // Filtering
+    if ($request->filled('search')) {
+        $search = $request->search;
+        $query->whereHas('clint', function ($q) use ($search) {
+            $q->where(function ($query) use ($search) {
+                $query->where('client_name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('phone_number', 'like', "%{$search}%");
+            });
+        });
+    }
+
+    if ($request->filled('date_from')) {
+        $query->whereDate('created_at', '>=', $request->date_from);
+    }
+
+    if ($request->filled('date_to')) {
+        $query->whereDate('created_at', '<=', $request->date_to);
+    }
+
+    if ($request->filled('origin_id')) {
+        $query->where('origin_id', $request->origin_id);
+    }
+
+    if ($request->filled('destination_id')) {
+        $query->where('destination_id', $request->destination_id);
+    }
+
+    if ($request->filled('application_status')) {
+        $query->where('applicationworkin_status', $request->application_status);
+    }
+
+    if ($request->filled('agencyid')) {
+        $query->where('agency_id', $request->agencyid);
+    }
+
+    // Check for export flag
+    if ($request->filled('export') && $request->export == 'true') {
+        $bookings = $query->get(); // Fetch all without pagination
+
+        foreach ($bookings as $viewbooking) {
+            $database = $viewbooking->agency->database_name ?? null;
+
+            if ($database) {
+                $this->agencyService->setConnectionByDatabase($database);
+
+                // Fetch client from user DB
+                $clientFromUserDB = ClientDetails::on('user_database')
+                    ->with('clientinfo')
+                    ->where('id', $viewbooking->client_id)
+                    ->first();
+
+                // Fetch other members
+                $otherMember = AuthervisaApplication::on('user_database')
+                    ->where('clint_id', $viewbooking->client_id)
+                    ->where('booking_id', $viewbooking->id)
+                    ->get();
+
+                // Fetch other application details
+                $otherapplicationDetails = null;
+                if (!empty($viewbooking->otherclientid)) {
+                    $otherapplicationDetails = AuthervisaApplication::on('user_database')
+                        ->where('id', $viewbooking->otherclientid)
+                        ->first();
+                }
+
+                // Override relationships
+                $viewbooking->setRelation('clint', $clientFromUserDB);
+                $viewbooking->setRelation('otherclients', $otherMember);
+                $viewbooking->setRelation('otherapplicationDetails', $otherapplicationDetails);
+            }
+        }
+
+        return $bookings; // return complete list for export
+    }
+
+    // Return paginated data for view
+    return $query->paginate((int)($request->per_page ?? 10))->withQueryString();
+}
+
+public function getagencyVisaApplication($request,$id)
+{
+    $query = VisaBooking::with([
+        'visa',
+        'origin',
+        'destination',
+        'visasubtype',
+        'clint',
+        'clientapplciation'
+    ])
+    ->where('sendtoadmin', '1')
+    ->where('agency_id',$id)
     ->orderBy('created_at', 'desc');
 
     // Filtering

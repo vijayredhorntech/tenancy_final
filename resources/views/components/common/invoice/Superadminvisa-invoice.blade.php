@@ -244,7 +244,7 @@
         </section>
 
         <!-- Main content -->
-        <div class="main-content" style="padding-top:90px;">
+        <div class="main-content" >
             <section>
             @php
             use Carbon\Carbon;       // Carbon alias
@@ -335,6 +335,7 @@
                     <p class="text-sm"><strong>E-MAIL:</strong>  {{$booking->agency->email}}</p>
                 </div>
             </div>
+
             <div class="mt-4 w-full">
                 <h2 class="text-md font-bold  bg-[#26ace2] p-3 w-max text-white">OTHER FACILITIES</h2>
                 <h3 class="text-md font-bold text-black mt-6">1. Passenger Details</h3>
@@ -350,7 +351,8 @@
                         <tr class="text-black text-sm border-b-[1px] border-blue-100">
                             <td class="p-1">1</td>
                             <td class="p-1">{{$booking->visa->name}}</td>
-                            <td class="p-1">{{$invoice->amount??''}}</td>
+                            <td class="p-1">{{$booking->total_amount??''}}</td>
+                            
 
                         </tr>
                     </table>
@@ -367,9 +369,9 @@
 
                         </tr>
                         <tr class="text-black text-sm border-b-[1px] border-blue-100">
-                            <td class="p-1">{{strtoupper($invoice->payment_type??'')}}</td>
-                            <td class="p-1">{{$invoice->amount??''}}</td>
-                            <td class="p-1">{{$date}}</td>
+                            <td class="p-1">{{strtoupper($invoices->payment_type??'')}}</td>
+                            <td class="p-1">{{$booking->total_amount??''}}</td>
+                            <td class="p-1">{{ $invoice->dateofentry ? \Carbon\Carbon::parse($invoice->dateofentry)->format('d-m-Y') : '—' }}</td>
 
                         </tr>
                     </table>

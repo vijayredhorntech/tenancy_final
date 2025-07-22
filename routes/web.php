@@ -369,7 +369,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                                 Route::get('/sendeail/{id}', 'hs_sendSAApplication')->name('superadminvisasendemail.application');
                                 Route::get('/viewapplication/{id}', 'hs_viewSAApplication')->name('superadminvisa.applicationview');
-                                Route::get('/visa-invoice/view/{id}',  'showFromInvoice')->name('superadminvisa.invoice.view');
+
+                                // Route::get('/visa-invoice/view/{id}',  'showFromInvoice')->name('superadminvisa.invoice.view');
 
 
 
@@ -510,6 +511,7 @@ Route::get('/documents/view/{document}', [DocumentSignController::class, 'hsview
     [ApplicationController::class, 'download'])
     ->name('download.application');
 
+    Route::get('/visa-invoice/view/{id}',  [VisaController::class,'showFromInvoice'])->name('superadminvisa.invoice.view');
 
 
 require __DIR__.'/auth.php';
