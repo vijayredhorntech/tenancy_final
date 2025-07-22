@@ -8,6 +8,7 @@
          
             </div>
 
+
             <div class="flex ">
                 <span class="w-[200px] font-semibold text-lg text-ternary">Unique Id: </span>
                 <span class="text-ternary text-medium italic"> {{$client->clientuid ?? 'N/A'}}</span>
@@ -33,7 +34,7 @@
                 <span class="text-ternary text-medium italic">{{$client->country ?? ''}}</span>
             </div>
             <div class="flex mt-2">
-                <span class="w-[200px] font-semibold text-lg text-ternary">Phone:</span>
+                <span class="w-[200px] font-semibold text-lg text-ternary">Phone:</span>    
                 <span class="text-ternary text-medium italic"> {{$client->phone_number ?? 'N/A'}}</span>
             </div>
              <div class="flex ">

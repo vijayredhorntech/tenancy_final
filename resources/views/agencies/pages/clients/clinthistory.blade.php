@@ -1,6 +1,6 @@
 <x-agency.layout>
     @section('title')
-       Staff
+       Client Details
     @endsection
 
     <style> 
