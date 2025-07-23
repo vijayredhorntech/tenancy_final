@@ -691,10 +691,13 @@ public function saveBooking(array $data)
 
     $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
     $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
-    dd($totalAmount);
+    
 
     $agency = $this->agencyService->getAgencyData();
+    
     $user = $this->agencyService->getCurrentLoginUser();
+    dd($user);
+    
 
     $client = ClientDetails::where('id', $data['clientId'])->firstOrFail();
 
