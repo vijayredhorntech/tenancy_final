@@ -697,9 +697,10 @@ public function saveBooking(array $data)
     
     $user = $this->agencyService->getCurrentLoginUser();
 
-    dd("heelo");
+    dd($data);
+    // dd("heelo");
 
-    $client = ClientDetails::where('id', $data['clientId'])->firstOrFail();
+    // $client = ClientDetails::where('id', $data['clientId'])->firstOrFail();
 
     // ✅ Custom Application Number Format
     $agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
