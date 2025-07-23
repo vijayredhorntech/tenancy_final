@@ -699,13 +699,13 @@ public function saveBooking(array $data)
 
 
     $client = ClientDetails::where('id', $data['clientId'])->firstOrFail();
+    dd("heelo");
 
     // ✅ Custom Application Number Format
     $agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
     $agencyId = $agency->id;
     $clientUidPrefix = strtoupper(substr($client->clientuid, 0, 2)); // First 2 letters of client UID
       
-    dd("heelo");
 
     // Generate unique application number
     do {
