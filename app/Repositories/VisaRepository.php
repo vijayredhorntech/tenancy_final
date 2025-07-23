@@ -682,7 +682,6 @@ public function allVisacoutnry($request)
 public function saveBooking(array $data)
 {
 
-    
     // Existing logic
     $getCode = $this->getCountryCode($data['origin'], $data['destination']);
 
@@ -694,10 +693,13 @@ public function saveBooking(array $data)
     
 
     $agency = $this->agencyService->getAgencyData();
+    dd($agency);
+    $client_details=$this->getClientDetails($id, $user);
+
     
     $user = $this->agencyService->getCurrentLoginUser();
 
-    dd($data);
+    // dd($data);
     // dd("heelo");
 
     // $client = ClientDetails::where('id', $data['clientId'])->firstOrFail();

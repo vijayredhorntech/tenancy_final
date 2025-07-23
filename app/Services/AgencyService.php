@@ -249,7 +249,10 @@ public function getClientinfo($invoices){
            return $invoice; // Return the modified invoice objec
        }
        return false;
-   
+}
+
+public function getClientDetails($id,$agencyid){
 
 }
+
 }
