@@ -251,41 +251,6 @@
 
                                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                                             <div class="flex gap-2 items-center">
-                                                                @if($booking->applicationworkin_status == "Complete")              
-                                                                    <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                                                        <i class="fa fa-check"></i> <!-- FontAwesome icon -->
-                                                                    </div> 
-
-                                                                    <a href="{{ route('superadminaad.document.upload', ['id' => $booking->id]) }}" title="Uploade Document">
-                                                                    <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
-                                                                    <i class="fas fa-upload"></i><!-- FontAwesome icon -->
-                                                                        </div> 
-                                                                    </a>
-                                                                @else
-                                                                
-                                                                <a href="{{ route('superadminaad.document.application', ['id' => $booking->id]) }}" title="Remind for funds">
-                                                                    <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                                                            <i class="fa fa-plus"></i> <!-- FontAwesome icon -->
-                                                                        </div> 
-                                                                    </a>
-                                                                    <a href="{{ route('superadminvisaedit.application', ['id' => $booking->id]) }}" title="Remind for funds">
-                                                                        <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
-                                                                            <i class="fa fa-pencil"></i>
-                                                                        </div>
-                                                                    </a>
-
-                                                                    <a href="{{ route('superadminvisasendemail.application', ['id' => $booking->id]) }}" title="Remind for funds">
-                                                                        <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
-                                                                            <i class="fa fa-envelope"></i>
-                                                                        </div>
-                                                                    </a>
-
-                                                                    <a href="{{route('superadminvisachat.client',['id' => $booking->client_id])}}" title="Edit">
-                                                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                                                            <i class="fas fa-comment-dots"></i>
-                                                                        </div>
-                                                                    </a>
-                                                                @endif
 
                                                                 <!-- <a href="{{ route('visa.assign', ['id' => $booking->id]) }}" title="Assign to Visa Request">
                                                                     <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">

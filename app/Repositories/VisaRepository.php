@@ -681,6 +681,7 @@ public function allVisacoutnry($request)
 
 public function saveBooking(array $data)
 {
+
     // Existing logic
     $getCode = $this->getCountryCode($data['origin'], $data['destination']);
 
@@ -697,12 +698,14 @@ public function saveBooking(array $data)
     // ✅ Custom Application Number Format
     $agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
     $agencyId = $agency->id;
-    $clientUidPrefix = strtoupper(substr($client->clientuid, 0, 2));   // First 2 letters of client UID
+    $clientUidPrefix = strtoupper(substr($client->clientuid, 0, 2)); // First 2 letters of client UID
+      
+    
 
     // Generate unique application number
     do {
         $random = mt_rand(1000, 9999); // 4-digit number
-        $application = "CLD-{$agencyInitial}{$agencyId}-{$clientUidPrefix}{$random}";
+        $application = "CLD-{$agencyInitial}{$agencyId}-VIS-{$clientUidPrefix}{$random}";
     } while (VisaBooking::where('application_number', $application)->exists());
 
     // ✅ Passenger count-based total amount
@@ -722,7 +725,7 @@ public function saveBooking(array $data)
     $booking->client_id = $data['clientId'];
     $booking->application_number = $application;
     $booking->total_amount = $totalAmount;
-    $booking->dateofentry = $data['dateofentry'];
+    $booking->dateofentry = $data['dateofentry'];    
     $booking->save();
 
     // ✅ Save passenger details

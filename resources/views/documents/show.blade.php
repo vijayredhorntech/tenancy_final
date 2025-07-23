@@ -385,6 +385,11 @@
     <section style="display: flex; justify-content: flex-end; padding-right: 10vh; padding-top: 2vh; padding-bottom: 2vh;">
         <div class="sign-line"></div>
     </section>
+                 <div class="no-print flex justify-center mt-6 mb-8">
+            <button onclick="window.print()" class="bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-blue-600">
+                Print Invoice
+            </button>
+        </div>
 
     <!-- Footer section -->
     <section class="footer">
