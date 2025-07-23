@@ -693,8 +693,10 @@ public function saveBooking(array $data)
     
 
     $agency = $this->agencyService->getAgencyData();
-    dd($agency);
-    $client_details=$this->getClientDetails($id, $user);
+    // dd($agency);
+    $client_id=$data['clientId'];
+    // dd($client_id);
+    $client_details=$this->agencyService->getClientDetails($client_id, $agency);
 
     
     $user = $this->agencyService->getCurrentLoginUser();
@@ -707,7 +709,7 @@ public function saveBooking(array $data)
     // ✅ Custom Application Number Format
     $agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
     $agencyId = $agency->id;
-    $clientUidPrefix = strtoupper(substr($client->clientuid, 0, 2)); // First 2 letters of client UID
+    $clientUidPrefix = strtoupper(substr($client_details->clientuid, 0, 2)); // First 2 letters of client UID
       
 
     // Generate unique application number

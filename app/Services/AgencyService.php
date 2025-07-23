@@ -251,7 +251,18 @@ public function getClientinfo($invoices){
        return false;
 }
 
-public function getClientDetails($id,$agencyid){
+public function getClientDetails($clientId,$agencyData){
+    //   dd($id);
+    // dd($agencyData->database_name);
+       $this->setConnectionByDatabase($agencyData->database_name);
+          
+           // Fetch related data from the user's database
+           $clientFromUserDB = ClientDetails::on('user_database')
+               ->with('clientinfo')
+               ->find($clientId);
+               return $clientFromUserDB;
+           
+
 
 }
 
