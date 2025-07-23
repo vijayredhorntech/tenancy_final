@@ -682,7 +682,6 @@ public function allVisacoutnry($request)
 public function saveBooking(array $data)
 {
 
-
     // Existing logic
     $getCode = $this->getCountryCode($data['origin'], $data['destination']);
 
@@ -695,6 +694,7 @@ public function saveBooking(array $data)
     $agency = $this->agencyService->getAgencyData();
     $user = $this->agencyService->getCurrentLoginUser();
     $client = ClientDetails::where('id', $data['clientId'])->firstOrFail();
+    dd($client);
 
     // ✅ Custom Application Number Format
     $agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
@@ -745,6 +745,7 @@ public function saveBooking(array $data)
             $authapplication->save();
         }
     }
+
 
     return $booking;
 }
