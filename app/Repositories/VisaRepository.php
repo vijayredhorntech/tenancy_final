@@ -685,13 +685,13 @@ public function saveBooking(array $data)
     
     // Existing logic
     $getCode = $this->getCountryCode($data['origin'], $data['destination']);
-    dd($getCode);
 
     $originCode = $getCode['origin_code'];
     $destinationCode = $getCode['destination_code'];
 
     $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
     $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
+    dd($totalAmount);
 
     $agency = $this->agencyService->getAgencyData();
     $user = $this->agencyService->getCurrentLoginUser();
