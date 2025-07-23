@@ -129,9 +129,9 @@
             <span class="font-semibold text-ternary text-xl">
                 {{ $client->email ?? 'N/A' }} 
            </span>
-        <span class="font-semibold text-ternary text-xl">
-            {{ $client->phone_number ?? 'N/A' }}
-        </span>
+            <span class="font-semibold text-ternary text-xl">
+                {{ $client->phone_number ?? 'N/A' }}
+            </span>
 
             <span class="font-semibold text-ternary text-xl"></span>
 
