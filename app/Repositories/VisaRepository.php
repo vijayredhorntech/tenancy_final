@@ -52,48 +52,6 @@ class VisaRepository implements VisaRepositoryInterface
        return Country::paginate(10);
     }
 
-    
-//     public function getSuperadminAllApplication()
-// {
-//     $bookings = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'agency'])
-//         ->where('sendtoadmin', '1')
-//         ->orderBy('created_at', 'desc')
-//         ->paginate(10);
-
-//     foreach ($bookings as $viewbooking) {
-//         $database = $viewbooking->agency->database_name ?? null;
-
-//         if ($database) {
-//             // Set the user-specific database connection
-//             $this->agencyService->setConnectionByDatabase($database);
-
-//             // Load client data
-//             $clientFromUserDB = ClientDetails::on('user_database')
-//                 ->with('clientinfo')
-//                 ->where('id', $viewbooking->client_id)
-//                 ->first();
-
-//             $otherMember = AuthervisaApplication::on('user_database')
-//                 ->where('clint_id', $viewbooking->client_id)
-//                 ->where('booking_id', $viewbooking->id)
-//                 ->get();
-
-//             $otherapplicationDetails = null;
-//             if (!empty($viewbooking->otherclientid)) {
-//                 $otherapplicationDetails = AuthervisaApplication::on('user_database')
-//                     ->where('id', $viewbooking->otherclientid)
-//                     ->first();
-//             }
-
-//             // Override default relations with data from user DB
-//             $viewbooking->setRelation('clint', $clientFromUserDB);
-//             $viewbooking->setRelation('otherclients', $otherMember);
-//             $viewbooking->setRelation('otherapplicationDetails', $otherapplicationDetails);
-//         }
-//     }
-
-//     return $bookings;
-// }
 
 public function getSuperadminAllApplication($request){
     // dd("heelo");
@@ -260,76 +218,87 @@ public function getSuperadminAllApplication($request){
 
 public function getSuperadminshotedapplication($request)
 {
-    $query = VisaBooking::with([
+    // dd("heelo");
+    
+   $query = VisaBooking::with(['agency',
         'visa',
         'origin',
         'destination',
         'visasubtype',
-        'clint',
-        'clientapplciation'
-    ])
-    ->where('sendtoadmin', '1')
-    ->orderBy('created_at', 'desc');
+ ]);
 
-    // Filtering
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->whereHas('clint', function ($q) use ($search) {
-            $q->where(function ($query) use ($search) {
-                $query->where('client_name', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%")
-                      ->orWhere('phone_number', 'like', "%{$search}%");
+        // Base query
+        $query->with(['downloadDocument', 'clientapplciation']) // clint will be overridden manually
+              ->where('sendtoadmin', '1')
+              ->orderBy('created_at', 'desc');
+
+        // Filters
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where(function ($q) use ($search) {
+                // Search inside the visa_bookings table
+                $q->where('application_number', 'like', "%{$search}%")
+                
+                // OR search inside the related 'clint' model
+                ->orWhereHas('clint', function ($q1) use ($search) {
+                    $q1->where('client_name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('phone_number', 'like', "%{$search}%");
+                });
             });
-        });
-    }
+        }
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
 
-    if ($request->filled('date_from')) {
-        $query->whereDate('created_at', '>=', $request->date_from);
-    }
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
 
-    if ($request->filled('date_to')) {
-        $query->whereDate('created_at', '<=', $request->date_to);
-    }
+        if ($request->filled('origin_id')) {
+            $query->where('origin_id', $request->origin_id);
+        }
 
-    if ($request->filled('origin_id')) {
-        $query->where('origin_id', $request->origin_id);
-    }
+        if ($request->filled('destination_id')) {
+            $query->where('destination_id', $request->destination_id);
+        }
 
-    if ($request->filled('destination_id')) {
-        $query->where('destination_id', $request->destination_id);
-    }
+        if ($request->filled('application_status')) {
+            $query->where('applicationworkin_status', $request->application_status);
+        }
 
-    if ($request->filled('application_status')) {
-        $query->where('applicationworkin_status', $request->application_status);
-    }
+        if ($request->filled('agencyid')) {
+            $query->where('agency_id', $request->agencyid);
+        }
 
-    if ($request->filled('agencyid')) {
-        $query->where('agency_id', $request->agencyid);
-    }
+        // Export
+        if ($request->filled('export') && $request->export == 'true') {
+            $bookings = $query->get();
+        } else {
+            $bookings = $query->paginate((int)($request->per_page ?? 10))->withQueryString();
+        }
 
-    // Check for export flag
-    if ($request->filled('export') && $request->export == 'true') {
-        $bookings = $query->get(); // Fetch all without pagination
-
+        // Loop and override `clint` with data from the user's DB
         foreach ($bookings as $viewbooking) {
             $database = $viewbooking->agency->database_name ?? null;
 
             if ($database) {
                 $this->agencyService->setConnectionByDatabase($database);
 
-                // Fetch client from user DB
+                // ✅ Get client from tenant DB
                 $clientFromUserDB = ClientDetails::on('user_database')
                     ->with('clientinfo')
                     ->where('id', $viewbooking->client_id)
                     ->first();
 
-                // Fetch other members
+                // ✅ Get other members
                 $otherMember = AuthervisaApplication::on('user_database')
                     ->where('clint_id', $viewbooking->client_id)
                     ->where('booking_id', $viewbooking->id)
                     ->get();
 
-                // Fetch other application details
+                // ✅ Get other application details
                 $otherapplicationDetails = null;
                 if (!empty($viewbooking->otherclientid)) {
                     $otherapplicationDetails = AuthervisaApplication::on('user_database')
@@ -337,18 +306,15 @@ public function getSuperadminshotedapplication($request)
                         ->first();
                 }
 
-                // Override relationships
+                // ✅ Override relationships
                 $viewbooking->setRelation('clint', $clientFromUserDB);
                 $viewbooking->setRelation('otherclients', $otherMember);
                 $viewbooking->setRelation('otherapplicationDetails', $otherapplicationDetails);
             }
         }
 
-        return $bookings; // return complete list for export
-    }
-
-    // Return paginated data for view
-    return $query->paginate((int)($request->per_page ?? 10))->withQueryString();
+        return $bookings;
+    
 }
 
 public function getagencyVisaApplication($request,$id)
@@ -694,7 +660,7 @@ public function saveBooking(array $data)
 
     $agency = $this->agencyService->getAgencyData();
     // dd($agency);
-    $client_id=$data['clientId'];
+    $client_id=$data['clientId']; 
     // dd($client_id);
     $client_details=$this->agencyService->getClientDetails($client_id, $agency);
 
@@ -709,7 +675,7 @@ public function saveBooking(array $data)
     // ✅ Custom Application Number Format
     $agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
     $agencyId = $agency->id;
-    $clientUidPrefix = strtoupper(substr($client_details->clientuid, 0, 2)); // First 2 letters of client UID
+    $clientUidPrefix = strtoupper(substr($client_details->clientuid, 0, 2));  // First 2 letters of client UID
       
 
     // Generate unique application number
@@ -1274,6 +1240,7 @@ public function getBookingByid($id, $type, $request)
         $visabooking->payment_status="Paid";
         $visabooking->confirm_application=1;
         $visabooking->save(); 
+
         $this->payment($visabooking);
 
         if (isset($data['othermember']) && is_array($data['othermember'])) {

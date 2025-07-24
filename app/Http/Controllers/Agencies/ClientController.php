@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\Services\AgencyService;
 use App\Traits\ClientTrait;
 use App\Traits\ChatTrait;
-
+use App\Models\Deduction;
 
 
 class ClientController extends Controller
@@ -169,10 +169,13 @@ public function hs_viewAgencyClient($id)
             ->count();
 
         // ✅ Total Signed Documents (DocSign)
-        $paidInvoicesCount = \App\Models\Deduction::where('client_id', $client->id)
+        $paidInvoicesCount = Deduction::where('client_id', $client->id)
             ->where('agency_id', $agency->id)
-            ->whereHas('docsign') // assuming docsign relationship is present
-            ->count();
+            ->whereHas('docsign', function ($docSignQuery) {
+                $docSignQuery->whereHas('docsign', function ($docSignProcessQuery) {
+                    $docSignProcessQuery->where('status', 'Signed');
+                });
+            })->count();
 
         // ✅ Total Bookings (flight/visa/hotel)
         $bookingDeductions = \App\Models\Deduction::where('client_id', $client->id)

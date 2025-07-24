@@ -29,6 +29,8 @@
 }
 </style>
     <style>
+
+       
         /* Base styles */
         body {
             margin: 0;
@@ -423,12 +425,12 @@
                 <div class="sign-line"></div>
             </section>
         </div>
-        
-        <div class="no-print flex justify-center mt-6 mb-8">
-    <button onclick="window.print()" class="bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-blue-600">
-        Print Invoice
-    </button>
-</div>
+
+                <div class="no-print flex justify-center mt-6 mb-8">
+            <button onclick="window.print()" class="bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-blue-600">
+                Print Invoice
+            </button>
+        </div>
 
         <!-- Footer section -->
         <section class="footer">

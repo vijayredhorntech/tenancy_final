@@ -377,17 +377,22 @@ public function hs_hotelbooking(Request $request)
 
 public function hsvisaApplication(Request $request, $type = null)
 {
-//    dd($type);
      $agencyData= $this->agencyService->getAgencyData();
+     
 
     if (isset($agencyData)) {
        
-        $allbookings = $this->visaRepository->getagencyVisaApplication($request,$agencyData->id);
+        $allbookings = $this->visaRepository->getSuperadminshotedapplication($request,$agencyData->id);
+
  
         $view = 'agencies.pages.invoicehandling.visaapplication-agency';
     } else {
 
-        $allbookings = $this->visaRepository->getSuperadminshotedapplication($request); // fallback or general case
+        $allbookings = $this->visaRepository->getSuperadminshotedapplication($request);
+        
+           
+        
+        // fallback or general case
         $view = 'superadmin.pages.booking.visaapplication';
     }
 

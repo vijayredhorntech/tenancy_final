@@ -92,6 +92,7 @@ class VisaController extends Controller
 //    all application
     public function hs_visaAllApplication(Request $request){
         $allbookings = $this->visaRepository->getSuperadminAllApplication($request);
+        
         $countries=Country::get();
         $agencies=Agency::get();  
         return view('superadmin.pages.visa.superadminallapplication', compact('allbookings','countries','agencies'));

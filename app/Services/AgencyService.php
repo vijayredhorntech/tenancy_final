@@ -206,6 +206,7 @@ public function getClientinfo($invoices){
 
     
     public function getClientinfoById($invoice){
+        // dd("heelo");
      if ($invoice->agency && $invoice->visaBooking) {
             $this->setConnectionByDatabase($invoice->agency->database_name);
             $clientId = $invoice->visaBooking->client_id;

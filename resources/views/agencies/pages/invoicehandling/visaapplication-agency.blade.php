@@ -160,26 +160,25 @@
                                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking->application_number}}</td>
 
-                                                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">
-                                                        @php
+                                                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                                            @php
+                                                                if (isset($booking->otherclientid) && isset($booking->otherapplicationDetails)) {
+                                                                    $firstName = $booking->otherapplicationDetails?->name ?? '';
+                                                                    $lastName = $booking->otherapplicationDetails?->lastname ?? '';
+                                                                    $fullName = trim($firstName . ' ' . $lastName);
 
-                                                                    $fullName = isset($booking->clint->client_name) && isset($booking->clint->client_name) && isset($booking->clint->client_name) 
-                                                                                ? $booking->clint->client_name 
-                                                                                : '';
-                                                                    $cleanName = str_replace(',', '', $fullName);
+                                                                    $email = $booking->clint?->email ?? '';
+                                                                    $phone = $booking->clint?->phone_number ?? '';
+                                                                } else {
+                                                                    $fullName = $booking->clint?->client_name ?? '';
+                                                                    $email = $booking->clint?->email ?? '';
+                                                                    $phone = $booking->clint?->phone_number ?? '';
+                                                                }
+                                                            @endphp
 
-                                                                    $email = isset($booking->clint) && isset($booking->clint) && isset($booking->clint->email) 
-                                                                            ? $booking->clint->email 
-                                                                            : '';
-
-                                                                    $phone = isset($booking->clint) && isset($booking->clint) && isset($booking->clint->phone_number) 
-                                                                            ? $booking->clint->phone_number 
-                                                                            : '';
-                                                                @endphp
-
-                                                                <span>{{ $cleanName }}</span><br>
-                                                                <span class="font-medium text-xs">{{ $email }}</span><br>
-                                                                <span class="font-medium text-xs">{{ $phone }}</span>
+                                                            <span>{{ $fullName }}</span><br>
+                                                            <span class="font-medium text-xs">{{ $email }}</span><br>
+                                                            <span class="font-medium text-xs">{{ $phone }}</span>
                                                         </td>
                                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                                             <span>{{$booking->visa->name }}</span><br>
