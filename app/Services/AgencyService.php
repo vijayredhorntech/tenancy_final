@@ -206,6 +206,7 @@ public function getClientinfo($invoices){
 
     
     public function getClientinfoById($invoice){
+        // dd("heelo");
      if ($invoice->agency && $invoice->visaBooking) {
             $this->setConnectionByDatabase($invoice->agency->database_name);
             $clientId = $invoice->visaBooking->client_id;
@@ -249,7 +250,21 @@ public function getClientinfo($invoices){
            return $invoice; // Return the modified invoice objec
        }
        return false;
-   
+}
+
+public function getClientDetails($clientId,$agencyData){
+    //   dd($id);
+    // dd($agencyData->database_name);
+       $this->setConnectionByDatabase($agencyData->database_name);
+          
+           // Fetch related data from the user's database
+           $clientFromUserDB = ClientDetails::on('user_database')
+               ->with('clientinfo')
+               ->find($clientId);
+               return $clientFromUserDB;
+           
+
 
 }
+
 }

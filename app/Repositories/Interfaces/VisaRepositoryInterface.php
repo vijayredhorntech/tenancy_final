@@ -33,6 +33,9 @@ interface VisaRepositoryInterface
     public function storeClientDocuemtn($data);
     public function getBookingBySingleId($id);
     public function getSuperadminshotedapplication($request);
+
+    public function getagencyVisaApplication($request,$id);
+
     public function getPendingBookingByid($id);
     public function payment($data);
     public function checkBalance($id,$totalAmount);

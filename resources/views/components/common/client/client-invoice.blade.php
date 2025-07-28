@@ -19,7 +19,7 @@
 
     @foreach($invoices as $index => $invoice)
     
-
+   
 
 
         <tr>

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 use App\Services\AgencyService;
 use App\Traits\ClientTrait;
 use App\Traits\ChatTrait;
-
+use App\Models\Deduction;
 
 
 class ClientController extends Controller
@@ -157,16 +157,50 @@ class ClientController extends Controller
 
 
    /**** View Agency Client *****/
-     public function hs_viewAgencyClient($id) {
-            $agency = $this->agencyService->getAgencyData();
-            $client = $this->clintRepository->getClientById($id);
-            // dd($client);
+public function hs_viewAgencyClient($id)
+{
+    $agency = $this->agencyService->getAgencyData();
+    $client = $this->clintRepository->getClientById($id);
 
-            if (isset($client) && $client->agency_id == $agency->id) {
-                return view('agencies.pages.clients.clinthistory', compact('client'));
+    if (isset($client) && $client->agency_id == $agency->id) {
+        // ✅ Total Invoices
+        $totalInvoicesCount = \App\Models\Deduction::where('client_id', $client->id)
+            ->where('agency_id', $agency->id)
+            ->count();
+
+        // ✅ Total Signed Documents (DocSign)
+        $paidInvoicesCount = Deduction::where('client_id', $client->id)
+            ->where('agency_id', $agency->id)
+            ->whereHas('docsign', function ($docSignQuery) {
+                $docSignQuery->whereHas('docsign', function ($docSignProcessQuery) {
+                    $docSignProcessQuery->where('status', 'Signed');
+                });
+            })->count();
+
+        // ✅ Total Bookings (flight/visa/hotel)
+        $bookingDeductions = \App\Models\Deduction::where('client_id', $client->id)
+            ->where('agency_id', $agency->id)
+            ->get();
+
+        $bookingCount = 0;
+        foreach ($bookingDeductions as $deduction) {
+            if ($deduction->flightBooking || $deduction->visaBooking || $deduction->hotelBooking) {
+                $bookingCount++;
             }
-            return redirect()->route("client.index");
         }
+
+        return view('agencies.pages.clients.clinthistory', compact(
+            'client',
+            'totalInvoicesCount',
+            'paidInvoicesCount',
+            'bookingCount'
+        ));
+    }
+
+    return redirect()->route("client.index");
+}
+
+
 
     /********Edit Agency Clint *****/
     public function hs_agencyUpdateClient($id){

@@ -19,6 +19,8 @@ use App\Models\FlightBooking;
 use App\Traits\Booking\BookingExportTrait;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
+use App\Services\AgencyService;
+
 
 
 use App\Helpers\DatabaseHelper;
@@ -28,10 +30,12 @@ use Illuminate\Support\Facades\Config;
 class InventoryController extends Controller
 {
     protected $visaRepository;
+     protected $agencyService;
 
     use BookingExportTrait;
 
-    public function __construct( VisaRepositoryInterface $visaRepository) {
+    public function __construct( AgencyService $agencyService,VisaRepositoryInterface $visaRepository) {
+         $this->agencyService = $agencyService;
         $this->visaRepository = $visaRepository;
     
       
@@ -355,20 +359,48 @@ public function hs_hotelbooking(Request $request)
 }
 
 
-public function hsvisaApplication(Request $request){
+// public function hsvisaApplication(Request $request,$type=null){
 
     
 
-    $allbookings = $this->visaRepository->getSuperadminshotedapplication($request);
-    // dd($allbookings);
+//     $allbookings = $this->visaRepository->getSuperadminshotedapplication($request);
+//     // dd($allbookings);
 
    
+//     $agencies = Agency::all();
+//    $countries=Country::get();
+//    $allvisa = $this->visaRepository->getAllVisas();
+
+
+//     return view('superadmin.pages.booking.visaapplication', compact('agencies', 'allbookings','countries','allvisa'));
+// }
+
+public function hsvisaApplication(Request $request, $type = null)
+{
+     $agencyData= $this->agencyService->getAgencyData();
+     
+
+    if (isset($agencyData)) {
+       
+        $allbookings = $this->visaRepository->getSuperadminshotedapplication($request,$agencyData->id);
+
+ 
+        $view = 'agencies.pages.invoicehandling.visaapplication-agency';
+    } else {
+
+        $allbookings = $this->visaRepository->getSuperadminshotedapplication($request);
+        
+           
+        
+        // fallback or general case
+        $view = 'superadmin.pages.booking.visaapplication';
+    }
+
     $agencies = Agency::all();
-   $countries=Country::get();
-   $allvisa = $this->visaRepository->getAllVisas();
+    $countries = Country::all();
+    $allvisa = $this->visaRepository->getAllVisas();
 
-
-    return view('superadmin.pages.booking.visaapplication', compact('agencies', 'allbookings','countries','allvisa'));
+    return view($view, compact('agencies', 'allbookings', 'countries', 'allvisa', 'type'));
 }
 
 }

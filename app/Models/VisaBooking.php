@@ -42,7 +42,7 @@ class VisaBooking extends Model
         return $this->hasOne(VisaSubtype::class, 'id','subtype_id');
     }
     public function clint(){
-        return $this->hasOne(ClientDetails::class, 'id','client_id');
+        return $this->belongsTo(ClientDetails::class, 'client_id');
     }
 
     public function otherclients(){

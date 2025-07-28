@@ -1,5 +1,5 @@
-<x-front.layout>
-    @section('title')Staff @endsection
+<x-agency.layout>
+  @section('title')Invoices @endsection
     <div class="w-full grid xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 mb-4">
 
     </div>
@@ -160,24 +160,25 @@
                                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking->application_number}}</td>
 
-                                                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">
-                                                       @php
-                                                            if (isset($booking->otherclientid) && isset($booking->otherapplicationDetails)) {
-                                                                $firstName = $booking->otherapplicationDetails?->name ?? '';
-                                                                $lastName = $booking->otherapplicationDetails?->lastname ?? '';
-                                                                $fullName = trim($firstName . ' ' . $lastName);
+                                                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                                            @php
+                                                                if (isset($booking->otherclientid) && isset($booking->otherapplicationDetails)) {
+                                                                    $firstName = $booking->otherapplicationDetails?->name ?? '';
+                                                                    $lastName = $booking->otherapplicationDetails?->lastname ?? '';
+                                                                    $fullName = trim($firstName . ' ' . $lastName);
 
-                                                                $email = $booking->clint?->email ?? '';
-                                                                $phone = $booking->clint?->phone_number ?? '';
-                                                            } else {
-                                                                $fullName = $booking->clint?->client_name ?? '';
-                                                                $email = $booking->clint?->email ?? '';
-                                                                $phone = $booking->clint?->phone_number ?? '';
-                                                            }
-                                                        @endphp
-                                                                <span>{{ $fullName }}</span><br>
-                                                                <span class="font-medium text-xs">{{ $email }}</span><br>
-                                                                <span class="font-medium text-xs">{{ $phone }}</span>
+                                                                    $email = $booking->clint?->email ?? '';
+                                                                    $phone = $booking->clint?->phone_number ?? '';
+                                                                } else {
+                                                                    $fullName = $booking->clint?->client_name ?? '';
+                                                                    $email = $booking->clint?->email ?? '';
+                                                                    $phone = $booking->clint?->phone_number ?? '';
+                                                                }
+                                                            @endphp
+
+                                                            <span>{{ $fullName }}</span><br>
+                                                            <span class="font-medium text-xs">{{ $email }}</span><br>
+                                                            <span class="font-medium text-xs">{{ $phone }}</span>
                                                         </td>
                                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                                             <span>{{$booking->visa->name }}</span><br>
@@ -249,6 +250,7 @@
 
                                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                                             <div class="flex gap-2 items-center">
+                                                                <!--  -->
 
                                                                 <!-- <a href="{{ route('visa.assign', ['id' => $booking->id]) }}" title="Assign to Visa Request">
                                                                     <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
@@ -290,4 +292,4 @@
 {{--        === table section code ends here===--}}
 
         </div>
-</x-front.layout>
+</x-agency.layout>

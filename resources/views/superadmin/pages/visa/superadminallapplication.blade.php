@@ -178,6 +178,7 @@
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking->application_number}}</td>
                         <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm {{ request('agencyid') == $booking->agency->id ? 'bg-yellow-100' : '' }}">
                             {{ $booking->agency->name }}
+                            
                         </td>
 
 

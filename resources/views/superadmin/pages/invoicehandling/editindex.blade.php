@@ -1,4 +1,4 @@
-<x-front.layout>
+<x-agency.layout>
     @section('title') Edited Invoices @endsection
     
     <div class="w-full grid xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 mb-4">
@@ -48,4 +48,4 @@
             </table>
         </div>
     </div>
-</x-front.layout>
+</x-agency.layout>
