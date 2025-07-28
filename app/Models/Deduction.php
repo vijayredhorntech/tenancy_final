@@ -16,7 +16,9 @@ class Deduction extends Model
         'flight_booking_id',
         'amount',
         'date',
+        'superadmin_invoice_number',
     ];
+    
 
     public function agency()
         {
@@ -82,9 +84,17 @@ class Deduction extends Model
         return $this->hasOne(DocSignDocument::class, 'related_id', 'id');
     }
 
-
-
-
-
     
+protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($deduction) {
+            if (!$deduction->superadmin_invoice_number) {
+                $deduction->superadmin_invoice_number = 'CLDSI00' . $deduction->id;
+                $deduction->save();
+            }
+        });
+    }
+
 }

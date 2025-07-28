@@ -91,6 +91,11 @@ class VisaBooking extends Model
     // public function combinationId(){
     //     return $this->hasOne(VisaCombination::class, 'id','combination_id');
     // }
+    public function deduction()
+{
+    return $this->hasOne(Deduction::class, 'flight_booking_id', 'id');
+}
+
 
    
 

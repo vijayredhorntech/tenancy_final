@@ -149,7 +149,7 @@ public function getSuperadminAllApplication($request){
 
     public function getSuperradmiNewApplication(){
 //    dd("heelo");
-        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation'])
+        return VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','clint','clientapplciation','deduction'])
         ->where('sendtoadmin', '0')
         ->where('display_notification', '1')
         ->orderBy('created_at', 'desc') // Orders by latest created_at first
@@ -647,64 +647,51 @@ public function allVisacoutnry($request)
 
 public function saveBooking(array $data)
 {
-
-    // Existing logic
+    // Get country codes
     $getCode = $this->getCountryCode($data['origin'], $data['destination']);
-
     $originCode = $getCode['origin_code'];
     $destinationCode = $getCode['destination_code'];
 
+    // Subtype and amount calculation
     $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
     $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
-    
 
+    // Get agency, client details, user
     $agency = $this->agencyService->getAgencyData();
-    // dd($agency);
-    $client_id=$data['clientId']; 
-    // dd($client_id);
-    $client_details=$this->agencyService->getClientDetails($client_id, $agency);
-
-    
+    $client_id = $data['clientId']; 
+    $client_details = $this->agencyService->getClientDetails($client_id, $agency);
     $user = $this->agencyService->getCurrentLoginUser();
 
-    // dd($data);
-    // dd("heelo");
-
-    // $client = ClientDetails::where('id', $data['clientId'])->firstOrFail();
-
-    // ✅ Custom Application Number Format
-    $agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
-    $agencyId = $agency->id;
-    $clientUidPrefix = strtoupper(substr($client_details->clientuid, 0, 2));  // First 2 letters of client UID
-      
-
-    // Generate unique application number
-    do {
-        $random = mt_rand(1000, 9999); // 4-digit number
-        $application = "CLD-{$agencyInitial}{$agencyId}-VIS-{$clientUidPrefix}{$random}";
-    } while (VisaBooking::where('application_number', $application)->exists());
-
-    // ✅ Passenger count-based total amount
+    // Passenger count-based total amount
     if (isset($data['passengerfirstname'])) {
         $passengerCount = count($data['passengerfirstname']) + 1;
         $totalAmount *= $passengerCount;
     }
 
-    // ✅ Save booking
-    $booking = new VisaBooking();
-    $booking->origin_id = $data['origin'];
-    $booking->destination_id = $data['destination'];
-    $booking->visa_id = $data['typeof'];
-    $booking->subtype_id = $data['category'];
-    $booking->agency_id = $agencyId;
-    $booking->user_id = $user->id;
-    $booking->client_id = $data['clientId'];
-    $booking->application_number = $application;
-    $booking->total_amount = $totalAmount;
-    $booking->dateofentry = $data['dateofentry'];    
-    $booking->save();
+    // Save booking first (without application number)
+    // Save booking first (with temporary application number)
+$booking = new VisaBooking();
+$booking->origin_id = $data['origin'];
+$booking->destination_id = $data['destination'];
+$booking->visa_id = $data['typeof'];
+$booking->subtype_id = $data['category'];
+$booking->agency_id = $agency->id;
+$booking->user_id = $user->id;
+$booking->client_id = $data['clientId'];
+$booking->total_amount = $totalAmount;
+$booking->dateofentry = $data['dateofentry'];
+$booking->application_number = ''; // ✅ Temporary to pass NOT NULL
+$booking->save(); // Now ID is available
 
-    // ✅ Save passenger details
+// Generate application number
+$agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
+$application = "CLDA" . $agencyInitial . "I00" . $booking->id;
+
+// Update booking with real application number
+$booking->application_number = $application;
+$booking->save();
+
+    // Save passenger details
     if (isset($data['passengerfirstname'])) {
         foreach ($data['passengerfirstname'] as $index => $firstname) {
             $authapplication = new AuthervisaApplication();
@@ -720,7 +707,6 @@ public function saveBooking(array $data)
             $authapplication->save();
         }
     }
-
 
     return $booking;
 }

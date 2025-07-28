@@ -155,7 +155,7 @@
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Document </th>
             
                
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Total Amount(£)</th> 
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Total Amount(£)</th> 
                   
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application Submission Date  </th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Passport Submit</th>
@@ -175,14 +175,17 @@
                       
                     <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$booking->application_number}}</td>
+                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm whitespace-nowrap">{{ $booking->deduction->superadmin_invoice_number}}
+                            <br><span class="font-medium text-xs"> <i class="fa fa-user mr-1"></i> Order Id:{{$booking->application_number}} </span>
+                            
+                        </td>
                         <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm {{ request('agencyid') == $booking->agency->id ? 'bg-yellow-100' : '' }}">
                             {{ $booking->agency->name }}
                             
                         </td>
 
 
-                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm whitespace-nowrap">
                                     @php
                                         if (isset($booking->otherclientid) && isset($booking->otherapplicationDetails)) {
                                             $firstName = $booking->otherapplicationDetails?->name ?? '';
@@ -198,12 +201,13 @@
                                         }
                                     @endphp
 
-                                    <span>{{ $fullName }}</span><br>
-                                    <span class="font-medium text-xs">{{ $email }}</span><br>
-                                    <span class="font-medium text-xs">{{ $phone }}</span>
+                                    <span><i class="fa fa-user mr-1"></i>{{ $fullName }}</span><br>
+                                    <span class="font-medium text-xs"><i class="fa fa-envelope mr-1"></i>{{ $email }}</span><br>
+                                    <span class="font-medium text-xs"><i class="fa fa-phone mr-1"></i>{{ $phone }}</span>
+                                    
                                 </td>
                         <td class="border-[2px] border-secondary/40 px-4 py-0.5 text-ternary/80 font-medium text-sm ">
-                            <span class="text-sm text-ternary/80 font-medium flex items-center gap-2 mr-6">
+                            <span class="text-sm text-ternary/80 font-medium flex items-center gap-2 mr-6 whitespace-nowrap">
                                 <img src="{{ asset('assets/flags/64x48/' . strtolower($booking->origin->countryCode) . '.png') }}" 
                                     alt="{{ $booking->origin->countryCode }}" 
                                     class="w-5 h-4 object-cover rounded-sm" />
@@ -227,12 +231,12 @@
                                 <span class="font-medium text-xs"> Pending :  {{ $booking->clientapplciation()->where('document_status', '0')->count() }}</span><br>
                                 <span class="font-medium text-xs"> Done :      {{ $booking->clientapplciation()->where('document_status', '1')->count() }}</span>
                             </td> -->
-                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm whitespace-nowrap">
                                 <div class="flex justify-between items-center">
-                                    <span class="font-medium text-xs border p-10 rounded-md">
-                                        Total: {{ $booking->clientapplciation->count() ?: 0 }}<br>
-                                        Pending: {{ $booking->clientapplciation->where('document_status', '0')->count() }}<br>
-                                        Done: {{ $booking->clientapplciation->where('document_status', '1')->count() }}
+                                    <span class="font-medium text-xs ">
+                                        <i class="fa fa-file mr-1"></i>Total: {{ $booking->clientapplciation->count() ?: 0 }}<br>
+                                        <i class="fa fa-hourglass-half mr-1"></i>Pending: {{ $booking->clientapplciation->where('document_status', '0')->count() }}<br>
+                                        <i class="fa fa-check mr-1"></i> Done: {{ $booking->clientapplciation->where('document_status', '1')->count() }}
                                     </span>
                                    
                                 </div>
