@@ -320,7 +320,7 @@ protected function saveDocumentForSign($document, $request)
             $bookingApplication->save();
         }
     }
-    $save=$this->agencyService->saveLog($bookings,'Super Admin','Update Document status', Auth::id(),$data['document_status']);
+    $save=$this->agencyService->saveLog($bookings,'Super Admin','Updated Document status', Auth::id(),$data['document_status']);
     return $document;
 }
 

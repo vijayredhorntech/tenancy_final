@@ -96,11 +96,10 @@ class VisaBooking extends Model
     return $this->hasOne(Deduction::class, 'flight_booking_id', 'id');
 }
 
-
-   
-
-   
-
+public function visaapplicationlog()
+{
+    return $this->hasMany(VisaApplicationLog::class, 'booking_id', 'id');
+}
 
 
 }

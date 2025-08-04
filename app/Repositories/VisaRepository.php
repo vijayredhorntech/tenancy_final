@@ -1034,6 +1034,7 @@ public function getBookingByid($id, $type, $request)
         'downloadDocument',
         'clientrequestdocuments',
         'applicationlog',
+        'visaapplicationlog',
         'clientrequiremtsinfo',
         'visarequireddocument',
         'visaInvoiceStatus.invoice',
@@ -1087,8 +1088,8 @@ public function getBookingByid($id, $type, $request)
 
     public function assignUpdateBooking($id,$data){
       $visabooking=VisaBooking::with('agency')->where('id',$id)->first(); 
-        $visabooking->document_status=$data['document_status']; 
-        $visabooking->payment_status=$data['paymentstatus']; 
+
+
         if(isset($data['application_status'])){
             $visabooking->application_status=$data['application_status'];
             $visabooking->applicationworkin_status=$data['application_status'];

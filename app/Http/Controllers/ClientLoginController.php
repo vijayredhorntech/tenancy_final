@@ -251,13 +251,14 @@ class ClientLoginController extends Controller
     // ->send(new DocumentVerificationRequestMail(
     //     $application->application_number
     // ));
+    
    
     if($request->type=='agency') {
 
-        $save=$this->agencyService->saveLog($bookingApplication,'agency','Upload Document', $user->id);
+        $save=$this->agencyService->saveLog($bookingApplication,'agency','Uploaded Document', $user->id);
         return redirect()->route('agency.application',['type' => 'all'])->with('success', 'Documents uploaded successfully.');
     }
-    $save=$this->agencyService->saveLog($bookingApplication,'Client','Upload Document', '1');
+    $save=$this->agencyService->saveLog($bookingApplication,'Client','Uploaded Document', '1');
     return redirect()->route('client.notification')->with('success', 'Documents uploaded successfully.');
        
 
