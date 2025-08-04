@@ -835,7 +835,7 @@ public function hsFromindex(Request $request)
     public function hsupdateapplication(Request $request)
 {
 
-    dd("hello");
+
 
     if (isset($request->type) && $request->type === 'superadmin') {
         $data = $request->validate([

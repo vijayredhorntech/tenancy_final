@@ -243,7 +243,7 @@
                                 </div>
                         @endif
 
-                         @if(in_array('Nationality at Birth', $permission))
+                         @if(in_array('Past Nationality', $permission))
                                 <!-- Past Nationality (if any) -->
                                 <div class="w-full relative group flex flex-col gap-1">
                                         <label for="past_nationality" class="font-semibold text-ternary/90 text-sm">Past Nationality (if any)</label>
