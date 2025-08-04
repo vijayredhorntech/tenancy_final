@@ -74,6 +74,30 @@
         .signature{
 
         }
+        @media print {
+    /* body * {
+        visibility: hidden;        
+    } */
+
+    /* Make the invoice and its children visible */
+    #ViewApplicationDiv,
+    #ViewApplicationDiv * {
+        visibility: visible;
+    }
+
+    /* Keep the invoice at the top‑left and use full width */
+    #ViewApplicationDiv {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+    
+    /* Optionally hide buttons or other screen‑only elements */
+    .no-print {
+        display: none !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -92,7 +116,7 @@
 
 <!-- Wrap the content of your PDF inside a main tag -->
 <main>
-    <div class="main-container" style="padding:10px; padding-top: 100px">
+    <div class="main-container" style="padding:10px; padding-top: 213px">
         <section>
             @php
             use Carbon\Carbon;       // Carbon alias
