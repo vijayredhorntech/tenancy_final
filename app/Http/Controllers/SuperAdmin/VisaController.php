@@ -227,7 +227,7 @@ class VisaController extends Controller
             'description'  => 'nullable|string', 
         ]);
         $visa = $this->visaRepository->createVisa($data);
-        return redirect()->route('visa.view')->with('success', 'Visa created successfully');
+        return redirect()->route('allvisa.view')->with('success', 'Visa created successfully');
     }
 
 
