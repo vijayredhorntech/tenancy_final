@@ -19,6 +19,7 @@ use App\Services\AgencyService;
 use App\Models\Balance;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Repositories\Interfaces\ClintRepositoryInterface;
+use App\Repositories\Interfaces\TermConditionRepositoryInterface;
 use App\Traits\ChatTrait;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DocumentDownloadedNotificationMail;
@@ -41,11 +42,13 @@ class VisaController extends Controller
 
     protected $visaRepository,$clintRepository;
     protected $agencyService;
+    protected $termConditionRepo;
 
-    public function __construct( ClintRepositoryInterface $clintRepository,VisaRepositoryInterface $visaRepository, AgencyService $agencyService) {
+    public function __construct( ClintRepositoryInterface $clintRepository,VisaRepositoryInterface $visaRepository, AgencyService $agencyService,TermConditionRepositoryInterface $termConditionRepo) {
         $this->visaRepository = $visaRepository;
         $this->agencyService = $agencyService;
         $this->clintRepository = $clintRepository;
+         $this->termConditionRepo = $termConditionRepo;
 
 
     }
@@ -1077,7 +1080,7 @@ public function hsconfirmApplication(Request $request)
 public function showFromInvoice($id)
 {
     $booking = VisaBooking::with(['agency', 'clint', 'visa', 'visaInvoiceStatus', 'visaInvoiceStatus.docsign.sign'])->findOrFail($id);
-    $termconditon = TermsCondition::with('termType')->get();
+    $termconditon = $this->termConditionRepo->allTeamTypes();
 
     return view('components.common.invoice.Superadminvisa-invoice', compact('booking', 'termconditon'));
 }

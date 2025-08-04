@@ -207,22 +207,23 @@
         </section>
 
         <!-- Repeat sections as needed -->
-
         <span>Terms and Conditions</span>
         <strong>Notes:</strong>
         <ul class="list-disc pl-6 mt-4">
-            @foreach ($termtype as $type)                 {{-- each TermType --}}
-
-            @foreach ($type->terms as $term)      {{-- its related TermsCondition rows --}}
+            @foreach ($termtype as $type)   {{-- each TermType --}}
+           
+            @foreach ($type->terms as $term)  {{-- its related TermsCondition rows --}}
             <section>
                 <li>
                     <strong>{{ $term->heading }}</strong>
+                    <strong>{{ $term->description }}</strong>
                 </li>
                 @endforeach
             </section>
             @endforeach
         </ul>
 
+      
         @php
         // null-safe chain; returns null if any link is missing
         $signature = $booking->visaInvoiceStatus?->docsign?->sign?->signature_data;

@@ -104,6 +104,14 @@
                                         </div>
                                         @endif
 
+                                        @if(in_array('Mother Previous Nationality', $permission))
+                                        <div>
+                                        <label for="mother_previous_nationality" class="font-semibold text-sm text-ternary/90">Previous Nationality</label>
+                                        <input type="text" name="mother_previous_nationality" id="mother_previous_nationality" value="{{ old('mother_previous_nationality', $motherdetails->previous_nationality ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                        @endif
+
                                         @if(in_array('Mother Place of Birth', $permission))
                                         <div>
                                         <label for="mother_birth_place" class="font-semibold text-sm text-ternary/90">Place of Birth</label>
