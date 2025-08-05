@@ -13,6 +13,7 @@ use App\Models\VisaSubtype;
 use Auth;
 use Illuminate\Support\Str;
 use App\Models\User;
+use Illuminate\Support\Arr;
 use App\Models\Agency;
 use App\Models\VisaServiceTypeDocument;
 use App\Services\AgencyService;
@@ -988,40 +989,71 @@ public function hsFromindex(Request $request)
 
 
 
+
+
 public function hsconfirmApplication(Request $request)
 {
     $booking = $this->visaRepository->bookingDataById($request->bookingid);
-    $newData = $request->all();  
+    $newData = $request->all();
 
-    if ($request->type == 'superadmin') {
-        return redirect()->route('superadminvisa.applicationview', ['id' => $request->bookingid]);
-    }
+    // Fields that should be ignored during comparison/logging
+    $ignoreFields = ['_token', '_method', 'bookingid'];
 
-    $clientInfo = $booking->clint->clientinfo;
+    // Step 1: Flatten the current stored data from all necessary models
+    $oldData = [];
 
-    foreach ($newData as $key => $newValue) {
-        if (isset($clientInfo->$key)) {
-            $oldValue = $clientInfo->$key;
-            $oldValue = trim($oldValue);
-            $newValue = trim($newValue);
+    // Main booking model
+    $oldData = array_merge($oldData, $booking->getAttributes());
 
-            if ($oldValue != $newValue) {
-                // Now including the 'field_name' (key)
-                \App\Models\VisaApplicationLog::create([
-                    'booking_id' => $booking->id,
-                    'application_number' => $booking->application_number,
-                    'field_name' => $key,   // Add 'field_name' here
-                    'old_value' => $oldValue,  
-                    'new_value' => $newValue, 
-                    'type' => 'agency',        
-                ]);
-            }
+    // Add clint model if exists
+    if ($booking->clint) {
+        $oldData = array_merge($oldData, $booking->clint->getAttributes());
+
+        // Add clientinfo inside clint
+        if ($booking->clint->clientinfo) {
+            $oldData = array_merge($oldData, $booking->clint->clientinfo->getAttributes());
         }
     }
 
+    // Add clientrequiremtsinfo directly (flat)
+    if ($booking->clientrequiremtsinfo) {
+        $oldData = array_merge($oldData, $booking->clientrequiremtsinfo->getAttributes());
+    }
+
+    // Step 2: Compare and log changes
+    foreach ($newData as $key => $newValue) {
+        if (in_array($key, $ignoreFields)) {
+            continue; // Skip ignored/system fields
+        }
+
+        $oldValue = Arr::get($oldData, $key);
+
+        // Skip logging if the field doesn't exist in the original model
+        if (is_null($oldValue)) {
+            continue;
+        }
+
+        $oldValue = trim((string) $oldValue);
+        $newValue = is_null($newValue) ? null : trim((string) $newValue);
+
+        // Only log if changed
+        if ($oldValue !== $newValue) {
+            \App\Models\VisaApplicationLog::create([
+                'booking_id' => $booking->id,
+                'application_number' => $booking->application_number,
+                'field_name' => $key,
+                'old_value' => $oldValue,
+                'new_value' => $newValue,
+                'type' => $request->type === 'superadmin' ? 'superadmin' : 'agency',
+            ]);
+        }
+    }
+
+    // Step 3: Save updates
     $this->clintRepository->step1createclient($newData);
     $this->visaRepository->visadocumentstore($newData);
 
+    // Step 4: Auto insert missing documents
     $checkDocument = VisaServiceType::where('origin', $booking->origin_id)
         ->where('destination', $booking->destination_id)
         ->where('visa_id', $booking->visa_id)
@@ -1037,23 +1069,31 @@ public function hsconfirmApplication(Request $request)
                     ->exists();
 
                 if (!$exists) {
-                    $insertDocument = new ClientApplicationDocument();
-                    $insertDocument->application_id = $booking->id;
-                    $insertDocument->application_number = $booking->application_number;
-                    $insertDocument->agency_id = $booking->agency_id;
-                    $insertDocument->document_name = $docName;
-                    $insertDocument->document_status = 0; // Assuming document is not yet verified
-                    $insertDocument->save();
+                    \App\Models\ClientApplicationDocument::create([
+                        'application_id' => $booking->id,
+                        'application_number' => $booking->application_number,
+                        'agency_id' => $booking->agency_id,
+                        'document_name' => $docName,
+                        'document_status' => 0,
+                    ]);
                 }
             }
         }
     }
 
-    $booking->sendtoadmin = 3; 
+    // Step 5: Update application flag
+    $booking->sendtoadmin = 3;
     $booking->save();
+
+    // Step 6: Redirect
+    if ($request->type === 'superadmin') {
+        return redirect()->route('superadminvisa.applicationview', ['id' => $request->bookingid]);
+    }
 
     return redirect()->route('visa.applicationview', ['id' => $request->bookingid]);
 }
+
+
 
 
 
