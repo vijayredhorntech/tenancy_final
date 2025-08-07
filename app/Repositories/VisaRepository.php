@@ -1190,23 +1190,55 @@ public function getBookingByid($id, $type, $request)
        ->paginate(10);
     }
 
-    public function storeClientDocuemtn($data){
+    // public function storeClientDocuemtn($data){
   
-        $bookingId = $data['booking_id'];
-    //   dd($bookingId);
-       foreach ($data['documents'] as $docId => $file) {
-        $filename = $file->store('client/documents', 'public');
+    //     $bookingId = $data['booking_id'];
+    //     //   dd($bookingId);
+    //         foreach ($data['documents'] as $docId => $file) {
+    //             $filename = $file->store('client/documents', 'public');
 
 
-        // Example: store document path in DB
-        ClientApplicationDocument::where('id', $docId)->update([
-            'document_file' => $filename,
-            'document_status' => 2, // Mark as uploaded
-        ]);
-    }
-    return true;
+    //             // Example: store document path in DB
+    //             ClientApplicationDocument::where('id', $docId)->update([
+    //                 'document_file' => $filename,
+    //                 'document_status' => 2, // Mark as uploaded
+    //             ]);
+    //         }
+    //         return true;
        
-    }
+    // }
+   public function storeClientDocuemtn($data)
+{
+        $bookingId = $data['booking_id'];
+
+        foreach ($data['documents'] as $docId => $file) {
+            // Define destination folder inside public/images/client/documents
+            $destinationPath = public_path('images/client/documents');
+
+            // Create folder if it doesn't exist
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            // Generate unique filename
+            $filename = uniqid() . '_' . time() . '.' . $file->getClientOriginalExtension();
+
+            // Move file to the destination folder
+            $file->move($destinationPath, $filename);
+
+            // Save the relative path to DB (match public path)
+            $relativePath = 'images/client/documents/' . $filename;
+
+            ClientApplicationDocument::where('id', $docId)->update([
+                'document_file' => $relativePath,
+                'document_status' => 2,
+            ]);
+        }
+
+        return true;
+}
+
+
 
     public function getBookingBySingleId($id){
         $bookingData= VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype','otherclients','downloadDocument'])
