@@ -146,7 +146,7 @@
                   </div>
                   <div class="flex justify-between mt-1.5 pb-3 border-b-2 border-b-secondary/30 ">
                       <span class="text-black text-md ">Tax:</span>
-                      <span class="text-secondary text-md font-semibold"> </span>
+                      <span class="text-secondary text-md font-semibold" > </span>
                   </div>
 
                   <div class="flex justify-between mt-3">

@@ -322,7 +322,7 @@ public function getStoreclint(array $data)
         // Generate Unique Client ID
         do {
             $randomNumber = rand(1000, 9999);
-            $clientID = "{$agencyPrefix}-{$clientPrefix}-{$randomNumber}";
+            $clientID = "{$agencyPrefix}{$clientPrefix}{$randomNumber}";
         } while (ClientDetails::where('clientuid', $clientID)->exists());
 
         // Save in user database

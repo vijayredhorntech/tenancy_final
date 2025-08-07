@@ -143,7 +143,7 @@
                                 </div>
 
                                 <div class="flex justify-between mt-1">
-                                    <span>Gst:</span>
+                                    <span>VAT%:</span>
                                     <span class="font-medium">{{ $subvisa->gstin ?? 'N/A' }} %</span>
                                 </div>
                             </div>

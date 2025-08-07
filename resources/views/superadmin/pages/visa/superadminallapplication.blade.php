@@ -3,7 +3,7 @@
 <!-- Include Select2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-<!-- Include jQuery (required by Select2) and Select2 JS -->
+<!-- Include jQuery (required by Select2) and Select2 JS -->   
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
@@ -53,8 +53,8 @@
                                            <div class="flex gap-2 mt-1">
                                         <!-- Origin Country -->
                                         <select name="origin_id" id="origin_id"
-                                            class="select2 mt-1 block w-full text-gray-200 rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                                            <option value="">Select Origin Country</option>
+                                            class="select2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
+                                            <option value="">Origin Country</option>
                                             @foreach($countries as $country)
                                                 <option 
                                                     value="{{ $country->id }}" 
@@ -68,7 +68,7 @@
                                         <!-- Destination Country -->
                                         <select name="destination_id" id="destination_id"
                                             class="select2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primaryDark focus:ring-primaryDark sm:text-sm">
-                                            <option value="">Select Destination Country</option>
+                                            <option value="">Destination Country</option>
                                             @foreach($countries as $country)
                                                 <option 
                                                     value="{{ $country->id }}" 
@@ -144,23 +144,24 @@
                                     </div>
                                 </div>
             </form> 
-      
+
+<div class="max-h-[600px] overflow-auto mt-4 border border-gray-300 rounded-md">
         <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                 <tr>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application Number</th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Agency Details</th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Client Details</th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Sr. No.</th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Application Number</th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Agency Details</th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-mdwhitespace-nowrap">Client Details</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap ">Visa</th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Document </th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md ">Document </th>
             
                
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Total Amount(£)</th> 
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Total Amount(£)</th> 
                   
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application Submission Date  </th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Passport Submit</th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application status</th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Application Submission Date  </th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Passport Submit</th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Application status</th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md ">Action</th>
 
 
 
@@ -358,6 +359,7 @@
 
 
             </table>
+        </div>
             {{ $allbookings->onEachSide(0)->links() }}
 
 
