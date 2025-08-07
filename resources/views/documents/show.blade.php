@@ -236,8 +236,8 @@
         : [];
 
     /* 4. Human‑readable date or ‘N/A’ */
-    $date = $invoice && $invoice->invoice_date
-        ? Carbon::parse($invoice->invoice_date)->format('d F Y')
+    $date = $invoice && $invoice->date
+        ? Carbon::parse($invoice->date)->format('d F Y')
         : 'N/A';
 
     /* 5. Filter term‑conditions collection if present */
@@ -352,6 +352,7 @@
                 @foreach ($type->terms as $term)  
                           {{-- its related TermsCondition rows --}}
                 <section>
+                    
                     <li>
                         <strong>{{ $term->heading }}</strong>
                         <strong>{{ $term->description }}</strong>

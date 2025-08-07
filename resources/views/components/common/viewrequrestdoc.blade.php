@@ -32,7 +32,7 @@
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$document->application_number}}</td>
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$document->document_name }} </td>
                         <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                <a href="{{ asset('storage/' . $document->document_file) }}" target="_blank">
+                                <a href="{{ asset($document->document_file) }}" target="_blank">
                                 View Document
                             </a>
                       </td>

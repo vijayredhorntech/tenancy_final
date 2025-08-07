@@ -43,7 +43,7 @@
                          {{-- View Document Button --}}
                             <div class="w-full relative group flex flex-col gap-1 ">
                                 <label class="font-semibold text-ternary/90 text-sm">View Uploaded Document</label>
-                                <a href="{{ asset('storage/' . $document->document_file) }}" 
+                                <a href="{{ asset($document->document_file) }}" 
                                 target="_blank" 
                                 class="inline-block bg-blue-600 text-white text-sm px-4 py-1.5 rounded hover:bg-blue-700 transition-all w-fit">
                                     View Document
