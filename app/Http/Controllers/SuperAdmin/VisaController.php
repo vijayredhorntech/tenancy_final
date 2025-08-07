@@ -554,29 +554,78 @@ public function hsViewEditSection($id){
 
     /*******Visa BOoking *******/
 
-    public function hsVisaBook(Request $request){
+    // public function hsVisaBook(Request $request){
 
-        $data = $request->validate([
-            'origin'        => 'required|integer|exists:countries,id',  // Ensure it exists in the countries table
-            'destination'   => 'required|integer|exists:countries,id',
-            'typeof'        => 'required|integer|exists:visa_types,id',
-            'category'      => 'required|integer|exists:visa_subtypes,id',
+       
+    //     $data = $request->validate([
+    //         'origin'        => 'required|integer|exists:countries,id',  // Ensure it exists in the countries table
+    //         'destination'   => 'required|integer|exists:countries,id',
+    //         'typeof'        => 'required|integer|exists:visa_types,id',
+    //         'category'      => 'required|integer|exists:visa_subtypes,id',
 
-            'lastname'      => 'required|string|max:255',
-            'firstname'     => 'required|string|max:255',
+    //         'lastname'      => 'required|string|max:255',
+    //         'firstname'     => 'required|string|max:255',
 
-            'citizenship'   => 'nullable|string|max:255',  // Fix: "null" should be "nullable|string"
-            'email'         => 'required|email|max:255',
-            'phonenumber'   => 'required|numeric', // Ensures phone number is reasonable
+    //         'citizenship'   => 'nullable|string|max:255',  // Fix: "null" should be "nullable|string"
+    //         'email'         => 'required|email|max:255',
+    //         'phonenumber'   => 'required|numeric', // Ensures phone number is reasonable
 
-            'dateofentry'   => 'required|date|after_or_equal:today', // Ensures it's a valid date and not in the future
-        ]);
+    //         'dateofentry'   => 'required|date|after_or_equal:today', // Ensures it's a valid date and not in the future
+    //     ]);
 
-        $visas = $this->visaRepository->saveBooking($request->all());
-        // dd($visas);
-        return redirect()->route('verify.application', ['id' => $visas->id])
-        ->with('success', 'Booking successful');
+    //     // $data['agency_id'] = $agency->id;
+    //     // $data['total_amount'] = 
+
+    //     $visas = $this->visaRepository->saveBooking($request->all());
+    //     if($visas == false){
+    //         return redirect()->back()->with('error', 'Booking failed');
+    //     }
+    //     // dd($visas);
+    //     return redirect()->route('verify.application', ['id' => $visas->id])
+    //     ->with('success', 'Booking successful');
+    // }
+public function hsVisaBook(Request $request)
+{
+    $data = $request->validate([
+        'origin'        => 'required|integer|exists:countries,id',
+        'destination'   => 'required|integer|exists:countries,id',
+        'typeof'        => 'required|integer|exists:visa_types,id',
+        'category'      => 'required|integer|exists:visa_subtypes,id',
+
+        'lastname'      => 'required|string|max:255',
+        'firstname'     => 'required|string|max:255',
+        'citizenship'   => 'nullable|string|max:255',
+        'email'         => 'required|email|max:255',
+        'phonenumber'   => 'required|numeric',
+        'dateofentry'   => 'required|date|after_or_equal:today',
+    ]);
+
+    // Get the current user (assumes client is authenticated)
+        $agency = $this->agencyService->getAgencyData();
+    // Check for existing pending application
+  
+
+    $existing = VisaBooking::where('client_id', $request->clientId)
+        ->where('agency_id', $agency->id)
+        ->where('applicationworkin_status', 'Pending')
+        ->first();
+        // dd($existing);
+
+    if ($existing) {
+        return redirect()->back()->with('error', 'You have already applied for a visa. Kindly check your pending application or wait for approval.');
     }
+
+    // Proceed to book visa
+    $booking = $this->visaRepository->saveBooking($request->all());
+
+    if (!$booking) {
+        return redirect()->back()->with('error', 'Visa booking failed. Please try again.');
+    }
+
+    return redirect()
+        ->route('verify.application', ['id' => $booking->id])
+        ->with('success', 'Booking successful. Please verify your application.');
+}
 
 
 

@@ -668,44 +668,45 @@ public function saveBooking(array $data)
         $totalAmount *= $passengerCount;
     }
 
-    // Save booking first (without application number)
-    // Save booking first (with temporary application number)
-$booking = new VisaBooking();
-$booking->origin_id = $data['origin'];
-$booking->destination_id = $data['destination'];
-$booking->visa_id = $data['typeof'];
-$booking->subtype_id = $data['category'];
-$booking->agency_id = $agency->id;
-$booking->user_id = $user->id;
-$booking->client_id = $data['clientId'];
-$booking->total_amount = $totalAmount;
-$booking->dateofentry = $data['dateofentry'];
-$booking->application_number = ''; // ✅ Temporary to pass NOT NULL
-$booking->save(); // Now ID is available
+    
+     // Save booking first (without application number)
+        // Save booking first (with temporary application number)
+    $booking = new VisaBooking();
+    $booking->origin_id = $data['origin'];
+    $booking->destination_id = $data['destination'];
+    $booking->visa_id = $data['typeof'];
+    $booking->subtype_id = $data['category'];
+    $booking->agency_id = $agency->id;
+    $booking->user_id = $user->id;
+    $booking->client_id = $data['clientId'];
+    $booking->total_amount = $totalAmount;
+    $booking->dateofentry = $data['dateofentry'];
+    $booking->application_number = ''; // ✅ Temporary to pass NOT NULL
+    $booking->save(); // Now ID is available
 
-// Generate application number
-$agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
-$application = "CLDA" . $agencyInitial . "I00" . $booking->id;
+    // Generate application number
+    $agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
+    $application = "CLDA" . $agencyInitial . "I00" . $booking->id;
 
-// Update booking with real application number
-$booking->application_number = $application;
-$booking->save();
+    // Update booking with real application number
+    $booking->application_number = $application;
+    $booking->save();
 
-    // Save passenger details
-    if (isset($data['passengerfirstname'])) {
-        foreach ($data['passengerfirstname'] as $index => $firstname) {
-            $authapplication = new AuthervisaApplication();
-            $authapplication->setConnection('user_database');
-            $authapplication->booking_id = $booking->id;
-            $authapplication->clint_id = $data['clientId'];
-            $authapplication->name = $firstname;
-            $authapplication->lastname = $data['passengerlastname'][$index];
-            $authapplication->passport_number = $data['passengerpassportn'][$index];
-            $authapplication->passport_issue_date = $data['passportissuedate'][$index];
-            $authapplication->passport_expire_date = $data['passportexpiredate'][$index];
-            $authapplication->place_of_issue = $data['passengerplace'][$index];
-            $authapplication->save();
-        }
+        // Save passenger details
+        if (isset($data['passengerfirstname'])) {
+            foreach ($data['passengerfirstname'] as $index => $firstname) {
+                $authapplication = new AuthervisaApplication();
+                $authapplication->setConnection('user_database');
+                $authapplication->booking_id = $booking->id;
+                $authapplication->clint_id = $data['clientId'];
+                $authapplication->name = $firstname;
+                $authapplication->lastname = $data['passengerlastname'][$index];
+                $authapplication->passport_number = $data['passengerpassportn'][$index];
+                $authapplication->passport_issue_date = $data['passportissuedate'][$index];
+                $authapplication->passport_expire_date = $data['passportexpiredate'][$index];
+                $authapplication->place_of_issue = $data['passengerplace'][$index];
+                $authapplication->save();
+            }
     }
 
     return $booking;
