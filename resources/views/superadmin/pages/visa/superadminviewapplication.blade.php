@@ -229,6 +229,10 @@
                     <i class="fas fa-eye text-ternary"></i>
                     Log Data 
                 </div>
+                <div data-tid="VisaupdationlogDataDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-eye text-ternary"></i>
+                    Visa Updation Log Data
+                </div>
 
                 <div data-tid="sendEmailDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-envelope text-ternary"></i>
@@ -296,6 +300,9 @@
 
                     <div id="logDataDiv" class="tab  hidden">
                         <x-common.visalog :logs="$clientData->applicationlog->sortByDesc('created_at')" /> 
+                    </div>
+                    <div id="VisaupdationlogDataDiv" class="tab  hidden">
+                        <x-common.invoice.VisaApplicationlog :logs="$clientData->visaapplicationlog->sortByDesc('created_at')" /> 
                     </div>
 
                     <div id="applicationDataDiv" class="tab hidden">

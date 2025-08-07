@@ -232,13 +232,13 @@
                     Conversation
                 </div>
                </a>
+               <div data-tid="VisaupdationlogDataDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-eye text-ternary"></i>
+                    Visa Updation Log Data
+                </div>
 
 
                 @if($clientData->applicationworkin_status !== "Complete")   
-                    <div data-tid="editApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                        <i class="fas fa-edit text-ternary"></i>
-                        Edit Application
-                    </div>
                 @else
                     <div data-tid="downaloadDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                         <i class="fas fa-file-download text-ternary"></i>
@@ -393,6 +393,9 @@
                       
                       <div id="sendEmailDiv" class="tab hidden">
                         <x-common.sendemail :clientData="$clientData" :forms="$forms" />  
+                    </div>
+                    <div id="VisaupdationlogDataDiv" class="tab  hidden">
+                        <x-common.invoice.VisaApplicationlog :logs="$clientData->visaapplicationlog->sortByDesc('created_at')" /> 
                     </div>       
 
                     <div id="generateInvoiceDiv" class="tab hidden">

@@ -13,12 +13,14 @@ use App\Models\VisaSubtype;
 use Auth;
 use Illuminate\Support\Str;
 use App\Models\User;
+use Illuminate\Support\Arr;
 use App\Models\Agency;
 use App\Models\VisaServiceTypeDocument;
 use App\Services\AgencyService;
 use App\Models\Balance;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Repositories\Interfaces\ClintRepositoryInterface;
+use App\Repositories\Interfaces\TermConditionRepositoryInterface;
 use App\Traits\ChatTrait;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\DocumentDownloadedNotificationMail;
@@ -41,11 +43,13 @@ class VisaController extends Controller
 
     protected $visaRepository,$clintRepository;
     protected $agencyService;
+    protected $termConditionRepo;
 
-    public function __construct( ClintRepositoryInterface $clintRepository,VisaRepositoryInterface $visaRepository, AgencyService $agencyService) {
+    public function __construct( ClintRepositoryInterface $clintRepository,VisaRepositoryInterface $visaRepository, AgencyService $agencyService,TermConditionRepositoryInterface $termConditionRepo) {
         $this->visaRepository = $visaRepository;
         $this->agencyService = $agencyService;
         $this->clintRepository = $clintRepository;
+         $this->termConditionRepo = $termConditionRepo;
 
 
     }
@@ -92,7 +96,6 @@ class VisaController extends Controller
 //    all application
     public function hs_visaAllApplication(Request $request){
         $allbookings = $this->visaRepository->getSuperadminAllApplication($request);
-        
         $countries=Country::get();
         $agencies=Agency::get();  
         return view('superadmin.pages.visa.superadminallapplication', compact('allbookings','countries','agencies'));
@@ -131,7 +134,6 @@ class VisaController extends Controller
     public function hsVisaView($id){
         $visa = $this->visaRepository->getVisaById($id);
         $clientData=[];
-        // dd($visa);
         return view('superadmin.pages.visa.addsection.visaview', compact('visa','clientData'));
     }
 
@@ -226,7 +228,7 @@ class VisaController extends Controller
             'name'         => 'required|string|max:255|unique:visa_types,name',
             'description'  => 'nullable|string', 
         ]);
-        $visa = $this->visaRepository->createVisa($data);
+        $visa = $this->visaRepository->createVisa($data); 
         return redirect()->route('allvisa.view')->with('success', 'Visa created successfully');
     }
 
@@ -273,6 +275,7 @@ class VisaController extends Controller
             'processing.*'    => 'string|max:255',
             'gstin'   => 'required|array|min:1',
             'gstin.*' => 'numeric|min:0',
+            
 
         ]);
        
@@ -832,6 +835,9 @@ public function hsFromindex(Request $request)
     /*****Update Application ******/
     public function hsupdateapplication(Request $request)
 {
+
+
+
     if (isset($request->type) && $request->type === 'superadmin') {
         $data = $request->validate([
             'applciationid' => 'required',
@@ -853,6 +859,7 @@ public function hsFromindex(Request $request)
 
         // Now update the booking
         $updatedBooking = $this->visaRepository->assignUpdateBooking($request->applciationid, $request->all());
+
 
         $changes = [];
         foreach ($original as $key => $value) {
@@ -980,54 +987,117 @@ public function hsFromindex(Request $request)
  }
 
 
-  public function hsconfirmApplication(Request $request){
-    //  dd($request->all());
-    $this->clintRepository->step1createclient($request->all());
-    $this->visaRepository->visadocumentstore($request->all());
-    // $bookingData = $this->visaRepository->sendToAdmin($request->booking_id);
-    if($request->type=='superadmin'){
-        return redirect()->route('superadminvisa.applicationview', ['id' => $request->bookingid]);
-    }else{
-        
-        //   dd($request->all());
-        $booking = VisaBooking::with('visasubtype.countryData')->where('id', $request->bookingid)->first();
-        // dd($booking);
-        $checkDocument = VisaServiceType::where('origin', $booking->origin_id)
+
+
+
+
+public function hsconfirmApplication(Request $request)
+{
+    $booking = $this->visaRepository->bookingDataById($request->bookingid);
+    $newData = $request->all();
+
+    // Fields that should be ignored during comparison/logging
+    $ignoreFields = ['_token', '_method', 'bookingid'];
+
+    // Step 1: Flatten the current stored data from all necessary models
+    $oldData = [];
+
+    // Main booking model
+    $oldData = array_merge($oldData, $booking->getAttributes());
+
+    // Add clint model if exists
+    if ($booking->clint) {
+        $oldData = array_merge($oldData, $booking->clint->getAttributes());
+
+        // Add clientinfo inside clint
+        if ($booking->clint->clientinfo) {
+            $oldData = array_merge($oldData, $booking->clint->clientinfo->getAttributes());
+        }
+    }
+
+    // Add clientrequiremtsinfo directly (flat)
+    if ($booking->clientrequiremtsinfo) {
+        $oldData = array_merge($oldData, $booking->clientrequiremtsinfo->getAttributes());
+    }
+
+    // Step 2: Compare and log changes
+    foreach ($newData as $key => $newValue) {
+        if (in_array($key, $ignoreFields)) {
+            continue; // Skip ignored/system fields
+        }
+
+        $oldValue = Arr::get($oldData, $key);
+
+        // Skip logging if the field doesn't exist in the original model
+        if (is_null($oldValue)) {
+            continue;
+        }
+
+        $oldValue = trim((string) $oldValue);
+        $newValue = is_null($newValue) ? null : trim((string) $newValue);
+
+        // Only log if changed
+        if ($oldValue !== $newValue) {
+            \App\Models\VisaApplicationLog::create([
+                'booking_id' => $booking->id,
+                'application_number' => $booking->application_number,
+                'field_name' => $key,
+                'old_value' => $oldValue,
+                'new_value' => $newValue,
+                'type' => $request->type === 'superadmin' ? 'superadmin' : 'agency',
+            ]);
+        }
+    }
+
+    // Step 3: Save updates
+    $this->clintRepository->step1createclient($newData);
+    $this->visaRepository->visadocumentstore($newData);
+
+    // Step 4: Auto insert missing documents
+    $checkDocument = VisaServiceType::where('origin', $booking->origin_id)
         ->where('destination', $booking->destination_id)
         ->where('visa_id', $booking->visa_id)
         ->first();
-        //  dd($checkDocument);
-        if (isset($booking) && $checkDocument) {
-            $documents = json_decode($checkDocument->required_document, true);
-        
-           
-            if (is_array($documents)) {
-                foreach ($documents as $docName) {
-                    $exists = \App\Models\ClientApplicationDocument::where('application_id', $booking->id)
-                        ->where('document_name', $docName)
-                        ->exists();
-        
-                    if (!$exists) {
-                        $insertDocument = new ClientApplicationDocument();
-                        $insertDocument->application_id = $booking->id;
-                        $insertDocument->application_number = $booking->application_number;
-                        $insertDocument->agency_id = $booking->agency_id;
-                        $insertDocument->document_name = $docName;
-                        $insertDocument->document_status = 0;
-                        $insertDocument->save();
-                    }
+
+    if ($checkDocument) {
+        $documents = json_decode($checkDocument->required_document, true);
+
+        if (is_array($documents)) {
+            foreach ($documents as $docName) {
+                $exists = \App\Models\ClientApplicationDocument::where('application_id', $booking->id)
+                    ->where('document_name', $docName)
+                    ->exists();
+
+                if (!$exists) {
+                    \App\Models\ClientApplicationDocument::create([
+                        'application_id' => $booking->id,
+                        'application_number' => $booking->application_number,
+                        'agency_id' => $booking->agency_id,
+                        'document_name' => $docName,
+                        'document_status' => 0,
+                    ]);
                 }
             }
         }
-        // dd($booking);
-        $booking->sendtoadmin=3;
-        $booking->save();
-        // dd($bookingData);
-        return redirect()->route('visa.applicationview', ['id' => $request->bookingid]);
     }
 
+    // Step 5: Update application flag
+    $booking->sendtoadmin = 3;
+    $booking->save();
 
- }
+    // Step 6: Redirect
+    if ($request->type === 'superadmin') {
+        return redirect()->route('superadminvisa.applicationview', ['id' => $request->bookingid]);
+    }
+
+    return redirect()->route('visa.applicationview', ['id' => $request->bookingid]);
+}
+
+
+
+
+
+
 
  public function hs_veriryvisaapplication($id, $type)
 {
@@ -1050,12 +1120,23 @@ public function hsFromindex(Request $request)
 public function showFromInvoice($id)
 {
     $booking = VisaBooking::with(['agency', 'clint', 'visa', 'visaInvoiceStatus', 'visaInvoiceStatus.docsign.sign'])->findOrFail($id);
-    $termconditon = TermsCondition::with('termType')->get();
+    $termconditon = $this->termConditionRepo->allTeamTypes();
 
     return view('components.common.invoice.Superadminvisa-invoice', compact('booking', 'termconditon'));
 }
 
+// VisaController.php
 
+public function showVisaApplicationLogs()
+{
+    // Fetch VisaApplicationLog data (can be paginated if needed)
+    $logs = \App\Models\VisaApplicationLog::paginate(10); // Paginate 10 logs per page (adjust if necessary)
+
+
+
+    // Return the view with logs
+    return view('components.common.visalog', compact('logs'));
+}
 
 
 

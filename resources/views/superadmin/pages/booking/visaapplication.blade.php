@@ -256,7 +256,7 @@
                                                                     </div>
                                                                 </a> -->
 
-                                                                <a href="{{ route('superadminvisa.invoice.view', ['id' => $booking->id]) }}" title="View Visa Application">
+                                                                <a href="{{ route('superadminvisa.invoice.view', ['id' => $booking->id]) }}" title="Download Invoice">
                                                                     <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
                                                                         <i class="fa fa-eye"></i> 
                                                                     </div>
@@ -265,7 +265,7 @@
                                                         
                                                                 <!-- <a href="" title="View Dashboard">
                                                                     <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
-                                                                        <i class="fa fa-computer"></i>
+                                                                        <i class="fa fa-computer"><s/i>
                                                                     </div>
                                                                 </a> -->
 

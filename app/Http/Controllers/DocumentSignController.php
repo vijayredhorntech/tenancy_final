@@ -39,6 +39,7 @@ class DocumentSignController extends Controller
     $booking = $this->documentSignRepository->checkSignDocument($id);
  
     $termconditon = $this->termConditionRepo->allTeamTypes();
+    // dd($termconditon);
   
     return view('documents.show', compact('booking','termconditon'));
 }
