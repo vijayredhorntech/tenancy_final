@@ -354,8 +354,8 @@
                 <section>
                     
                     <li>
-                        <strong>{{ $term->heading }}</strong>
-                        <strong>{{ $term->description }}</strong>
+                      <h4 class="font-bold mb-2">{{ $term->heading }}</h4>
+                    <p class="mb-4"> {{ $term->description }}</p>
 
                     </li>
                 @endforeach

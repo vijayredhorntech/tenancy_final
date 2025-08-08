@@ -1,5 +1,5 @@
 <x-agency.layout>
-    @section('title')Clint @endsection
+    @section('title')Client @endsection
 
 
 
@@ -9,21 +9,12 @@
 
             {{-- === Heading Section === --}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">Visa Application Form</span>
+                <span class="font-semibold text-ternary text-xl">Edit Client Details</span>
             </div>
             {{-- === heading section code ends here===--}}
 
             {{-- === Form Section === --}}
             <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 p-4">
-                @if ($errors->any())
-                    <div class="bg-red-100 text-red-700 p-3 rounded-md mb-4">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
 
                 <form action="{{ isset($client) ? route('updateclient.store', $client->id) : route('client.store') }}" method="POST" enctype="multipart/form-data" id="multiStepForm">
                     @csrf
@@ -32,9 +23,6 @@
                     {{-- Step 1: Personal Information --}}
                     <div class="form-step active" data-step="1">
                         <div class="w-full flex flex-col gap-2 px-4 mt-4">
-                            <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
-                                <span class="text-lg font-bold text-ternary">Personal Information</span>
-                            </div>
 
                             <div class="w-full grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4">
                                 <div class="w-full relative group flex flex-col gap-1">
@@ -69,97 +57,6 @@
                                 </div>
 
                                 <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="previous_name" class="font-semibold text-ternary/90 text-sm">Previous Name (if any)</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="previous_name" id="previous_name"
-                                            value="{{ old('previous_name', $client->clientInfo->previous_name ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-user-tag absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="gender" class="font-semibold text-ternary/90 text-sm">Gender *</label>
-                                    <div class="w-full relative">
-                                        <select name="gender" id="gender" required
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                @error('gender') border-red-500 @enderror">
-                                            <option value="">Select Gender</option>
-                                            <option value="MALE" {{ old('gender', $client->gender ?? '') == 'MALE' ? 'selected' : '' }}>Male</option>
-                                            <option value="FEMALE" {{ old('gender', $client->gender ?? '') == 'FEMALE' ? 'selected' : '' }}>Female</option>
-                                            <option value="OTHER" {{ old('gender', $client->gender ?? '') == 'OTHER' ? 'selected' : '' }}>Other</option>
-                                        </select>
-                                        <i class="fa fa-venus-mars absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('gender')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="marital_status" class="font-semibold text-ternary/90 text-sm">Marital Status *</label>
-                                    <div class="w-full relative">
-                                        <select name="marital_status" id="marital_status" required
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                @error('marital_status') border-red-500 @enderror">
-                                            <option value="">Select Status</option>
-                                            <option value="single" {{ old('marital_status', $client->marital_status ?? '') == 'single' ? 'selected' : '' }}>Single</option>
-                                            <option value="married" {{ old('marital_status', $client->marital_status ?? '') == 'married' ? 'selected' : '' }}>Married</option>
-                                            <option value="divorced" {{ old('marital_status', $client->marital_status ?? '') == 'divorced' ? 'selected' : '' }}>Divorced</option>
-                                            <option value="widowed" {{ old('marital_status', $client->marital_status ?? '') == 'widowed' ? 'selected' : '' }}>Widowed</option>
-                                        </select>
-                                        <i class="fa fa-heart absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('marital_status')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="religion" class="font-semibold text-ternary/90 text-sm">Religion</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="religion" id="religion"
-                                            value="{{ old('religion', $client->clientInfo->religion ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-pray absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="date_of_birth" class="font-semibold text-ternary/90 text-sm">Date of Birth *</label>
-                                    <div class="w-full relative">
-                                        <input type="date" name="date_of_birth" id="date_of_birth" required
-                                            value="{{ old('date_of_birth', $client->date_of_birth ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('date_of_birth') border-red-500 @enderror">
-                                        <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('date_of_birth')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="place_of_birth" class="font-semibold text-ternary/90 text-sm">Place of Birth</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="place_of_birth" id="place_of_birth"
-                                            value="{{ old('place_of_birth', $client->clientInfo->place_of_birth ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="country_of_birth" class="font-semibold text-ternary/90 text-sm">Country of Birth</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="country_of_birth" id="country_of_birth"
-                                            value="{{ old('country_of_birth', $client->clientInfo->country_of_birth ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
                                     <label for="nationality" class="font-semibold text-ternary/90 text-sm">Nationality *</label>
                                     <div class="w-full relative">
                                         <input type="text" name="nationality" id="nationality" required
@@ -169,139 +66,6 @@
                                         <i class="fa fa-flag absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>
                                     @error('nationality')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="past_nationality" class="font-semibold text-ternary/90 text-sm">Past Nationality (if any)</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="past_nationality" id="past_nationality"
-                                            value="{{ old('past_nationality', $client->clientInfo->past_nationality ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="educational_qualification" class="font-semibold text-ternary/90 text-sm">Educational Qualification</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="educational_qualification" id="educational_qualification"
-                                            value="{{ old('educational_qualification', $client->clientInfo->educational_qualification ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-graduation-cap absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="identification_marks" class="font-semibold text-ternary/90 text-sm">Identification Marks</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="identification_marks" id="identification_marks"
-                                            value="{{ old('identification_marks', $client->clientInfo->identification_marks ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="w-full flex justify-between px-4 pb-4 gap-2 mt-8">
-                            <button type="button" class="next-step text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
-                                Next: Family Details <i class="fa fa-arrow-right ml-1"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    {{-- Step 2: Family Information --}}
-                    <div class="form-step hidden" data-step="2">
-                        <div class="w-full flex flex-col gap-2 px-4 mt-4">
-                            <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
-                                <span class="text-lg font-bold text-ternary">Family Information</span>
-                            </div>
-
-                            <div class="w-full grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4">
-                                <!-- Father's Name -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="father_name" class="font-semibold text-ternary/90 text-sm">Father's Name *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="father_name" id="father_name"
-                                            value="{{ old('father_name', $client->clientInfo->father_details ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('father_name') border-red-500 @enderror">
-                                        <i class="fa fa-user-tie absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('father_name')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <!-- Mother's Name -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="mother_name" class="font-semibold text-ternary/90 text-sm">Mother's Name *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="mother_name" id="mother_name"
-                                            value="{{ old('mother_name', $client->clientInfo->mother_details ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('mother_name') border-red-500 @enderror">
-                                        <i class="fa fa-user-nurse absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('mother_name')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <!-- Spouse Name -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="spouse_name" class="font-semibold text-ternary/90 text-sm">Spouse Name</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="spouse_name" id="spouse_name"
-                                            value="{{ old('spouse_name', $client->clientInfo->spouse_details ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-ring absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <!-- Number of Children -->
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="children" class="font-semibold text-ternary/90 text-sm">Number of Children</label>
-                                    <div class="w-full relative">
-                                        <input type="number" name="children" id="children"
-                                            value="{{ old('children', $client->clientInfo->children ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-child absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="w-full flex justify-between px-4 pb-4 gap-2 mt-8">
-                            <button type="button" class="prev-step text-sm bg-ternary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/90 text-ternary hover:text-white hover:bg-ternary hover:border-ternary/30 transition ease-in duration-200">
-                                <i class="fa fa-arrow-left mr-1"></i> Previous
-                            </button>
-                            <button type="button" class="next-step text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
-                                Next: Contact Details <i class="fa fa-arrow-right ml-1"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    {{-- Step 3: Contact Information --}}
-                    <div class="form-step hidden" data-step="3">
-                        <div class="w-full flex flex-col gap-2 px-4 mt-4">
-                            <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
-                                <span class="text-lg font-bold text-ternary">Contact Information</span>
-                            </div>
-
-                            <div class="w-full grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4">
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="email" class="font-semibold text-ternary/90 text-sm">Email Address *</label>
-                                    <div class="w-full relative">
-                                        <input type="email" name="email" id="email" required
-                                            value="{{ old('email', $client->email ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('email') border-red-500 @enderror">
-                                        <i class="fa fa-envelope absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('email')
                                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -320,16 +84,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="citizenship_id" class="font-semibold text-ternary/90 text-sm">Citizenship ID</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="citizenship_id" id="citizenship_id"
-                                            value="{{ old('citizenship_id', $client->clientInfo->citizenship_id ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
+                                
                                 <div class="w-full relative group flex flex-col gap-1">
                                     <label for="zip_code" class="font-semibold text-ternary/90 text-sm">Zip/Postal Code</label>
                                     <div class="w-full relative flex items-center gap-2">
@@ -404,269 +159,17 @@
                         </div>
 
                         <div class="w-full flex justify-between px-4 pb-4 gap-2 mt-8">
-                            <button type="button" class="prev-step text-sm bg-ternary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/90 text-ternary hover:text-white hover:bg-ternary hover:border-ternary/30 transition ease-in duration-200">
-                                <i class="fa fa-arrow-left mr-1"></i> Previous
-                            </button>
-                            <button type="button" class="next-step text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
-                                Next: Passport Info <i class="fa fa-arrow-right ml-1"></i>
-                            </button>
-                        </div>
+                         <a href="{{ route('client.index', $client->id) }}" 
+   class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-200">
+   <i class="fa fa-check ml-1"></i> Edit Client Details
+</a>
+</div>
                     </div>
 
-                    {{-- Step 4: Passport Information --}}
-                    <div class="form-step hidden" data-step="4">
-                        <div class="w-full flex flex-col gap-2 px-4 mt-4">
-                            <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
-                                <span class="text-lg font-bold text-ternary">Passport Information</span>
-                            </div>
 
-                            <div class="w-full grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4">
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="passport_country" class="font-semibold text-ternary/90 text-sm">Passport Country *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="passport_country" id="passport_country" required
-                                            value="{{ old('passport_country', $client->clientInfo->passport_country ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('passport_country') border-red-500 @enderror">
-                                        <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('passport_country')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
 
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="passport_issue_place" class="font-semibold text-ternary/90 text-sm">Passport Issue Place *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="passport_issue_place" id="passport_issue_place" required
-                                            value="{{ old('passport_issue_place', $client->clientInfo->passport_issue_place ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('passport_issue_place') border-red-500 @enderror">
-                                        <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('passport_issue_place')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
 
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="passport_ic_number" class="font-semibold text-ternary/90 text-sm">Passport/IC Number *</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="passport_ic_number" id="passport_ic_number" required
-                                            value="{{ old('passport_ic_number', $client->clientInfo->passport_ic_number ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('passport_ic_number') border-red-500 @enderror">
-                                        <i class="fa fa-id-card absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('passport_ic_number')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="passport_issue_date" class="font-semibold text-ternary/90 text-sm">Passport Issue Date *</label>
-                                    <div class="w-full relative">
-                                        <input type="date" name="passport_issue_date" id="passport_issue_date" required
-                                            value="{{ old('passport_issue_date', $client->clientInfo->passport_issue_date ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('passport_issue_date') border-red-500 @enderror">
-                                        <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('passport_issue_date')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="passport_expiry_date" class="font-semibold text-ternary/90 text-sm">Passport Expiry Date *</label>
-                                    <div class="w-full relative">
-                                        <input type="date" name="passport_expiry_date" id="passport_expiry_date" required
-                                            value="{{ old('passport_expiry_date', $client->clientInfo->passport_expiry_date ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                            @error('passport_expiry_date') border-red-500 @enderror">
-                                        <i class="fa fa-calendar-times absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                    @error('passport_expiry_date')
-                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="w-full flex justify-between px-4 pb-4 gap-2 mt-8">
-                            <button type="button" class="prev-step text-sm bg-ternary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/90 text-ternary hover:text-white hover:bg-ternary hover:border-ternary/30 transition ease-in duration-200">
-                                <i class="fa fa-arrow-left mr-1"></i> Previous
-                            </button>
-                            <button type="button" class="next-step text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
-                                Next: Travel Details <i class="fa fa-arrow-right ml-1"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    {{-- Step 5: Travel Details --}}
-                    <div class="form-step hidden" data-step="5">
-                        <div class="w-full flex flex-col gap-2 px-4 mt-4">
-                            <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
-                                <span class="text-lg font-bold text-ternary">Travel Details</span>
-                            </div>
-
-                            <div class="w-full grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4">
-                                <div class="w-full relative group flex flex-col gap-1 col-span-3">
-                                    <label for="cities_visited" class="font-semibold text-ternary/90 text-sm">Cities Visited Before (if any)</label>
-                                    <div class="w-full relative">
-                                        <textarea name="cities_visited" id="cities_visited"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('cities_visited', $client->clientInfo->cities_visited ?? '') }}</textarea>
-                                        <i class="fa fa-city absolute right-3 top-4 text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="previous_visa_number" class="font-semibold text-ternary/90 text-sm">Previous Visa Number</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="previous_visa_number" id="previous_visa_number"
-                                            value="{{ old('previous_visa_number', $client->clientInfo->previous_visa_number ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-file-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="previous_visa_place" class="font-semibold text-ternary/90 text-sm">Previous Visa Place</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="previous_visa_place" id="previous_visa_place"
-                                            value="{{ old('previous_visa_place', $client->clientInfo->previous_visa_place ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-map-marker-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="previous_visa_issue_date" class="font-semibold text-ternary/90 text-sm">Previous Visa Issue Date</label>
-                                    <div class="w-full relative">
-                                        <input type="date" name="previous_visa_issue_date" id="previous_visa_issue_date"
-                                            value="{{ old('previous_visa_issue_date', $client->clientInfo->previous_visa_issue_date ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-calendar-day absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1 col-span-3">
-                                    <label for="countries_visited_last_10_years" class="font-semibold text-ternary/90 text-sm">Countries Visited in Last 10 Years</label>
-                                    <div class="w-full relative">
-                                        <textarea name="countries_visited_last_10_years" id="countries_visited_last_10_years"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('countries_visited_last_10_years', $client->clientInfo->countries_visited_last_10_years ?? '') }}</textarea>
-                                        <i class="fa fa-globe-europe absolute right-3 top-4 text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="w-full flex justify-between px-4 pb-4 gap-2 mt-8">
-                            <button type="button" class="prev-step text-sm bg-ternary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/90 text-ternary hover:text-white hover:bg-ternary hover:border-ternary/30 transition ease-in duration-200">
-                                <i class="fa fa-arrow-left mr-1"></i> Previous
-                            </button>
-                            <button type="button" class="next-step text-sm bg-primary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-primary/90 text-ternary hover:text-white hover:bg-primary hover:border-ternary/30 transition ease-in duration-200">
-                                Next: Employment <i class="fa fa-arrow-right ml-1"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    {{-- Step 6: Employment Information --}}
-                    <div class="form-step hidden" data-step="6">
-                        <div class="w-full flex flex-col gap-2 px-4 mt-4">
-                            <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
-                                <span class="text-lg font-bold text-ternary">Employment Information</span>
-                            </div>
-
-                            <div class="w-full grid xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-4 mt-4">
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="present_occupation" class="font-semibold text-ternary/90 text-sm">Present Occupation</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="present_occupation" id="present_occupation"
-                                            value="{{ old('present_occupation', $client->clientInfo->present_occupation ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-briefcase absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="designation" class="font-semibold text-ternary/90 text-sm">Designation</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="designation" id="designation"
-                                            value="{{ old('designation', $client->clientInfo->designation ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-user-tie absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="employer_name" class="font-semibold text-ternary/90 text-sm">Employer Name</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="employer_name" id="employer_name"
-                                            value="{{ old('employer_name', $client->clientInfo->employer_name ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-building absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1 col-span-3">
-                                    <label for="employer_address" class="font-semibold text-ternary/90 text-sm">Employer Address</label>
-                                    <div class="w-full relative">
-                                        <textarea name="employer_address" id="employer_address"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('employer_address', $client->clientInfo->employer_address ?? '') }}</textarea>
-                                        <i class="fa fa-map-pin absolute right-3 top-4 text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="employer_phone" class="font-semibold text-ternary/90 text-sm">Employer Phone</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="employer_phone" id="employer_phone"
-                                            value="{{ old('employer_phone', $client->clientInfo->employer_phone ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-phone-square-alt absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="past_occupation" class="font-semibold text-ternary/90 text-sm">Past Occupation</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="past_occupation" id="past_occupation"
-                                            value="{{ old('past_occupation', $client->clientInfo->past_occupation ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-history absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="reference_name" class="font-semibold text-ternary/90 text-sm">Reference Name</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="reference_name" id="reference_name"
-                                            value="{{ old('reference_name', $client->clientInfo->reference_name ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-user-friends absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-
-                                <div class="w-full relative group flex flex-col gap-1 col-span-3">
-                                    <label for="reference_address" class="font-semibold text-ternary/90 text-sm">Reference Address</label>
-                                    <div class="w-full relative">
-                                        <textarea name="reference_address" id="reference_address"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('reference_address', $client->clientInfo->reference_address ?? '') }}</textarea>
-                                        <i class="fa fa-map-marked absolute right-3 top-4 text-sm text-secondary/80"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="w-full flex justify-between px-4 pb-4 gap-2 mt-8">
-                            <button type="button" class="prev-step text-sm bg-ternary/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-ternary/90 text-ternary hover:text-white hover:bg-ternary hover:border-ternary/30 transition ease-in duration-200">
-                                <i class="fa fa-arrow-left mr-1"></i> Previous
-                            </button>
-                            <button type="submit" class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-200">
-                                {{ isset($client) ? 'Update' : 'Submit' }} Application <i class="fa fa-check ml-1"></i>
-                            </button>
-                        </div>
+                  
                     </div>
                 </form>
             </div>

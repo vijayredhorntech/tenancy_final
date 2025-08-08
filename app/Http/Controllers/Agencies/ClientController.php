@@ -203,17 +203,40 @@ public function hs_viewAgencyClient($id)
 
 
     /********Edit Agency Clint *****/
-    public function hs_agencyUpdateClient($id){
-     
-        $agency = $this->agencyService->getAgencyData();
-        $client = $this->clintRepository->getClientById($id);
-      
+public function hs_agencyUpdateClient(Request $request, $id)
+{
+    $agency = $this->agencyService->getAgencyData();
+    $client = $this->clintRepository->getClientById($id);
 
-            if (isset($client) && $client->agency_id == $agency->id) {
-                return view('agencies.pages.clients.clintupdate', compact('client','agency'));
-            }
-            return redirect()->route("client.index");
+    // Check if client exists and belongs to the agency
+    if (!$client || $client->agency_id !== $agency->id) {
+        return redirect()->route("client.index")->with('error', 'Unauthorized access.');
     }
+
+    // If it's a POST or PUT request, update the client
+    if ($request->isMethod('post') || $request->isMethod('put')) {
+        // Validate the request
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'nationality' => 'required|string|max:100',
+            'phone_number' => 'required|string|max:20',
+            'permanent_address' => 'required|string|max:500',
+            'city' => 'required|string|max:100',
+            'country' => 'required|string|max:100',
+            // Add other fields here as needed
+        ]);
+
+        // Update the client (assuming $client is an Eloquent model)
+        $client->update($validated);
+
+        return redirect()->route('client.index')->with('success', 'Client updated successfully.');
+    }
+
+    // Otherwise, show the form (GET request)
+    return view('agencies.pages.clients.clintupdate', compact('client', 'agency'));
+}
+
 
 
     /****Store Update Cint***** */
