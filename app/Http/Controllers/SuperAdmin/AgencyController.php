@@ -426,12 +426,14 @@ class AgencyController extends Controller
         }
 
         if ($agency) {
+            
             $fullUrl = optional($agency->domains->first())->full_url;
 
 
             session(['agency_full_url' => $fullUrl]);
+            return view('agencies.welcome', ['agency' => $agency]);
 
-            return view('agencies.login', ['agency' => $agency]);
+            // return view('agencies.login', ['agency' => $agency]);
         } else {
             return redirect()->route('login')->with('error', 'Domain not found.');
         }

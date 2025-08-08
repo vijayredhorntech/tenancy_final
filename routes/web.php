@@ -78,6 +78,7 @@ return view('forms.ANNEXURE-E');
 });
 
 
+Route::get('/home',[ClientController::class,'home'])->name('home');
 
 Route::get('/migration',[AgencyAdminController::class,'migration']);
 
