@@ -7,6 +7,7 @@
          {{--    home slider section here--}}
          <div class="w-full">
              <div class="homeBanner">
+            
                  @php
 
                      $sliderImages = [
@@ -28,34 +29,37 @@
          {{--    home slider section ends here--}}
 
 
-         <div class="w-full absolute top-[60%]">
-             <div class="lg:w-[80%] md:w-[90%] w-[95%] bg-white p-4 flex flex-col gap-2 rounded-t-md mx-auto">
-
-                 <span class="font-semibold lg:text-3xl md:text-2xl sm:text-xl text-lg"> Discover, Explore the World with Ease </span>
+                        <div class="w-full">
+                            <div class="w-full bg-white p-4 flex flex-col gap-2 rounded-t-md mx-auto">
+                            <span class="font-semibold lg:text-3xl md:text-2xl sm:text-xl text-lg"> Discover, Explore the World with Ease</span>
+                <div class="flex gap-2 py-2 w-full border-b-[1px] border-b-ternary/20">
+                    <Link href="{{ route('home') }}">
+                    <button
+                        class=" @if(Route::currentRouteName() == 'home') bg-ternary text-white @else text-ternary bg-transparent hover:bg-ternary/20 hover:text-black @endif  py-1 px-4 font-medium text-sm rounded-md transition ease-in duration-2000">
+                        Flights
+                    </button>
+                    </Link>
+                    <Link href="{{ route('home') }}">
+                    <button
+                        class=" @if(Route::currentRouteName() == 'hotels') bg-ternary text-white @else text-ternary bg-transparent hover:bg-ternary/20 hover:text-black @endif  py-1 px-4 font-medium text-sm rounded-md transition ease-in duration-2000">
+                        Hotels
+                    </button>
+                    </Link>
+                    
+                </div>
+                </div>
                   <div class="flex gap-2 py-2 w-full border-b-[1px] border-b-ternary/20">
-                      <Link href="">
-                      <button
-                          class=" @if(Route::currentRouteName() == 'home') bg-ternary text-white @else text-ternary bg-transparent hover:bg-ternary/20 hover:text-black @endif  py-1 px-4 font-medium text-sm rounded-md transition ease-in duration-2000">
-                          Flights this 
-                      </button>
-                      </Link>
-                      <Link href="">
-                      <button
-                          class=" @if(Route::currentRouteName() == 'hotels') bg-ternary text-white @else text-ternary bg-transparent hover:bg-ternary/20 hover:text-black @endif  py-1 px-4 font-medium text-sm rounded-md transition ease-in duration-2000">
-                          Hotels
-                      </button>
-                      </Link>
+                     
+                  
                   </div>
              </div>
-             <div class="lg:w-[80%] md:w-[90%] w-full mx-auto bg-white rounded-b-md shadow-lg shadow-ternary/30">
-                 @if(Route::currentRouteName() == 'home')
-                
-                 @else
-                  
-                 @endif
+             <div class="w-full mx-auto bg-white rounded-b-md shadow-lg shadow-ternary/30">
+          
+                     <x-flight-search></x-flight-search>               
+
              </div>
          </div>
-     </div>
+
 {{--    banner and search section ends here--}}
 
 

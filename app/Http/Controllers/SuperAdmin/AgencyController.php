@@ -440,6 +440,45 @@ class AgencyController extends Controller
     }
 
 
+    public function showAgencyLogin($domain)
+{
+    // Check if user already logged in
+    $sessionUser = session('user_data');
+    if ($sessionUser && isset($sessionUser['agency_id'])) {
+        $sessionAgencyId = $sessionUser['agency_id'];
+
+        $matchedAgency = Agency::whereHas('domains', function ($query) use ($domain) {
+            $query->where('domain_name', $domain);
+        })->first();
+
+        if ($matchedAgency && $matchedAgency->id == $sessionAgencyId) {
+            return redirect()->route('agency_dashboard');
+        }
+    }
+
+    // Get agency by domain
+    $agency = Agency::with('details')->whereHas('domains', function ($query) use ($domain) {
+        $query->where('domain_name', $domain);
+    })->with('domains')->first();
+
+    if (!$agency) {
+        return redirect()->route('login')->with('error', 'Domain not found.');
+    }
+
+    if ($agency->details->status == 0) {
+        return view('agencies.permission');
+    }
+
+    $fullUrl = optional($agency->domains->first())->full_url;
+    session(['agency_full_url' => $fullUrl]);
+
+    // Show the login view for this agency
+    return view('agencies.login', ['agency' => $agency]);
+}
+
+
+
+
     /*** Function for agencies login ** */
     public function him_agencies_store(Request $request)
     {

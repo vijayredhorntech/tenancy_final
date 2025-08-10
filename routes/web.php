@@ -72,10 +72,11 @@ Route::get('/test',function (){
 
 
 Route::get('/viewtest',function (){
-return view('forms.ANNEXURE-E');
+return view('');
 
 // return view('viewtest');
 });
+
 
 
 Route::get('/home',[ClientController::class,'home'])->name('home');
@@ -86,6 +87,7 @@ Route::get('/dummy-agencies', [AgencyController::class, 'dummyCreateAgency']);
 Route::post('/search',[GloballyController::class,'hs_globalSearch'])->name('search');
 Route::get('/login',[AuthController::class,'login_form'])->name('login');
 Route::post('/login',[AuthController::class,'superadmin_login'])->name("superadmin_login");
+
 Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
 Route::get('/agencylogout',[AuthController::class,'agency_logout'])->name("agency_logout");
 Route::get('/getflight',[ServiceController::class,'getflight']);
