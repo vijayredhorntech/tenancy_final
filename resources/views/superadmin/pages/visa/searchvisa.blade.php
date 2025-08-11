@@ -32,7 +32,9 @@
             <div class="w-full lg:h-[400px] md:h-[400px] sm:h-[300px] h-[200px] bg-black rounded-md bg-center bg-cover bg-no-repeat relative z-20" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://www.goodwind.in/static/images/world-bg.jpg');">
                 <div class="absolute flex justify-center  w-full h-max bottom-0 lg:translate-y-[50%] md:translate-y-[50%] sm:translate-y-[70%] translate-y-[100%] left-0 z-10">
                 {{-- search form componnet --}}
-             <x-visa-search :countries="$countries" />
+                <div class="lg:w-[70%] bg-white shadow-lg shadow-black/10 rounded-xs">
+                      <x-visa-search :countries="$countries" />
+                </div>
              
             </div>
         </div>

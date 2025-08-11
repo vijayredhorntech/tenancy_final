@@ -1,5 +1,4 @@
 
-                    <div class="lg:w-[70%] bg-white shadow-lg shadow-black/10 rounded-xs">
                                 <div class="w-full  p-4 flex flex-col gap-2 mx-auto">
                                     <span class=" text-secondary font-semibold lg:text-2xl md:text-2xl sm:text-xl text-lg">Travel Visa Requirements</span>
                                     <p class="lg:text-sm">Sometimes a journey of a thousand miles begins with a visa. Check your destination and apply online for any visa in the world.</p>
@@ -115,4 +114,4 @@
                                         </div>
                                 </div>
                             </div>
-                </div>
+              
