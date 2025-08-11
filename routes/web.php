@@ -92,7 +92,8 @@ Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superad
 Route::get('/agencylogout',[AuthController::class,'agency_logout'])->name("agency_logout");
 Route::get('/getflight',[ServiceController::class,'getflight']);
 Route::get('/{d}', [AgencyController::class, 'him_agencyhomepage']);
-Route::get('/login/', [AgencyController::class, 'him_agencylogin'])->name('agency.login');
+Route::get('/agency/login/', [AgencyController::class, 'him_agencylogin'])->name('agency.login');
+    // Service Management
 
 // Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
 Route::middleware([LogUserActivity::class])->group(function () {
@@ -504,6 +505,11 @@ Route::post('/documents/sign/{token}', [DocumentSignController::class, 'submitSi
     
 //     return response()->file($fullPath);
 // })->where('path', '.*')->name('documents.serve');
+
+    Route::controller(ServiceController::class)->group(function () {
+
+        Route::get('agencies/airport/{input}', 'airport')->name('search.airport');
+    });
 
 Route::get('/documents/view/{document}', [DocumentSignController::class, 'hsviewInvoice'])
     ->name('documents.view');

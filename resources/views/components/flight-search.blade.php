@@ -485,6 +485,7 @@ $(document).ready(function () {
     originInput.on('input', function () {
         var inputText = $(this).val();
         if (inputText.length >= 3) {
+            //  alert("heelo");
             fetchAutocompleteResults(inputText, $(this), originDropdownContainer);
         } else {
             originDropdownContainer.empty();
@@ -498,9 +499,11 @@ $(document).ready(function () {
             url: '{{ url('/agencies/airport') }}/' + encodeURIComponent(inputText),
             method: 'GET',
             success: function (data) {
+          
                 displayAutocompleteResults(data, input, dropdownContainer);
             },
             error: function (xhr, status, error) {
+           
                 console.error("AJAX Error:", status, error);
                 console.log("Response Text:", xhr.responseText); // Logs the actual response for debugging
             }

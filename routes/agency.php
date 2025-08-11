@@ -75,7 +75,7 @@ Route::group([
         Route::post('/payment',  'payment')->name('flight.payment');
         Route::get('/invoice/{invoice_number}','hs_generateinvocie')->name('generateInvoice');
         Route::get('/booking/{booking_number}','hs_invoice')->name('agency_booking');
-        Route::get('/airport/{input}', 'airport')->name('search.airport');
+        // Route::get('/airport/{input}', 'airport')->name('search.airport');
     });
 /*****Fund Managment *** */
 
@@ -194,21 +194,7 @@ Route::group([
     });
 
 
-    Route::group(['prefix' => 'flight', 'controller' => FlightController::class], function () {
-        Route::group(['prefix' => 'modal'], function () {
-            Route::get('/details', 'detailModal')->name('flight.detail-modal');
-        });
-    
-        Route::get('/details', 'detailModal')->name('flight.detail-modal');
-        Route::post('/search', 'search')->name('flight.search');
-        Route::get('/search/results', 'results')->name('flight.results');
-        Route::post('/pricing', 'pricing')->name('flight.pricing');
-    
-        Route::get('/pricing', 'pricing')->name('flight.pricing'); // Added name for consistency
-        // Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
-        // Route::get('/flight-passenger-details', 'passengerDetailsView')->name('flight.passenger-details.view');
-        // Route::post('/payment', 'payment')->name('flight.payment');
-    });
+
 
 
     
@@ -369,4 +355,28 @@ Route::controller(DocumentSignController::class)->group(function () {
 
  
 });
+
+
+/****Common route  */
+
+    Route::controller(ServiceController::class)->group(function () {
+
+        Route::get('agencies/airport/{input}', 'airport')->name('search.airport');
+    });
+
+        Route::group(['prefix' => 'agencies/flight', 'controller' => FlightController::class], function () {
+        Route::group(['prefix' => 'modal'], function () {
+            Route::get('/details', 'detailModal')->name('flight.detail-modal');
+        });
+    
+        Route::get('/details', 'detailModal')->name('flight.detail-modal');
+        Route::post('/search', 'search')->name('flight.search');
+        Route::get('/search/results', 'results')->name('flight.results');
+        Route::post('/pricing', 'pricing')->name('flight.pricing');
+    
+        Route::get('/pricing', 'pricing')->name('flight.pricing'); // Added name for consistency
+        // Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
+        // Route::get('/flight-passenger-details', 'passengerDetailsView')->name('flight.passenger-details.view');
+        // Route::post('/payment', 'payment')->name('flight.payment');
+    });
 // 

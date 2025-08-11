@@ -543,6 +543,7 @@ public function hs_invoice($invoice_number){
  * ******/
 public function airport($input){
 
+    //    dd($input);
         $airports = Airport::where('code', 'LIKE', '%' . $input . '%')
             ->orWhere('country', 'LIKE', '%' . $input . '%')
             ->orWhere('airport', 'LIKE', '%' . $input . '%')

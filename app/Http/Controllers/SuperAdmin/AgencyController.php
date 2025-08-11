@@ -20,6 +20,7 @@ use App\Models\UserServiceAssignment;
 use App\Models\AddBalance;
 use App\Models\Balance;
 use App\Models\Deduction;
+use App\Models\Country;
 use App\Models\AgencyDetail;
 use App\Mail\UserRegisteredMail;
 use Illuminate\Support\Facades\Mail;
@@ -408,7 +409,7 @@ class AgencyController extends Controller
     public function him_agencyhomepage($domain)
     {
 
-    // dd('heelo');    
+      
  
         $agency = Agency::with('details')->whereHas('domains', function ($query) use ($domain) {
             $query->where('domain_name', $domain);
@@ -430,8 +431,11 @@ class AgencyController extends Controller
            session([
                     'agency_full_url' => $fullUrl,
                     'agency_domain'   => $domain
+             
                 ]);
-            return view('agencies.welcome', ['agency' => $agency]);
+             $countries=Country::get(); 
+           
+            return view('agencies.welcome', ['agency' => $agency,'countries'=>$countries]);
 
             // return view('agencies.login', ['agency' => $agency]);
         } else {
@@ -468,7 +472,8 @@ class AgencyController extends Controller
       
             // return view('agencies.welcome', ['agency' => $agency]);
 
-            return view('agencies.login', ['agency' => $agency]);
+            $countries=Country::get(); 
+            return view('agencies.login', ['agency' => $agency,'countries'=>$countries]);
         } else {
             return redirect()->route('login')->with('error', 'Domain not found.');
         }
