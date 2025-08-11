@@ -64,6 +64,7 @@
 
 <body style="font-family: 'Public Sans', serif; background-color: white">
 <div class="min-h-screen bg-white">
+
     <x-main.navigation />
     <main style="position: relative">
         {{ $slot }}

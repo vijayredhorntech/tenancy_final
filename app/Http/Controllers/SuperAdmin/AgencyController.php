@@ -405,14 +405,11 @@ class AgencyController extends Controller
 
 
     /*****  Route for agency   ***** */
-    public function him_agencylogin($domain)
+    public function him_agencyhomepage($domain)
     {
 
     // dd('heelo');    
-        $domin = session('user_data');
-        if (isset($domin)) {
-            return redirect()->route('agency_dashboard');
-        }
+ 
         $agency = Agency::with('details')->whereHas('domains', function ($query) use ($domain) {
             $query->where('domain_name', $domain);
         })->with('domains')->first();
@@ -430,10 +427,48 @@ class AgencyController extends Controller
             $fullUrl = optional($agency->domains->first())->full_url;
 
 
-            session(['agency_full_url' => $fullUrl]);
+           session([
+                    'agency_full_url' => $fullUrl,
+                    'agency_domain'   => $domain
+                ]);
             return view('agencies.welcome', ['agency' => $agency]);
 
             // return view('agencies.login', ['agency' => $agency]);
+        } else {
+            return redirect()->route('login')->with('error', 'Domain not found.');
+        }
+    }
+
+       /*****  Route for agency   ***** */
+    public function him_agencylogin()
+    {
+
+    // dd('heelo');    
+        $domin = session('user_data');
+        if (isset($domin)) {
+            return redirect()->route('agency_dashboard');
+        }
+        $domain   = session('agency_domain');
+
+        $agency = Agency::with('details')->whereHas('domains', function ($query) use ($domain) {
+            $query->where('domain_name', $domain);
+        })->with('domains')->first();
+
+        // dd($agency);
+
+        if (!$agency) {
+            return redirect()->route('login')->with('error', 'Domain not found.');
+        }
+ 
+        if ($agency->details->status == 0) {
+            return view('agencies.permission');
+        }
+
+        if ($agency) {
+      
+            // return view('agencies.welcome', ['agency' => $agency]);
+
+            return view('agencies.login', ['agency' => $agency]);
         } else {
             return redirect()->route('login')->with('error', 'Domain not found.');
         }

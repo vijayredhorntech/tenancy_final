@@ -91,7 +91,9 @@ Route::post('/login',[AuthController::class,'superadmin_login'])->name("superadm
 Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
 Route::get('/agencylogout',[AuthController::class,'agency_logout'])->name("agency_logout");
 Route::get('/getflight',[ServiceController::class,'getflight']);
-Route::get('/{d}', [AgencyController::class, 'him_agencylogin']);
+Route::get('/{d}', [AgencyController::class, 'him_agencyhomepage']);
+Route::get('/login/', [AgencyController::class, 'him_agencylogin'])->name('agency.login');
+
 // Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
 Route::middleware([LogUserActivity::class])->group(function () {
 

@@ -87,8 +87,11 @@
 
 
             <div class="flex gap-2 items-center ">
-                <button class="bg-transparent hover:bg-secondary text-primary hover:text-white border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">Login</button>
-                <button class="bg-primaryColor hover:bg-secondary text-white  border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">Sign Up</button>
+               <a href="{{ route('agency.login') }}" 
+                        class="bg-transparent hover:bg-secondary text-primary hover:text-red border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">
+                            Login
+                        </a>
+                {{-- <button class="bg-primaryColor hover:bg-secondary text-white  border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">Sign Up</button> --}}
             </div>
 
 
