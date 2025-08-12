@@ -145,7 +145,7 @@
                                 </div>
             </form> 
 
-<div class="max-h-[600px] overflow-auto mt-4 border border-gray-300 rounded-md">
+<div class="max-h-[900px] overflow-auto mt-4 border border-gray-300 rounded-md">
         <table class="w-full border-[2px] border-secondary/40 border-collapse mt-4">
                 <tr>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Sr. No.</th>

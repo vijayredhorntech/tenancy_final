@@ -65,7 +65,7 @@
                     </div>
                     <div class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4 mt-2">
                         <div class="w-full relative group flex flex-col gap-1">
-                            <label for="name" class="font-semibold text-ternary/90 text-sm">Agency Logo</label>
+                            <label for="name" class="font-semibold text-ternary/90 text-sm">Agency Logo <span class="text-red-600 text-[12px]"> Max 2MB allowed(Jpg) </span> </label>
                             <div class="w-full relative">
                                 <input type="file" name="logo" id="name" placeholder="Agency name....."
                                     class="w-full pl-2 pr-8 py-0.5 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
@@ -399,7 +399,7 @@
                             </div>
 
                             <div class="w-full relative group flex flex-col gap-1">
-                                <label for="attachment1" class="font-semibold text-ternary/90 text-sm">Attachment</label>
+                                <label for="attachment1" class="font-semibold text-ternary/90 text-sm">Attachment  <span class="text-red-600 text-[12px]"> Max 2MB allowed(Jpg or Pdf) </span> </label>
                                 <div class="w-full relative">
                                     <input type="file" name="file1" id="file1"
                                         value="{{ old('file1') }}"

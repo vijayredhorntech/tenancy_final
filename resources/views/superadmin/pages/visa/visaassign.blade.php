@@ -33,9 +33,10 @@
 
                          {{--               === text type input field ===--}}
                          <div class="w-full relative group flex flex-col gap-1">
-                             <label for="name" class="font-semibold text-ternary/90 text-sm">Title Images</label>
+                             <label for="name" class="font-semibold text-ternary/90 text-sm">Title Images <span class="text-red-600">*</span> <span class="text-red-600 text-[12px]">Max 2MB allowed (JPG)</span> </label>
                              <div class="w-full relative">
-                                 <input type="file" name="title_image" id="title_image"  placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 <input type="file" name="title_image" id="title_image" accept="image/jpeg,image/jpg" placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                                 
                  
                              </div>
                          </div>
@@ -43,7 +44,7 @@
                          @if(isset($single_visa->name))
 
                          <div class="w-full relative group flex flex-col gap-1">
-                             <label for="name" class="font-semibold text-ternary/90 text-sm">Visa Type</label>
+                             <label for="name" class="font-semibold text-ternary/90 text-sm">Visa Type <span class="text-red-600">*</span></label>
                              <div class="w-full relative">
                                  <input type="text" name="visa_name" id="title_image" readonly=""  value="{{$single_visa->name}}"placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                  <input type="hidden" name="visa_id" value="{{$single_visa->id}}">
@@ -52,9 +53,9 @@
                          @else
                          
                          <div class="w-full relative group flex flex-col gap-1">
-                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Visa Type</label>
+                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Visa Type <span class="text-red-600">*</span></label>
                              <div class="w-full relative">
-                                 <select  name="visa_id" id="datePicker"
+                                 <select  name="visa_id" id="datePicker" required
                                           class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                 
                                    
@@ -66,6 +67,7 @@
                                      @endforelse
                                  </select>
                                  <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
+                                 
                                  @error('visa_id')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
@@ -76,9 +78,9 @@
                          @endif
 
                          <div class="w-full relative group flex flex-col gap-1">
-                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Origin</label>
+                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Origin <span class="text-red-600">*</span> <span class="text-red-600 text-[12px]">Required</span> </label>
                              <div class="w-full relative">
-                                 <select  name="origincoutnry" id="origincoutnry"
+                                 <select  name="origincoutnry" id="origincoutnry" required
                                           class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                      <option value="">---Select---</option>
                                      @forelse($countries as $country)
@@ -89,6 +91,7 @@
                           
                                  </select>
                                  <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
+                                 
                                  @error('origincoutnry')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
@@ -97,9 +100,9 @@
 
 
                          <div class="w-full relative group flex flex-col  gap-1">
-                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Destination</label>
+                             <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Destination <span class="text-red-600">*</span> <span class="text-red-600 text-[12px]">Required</span></label>
                              <div class="w-full relative">
-                                 <select  name="destination" id="datePicker"
+                                 <select  name="destination" id="datePicker" required
                                           class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                      <option value="">---Select---</option>
                                      @forelse($countries as $country)
@@ -109,6 +112,7 @@
                                      @endforelse
                                  </select>
                                  <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
+                                 
                                  @error('destination')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                 @enderror
@@ -122,7 +126,7 @@
 
                          {{--               === radio input field ===--}}
                          <div class="w-full relative group flex flex-col gap-1">
-                             <span class="font-semibold text-ternary/90 text-sm">Required </span>
+                             <span class="font-semibold text-ternary/90 text-sm">Required <span class="text-red-600">*</span> <span class="text-red-600 text-[12px]">Please select one</span> </span>
                              <div class="flex gap-4">
                                  <label class="flex items-center gap-2">
                                      <input type="radio" name="required" value="0" class="appearance-none rounded-full text-ternary/90 w-4 h-4 border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 rounded-[3px]  checked:bg-secondary checked:border-secondary/70 transition ease-in duration-200 focus:outline-none focus:ring-0">
@@ -133,6 +137,7 @@
                                     Not Required
                                  </label>
                              </div>
+                             
                          </div>
                        
 
@@ -150,6 +155,7 @@
                                         <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                     @enderror
                                     <i class="fa-regular fa-comment-dots absolute right-3 top-3 text-sm text-secondary/80"></i>
+                                    <span class="text-red-600 text-[12px]">Rich text supported</span>
                                 </div>
                            </div>
                      </div>
@@ -170,7 +176,7 @@
                                     <div class="subtypeGroup clickedit w-full grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-2 px-4 py-6" style="{{ isset($eid) ? 'display: none;' : '' }}">
                                     <!-- Visa Name -->
                                             <div class="w-full relative group flex flex-col gap-1">
-                                                <label for="name" class="font-semibold text-ternary/90 text-sm">Subtype Name</label>
+                                                <label for="name" class="font-semibold text-ternary/90 text-sm">Subtype Name <span class="text-red-600 text-[12px]">e.g., Tourist Single Entry</span></label>
                                                     <div class="w-full relative">
                                                         <input type="text" name="subtype[]" value="{{ $subtype }}" placeholder="Subtype name..."
                                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
@@ -183,9 +189,9 @@
 
                                 
                                             <div class="w-full relative group flex flex-col gap-1">
-                                                <label for="name" class="font-semibold text-ternary/90 text-sm">Validity</label>
+                                                <label for="name" class="font-semibold text-ternary/90 text-sm">Validity (days) <span class="text-red-600 text-[12px]">numbers only</span></label>
                                                     <div class="w-full relative">
-                                                        <input type="text" name="validity[]"  placeholder="Validity..."
+                                                        <input type="number" name="validity[]" min="0" step="1" placeholder="e.g., 30"
                                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
                                                             border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                                         @error('validity.$index')
@@ -195,9 +201,9 @@
                                             </div>
 
                                             <div class="w-full relative group flex flex-col gap-1">
-                                                <label for="name" class="font-semibold text-ternary/90 text-sm">Processing</label>
+                                                <label for="name" class="font-semibold text-ternary/90 text-sm">Processing Time (days) <span class="text-red-600 text-[12px]">numbers only</span></label>
                                                     <div class="w-full relative">
-                                                        <input type="text" name="processing[]"  placeholder="Processing..."
+                                                        <input type="number" name="processing[]" min="0" step="1" placeholder="e.g., 7"
                                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
                                                             border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                                         @error('processing.$index')
@@ -209,9 +215,9 @@
                                         
 
                                             <div class="w-full relative group flex flex-col gap-1">
-                                                <label for="name" class="font-semibold text-ternary/90 text-sm">Subtype Price</label>
+                                                <label for="name" class="font-semibold text-ternary/90 text-sm">Subtype Price <span class="text-red-600 text-[12px]">min 0, decimals allowed</span></label>
                                                     <div class="w-full relative">
-                                                        <input type="number" name="subtypeprice[]" value="{{ $oldSubtypePrices[$index] }}" placeholder="Subtype price..."
+                                                        <input type="number" name="subtypeprice[]" value="{{ $oldSubtypePrices[$index] }}" min="0" step="0.01" placeholder="Subtype price..."
                                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
                                                             border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                                         @error('subtypeprice.$index')
@@ -221,9 +227,9 @@
                                             </div>
 
                                             <div class="w-full relative group flex flex-col gap-1">
-                                                <label for="name" class="font-semibold text-ternary/90 text-sm">Commission</label>
+                                                <label for="name" class="font-semibold text-ternary/90 text-sm">Commission <span class="text-red-600 text-[12px]">min 0, decimals allowed</span></label>
                                                     <div class="w-full relative">
-                                                        <input type="number" name="commission[]" value="{{ $oldCommissions[$index] }}" placeholder="Commission..."
+                                                        <input type="number" name="commission[]" value="{{ $oldCommissions[$index] }}" min="0" step="0.01" placeholder="Commission..."
                                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
                                                             border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                                         @error('commission.$index')
@@ -233,9 +239,9 @@
                                             </div>
 
                                             <div class="w-full relative group flex flex-col gap-1">
-                                                <label for="name" class="font-semibold text-ternary/90 text-sm">GSTIN(18%)</label>
+                                                <label for="name" class="font-semibold text-ternary/90 text-sm">VAT (20%) <span class="text-red-600 text-[12px]">0–100%, decimals allowed</span></label>
                                                     <div class="w-full relative">
-                                                        <input type="number" name="gstin[]" placeholder="GSTIN..."
+                                                        <input type="number" name="gstin[]" min="0" max="100" step="0.01" placeholder="VAT %"
                                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]
                                                             border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                                         @error('gstin.$index')
@@ -279,36 +285,48 @@
         </div>
         @section('scripts')
       <script>
-
-              jQuery("#showButton").on("click",function (){
-                     jQuery(".clickedit").show();
-                     jQuery(this).hide();
-              });
-                document.addEventListener("DOMContentLoaded", function () {
-                    const container = document.getElementById("subtypeContainer");
-                    const addMoreButton = document.getElementById("addMore");
-
-                    addMoreButton.addEventListener("click", function () {
-                        let original = document.querySelector(".subtypeGroup");
-                        let clone = original.cloneNode(true);
-
-                        // Clear input values in cloned fields
-                        clone.querySelectorAll("input").forEach(input => input.value = "");
-
-                        // Show remove button in cloned elements
-                        clone.querySelector(".removeField").classList.remove("hidden");
-
-                        // Append the cloned field
-                        container.appendChild(clone);
-                    });
-
-                    container.addEventListener("click", function (event) {
-                        console.log(event);
-                        if (event.target.classList.contains("removeField")) {
-                            event.target.parentElement.remove();
-                        }
-                    });
-                });
-            </script>
-            @endsection
+        // Enforce 2MB client-side check for Title Images (best-effort; server must validate too)
+        document.addEventListener('change', function(e){
+            if(e.target && e.target.id === 'title_image' && e.target.files && e.target.files[0]){
+                const file = e.target.files[0];
+                const maxBytes = 2 * 1024 * 1024; // 2MB
+                const isJpg = /jpeg|jpg/i.test(file.type);
+                if(file.size > maxBytes || !isJpg){
+                    alert('Please upload a JPG image up to 2MB.');
+                    e.target.value = '';
+                }
+            }
+        });
+ 
+               jQuery("#showButton").on("click",function (){
+                      jQuery(".clickedit").show();
+                      jQuery(this).hide();
+               });
+                 document.addEventListener("DOMContentLoaded", function () {
+                     const container = document.getElementById("subtypeContainer");
+                     const addMoreButton = document.getElementById("addMore");
+ 
+                     addMoreButton.addEventListener("click", function () {
+                         let original = document.querySelector(".subtypeGroup");
+                         let clone = original.cloneNode(true);
+ 
+                         // Clear input values in cloned fields
+                         clone.querySelectorAll("input").forEach(input => input.value = "");
+ 
+                         // Show remove button in cloned elements
+                         clone.querySelector(".removeField").classList.remove("hidden");
+ 
+                         // Append the cloned field
+                         container.appendChild(clone);
+                     });
+ 
+                     container.addEventListener("click", function (event) {
+                         console.log(event);
+                         if (event.target.classList.contains("removeField")) {
+                             event.target.parentElement.remove();
+                         }
+                     });
+                 });
+             </script>
+             @endsection
 </x-front.layout>
