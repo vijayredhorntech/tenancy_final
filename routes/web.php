@@ -506,10 +506,6 @@ Route::post('/documents/sign/{token}', [DocumentSignController::class, 'submitSi
 //     return response()->file($fullPath);
 // })->where('path', '.*')->name('documents.serve');
 
-    Route::controller(ServiceController::class)->group(function () {
-
-        Route::get('agencies/airport/{input}', 'airport')->name('search.airport');
-    });
 
 Route::get('/documents/view/{document}', [DocumentSignController::class, 'hsviewInvoice'])
     ->name('documents.view');

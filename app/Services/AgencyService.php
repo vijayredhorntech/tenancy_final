@@ -267,4 +267,19 @@ public function getClientDetails($clientId,$agencyData){
 
 }
 
+public function checkValidationInfo($email,$agencyData,$phoneNumber){
+    //   dd($id);
+    // dd($agencyData->database_name);
+       $this->setConnectionByDatabase($agencyData->database_name);
+          
+           // Fetch related data from the user's database
+           $clientFromUserDB = ClientDetails::on('user_database')
+               ->with('clientinfo')
+               ->find($clientId);
+               return $clientFromUserDB;
+           
+
+
+}
+
 }
