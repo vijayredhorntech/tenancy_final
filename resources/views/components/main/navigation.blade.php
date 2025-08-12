@@ -30,6 +30,9 @@
     </div>
 
 
+    @php 
+    
+    @endphp
     <div class="lg:flex hidden gap-6 justify-between items-center w-full">
            <div class="w-max flex items-center">
                <a class="" href="{{ env('APP_URL') }}">
