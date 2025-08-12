@@ -339,6 +339,8 @@ class VisaController extends Controller
     }
 
     public function hsviewSearchvisa(Request $request){
+
+        // dd("Heelo");
         $data = $request->validate([
             'origincountry'     => 'required',
             'destinationcountry'       => 'required',
@@ -349,6 +351,10 @@ class VisaController extends Controller
         $visas = $this->visaRepository->getVisabySearch($orgin,$destination);
         $countries=Country::get();
         
+        $agency = $this->agencyService->getAgencyData();
+        if($agency==null){
+             return view('agencies.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination'));
+        }
         return view('superadmin.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination'));
     }
 
@@ -524,6 +530,12 @@ public function hsViewEditSection($id){
 
         $status="true";
         // dd($visas);
+          $agency = $this->agencyService->getAgencyData();
+        //   dd($agency);
+        if($agency==null){
+            //  dd("heelo");
+             return view('agencies.pages.visa.visapricesession',compact('visas','status'));
+        }
         return view('superadmin.pages.visa.payment',compact('visas','status'));
     }
 

@@ -21,14 +21,37 @@ use App\Models\TermsCondition;
 use App\Mail\BookingConfirmationMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Country;
+use App\Models\RequestApplication;
+use App\Services\AgencyService;
+use App\Repositories\Interfaces\ClintRepositoryInterface;
+use App\Repositories\Interfaces\VisaRepositoryInterface;
+
+
+
+
 
 
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
+use App\Traits\ClientTrait;
+
 use Auth;
 
 class ServiceController extends Controller
 {
+
+    
+    use ClientTrait;
+
+    protected $clintRepository,$agencyService,$visaRepository;
+
+     public function __construct( AgencyService $agencyService,VisaRepositoryInterface $visaRepository,ClintRepositoryInterface $clintRepository,) {
+       
+        $this->agencyService = $agencyService;
+        $this->visaRepository = $visaRepository;
+        $this->clintRepository = $clintRepository;
+
+    }
     
  /**** */
  public function him_test(){
@@ -619,6 +642,39 @@ public function airport($input){
     return view('superadmin.pages.visa.searchvisa',compact('countries'));
  }
 
+ public function hsrequestApplication(Request $request){
+
+    $agencyData= $this->agencyService->getAgencyData(); 
+    // dd($agencyData);
+  $requestDatas = RequestApplication::with([
+        'visa',
+        'visasubtype',
+        'combination.origincountry',
+        'combination.destinationcountry'
+    ])
+    ->where([
+        ['status', 'pending'],
+        ['agency_id', $agencyData->id],
+    ])
+    ->get();
+    // dd($requestDatas);
+    return view('agencies.pages.service.all-application',compact('requestDatas'));
+
+ }
+
+
+  public function hsRequestproceed($id)
+    {
+        $application = RequestApplication::findOrFail($id);
+        dd($application);
+        // Example: update status to "in progress"
+        $application->status = 'in_progress';
+        $application->save();
+
+        return redirect()
+            ->back()
+            ->with('message', 'Application proceeded successfully!');
+    }
 
 
 }

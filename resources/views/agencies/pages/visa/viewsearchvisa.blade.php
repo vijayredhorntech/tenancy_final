@@ -1,8 +1,8 @@
-<x-agency.layout>
-       <x-visa.visaresult 
+<x-main.layout>
+    <x-visa.visaresult 
         :visas="$visas" 
         :countries="$countries" 
         :orgin="$orgin" 
         :destination="$destination" 
     />
-    </x-agency.layout>
+</x-main.layout>

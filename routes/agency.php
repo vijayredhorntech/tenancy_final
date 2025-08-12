@@ -126,13 +126,20 @@ Route::group([
       });
 
 
+       Route::controller(ServiceController::class)->group(function () {
+
+        Route::get('application', 'hsrequestApplication')->name('request.index');
+        Route::get('/applications/{id}/proceed', 'hsRequestproceed')->name('applications.proceed');
+    });
+
+
 
     // Visa
       Route::controller(VisaController::class)->group(function () {
         
         Route::get('/viewapplication/{type}', 'hs_visaApplication')->name('agency.application');
-        Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
-        Route::get('/payment/{id}','him_payment')->name('visa.payment');
+      
+      
         Route::get('/get-visa-services','him_getService' )->name('get.visa.services');
         Route::post('/visabook','hsVisaBook')->name('visa.book');
         Route::get('/verifyapplication/{id}','hs_verifyapplication')->name('verify.application');
@@ -380,3 +387,17 @@ Route::controller(DocumentSignController::class)->group(function () {
         // Route::post('/payment', 'payment')->name('flight.payment');
     });
 // 
+
+   Route::controller(VisaController::class)->group(function () {
+
+         Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
+           Route::get('/payment/{id}','him_payment')->name('visa.payment');
+    });
+
+
+    Route::get('/visa/thank-you', function () {
+    return view('visa.thank-you', [
+        'applicationId' => 'VS-' . strtoupper(uniqid()),
+        'destination' => 'United States' // You can pass the actual destination from your form
+    ]);
+})->name('visa.thank-you');
