@@ -32,3 +32,12 @@ yarn-error.log
 
 # Coders in Flow
 .codersinflow
+
+# Coders in Flow
+.venv
+.codex
+out
+dist
+*.vsix
+.claude
+CLAUDE.md

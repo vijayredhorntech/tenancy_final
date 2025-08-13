@@ -569,36 +569,6 @@ public function hsViewEditSection($id){
 
     /*******Visa BOoking *******/
 
-    // public function hsVisaBook(Request $request){
-
-       
-    //     $data = $request->validate([
-    //         'origin'        => 'required|integer|exists:countries,id',  // Ensure it exists in the countries table
-    //         'destination'   => 'required|integer|exists:countries,id',
-    //         'typeof'        => 'required|integer|exists:visa_types,id',
-    //         'category'      => 'required|integer|exists:visa_subtypes,id',
-
-    //         'lastname'      => 'required|string|max:255',
-    //         'firstname'     => 'required|string|max:255',
-
-    //         'citizenship'   => 'nullable|string|max:255',  // Fix: "null" should be "nullable|string"
-    //         'email'         => 'required|email|max:255',
-    //         'phonenumber'   => 'required|numeric', // Ensures phone number is reasonable
-
-    //         'dateofentry'   => 'required|date|after_or_equal:today', // Ensures it's a valid date and not in the future
-    //     ]);
-
-    //     // $data['agency_id'] = $agency->id;
-    //     // $data['total_amount'] = 
-
-    //     $visas = $this->visaRepository->saveBooking($request->all());
-    //     if($visas == false){
-    //         return redirect()->back()->with('error', 'Booking failed');
-    //     }
-    //     // dd($visas);
-    //     return redirect()->route('verify.application', ['id' => $visas->id])
-    //     ->with('success', 'Booking successful');
-    // }
 public function hsVisaBook(Request $request)
 {
     $data = $request->validate([
