@@ -7,7 +7,8 @@
     $allSessionData = session()->all();
 @endphp
 
-{{-- <a href="{{ env('APP_URL') }}/{{ $allSessionData['agency_domain'] }}"> --}}
+
+<a href="/{{ $agency->domains->domain_name }}">
     <img src="{{ asset($user_data->type == 'staff' 
         ? 'images/user/agency/profile/' . $user_data->profile 
         : 'images/agencies/logo/' . $user_data->profile) }}"
