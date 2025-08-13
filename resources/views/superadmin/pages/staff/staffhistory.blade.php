@@ -1,16 +1,17 @@
 <x-front.layout>
     @section('title')
-        Agency
+        Staff History
     @endsection
 
     <style> 
-      .card {
+              .card {
             width: 600px;
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
             position: relative;
+            border: 2px solid #26ace2;
         }
 
         .background-pattern {
@@ -124,6 +125,47 @@
         .details table { width: 100%; border-collapse: collapse; }
         .details th, .details td { padding: 8px; border: 1px solid #ddd; text-align: left; }
         .footer { margin-top: 20px; text-align: center; font-size: 12px; }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .card, .card * {
+                visibility: visible;
+            }
+            .card {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                width: 400px;
+                height: auto;
+                margin: 0;
+                box-shadow: none;
+                border: 2px solid #26ace2;
+            }
+            .card .header {
+                background: #26ace2 !important;
+            }
+            .card .content {
+                padding: 20px;
+            }
+            .card .photo img {
+                width: 120px;
+                height: 150px;
+                object-fit: cover;
+            }
+            .card .details .field {
+                margin-bottom: 10px;
+                font-size: 14px;
+            }
+            .card .id-number {
+                font-size: 16px;
+                font-weight: bold;
+                color: #26ace2;
+                margin-top: 15px;
+            }
+        }
     </style>
 
 
@@ -232,17 +274,10 @@
                     </div>
                 </div>
                 <div class="flex justify-center mt-4">
-                <button id="printInvoice" class="bg-[#28a745] text-white text-sm px-2 py-1 rounded-sm"  onclick="
-                var printContents = document.getElementById('joiningLettersDiv').innerHTML;
-                var originalContents = document.body.innerHTML;
-
-                document.body.innerHTML = printContents;
-                window.print();
-                document.body.innerHTML = originalContents;
-                " >
-                    Print Invoice
-                </button>
-               </div>
+                    <button id="printJoiningLetter" class="bg-success text-white text-sm px-6 py-2 rounded-md hover:bg-success/80 transition ease-in duration-200" onclick="printJoiningLetter()">
+                        <i class="fas fa-print mr-2"></i>Print Joining Letter
+                    </button>
+                </div>
             </div>
 
       <!-- end joing letter  -->
@@ -361,54 +396,56 @@
 
                     <!-- icard -->
                     <div id="icardDiv" class="tab hidden">
-                         
-                    <div class="card">
-                            <div class="background-pattern"></div>
-                            <div class="header">
-                                <div class="headerTitle">
-                                    Cloud Travel
+                        <div class="w-full flex justify-center">
+                            <div class="card">
+                                <div class="background-pattern"></div>
+                                <div class="header">
+                                    <div class="headerTitle">
+                                        Cloud Travel
+                                    </div>
+                                    <div class="logo">
+                                        <img src="{{ asset('assets/images/logo.png') }}" alt="Cloud Travel" class="h-24 mr-4" />
+                                    </div>
                                 </div>
-                                <div class="logo">
-                                <img src="{{ asset('assets/images/logo.png') }}" alt="Cloud Travel"  class="h-24 mr-4" />
-                                   
-                                </div>
-                                
-                            </div>
-                            <div class="content">
-                                <div class="photo">
-                                @if(isset($user->profile))
-                                            <img src="{{ asset('images/user/profile/' . $user->profile) }}" alt="Cloud Travel"  class="h-24 mr-4" />
+                                <div class="content">
+                                    <div class="photo">
+                                        @if(isset($user->profile))
+                                            <img src="{{ asset('images/user/profile/' . $user->profile) }}" alt="Cloud Travel" class="h-24 mr-4" />
                                         @else
-                                        <img src="{{asset('assets/images/profile_photo.jpg')}}" class="h-40 rounded-md w-auto " alt="">
+                                            <img src="{{asset('assets/images/profile_photo.jpg')}}" class="h-40 rounded-md w-auto" alt="">
                                         @endif
-                                  
-                                </div>
-                                <div class="details">
-                                    <div class="field">
-                                        <span class="field-label">Name:</span>
-                                        {{ $user->name ?? 'N/A' }}
                                     </div>
-                                    <div class="field">
-                                        <span class="field-label">Joining Date:</span>
-                                        {{ $user->created_at ? $user->created_at->format('d-m-Y') : 'N/A' }}
+                                    <div class="details">
+                                        <div class="field">
+                                            <span class="field-label">Name:</span>
+                                            {{ $user->name ?? 'N/A' }}
+                                        </div>
+                                        <div class="field">
+                                            <span class="field-label">Joining Date:</span>
+                                            {{ $user->created_at ? $user->created_at->format('d-m-Y') : 'N/A' }}
+                                        </div>
+                                        <div class="field">
+                                            <span class="field-label">Department:</span>
+                                            {{$user->userdetails->department ?? 'N/A'}}
+                                        </div>
+                                        <div class="field">
+                                            <span class="field-label">Phone Number:</span>
+                                            {{$user->userdetails->phone_number ?? 'N/A'}}
+                                        </div>
+                                        <div class="id-number">
+                                            EMP- {{ $user->id ?? 'N/A' }}
+                                        </div>
                                     </div>
-                                    <div class="field">
-                                        <span class="field-label">Department:</span>
-                                        Customer Service
-                                    </div>
-                                    <div class="field">
-                                        <span class="field-label">Phone Number</span>
-                                        {{$user->userdetails->phone_number ?? 'N/A'}}
-                                    </div>
-                                    <div class="id-number">
-                                        EMP- {{ $user->id ?? 'N/A' }}
-                                    </div>
-                                 
                                 </div>
                             </div>
                         </div>
-
-                      </div>
+                        
+                        <div class="flex w-full justify-center mt-8">
+                            <button id="printIcard" class="bg-secondary text-white text-sm px-6 py-2 rounded-md hover:bg-secondary/80 transition ease-in duration-200" onclick="printIcard()">
+                                <i class="fas fa-print mr-2"></i>Print I-Card
+                            </button>
+                        </div>
+                    </div>
 
                       <!-- attendance -->
                       <div id="attendanceDiv" class="tab hidden">
@@ -506,7 +543,7 @@
                             <div class="w-full ">
                                 <div class="  border-[2px] border-danger/70 ">
                                     <div class="flex justify-center bg-danger/40 px-4 py-0.5">
-                                        <span class="font-semibold text-ternary text-xl">Oher Document</span>
+                                        <span class="font-semibold text-ternary text-xl">Other Document</span>
                                     </div>
                             <div class="mt-2 overflow-x-auto px-4 py-0.5">
                                <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">              
@@ -648,70 +685,70 @@
                     <div id="bookingDiv" class="tab hidden">
                       
                      </div>
-                    <div id="profileDiv" class="tab  ">
-                        <div class="w-full border-[1px] border-success/40">
-                            <div class="flex bg-success/40 px-4 py-0.5">
-                                <span class="font-semibold text-ternary text-xl">Agency Details</span>
+                    <div id="profileDiv" class="tab">
+                        <div class="w-full border-[1px] border-primary/20 bg-white rounded-lg shadow-sm">
+                            <div class="flex bg-primary/10 px-6 py-3 border-b border-primary/20">
+                                <span class="font-semibold text-ternary text-xl flex items-center">
+                                    <i class="fas fa-user-circle mr-2 text-primary"></i>
+                                    Staff Details
+                                </span>
                             </div>
-                            <div class="w-full p-4 grid lg:grid-cols-3 gap-x-4 gap-y-8 ">
-                                <div class="w-full flex flex-col overflow-x-auto">
-                                    <div class="pb-2 pr-12 border-b-[2px] border-b-success">
-                                        <span class="font-semibold text-ternary text-lg">Basic Information:</span>
+                            <div class="w-full p-6 grid lg:grid-cols-3 gap-6">
+                                <div class="w-full flex flex-col">
+                                    <div class="pb-3 border-b-2 border-primary/30 mb-4">
+                                        <span class="font-semibold text-ternary text-lg flex items-center">
+                                            <i class="fas fa-info-circle mr-2 text-primary"></i>
+                                            Basic Information
+                                        </span>
                                     </div>
-                                    <div class="flex flex-col mt-4 overflow-x-auto">
+                                    <div class="flex flex-col space-y-4">
                                         <div class="w-full pb-4">
-                                      
-                                        @if(isset($user->profile))
-                                            <img src="{{ asset('images/user/profile/' . $user->profile) }}" alt="Cloud Travel"  class="h-24 mr-4" />
-                                        @else
-                                        <img src="{{asset('assets/images/profile_photo.jpg')}}" class="h-40 rounded-md w-auto " alt="">
-                                        @endif
-                                           
+                                            @if(isset($user->profile))
+                                                <img src="{{ asset($user->type == 'staff' ? 'images/user/agency/profile/' . $user->profile : 'images/agencies/logo/' . $user->profile) }}" 
+                                                onerror="this.onerror=null; this.src='{{ asset('assets/images/profile_photo.jpg') }}';"
+                                                class="w-full h-48 object-contain bg-gray-100 rounded-lg" 
+                                                alt="{{$user->name}}">
+                                            @else
+                                                <img src="{{asset('assets/images/profile_photo.jpg')}}" class="w-full h-48 object-contain bg-gray-100 rounded-lg" alt="">
+                                            @endif
                                         </div>
-                                        <div class="flex ">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">User name: </span>
-                                            <span class="text-ternary text-medium italic">   {{$user->name ?? 'N/A'}}</span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">User Name:</span>
+                                            <span class="text-ternary font-medium">{{$user->name ?? 'N/A'}}</span>
                                         </div>
-
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Employee Id</span>
-                                            <span class="text-ternary text-medium italic">EMP-{{$user->id ?? 'N/A'}}</span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Employee ID:</span>
+                                            <span class="text-primary font-semibold">EMP-{{$user->id ?? 'N/A'}}</span>
                                         </div>
-
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Role </span>
-                                            <span class="text-ternary text-medium italic"></span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Role:</span>
+                                            <span class="text-ternary font-medium">{{$user->getRoleNames()->first() ?? 'N/A'}}</span>
                                         </div>
-
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Department </span>
-                                            <span class="text-ternary text-medium italic"></span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Department:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->department ?? 'N/A'}}</span>
                                         </div>
-
-
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary"></span>
-                                            <span class="text-ternary text-medium italic"> </span>
-                                        </div>
-                                      
                                     </div>
                                 </div>
-                                <div class="w-full flex flex-col overflow-x-auto">
-                                    <div class="pb-2 pr-12 border-b-[2px] border-b-success">
-                                        <span class="font-semibold text-ternary text-lg">Contact Information:</span>
+                                <div class="w-full flex flex-col">
+                                    <div class="pb-3 border-b-2 border-primary/30 mb-4">
+                                        <span class="font-semibold text-ternary text-lg flex items-center">
+                                            <i class="fas fa-phone mr-2 text-primary"></i>
+                                            Contact Information
+                                        </span>
                                     </div>
-                                    <div class="flex flex-col mt-4 ">
-                                        <div class="flex ">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Email:</span>
-                                            <span class="text-ternary text-medium italic">{{$user->email ?? 'N/A'}}</span>
+                                    <div class="flex flex-col space-y-4">
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Email:</span>
+                                            <span class="text-ternary font-medium">{{$user->email ?? 'N/A'}}</span>
                                         </div>
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Telephone: </span>
-                                            <span class="text-ternary text-medium italic">01780-200705 </span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Telephone:</span>
+                                            <span class="text-ternary font-medium">01780-200705</span>
                                         </div>
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Phone:</span>
-                                            <span class="text-ternary text-medium italic">{{$user->userdetails->phone_number ?? 'N/A'}}</span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Phone:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->phone_number ?? 'N/A'}}</span>
                                         </div>
                                     </div>
 
@@ -732,106 +769,110 @@
 
                                     
                                 </div>
-                                <div class="w-full flex flex-col overflow-x-auto">
-                                    <div class="pb-2 pr-12 border-b-[2px] border-b-success">
-                                        <span class="font-semibold text-ternary text-lg">Address Information:</span>
+                                <div class="w-full flex flex-col">
+                                    <div class="pb-3 border-b-2 border-primary/30 mb-4">
+                                        <span class="font-semibold text-ternary text-lg flex items-center">
+                                            <i class="fas fa-map-marker-alt mr-2 text-primary"></i>
+                                            Address Information
+                                        </span>
                                     </div>
-                                    <div class="flex flex-col mt-4">
-                                        <div class="flex ">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Address:</span>
-                                            <span class="text-ternary text-medium italic">{{$user->userdetails->address ?? 'N/A'}}</span>
+                                    <div class="flex flex-col space-y-4">
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Address:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->address ?? 'N/A'}}</span>
                                         </div>
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">City: </span>
-                                            <span class="text-ternary text-medium italic"> </span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">City:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->city ?? 'N/A'}}</span>
                                         </div>
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">State:</span>
-                                            <span class="text-ternary text-medium italic">{{$user->userdetails->state ?? 'N/A'}}</span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">State:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->state ?? 'N/A'}}</span>
                                         </div>
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Country:</span>
-                                            <span class="text-ternary text-medium italic">{{$user->userdetails->country ?? 'N/A'}}</span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Country:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->country ?? 'N/A'}}</span>
                                         </div>
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Zip Code:</span>
-                                            <span class="text-ternary text-medium italic"></span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Zip Code:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->zip_code ?? 'N/A'}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="w-full flex flex-col">
+                                    <div class="pb-3 border-b-2 border-primary/30 mb-4">
+                                        <span class="font-semibold text-ternary text-lg flex items-center">
+                                            <i class="fas fa-university mr-2 text-primary"></i>
+                                            Bank Details
+                                        </span>
+                                    </div>
+                                    <div class="flex flex-col space-y-4">
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Account Number:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->account_number ?? 'N/A'}}</span>
+                                        </div>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Short Code:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->short_code ?? 'N/A'}}</span>
+                                        </div>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Bank Name:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->bank_name ?? 'N/A'}}</span>
                                         </div>
                                     </div>
                                 </div>
 
 
-                                <div class="w-full flex flex-col overflow-x-auto">
-                                    <div class="pb-2 pr-12 border-b-[2px] border-b-success">
-                                        <span class="font-semibold text-ternary text-lg">Bank Details:</span>
+                                <div class="w-full flex flex-col">
+                                    <div class="pb-3 border-b-2 border-primary/30 mb-4">
+                                        <span class="font-semibold text-ternary text-lg flex items-center">
+                                            <i class="fas fa-passport mr-2 text-primary"></i>
+                                            Passport Details
+                                        </span>
                                     </div>
-                                    <div class="flex flex-col mt-4">
-                                        <div class="flex ">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Account Number</span>
-                                            <span class="text-ternary text-medium italic">{{$user->userdetails->account_number ?? 'N/A'}}</span>
+                                    <div class="flex flex-col space-y-4">
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Passport Number:</span>
+                                            <span class="text-ternary font-medium">{{$user->passport->passport_number ?? 'N/A'}}</span>
                                         </div>
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Short Code </span>
-                                            <span class="text-ternary text-medium italic">{{$user->userdetails->short_code ?? 'N/A'}} </span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Place of Issue:</span>
+                                            <span class="text-ternary font-medium">{{$user->passport->place_of_issue ?? 'N/A'}}</span>
                                         </div>
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Bank Name</span>
-                                            <span class="text-ternary text-medium italic">{{$user->userdetails->bank_name ?? 'N/A'}}</span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Date of Issue:</span>
+                                            <span class="text-ternary font-medium">{{$user->passport->date_of_issue ?? 'N/A'}}</span>
                                         </div>
-                                       
-                                    </div>
-                                </div>
-
-
-                                <div class="w-full flex flex-col overflow-x-auto">
-                                    <div class="pb-2 pr-12 border-b-[2px] border-b-success">
-                                        <span class="font-semibold text-ternary text-lg">Passport Details:</span>
-                                    </div>
-                     
-                                    <div class="flex flex-col mt-4">
-                                        <div class="flex ">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Passport Number</span>
-                                            <span class="text-ternary text-medium italic">{{$user->passport->passport_number ?? 'N/A'}}</span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Date of Expiry:</span>
+                                            <span class="text-ternary font-medium">{{$user->passport->passport_expire_date ?? 'N/A'}}</span>
                                         </div>
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Place of  Issue</span>
-                                            <span class="text-ternary text-medium italic">{{$user->passport->place_of_issue ?? 'N/A'}} </span>
-                                        </div>
-
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Date of Issue </span>
-                                            <span class="text-ternary text-medium italic">{{$user->passport->date_of_issue ?? 'N/A'}} </span>
-                                        </div>
-
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Date Of Expire</span>
-                                            <span class="text-ternary text-medium italic">{{$user->passport->passport_expire_date ?? 'N/A'}}</span>
-                                        </div>
-                                       
                                     </div>
                                 </div>
 
 
-                                <div class="w-full flex flex-col overflow-x-auto">
-                                    <div class="pb-2 pr-12 border-b-[2px] border-b-success">
-                                        <span class="font-semibold text-ternary text-lg">Other:</span>
+                                <div class="w-full flex flex-col">
+                                    <div class="pb-3 border-b-2 border-primary/30 mb-4">
+                                        <span class="font-semibold text-ternary text-lg flex items-center">
+                                            <i class="fas fa-ellipsis-h mr-2 text-primary"></i>
+                                            Other Information
+                                        </span>
                                     </div>
-                                    <div class="flex flex-col mt-4">
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Emergency Person name</span>
-                                            <span class="text-ternary text-medium italic">{{$user->userdetails->emergency_person_name ?? 'N/A'}}</span>
+                                    <div class="flex flex-col space-y-4">
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Emergency Contact:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->emergency_person_name ?? 'N/A'}}</span>
                                         </div>
-
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Emergency Person number</span>
-                                            <span class="text-ternary text-medium italic">{{$user->userdetails->emergency_contact_number ?? 'N/A'}}</span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Emergency Phone:</span>
+                                            <span class="text-ternary font-medium">{{$user->userdetails->emergency_contact_number ?? 'N/A'}}</span>
                                         </div>
-                                        
-                                        <div class="flex mt-2">
-                                            <span class="w-[150px] font-semibold text-md text-ternary">Date of Joinng</span>
-                                            <span class="text-ternary text-medium italic">{{ $user->created_at ? $user->created_at->format('d-m-Y') : 'N/A' }}</span>
+                                        <div class="flex items-center py-2 px-3 bg-gray-50 rounded-md">
+                                            <span class="w-[140px] font-semibold text-sm text-ternary/80">Date of Joining:</span>
+                                            <span class="text-primary font-semibold">{{ $user->created_at ? $user->created_at->format('d-m-Y') : 'N/A' }}</span>
                                         </div>
-                                       
                                     </div>
                                 </div>
 
@@ -850,16 +891,186 @@
         <script>
         jQuery(document).ready(function () {
             jQuery(document).on("click", ".agency_tab", function () {
-                                var id = jQuery(this).data('tid');
-                                  jQuery(".agency_tab").removeClass("bg-secondary/40 border-[2px] border-secondary/60");
-                                jQuery(this).addClass("bg-secondary/40 border-[2px] border-secondary/60");
+                var id = jQuery(this).data('tid');
+                jQuery(".agency_tab").removeClass("bg-secondary/40 border-[2px] border-secondary/60");
+                jQuery(this).addClass("bg-secondary/40 border-[2px] border-secondary/60");
 
-                                // Hide all tabs and show the selected one
-                                jQuery(".tab").hide();
-                                jQuery("#" + id).show();
-                            });
+                // Hide all tabs and show the selected one
+                jQuery(".tab").hide();
+                jQuery("#" + id).show();
+            });
+        });
+
+        function printIcard() {
+            var card = document.querySelector('#icardDiv .card');
+            var printWindow = window.open('', '_blank', 'width=800,height=600');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>I-Card Print</title>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 20px;
+                            font-family: Arial, sans-serif;
+                            background: white;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            min-height: 100vh;
+                        }
+                        .print-card {
+                            width: 400px;
+                            background: white;
+                            border: 2px solid #26ace2;
+                            border-radius: 12px;
+                            overflow: hidden;
+                            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+                        }
+                        .print-header {
+                            background: #26ace2;
+                            color: white;
+                            padding: 15px 20px;
+                            font-size: 24px;
+                            border-bottom-right-radius: 50px;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        }
+                        .print-logo {
+                            width: 60px;
+                            height: 60px;
+                            background: white;
+                            border-radius: 50%;
+                            padding: 5px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        .print-logo img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: contain;
+                        }
+                        .print-content {
+                            padding: 20px;
+                            display: flex;
+                            gap: 20px;
+                        }
+                        .print-photo {
+                            width: 120px;
+                            height: 150px;
+                            background: #f0f0f0;
+                            border-radius: 8px;
+                            overflow: hidden;
+                            flex-shrink: 0;
+                        }
+                        .print-photo img {
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                        }
+                        .print-details {
+                            flex: 1;
+                        }
+                        .print-field {
+                            margin-bottom: 12px;
+                            font-size: 14px;
+                        }
+                        .print-field-label {
+                            font-weight: bold;
+                            margin-right: 10px;
+                            color: #333;
+                        }
+                        .print-id-number {
+                            color: #26ace2;
+                            font-weight: bold;
+                            font-size: 16px;
+                            margin-top: 15px;
+                        }
+                        @media print {
+                            body {
+                                padding: 0;
+                            }
+                            .print-card {
+                                box-shadow: none;
+                                border: 2px solid #26ace2;
+                            }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="print-card">
+                        <div class="print-header">
+                            <div>Cloud Travel</div>
+                            <div class="print-logo">
+                                <img src="${window.location.origin}/assets/images/logo.png" alt="Cloud Travel" />
+                            </div>
+                        </div>
+                        <div class="print-content">
+                            <div class="print-photo">
+                                <img src="${card.querySelector('.photo img').src}" alt="Profile" />
+                            </div>
+                            <div class="print-details">
+                                <div class="print-field">
+                                    <span class="print-field-label">Name:</span>
+                                    ${card.querySelector('.field:nth-child(1)').textContent.replace('Name:', '').trim()}
+                                </div>
+                                <div class="print-field">
+                                    <span class="print-field-label">Joining Date:</span>
+                                    ${card.querySelector('.field:nth-child(2)').textContent.replace('Joining Date:', '').trim()}
+                                </div>
+                                <div class="print-field">
+                                    <span class="print-field-label">Department:</span>
+                                    ${card.querySelector('.field:nth-child(3)').textContent.replace('Department:', '').trim()}
+                                </div>
+                                <div class="print-field">
+                                    <span class="print-field-label">Phone Number:</span>
+                                    ${card.querySelector('.field:nth-child(4)').textContent.replace('Phone Number:', '').trim()}
+                                </div>
+                                <div class="print-id-number">
+                                    ${card.querySelector('.id-number').textContent.trim()}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            printWindow.focus();
+            
+            // Wait for images to load, then print
+            printWindow.onload = function() {
+                setTimeout(function() {
+                    printWindow.print();
+                    printWindow.close();
+                }, 500);
+            };
+        }
+
+        function printJoiningLetter() {
+            var printContents = document.getElementById('joiningLettersDiv').innerHTML;
+            var originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+            
+            // Reinitialize the tab functionality after printing
+            jQuery(document).ready(function () {
+                jQuery(document).on("click", ".agency_tab", function () {
+                    var id = jQuery(this).data('tid');
+                    jQuery(".agency_tab").removeClass("bg-secondary/40 border-[2px] border-secondary/60");
+                    jQuery(this).addClass("bg-secondary/40 border-[2px] border-secondary/60");
+                    jQuery(".tab").hide();
+                    jQuery("#" + id).show();
                 });
-
+            });
+        }
         </script>
 
 </x-front.layout>

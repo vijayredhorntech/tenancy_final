@@ -1,5 +1,21 @@
 <x-front.layout>
     @section('title')Staff @endsection
+    
+    {{-- Session Messages --}}
+    @if(session('error'))
+        <div class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+            <i class="fa fa-exclamation-circle mr-2"></i>
+            {{ session('error') }}
+        </div>
+    @endif
+    
+    @if(session('info'))
+        <div class="mb-4 p-4 bg-blue-100 border border-blue-400 text-blue-700 rounded-md">
+            <i class="fa fa-info-circle mr-2"></i>
+            {{ session('info') }}
+        </div>
+    @endif
+    
     <div class="w-full grid xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 mb-4">
 
     @php
@@ -951,14 +967,18 @@
                                 </option>
                             @endforeach
                         </select>
+                        @canany(['export excel', 'manage everything'])
                         <a href="{{ route('studentgenerate.excel') }}?{{ http_build_query(request()->all()) }}" 
                         class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
                             Export CSV
                         </a>
+                        @endcanany
+                        @canany(['export pdf', 'manage everything'])
                         <a href="{{ route('studentgenerate.pdf') }}?{{ http_build_query(request()->all()) }}"
                             class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
                                 Export PDF
-                            </a>
+                        </a>
+                        @endcanany
                     </div>
                 </div>
             </form> 
@@ -988,7 +1008,7 @@
                                 <span><i class="fa fa-envelope  text-sm mr-1 text-secondary"></i> {{$user['email']}}</span>
                                 <span class="font-medium"> <a href="tel:({{ $user->userdetails->phone_number ?? 'N/A' }} )"><i class="fa fa-phone mr-1 text-sm text-secondary"></i> ({{ $user->userdetails->phone_number ?? 'N/A' }} )</a></span>
                             </div></td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"></td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $user->userdetails->department ?? 'N/A' }}</td>
                        
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex justify-between gap-2">

@@ -20,6 +20,7 @@ class UserMeta extends Model
         'address',
         'state',
         'country',
+        'department',
     ];
 
     public function user()

@@ -372,6 +372,7 @@ class SuperadminController extends Controller
                 ['user_id' => $user->id],
                 [
                     'phone_number' => $request->phone,
+                    'department' => $request->department,
                     // 'phone_code'   => $request->phone_code,
                     // 'address'      => $request->address,
                     // 'state'        => $request->state,
@@ -413,10 +414,10 @@ class SuperadminController extends Controller
 
 
             DB::commit();
-            return redirect()->route('staff')->with('success', 'User updated successfully.');
+            return redirect()->route('staff')->with('success', 'Staff updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->route('staff')->with('error', 'Failed to update user: ' . $e->getMessage());
+            return redirect()->route('staff')->with('error', 'Failed to update staff: ' . $e->getMessage());
         }
     }
 

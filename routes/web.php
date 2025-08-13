@@ -189,8 +189,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     /*** Route for staff ***/
                     Route::controller(SuperadminController::class)->group(function () {
                         // Route::get('/generate-pdf','generatePDF')->name('studentgenerate.pdf');
-                        Route::get('/studentgenerate-pdf', 'generatePDF')->middleware('can:student export')->name('studentgenerate.pdf');
-                        Route::get('/studnetgenerate-excel','exportStudent')->middleware('can:student export')->name('studentgenerate.excel');
+                        Route::get('/studentgenerate-pdf', 'generatePDF')->middleware('can:export pdf')->name('studentgenerate.pdf');
+                        Route::get('/studnetgenerate-excel','exportStudent')->middleware('can:export excel')->name('studentgenerate.excel');
                         Route::get('/staffindex', 'hs_staffindex')->middleware('can:staff view')->name('staff');
                         Route::get('/staffcreate', 'hs_staffcreate')->middleware('can:staff create')->name('superadmin_staffcreate');
                         Route::post('/staffstore', 'hs_staffstore')->middleware('can:staff create')->name('superadmin_staffstore');

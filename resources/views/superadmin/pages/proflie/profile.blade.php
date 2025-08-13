@@ -328,7 +328,7 @@
                             <div class="w-full ">
                                 <div class="  border-[2px] border-danger/70 ">
                                     <div class="flex justify-center bg-danger/40 px-4 py-0.5">
-                                        <span class="font-semibold text-ternary text-xl">Oher Document</span>
+                                        <span class="font-semibold text-ternary text-xl">Other Document</span>
                                     </div>
                             <div class="mt-2 overflow-x-auto px-4 py-0.5">
                                <table class="w-full border-[2px] border-secondary/40 border-collapse my-4">              
