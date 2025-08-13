@@ -85,17 +85,19 @@
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
 
-                                   <a href="" title="View Application">
+                                   <a href="{{ route('applications.view', $requestData->id) }}" title="View Application">
                                             <div class="bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
                                                 <i class="fa fa-eye"></i>
                                             </div>
                                         </a>
 
          
-                                        <a href="{{ route('applications.proceed', $requestData->id) }}" title="Proceed Application">
-                                            <div class="bg-warning/10 text-warning h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-warning hover:text-white transition ease-in duration-2000">
-                                                <i class="fa fa-share"></i>
-                                            </div>
+                                        <a href="{{ route('applications.proceed', $requestData->id) }}" 
+                                                title="Proceed Application"
+                                                onclick="return confirm('Are you sure you want to proceed with this application?');">
+                                                    <div class="bg-warning/10 text-warning h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-warning hover:text-white transition ease-in duration-2000">
+                                                        <i class="fa fa-share"></i>
+                                                    </div>
                                         </a>
 
 

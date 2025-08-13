@@ -130,6 +130,8 @@ Route::group([
 
         Route::get('application', 'hsrequestApplication')->name('request.index');
         Route::get('/applications/{id}/proceed', 'hsRequestproceed')->name('applications.proceed');
+        Route::get('/applications/{id}/view', 'hsRequestView')->name('applications.view');
+
     });
 
 

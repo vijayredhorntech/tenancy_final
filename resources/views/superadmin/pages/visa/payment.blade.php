@@ -28,6 +28,9 @@
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Visa Category</label>
                                       <input type="hidden" value="{{ $visas['0']->origin }}" name="origin">
                                       <input type="hidden" value="{{ $visas['0']->destination }}" name="destination">
+                                      <input type="hidden" value="{{ $visas['0']->id }}" name="selectionid" id="selectionid">
+
+                                      
                                       <select class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"  name="typeof" id="typeof">
                                           @forelse($visas as $visaServiceType)
                                               @if ($visaServiceType->VisaServices)
@@ -50,7 +53,7 @@
                                           <option value="">
 
                                           </option>
-                                      </select>
+                                      </select> 
 
                                   </div>
 
@@ -359,11 +362,17 @@ $(document).ready(function () {
     // jQuery('.submitbutton').hide();
     function fetchCategories() {
         var visa_type_id = $("#typeof").val();
+         var combination_id = $("#selectionid").val();
+
+        
         if (visa_type_id) {
             $.ajax({
                 url: "{{ route('get.visa.services') }}", // API for fetching subtypes
                 type: "GET",
-                data: { visa_type_id: visa_type_id },
+                data: { 
+                visa_type_id: visa_type_id, 
+                combination: combination_id 
+            },
                 success: function (data) {
 
                     var html = ''; // Default option

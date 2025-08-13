@@ -30,13 +30,35 @@
     </div>
 
 
-    @php 
-    
-    @endphp
+   @php
+    use App\Models\Agency;
+
+    $allSessionData = session()->all();
+
+    $domain = $allSessionData['agency_domain'] ?? null;
+
+    if ($domain) {
+        // Eager load 'domain' relation and filter where related domain matches $domain
+        //  $data=Agency::with('domains')->get(); 
+        //  dd($data);
+        $agencyData = Agency::with('domains')->whereHas('domains', function ($query) use ($domain) {
+            $query->where('domain_name', $domain);
+        })->first();
+ 
+    } else {
+        $agencyData = null;
+    }
+@endphp
     <div class="lg:flex hidden gap-6 justify-between items-center w-full">
            <div class="w-max flex items-center">
                <a class="" href="{{ env('APP_URL') }}">
-                   <img src="{{asset('assets/images/logo.png')}}" class="h-16 object-cover" alt="">
+                   {{-- <img src="{{asset('assets/images/logo.png')}} profile_picture" class="h-16 object-cover" alt=""> --}}
+                 <img src="{{ asset('images/agencies/logo/' . $agencyData->profile_picture) }}" alt="profile_picture" class="h-16 object-cover">
+
+
+
+
+                   
                </a>
            </div>
 
@@ -90,10 +112,19 @@
 
 
             <div class="flex gap-2 items-center ">
+
+                @if(isset($allSessionData['user_data']))
+                <a href="{{ route('agency_dashboard') }}" 
+                                        class="bg-transparent hover:bg-secondary text-primary hover:text-red border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">
+                                            Dashboard
+                </a>
+
+                @else
                <a href="{{ route('agency.login') }}" 
                         class="bg-transparent hover:bg-secondary text-primary hover:text-red border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">
                             Login
                         </a>
+                @endif
                 {{-- <button class="bg-primaryColor hover:bg-secondary text-white  border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">Sign Up</button> --}}
             </div>
 
