@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 68b64f5f3d28e6a79e3b2fe0ba5cdf3d5a283883
 <style>
     .select2-container
     {
@@ -50,10 +46,6 @@
         : asset('assets/images/india-visa-application-requirements.jpg');
 @endphp
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 68b64f5f3d28e6a79e3b2fe0ba5cdf3d5a283883
         <div class=" w-full ">
             <!-- <div class="w-full lg:h-[400px] md:h-[400px] sm:h-[300px] h-[200px] bg-black rounded-md bg-center bg-cover bg-no-repeat relative z-20" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url({{asset('assets/images/india-visa-application-requirements.jpg')}});"> -->
             <div class="w-full lg:h-[400px] md:h-[400px] sm:h-[300px] h-[200px] bg-black rounded-md bg-center bg-cover bg-no-repeat relative z-20"

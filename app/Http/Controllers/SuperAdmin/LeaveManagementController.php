@@ -109,7 +109,7 @@ class LeaveManagementController extends Controller
             'status' => true,
         ]);
         // dd($redirectRoute);
-        return redirect()->route($redirectRoute, $routeParams)->with('message', 'Leave created successfully.');
+        return redirect()->route($redirectRoute, $routeParams)->with('success', 'Leave created successfully.');
     }
     
 
@@ -189,7 +189,7 @@ class LeaveManagementController extends Controller
 
     $leave->save();
 
-    return redirect()->route($redirectRoute, $routeParams)->with('message', 'Leave updated successfully.');
+    return redirect()->route($redirectRoute, $routeParams)->with('success', 'Leave updated successfully.');
 }
 
 
@@ -353,6 +353,29 @@ class LeaveManagementController extends Controller
     }
 
 
+
+    /** Delete a leave type */
+    public function hs_deleteLeave(Request $request, $id, $type = null)
+    {
+        $isAgency = ($request->type === 'agency') || ($type === 'agency');
+
+        if ($isAgency) {
+            $this->agencyService->setDatabaseConnection();
+            $leave = Leave::on('user_database')->find($id);
+            if (!$leave) {
+                return redirect()->route('add.agency.leave', ['type' => 'agency'])->with('error', 'Leave not found.');
+            }
+            $leave->delete();
+            return redirect()->route('add.agency.leave', ['type' => 'agency'])->with('success', 'Leave deleted successfully.');
+        }
+
+        $leave = Leave::find($id);
+        if (!$leave) {
+            return redirect()->route('add.leave')->with('error', 'Leave not found.');
+        }
+        $leave->delete();
+        return redirect()->route('add.leave')->with('success', 'Leave deleted successfully.');
+    }
 
     public function hs_LeaveUpdateStore(Request $request){
        

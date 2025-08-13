@@ -317,7 +317,7 @@
                                             </div>
 
                                             <div class="w-full relative group flex flex-col gap-1">
-                                                <label for="name" class="font-semibold text-ternary/90 text-sm">1GSTIN(18%)</label>
+                                                <label for="name" class="font-semibold text-ternary/90 text-sm">GSTIN(18%)</label>
                                                     <div class="w-full relative">
                                                         <input type="number" name="gstin[]" placeholder="GSTIN..."
                                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px]

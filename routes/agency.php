@@ -121,6 +121,7 @@ Route::group([
      
         Route::get('/edit_leave/{leaveid}','hs_editleave')->name('leave.edit');
         Route::get('/cancel_leave/{leaveid}','hs_cancelleave')->name('leave.cancel');
+        Route::delete('/leave/{id}/{type?}','hs_deleteLeave')->name('agency.leave.delete');
 
         
       });
