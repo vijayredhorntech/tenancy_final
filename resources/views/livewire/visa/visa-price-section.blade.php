@@ -30,7 +30,7 @@
                             <div class="lg:w-[33.3%] md:w-1/3 w-full flex flex-col relative">
                                 <label for="visaCategory" class="font-semibold text-gray-800 text-sm">Visa Category</label>
                                 <select 
-                                    wire:model="selectedVisaCategory"
+                                    wire:model.live="selectedVisaCategory"
                                     class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" 
                                     id="visaCategory"
                                 >

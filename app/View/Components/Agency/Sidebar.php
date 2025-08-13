@@ -22,6 +22,7 @@ class Sidebar extends Component
      public $services;
      public $visapermission;
      public $agencyService;
+     public $agency;
 
 
     public function __construct(AgencyService $agencyService)
@@ -54,7 +55,7 @@ class Sidebar extends Component
       
       
         // Extract services safely
-         $agency = Agency::with('userAssignments.service')->find($agency->id);
+         $this->agency = Agency::with('userAssignments.service','domains')->find($agency->id);
          $this->services = $agency->userAssignments->pluck('service.name', 'service.icon'); // Remove null values
         
      
@@ -71,6 +72,7 @@ class Sidebar extends Component
          return view('components.agency.sidebar',[
             'user_data' => $this->user,
             'services' => $this->services,
+            'agency' => $this->agency,
             'visapermission'=>$this->visapermission,
         ]);
     }

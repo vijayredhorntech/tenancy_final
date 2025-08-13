@@ -547,7 +547,10 @@ public function hsViewEditSection($id){
     {
         // dd($request->all());
         // $visasub = VisaSubtype::where('visa_type_id', $request->visa_type_id)->get();
-        $visasub = VisaSubtype::where('visa_type_id', $request->visa_type_id)->get();
+        $visasub = VisaSubtype::where([
+                ['visa_type_id', $request->visa_type_id],
+                ['country_type_id', $request->combination],
+            ])->get();
    
         $agency = $this->agencyService->getAgencyData();
 

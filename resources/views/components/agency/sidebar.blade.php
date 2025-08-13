@@ -3,13 +3,27 @@
 <div class="w-full flex flex-col justify-center items-center border-b-[1px] pb-2 border-b-gray-100/20 shadow-lg shadow-gray-700/10">
 
     {{-- <img src="{{asset($user_data->profile ? 'images/agencies/logo/' . $user_data->profile : 'assets/images/logo.png') }}" class="h-20 w-20 object-cover rounded-full" alt="Cloud Travel"> --}}
-    <img src="{{ asset($user_data->type == 'staff' ? 'images/user/agency/profile/' . $user_data->profile : 'images/agencies/logo/' . $user_data->profile) }}"
-     onerror="this.onerror=null; this.src='{{ asset('assets/images/logo.png') }}';"
-     class="h-20 w-20 object-cover rounded-full"
-     alt="Cloud Travel">
+   @php 
+    $allSessionData = session()->all();
+@endphp
 
-        <span class="font-semibold text-white/90 mt-2 text-2xl">{{ ucwords($user_data->name ? $user_data->name : 'Login') }}</span>
-        <p class="text-secondary/90 text-xs" ><i class="fa-regular fa-calendar-days mr-1"></i> <span id="clockDiv"></span> </p>
+
+<a href="{{ env('APP_URL') }}/{{ $agency->domains->domain_name }}">
+    <img src="{{ asset($user_data->type == 'staff' 
+        ? 'images/user/agency/profile/' . $user_data->profile 
+        : 'images/agencies/logo/' . $user_data->profile) }}"
+        onerror="this.onerror=null; this.src='{{ asset('assets/images/logo.png') }}';"
+        class="h-20 w-20 object-cover rounded-full"
+        alt="Cloud Travel">
+
+    <span class="font-semibold text-white/90 mt-2 text-2xl">
+        {{ ucwords($user_data->name ?: 'Login') }}
+    </span>
+    <p class="text-secondary/90 text-xs">
+        <i class="fa-regular fa-calendar-days mr-1"></i> 
+        <span id="clockDiv"></span>
+    </p>
+{{-- </a> --}}
     </div>
 
 

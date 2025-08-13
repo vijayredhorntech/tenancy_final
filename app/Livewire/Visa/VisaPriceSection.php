@@ -45,6 +45,7 @@ class VisaPriceSection extends Component
 
     public function mount($visas, $status)
     {
+         
         $this->visas = $visas;
         // dd($this->visas);
         $this->status = $status;
@@ -56,7 +57,7 @@ class VisaPriceSection extends Component
             
             // Initialize with first visa category if available
             if (count($this->visas)) {
-                $this->selectedVisaCategory = $this->visas[0]->VisaServices->id ?? null;
+                $this->selectedVisaCategory = $this->visas[0]->id ?? null;
                 $this->updatedSelectedVisaCategory($this->selectedVisaCategory);
             }
         }

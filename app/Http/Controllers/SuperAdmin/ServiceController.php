@@ -8,6 +8,7 @@ use App\Models\AddBalance;
 use App\Models\Balance;
 use App\Http\Requests\FlightSearchRequest;
 use App\Models\Deduction;
+use App\Models\VisaBooking;
 use App\Models\User;
 use App\Models\Service;
 use App\Models\Agency;
@@ -642,6 +643,8 @@ public function airport($input){
     return view('superadmin.pages.visa.searchvisa',compact('countries'));
  }
 
+
+ /******Application Part Store here **** */
  public function hsrequestApplication(Request $request){
 
     $agencyData= $this->agencyService->getAgencyData(); 
@@ -663,18 +666,116 @@ public function airport($input){
  }
 
 
+ 
+    public function hsRequestView($id){
+        $agencyData= $this->agencyService->getAgencyData(); 
+            // dd($agencyData);
+        $requestDatas = RequestApplication::with([
+                'visa',
+                'visasubtype',
+                'combination.origincountry',
+                'combination.destinationcountry'
+            ])
+            ->where([
+                ['status', 'pending'],
+                ['agency_id', $agencyData->id],
+            ])
+            ->where('id',$id)->first();
+            $clientData=[];
+    return view('agencies.pages.service.view-application',compact('requestDatas','clientData'));
+         
+    }
+       
+
+
   public function hsRequestproceed($id)
     {
-        $application = RequestApplication::findOrFail($id);
-        dd($application);
-        // Example: update status to "in progress"
-        $application->status = 'in_progress';
-        $application->save();
+                $application = RequestApplication::with([
+                'visa',
+                'visasubtype',
+                'combination.origincountry',
+                'combination.destinationcountry'
+            ])->where('id',$id)->first();
+                
+            $agencyData= $this->agencyService->getAgencyData(); 
+            $getClient= $this->agencyService->checkValidationInfo($application->email,$agencyData,$application->phone_number); 
+            // dd($getClient);
+            if($getClient==null){
+            $clientData=$this->hsClientCreate($application,$agencyData);
+            $clientAllData=$clientData; 
+            }else{
+            $clientAllData=$getClient; 
+            }
 
-        return redirect()
-            ->back()
-            ->with('message', 'Application proceeded successfully!');
+            
+            $booking=$this->hsconvertApplicationStore($clientAllData,$application);
+                // Example: update status to "in progress"
+                $application->status = 'send';
+                $application->save();
+
+                if (!$booking) {
+                return redirect()->back()->with('error', 'Visa booking failed. Please try again.');
+            }
+
+            return redirect()
+                ->route('verify.application', ['id' => $booking->id])
+                ->with('success', 'Booking successful. Please verify your application.');
+ }
+
+
+         public function hsClientCreate($application,$agencyData){
+                
+
+                $data=[
+                    'agency_id'=>$agencyData->id,
+                    'first_name'=>$application->first_name,
+                    'last_name'=>$application->last_name,
+                    'email'=>$application->email,
+                    'phone_number'=>$application->phone_number,
+                    'nationality'=>$application->nationality,
+
+                ];
+                
+            $clients = $this->clintRepository->getStoreclint($data);
+            return $clients;    
     }
 
+    public function hsconvertApplicationStore($clientAllData,$applicationData){
+
+                    $agencyData= $this->agencyService->getAgencyData(); 
+                    $existing = VisaBooking::where('client_id', $clientAllData->id)
+                    ->where('agency_id', $agencyData->id)
+                    ->where('applicationworkin_status', 'Pending')
+                    ->first();
+                    // dd($existing);
+
+                if ($existing) {
+                    return redirect()->back()->with('error', 'You have already applied for a visa. Kindly check your pending application or wait for approval.');
+                }
+
+            $data = [
+                "origin"        => $applicationData->combination->origin,
+                "destination"   => $applicationData->combination->destination,
+                "typeof"        => $applicationData->visa_id,
+                "category"      => $applicationData->visa_subtype,
+                "processing"    => $applicationData->visasubtype->processing,
+                "clientId"      => $clientAllData->id,
+                "last_name"     => $clientAllData->client_name,
+                "first_name"    => $clientAllData->last_name,
+                "citizenship"   => $clientAllData->clientinfo->nationality,
+                "email"         => $clientAllData->email,
+                "phone_number"  => $clientAllData->phone_number,
+                "dateofentry" => $applicationData->date_of_entry,
+            ];
+            // Proceed to book visa
+                $booking = $this->visaRepository->saveBooking($data);
+            return $booking;
+
+                    
+            
+    }
+
+    
+    
 
 }

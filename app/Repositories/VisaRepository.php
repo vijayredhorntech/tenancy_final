@@ -656,6 +656,7 @@ public function allVisacoutnry($request)
 public function saveBooking(array $data)
 {
     // Get country codes
+    // dd($data);
     $getCode = $this->getCountryCode($data['origin'], $data['destination']);
     $originCode = $getCode['origin_code'];
     $destinationCode = $getCode['destination_code'];
