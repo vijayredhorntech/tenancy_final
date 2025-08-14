@@ -17,17 +17,23 @@
         <div class="flex items-center gap-2 mx-4 cursor-pointer">
             <div class="">
                {{-- <img src="{{asset($user_data->profile ? 'images/agencies/logo/' . $user_data->profile : 'assets/images/profile_photo.jpg') }}" class="w-auto h-10 rounded-full" alt="Cloud Travels"> --}}
-               @if( $user_data->gender == 'MALE')
+               @if($user_data->gender === 'MALE')
                     <img src="{{ asset('assets/images/man.png') }}" 
-                    onerror="this.onerror=null; this.src='{{ asset('assets/images/logo.png') }}';"
-                    class="h-20 w-20 object-cover rounded-full" 
-                    alt="Cloud Travel">
-                    @else
+                        onerror="this.onerror=null; this.src='{{ asset('assets/images/logo.png') }}';"
+                        class="h-20 w-20 object-cover rounded-full" 
+                        alt="Cloud Travel">
+                @elseif($user_data->gender === 'FEMALE')
                     <img src="{{ asset('assets/images/female.png') }}" 
-                    onerror="this.onerror=null; this.src='{{ asset('assets/images/logo.png') }}';"
-                    class="h-20 w-20 object-cover rounded-full" 
-                    alt="Cloud Travel">
-                    @endif
+                        onerror="this.onerror=null; this.src='{{ asset('assets/images/logo.png') }}';"
+                        class="h-20 w-20 object-cover rounded-full" 
+                        alt="Cloud Travel">
+                @else
+                    {{-- Default image (man.png) if gender is null or not set --}}
+                    <img src="{{ asset('assets/images/man.png') }}" 
+                        onerror="this.onerror=null; this.src='{{ asset('assets/images/logo.png') }}';"
+                        class="h-20 w-20 object-cover rounded-full" 
+                        alt="Cloud Travel">
+                @endif
             </div>
             <div class="flex flex-col items-start justify-center">
                 <span class="text-ternary text-sm font-semibold"></span>
