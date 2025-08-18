@@ -84,7 +84,6 @@ class VisaPriceSection extends Component
                 ];
             });
 
-        dd($this->visaTypes);
 
         // Reset dependent selections
         $this->selectedVisaType = null;
@@ -148,6 +147,7 @@ class VisaPriceSection extends Component
 
 public function updatedSelectedVisaType($visaTypeId)
 {
+    dd("hwwlo");
     $selectedType = collect($this->visaTypes)->firstWhere('id', $visaTypeId);
 
 
