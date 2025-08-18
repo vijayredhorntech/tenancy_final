@@ -59,6 +59,8 @@
             background: #f3f4f6 !important ;         /* Removes background if needed */
         }
     </style>
+    @livewireStyles
+    @livewireScripts
 
 </head>
 
