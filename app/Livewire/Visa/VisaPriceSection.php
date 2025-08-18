@@ -90,6 +90,7 @@ class VisaPriceSection extends Component
         $this->selectedVisaType = null;
         $this->selectedProcessingTime = null;
         $this->resetPriceDetails();
+        dd("hello");
     }
 
    public function saveClient()
@@ -107,7 +108,7 @@ class VisaPriceSection extends Component
         'dateOfEntry'          => 'required|date',
     ]);
 
-    dd("heelo");
+    // dd("heelo");
     $allSessionData = session()->all();
     // Agency::where('',$allSessionData['agency_domain'])->first(); 
     $agencyData = Agency::with('domains')
