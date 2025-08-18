@@ -48,14 +48,20 @@ class VisaRepository implements VisaRepositoryInterface
     }
 
     public function getAllCountry(){
-
-       return Country::paginate(10);
+       $query = Country::query();
+       if ($s = request('search')) {
+           $query->where(function ($q) use ($s) {
+               $q->where('countryName', 'like', "%{$s}%")
+                 ->orWhere('countryCode', 'like', "%{$s}%");
+           });
+       }
+       return $query->orderBy('countryName')->paginate(10)->withQueryString();
     }
 
 
 public function getSuperadminAllApplication($request){
     // dd("heelo");
-   $query = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'agency']);
+   $query = VisaBooking::with(['visa', 'origin', 'destination', 'visasubtype', 'agency', 'deduction']);
 
         // Base query
         $query->with(['downloadDocument', 'clientapplciation']) // clint will be overridden manually
@@ -67,14 +73,16 @@ public function getSuperadminAllApplication($request){
             $search = $request->search;
 
             $query->where(function ($q) use ($search) {
-                // Search inside the visa_bookings table
-                $q->where('application_number', 'like', "%{$search}%")
-                
-                // OR search inside the related 'clint' model
-                ->orWhereHas('clint', function ($q1) use ($search) {
-                    $q1->where('client_name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('phone_number', 'like', "%{$search}%");
+                // Search inside the visa_bookings table / related tables
+                $q->whereHas('deduction', function ($qd) use ($search) {
+                        $qd->where('superadmin_invoice_number', 'like', "%{$search}%");
+                    })
+                    ->orWhere('application_number', 'like', "%{$search}%")
+                    // OR search inside the related 'clint' model
+                    ->orWhereHas('clint', function ($q1) use ($search) {
+                        $q1->where('client_name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->orWhere('phone_number', 'like', "%{$search}%");
                 });
             });
         }

@@ -1,4 +1,4 @@
-<div class="w-full relative">
+<div class="w-full relative" data-viewdetails>
     <img class="absolute -top-20 left-0 w-full opacity-20" style="z-index: -1" src="{{asset('assets/images/bgImage.png')}}" alt="">
 
     <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -16,17 +16,19 @@
                         </div>
                     </div>
                     <div class="mt-4 md:mt-0">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white/20 text-white border border-white/30">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <button type="button"
+                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white/20 text-white border border-white/30 hover:bg-white/30 transition"
+                                onclick="(function(btn){const root=btn.closest('[data-viewdetails]');const panel=root.querySelector('[data-panel]');const label=btn.querySelector('[data-label]');const icon=btn.querySelector('[data-icon]');panel.classList.toggle('hidden');const isHidden=panel.classList.contains('hidden');label.textContent=isHidden?'View Details':'Hide Details';icon.classList.toggle('rotate-90', !isHidden);})(this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" data-icon class="h-4 w-4 mr-1 transform transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
-                            View Details
-                        </span>
+                            <span data-label>View Details</span>
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="p-6">
+            <div class="p-6 hidden" data-panel>
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="flex-1">
                         <div class="space-y-4">
@@ -63,7 +65,7 @@
                     </div>
                 </div>
 
-             
+            
 
             </div>
         </div>

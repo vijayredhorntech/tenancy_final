@@ -69,7 +69,7 @@
                                     </div>
                                     <div class="mt-2 overflow-x-auto px-4 py-0.5">
                                     <!-- add form    -->
-                <form action="{{ route('updateleave') }}" method="POST" enctype="multipart/form-data"> 
+                <form action="{{ route('superadmin.updateleave') }}" method="POST" enctype="multipart/form-data"> 
                    @csrf
                      <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
 

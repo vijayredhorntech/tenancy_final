@@ -383,6 +383,13 @@
                                         element.style.display = 'none';
                                     }, 300);
                                 }
+
+                                function dismissAlert(alertId) {
+                                    const alert = document.getElementById(alertId);
+                                    if (alert) {
+                                        hideAlert(alert);
+                                    }
+                                }
            
 
 </script>

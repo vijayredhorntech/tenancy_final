@@ -1,24 +1,37 @@
-<div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
+@php
+    $hasForms = isset($forms) && (is_countable($forms) ? count($forms) > 0 : !empty($forms));
+@endphp
 
-{{-- === Heading Section === --}}
-<div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-    <span class="font-semibold text-ternary text-xl">Visa Forms</span>
-</div>
+@if($hasForms)
+    <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
-{{-- === Visa Forms Section === --}}
-
-<div class="w-full p-4 bg-gray-50 border-b-[2px] border-b-ternary/10">
-    <div class="flex gap-4 overflow-x-auto">
-        @foreach ($forms as $form)
-            <div class="bg-blue-100 border-[1px] border-b-[2px] border-r-[2px] border-blue-300 p-3 rounded-[3px] rounded-tr-[8px] min-w-[200px] shadow-md">
-                <h3 class="text-md font-semibold text-blue-900">{{ $form->from->form_name }}</h3>
-                <a href="{{ route('view.form', ['viewid' => Str::slug($form->from->form_name), 'id' => $clientData->id]) }}" 
-                    target="_blank" 
-                    class="mt-2 inline-block bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition">
-                        View Form
-                    </a>
-            </div>
-        @endforeach
+    {{-- === Heading Section === --}}
+    <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
+        <span class="font-semibold text-ternary text-xl">Visa Forms</span>
     </div>
-</div>
-</div>
+
+    {{-- === Visa Forms Section === --}}
+
+    <div class="w-full p-4 bg-gray-50 border-b-[2px] border-b-ternary/10">
+        <div class="flex gap-4 overflow-x-auto">
+            @foreach ($forms as $form)
+                @php 
+                    $formName = optional($form->from)->form_name; 
+                    $formSlug = $formName ? \Illuminate\Support\Str::slug($formName) : null;
+                    $clientId = $clientData->id ?? null;
+                @endphp
+                @if($formName && $formSlug && $clientId)
+                    <div class="bg-blue-100 border-[1px] border-b-[2px] border-r-[2px] border-blue-300 p-3 rounded-[3px] rounded-tr-[8px] min-w-[200px] shadow-md">
+                        <h3 class="text-md font-semibold text-blue-900">{{ $formName }}</h3>
+                        <a href="{{ route('view.form', ['viewid' => $formSlug, 'id' => $clientId]) }}" 
+                            target="_blank" 
+                            class="mt-2 inline-block bg-blue-500 text-white px-4 py-1 rounded-lg hover:bg-blue-700 transition">
+                                View Form
+                        </a>
+                    </div>
+                @endif
+            @endforeach
+        </div>
+    </div>
+    </div>
+@endif

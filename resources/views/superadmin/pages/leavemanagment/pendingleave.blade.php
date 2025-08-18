@@ -51,7 +51,7 @@
                             <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm">{{$leave->userName->name}}</td>
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm"></td>
+                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$leave->userName->userdetails->department ?? ''}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$leave->leaveName->leave_type}}</td>
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                             {{$leave->start_date ?? '0:00:00'}}
@@ -72,7 +72,7 @@
                                         </div>
                                     </a>
 
-                                    <a href="" title="Approved">
+                                    <a href="{{ route('leave.approve', ['id' => $leave->id]) }}" title="Approve">
                                         <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-check"></i>
                                         </div>

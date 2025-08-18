@@ -74,7 +74,7 @@
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Leave Type</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Days</td>
-                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Satatus</td>
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Status</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                     </tr>
            
@@ -99,12 +99,21 @@
 
                           
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                <div class="flex gap-2 items-center">
-                                    <a href="{{route('agency.update.leave',['id' => $leave->id,'type'=>'agency'])}}" title="Remind for funds">
+							<div class="flex gap-2 items-center">
+                                    <a href="{{ route('superadmin.update.leave', ['id' => $leave->id]) }}" title="Edit leave">
                                         <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-pencil"></i>
                                         </div>
                                     </a>
+								<form action="{{ route('leave.delete', $leave->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this leave?');">
+									@csrf
+									@method('DELETE')
+									<button type="submit" title="Delete leave">
+										<div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
+											<i class="fa fa-trash"></i>
+										</div>
+									</button>
+								</form>
                                     <!-- <a href="" title="View Dashboard">
                                         <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
                                             <i class="fa fa-computer"></i>

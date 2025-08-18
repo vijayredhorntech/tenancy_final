@@ -162,11 +162,13 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/leaves','hs_leaves')->name('leaves');
                         Route::post('/applyleave_store','hs_applyleave')->name('application_leave');
                         Route::get('/pending_leave','hs_pendingleave')->name('pending.leave');
-                        Route::post('/leavestore','hs_LeaveUpdateStore')->name('updateleave');
+                        Route::post('/leavestore','hs_LeaveUpdateStore')->name('superadmin.updateleave');
+                        Route::get('/approve_leave/{id}','hs_approveleave')->name('leave.approve');
 
                      
                         Route::get('/edit_leave/{leaveid}','hs_editleave')->name('leave.edit');
                         Route::get('/cancel_leave/{leaveid}','hs_cancelleave')->name('leave.cancel');
+                       Route::delete('/leave/{id}','hs_deleteLeave')->name('leave.delete');
 
                         
                       });
@@ -189,8 +191,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     /*** Route for staff ***/
                     Route::controller(SuperadminController::class)->group(function () {
                         // Route::get('/generate-pdf','generatePDF')->name('studentgenerate.pdf');
-                        Route::get('/studentgenerate-pdf', 'generatePDF')->middleware('can:student export')->name('studentgenerate.pdf');
-                        Route::get('/studnetgenerate-excel','exportStudent')->middleware('can:student export')->name('studentgenerate.excel');
+                        Route::get('/studentgenerate-pdf', 'generatePDF')->middleware('can:export pdf')->name('studentgenerate.pdf');
+                        Route::get('/studnetgenerate-excel','exportStudent')->middleware('can:export excel')->name('studentgenerate.excel');
                         Route::get('/staffindex', 'hs_staffindex')->middleware('can:staff view')->name('staff');
                         Route::get('/staffcreate', 'hs_staffcreate')->middleware('can:staff create')->name('superadmin_staffcreate');
                         Route::post('/staffstore', 'hs_staffstore')->middleware('can:staff create')->name('superadmin_staffstore');
