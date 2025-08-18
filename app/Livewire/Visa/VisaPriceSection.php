@@ -60,7 +60,7 @@ class VisaPriceSection extends Component
             if (count($this->visas)) {
                 $this->selectedVisaCategory = $this->visas[0]->id ?? null;
                 $this->updatedSelectedVisaCategory($this->selectedVisaCategory);
-                dd("hello");
+                
             }
             
         }
@@ -70,6 +70,7 @@ class VisaPriceSection extends Component
     {
         $this->visaTypes = VisaSubtype::where('country_type_id', $categoryId)
             ->get()
+            
             
             ->map(function ($type) {
                 return [
@@ -83,7 +84,7 @@ class VisaPriceSection extends Component
                 ];
             });
 
-        // dd($this->visaTypes);
+        dd($this->visaTypes);
 
         // Reset dependent selections
         $this->selectedVisaType = null;
