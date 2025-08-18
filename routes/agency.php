@@ -110,7 +110,7 @@ Route::group([
         Route::get('{type?}/addleave','hs_addleave')->name('add.agency.leave');
         Route::post('/leave','hs_leavestore')->name('agency.leavestore');
         Route::get('/leave/{id}/{type?}','hs_update')->name('agency.update.leave');
-        Route::get('/updateleave/{id}','hs_actionUpdateLeave')->name('update.leavesuperadmin');
+        Route::get('/updateleave/{id}','hs_actionUpdateLeave')->name('agency.update.leavesuperadmin');
 
         Route::post('/updateleave','hs_updatestore')->name('agency.update.leavestore');
         Route::get('/{type?}/leaves','hs_leaves')->name('agecy.leaves');

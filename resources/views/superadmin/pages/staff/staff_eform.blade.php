@@ -1,12 +1,12 @@
 <x-front.layout>
-    @section('title') Edit Agency @endsection
+    @section('title') Edit Staff Details @endsection
 
 
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">Edit Agency </span>
+                <span class="font-semibold text-ternary text-xl">Edit Staff Details </span>
               </div>
 {{--        === heading section code ends here===--}}
 

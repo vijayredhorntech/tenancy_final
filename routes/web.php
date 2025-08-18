@@ -162,7 +162,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/leaves','hs_leaves')->name('leaves');
                         Route::post('/applyleave_store','hs_applyleave')->name('application_leave');
                         Route::get('/pending_leave','hs_pendingleave')->name('pending.leave');
-                        Route::post('/leavestore','hs_LeaveUpdateStore')->name('updateleave');
+                        Route::post('/leavestore','hs_LeaveUpdateStore')->name('superadmin.updateleave');
+                        Route::get('/approve_leave/{id}','hs_approveleave')->name('leave.approve');
 
                      
                         Route::get('/edit_leave/{leaveid}','hs_editleave')->name('leave.edit');

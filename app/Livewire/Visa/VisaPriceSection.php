@@ -45,7 +45,7 @@ class VisaPriceSection extends Component
 
     public function mount($visas, $status)
     {
-         
+         dd("hello");
         $this->visas = $visas;
         // dd($this->visas);
         $this->status = $status;

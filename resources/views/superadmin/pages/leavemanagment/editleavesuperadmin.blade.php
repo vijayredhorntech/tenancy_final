@@ -23,7 +23,7 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <form action="{{ route('updateleave') }}" method="POST" enctype="multipart/form-data"> 
+            <form action="{{ route('superadmin.updateleave') }}" method="POST" enctype="multipart/form-data"> 
                    @csrf
                      <div class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-2 px-4 py-6">
                      <input type="hidden" type="superadmin" name="usertype" value="superadmin">
@@ -64,10 +64,10 @@
                                     class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 
                                     focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                                     
-                                    <option value="pending" {{ $leave->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="approved" {{ $leave->status == 'approved' ? 'selected' : '' }}>Approved</option>
-                                    <option value="rejected" {{ $leave->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                                    <option value="cancel" {{ $leave->status == 'cancel' ? 'selected' : '' }}>Canceled</option>
+                                    <option value="pending" {{ $leave->status_of_leave == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="approved" {{ $leave->status_of_leave == 'approved' ? 'selected' : '' }}>Approved</option>
+                                    <option value="rejected" {{ $leave->status_of_leave == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                                    <option value="cancel" {{ $leave->status_of_leave == 'cancel' ? 'selected' : '' }}>Canceled</option>
                                 </select>
                                  <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
                              </div>

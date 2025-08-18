@@ -108,7 +108,30 @@
       text-align: right;
     }
 
+    .print-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .print-button:hover {
+      background: #0056b3;
+    }
+
     @media print {
+      .print-button {
+        display: none;
+      }
+      
       input[type="text"], textarea {
         color: black;
         -webkit-print-color-adjust: exact;
@@ -124,6 +147,8 @@
   </style>
 </head>
 <body>
+  <button class="print-button" onclick="window.print()">Print Form</button>
+  
   <div class="container">
 
     <div class="header">
@@ -142,69 +167,69 @@
       ADDITIONAL FORM TO BE FILLED BY NON UK RESIDENTS (IN BLOCK<br>
       LETTERS)
     </div>
-                @php
-                   $fatherdetails = $clientData->clint->clientinfo->father_details ? json_decode($clientData->clint->clientinfo->father_details) : null;
-                   $motherdetails = $clientData->clint->clientinfo->father_details ? json_decode($clientData->clint->clientinfo->father_details) : null;
-                   $spouse = $clientData->clint->clientinfo->spouse_details ? json_decode($clientData->clint->clientinfo->spouse_details) : null;
-                                  
-            @endphp
+    
+    @php
+      $fatherdetails = $clientData->clint->clientinfo->father_details ? json_decode($clientData->clint->clientinfo->father_details) : null;
+      $motherdetails = $clientData->clint->clientinfo->mother_details ? json_decode($clientData->clint->clientinfo->mother_details) : null;
+      $spouse = $clientData->clint->clientinfo->spouse_details ? json_decode($clientData->clint->clientinfo->spouse_details) : null;
+    @endphp
 
     <div class="form-group">
       <div class="label">SURNAME:</div>
-      <div class="input-wrap">{{ $clientData->clint->last_name ?? '' }}<input type="text"></div>
+      <div class="input-wrap"><input type="text" value="{{ $clientData->clint->last_name ?? '' }}"></div>
     </div>
 
     <div class="form-group">
       <div class="label">FIRST NAME:</div>
-      <div class="input-wrap">{{ $clientData->clint->client_name ?? '' }}<input type="text"></div>
+      <div class="input-wrap"><input type="text" value="{{ $clientData->clint->first_name ?? '' }}"></div>
     </div>
 
     <div class="form-group">
       <div class="label">NATIONALITY:</div>
-      <div class="input-wrap"><input type="text"></div>
+      <div class="input-wrap"><input type="text" value="{{ $clientData->clint->clientinfo->nationality ?? '' }}"></div>
     </div>
 
     <div class="form-group">
       <div class="label">FATHER'S NAME:</div>
-      <div class="input-wrap">{{ $fatherdetails->name }}<input type="text"></div>
+      <div class="input-wrap"><input type="text" value="{{ $fatherdetails->name ?? '' }}"></div>
     </div>
 
     <div class="form-group">
       <div class="label">DATE & PLACE OF BIRTH:</div>
-      <div class="input-wrap"><input type="text"></div>
+      <div class="input-wrap"><input type="text" value="{{ $clientData->clint->date_of_birth ?? '' }} {{ $clientData->clint->clientinfo->place_of_birth ?? '' }}"></div>
     </div>
 
     <div class="form-group">
       <div class="label">PASSPORT NO:</div>
-      <div class="input-wrap"><input type="text"></div>
+      <div class="input-wrap"><input type="text" value="{{ $clientData->clint->clientinfo->passport_ic_number ?? '' }}"></div>
     </div>
 
     <div class="form-group gap">
       <div class="label">DATE & PLACE OF ISSUE:</div>
-      <div class="input-wrap"><input type="text"></div>
+      <div class="input-wrap"><input type="text" value="{{ $clientData->clint->clientinfo->passport_issue_date ?? '' }} {{ $clientData->clint->clientinfo->passport_issue_place ?? '' }}"></div>
     </div>
 
     <div class="form-group gap">
       <div class="label">PERMANENT ADDRESS IN UNITED KINGDOM:</div>
       <div class="input-wrap">
-        <input type="text"><br>
-        <input type="text"><br>
-        <input type="text">
+        <input type="text" value="{{ $clientData->clint->address ?? '' }}"><br>
+        <input type="text" value="{{ $clientData->clint->street ?? '' }}"><br>
+        <input type="text" value="{{ $clientData->clint->city ?? '' }} {{ $clientData->clint->zip_code ?? '' }}">
       </div>
     </div>
 
     <div class="form-group gap">
       <div class="label">ADDRESS IN COUNTRY OF ORIGIN:</div>
       <div class="input-wrap">
-        <input type="text"><br>
-        <input type="text"><br>
-        <input type="text">
+        <input type="text" value="{{ $clientData->clint->permanent_address ?? '' }}"><br>
+        <input type="text" value="{{ $clientData->clint->street ?? '' }}"><br>
+        <input type="text" value="{{ $clientData->clint->city ?? '' }} {{ $clientData->clint->country ?? '' }}">
       </div>
     </div>
 
     <div class="form-group">
       <div class="label">PROFESSION:</div>
-      <div class="input-wrap"><input type="text"></div>
+      <div class="input-wrap"><input type="text" value="{{ $clientData->clint->clientinfo->present_occupation ?? '' }}"></div>
     </div>
 
     <div class="form-group no-gap">
@@ -222,7 +247,7 @@
 
   <div class="form-group">
     <div class="label">No:<input type="text" style="width: 200px;"></div>
-    <div class="label">Date:<input type="text" style="width: 200px;"></div>
+    <div class="label">Date:<input type="text" style="width: 200px;" value="{{ date('d/m/Y') }}"></div>
   </div>
    <div class="section-title"> <p>TO: HCI/OMI/IND EMBASSY / CONSENDIA<br>
         WE SHALL BE GRATEFUL IF YOU COULD KINDLY CONVEY YOUR <br>URGENT CLEARANCE / NO OBJECTION TO ISSUE THE VISA.</p></div>

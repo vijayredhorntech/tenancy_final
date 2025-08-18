@@ -23,7 +23,7 @@
                     {{ session('success') }}
                 </div>
             @endif
-            <form action="{{ route('updateleave') }}" method="POST" enctype="multipart/form-data"> 
+            <form action="{{ route('superadmin.updateleave') }}" method="POST" enctype="multipart/form-data"> 
                    @csrf
                      <div class="w-full grid xl:grid-cols-4 lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-2 px-4 py-6">
                      <input type="hidden" type="superadmin" name="usertype" value="superadmin">

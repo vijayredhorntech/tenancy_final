@@ -294,7 +294,7 @@ class LeaveManagementController extends Controller
             $leave->start_date = $request->from;
             $leave->end_date = $request->to;
             $leave->type_of_leave = 'Full Day';
-            $leave->status_of_leave = 'Pending';
+            $leave->status_of_leave = 'pending';
             $leave->reason = $request->reason;
             $leave->save();
     return back()->with('success', 'Leave request submitted successfully.');
@@ -307,10 +307,15 @@ class LeaveManagementController extends Controller
    
         if(isset($type) && $type == "agency") {
             $setConnection= $this->agencyService->setDatabaseConnection();
-            $leaves=ApplyUserLeave::on('user_database')->with('leaveName','userName')->where('status_of_leave','Pending')->get();
+            $leaves = ApplyUserLeave::on('user_database')
+                ->with(['leaveName', 'userName.userdetails'])
+                ->where('status_of_leave','pending')
+                ->get();
             return view('agencies.pages.leavemanagment.pendingleave', compact('leaves'));
         }
-        $leaves=ApplyUserLeave::with('leaveName','userName')->where('status_of_leave','Pending')->get();
+        $leaves = ApplyUserLeave::with(['leaveName', 'userName.userdetails'])
+            ->where('status_of_leave','pending')
+            ->get();
          
     
         return view('superadmin.pages.leavemanagment.pendingleave', compact('leaves'));
@@ -318,7 +323,7 @@ class LeaveManagementController extends Controller
 
 
     public function hs_editleave($id){
-        $leave=ApplyUserLeave::with('leaveName','userName')->where('status_of_leave','Pending')->where('id',$id)->first();
+        $leave=ApplyUserLeave::with('leaveName','userName')->where('status_of_leave','pending')->where('id',$id)->first();
         $user = User::with([
             'userdetails',
             'passport',
@@ -327,7 +332,7 @@ class LeaveManagementController extends Controller
             'applyLeaves.leave',
         ])->where('id', $id)->first();
 
-        $leave=ApplyUserLeave::with('leaveName','userName')->where('status_of_leave','Pending')->where('id',$id)->first();
+        $leave=ApplyUserLeave::with('leaveName','userName')->where('status_of_leave','pending')->where('id',$id)->first();
       
      
         return view('superadmin.pages.leavemanagment.editleavestaff', compact('leave','user'));
@@ -406,9 +411,20 @@ class LeaveManagementController extends Controller
     public function hs_actionUpdateLeave($id){
        
     
-        $leave=ApplyUserLeave::with('leaveName','userName')->where('status_of_leave','Pending')->where('id',$id)->first();
+        $leave=ApplyUserLeave::with('leaveName','userName')->where('status_of_leave','pending')->where('id',$id)->first();
         
           return view('superadmin.pages.leavemanagment.editleavesuperadmin',compact('leave'));
+    }
+
+    public function hs_approveleave($id)
+    {
+        $leave = ApplyUserLeave::find($id);
+        if (!$leave) {
+            return back()->with('error', 'Leave request not found.');
+        }
+        $leave->status_of_leave = 'approved';
+        $leave->save();
+        return back()->with('success', 'Leave approved.');
     }
     
 
