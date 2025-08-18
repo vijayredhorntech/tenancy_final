@@ -55,10 +55,12 @@ class VisaPriceSection extends Component
             $this->destination = $visas[0]->destination;
             $this->visaSubtype = $visas[0]->Subvisas ?? [];
             
+            
             // Initialize with first visa category if available
             if (count($this->visas)) {
                 $this->selectedVisaCategory = $this->visas[0]->id ?? null;
                 $this->updatedSelectedVisaCategory($this->selectedVisaCategory);
+                dd("hello");
             }
             
         }
@@ -147,7 +149,6 @@ public function updatedSelectedVisaType($visaTypeId)
     $selectedType = collect($this->visaTypes)->firstWhere('id', $visaTypeId);
 
 
-    dd($selectedType);
     if ($selectedType) {
         // If processing_time is an array, pick the first one
  $this->processingTimes = $selectedType['processing_time'];
