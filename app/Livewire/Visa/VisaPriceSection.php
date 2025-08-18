@@ -90,7 +90,7 @@ class VisaPriceSection extends Component
         $this->selectedVisaType = null;
         $this->selectedProcessingTime = null;
         $this->resetPriceDetails();
-        dd("hello");
+        // dd("hello");
     }
 
    public function saveClient()
