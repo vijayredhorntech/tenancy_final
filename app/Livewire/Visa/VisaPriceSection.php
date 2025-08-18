@@ -84,7 +84,7 @@ class VisaPriceSection extends Component
                 ];
             });
 
-        dd($this->visaTypes);
+        // dd($this->visaTypes);
 
         // Reset dependent selections
         $this->selectedVisaType = null;
@@ -107,7 +107,7 @@ class VisaPriceSection extends Component
         'dateOfEntry'          => 'required|date',
     ]);
 
-    // dd("heelo");
+    dd("heelo");
     $allSessionData = session()->all();
     // Agency::where('',$allSessionData['agency_domain'])->first(); 
     $agencyData = Agency::with('domains')
