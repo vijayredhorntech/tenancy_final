@@ -60,6 +60,7 @@ class VisaPriceSection extends Component
                 $this->selectedVisaCategory = $this->visas[0]->id ?? null;
                 $this->updatedSelectedVisaCategory($this->selectedVisaCategory);
             }
+            
         }
     }
 
@@ -80,7 +81,7 @@ class VisaPriceSection extends Component
                 ];
             });
 
-        
+        // dd($this->visaTypes);
 
         // Reset dependent selections
         $this->selectedVisaType = null;
@@ -146,6 +147,7 @@ public function updatedSelectedVisaType($visaTypeId)
     $selectedType = collect($this->visaTypes)->firstWhere('id', $visaTypeId);
 
 
+    dd($selectedType);
     if ($selectedType) {
         // If processing_time is an array, pick the first one
  $this->processingTimes = $selectedType['processing_time'];
