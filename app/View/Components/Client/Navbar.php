@@ -25,9 +25,11 @@ class Navbar extends Component
 
     private function initializeData()
     {
-         $loggedInClient = Auth::guard('client')->user();
-         $this->user = $loggedInClient;
-         $this->agency = Agency::with('userAssignments.service')->find($loggedInClient->agency_id);
+       $allSessionData = session()->all();
+         
+       $this->user=$allSessionData['user_data']['agencydatabaseclient']; 
+        //  dd($allSessionData['user_data']['agencydatabaseclient']);
+         $this->agency = Agency::with('userAssignments.service')->find($allSessionData['user_data']['agencydatabaseclient']->agency_id);
    
 
     }

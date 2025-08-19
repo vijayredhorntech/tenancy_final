@@ -84,7 +84,6 @@ class VisaPriceSection extends Component
                 ];
             });
 
-        // dd($this->visaTypes);
 
         // Reset dependent selections
         $this->selectedVisaType = null;

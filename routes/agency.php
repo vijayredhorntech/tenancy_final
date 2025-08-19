@@ -143,7 +143,7 @@ Route::group([
         Route::get('/viewapplication/{type}', 'hs_visaApplication')->name('agency.application');
       
       
-        Route::get('/get-visa-services','him_getService' )->name('get.visa.services');
+        // Route::get('/get-visa-services','him_getService' )->name('get.visa.services');
         Route::post('/visabook','hsVisaBook')->name('visa.book');
         Route::get('/verifyapplication/{id}','hs_verifyapplication')->name('verify.application');
         Route::post('visapayment/{id}','him_visaApplicationPay')->name('visaapplication.pay');
@@ -322,6 +322,10 @@ Route::controller(VisaController::class)->group(function () {
         Route::get('/fillapplication/{id}/{token}','hsfillApplication')->name('application.client');
         Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
         Route::get('/download-fill-application/{id}', 'hs_')->name('download.fillapplication');
+        Route::get('/agencies/get-visa-services','him_getService' )->name('get.visa.services');
+
+        Route::post('storeclientdetails','him_storeClientVisaRequest')->name('visa.applicationclient.store');
+
         
 
         Route::post('/agencies/visastoretoreajax','hs_VisaStoreAjax')->name('visadocument.update');

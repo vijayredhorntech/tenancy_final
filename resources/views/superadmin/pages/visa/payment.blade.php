@@ -31,10 +31,10 @@
                                       <input type="hidden" value="{{ $visas['0']->id }}" name="selectionid" id="selectionid">
 
                                       
-                                      <select class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"  name="typeof" id="typeof">
+                                      <select id="typeof" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"  name="typeof" id="typeof">
                                           @forelse($visas as $visaServiceType)
                                               @if ($visaServiceType->VisaServices)
-                                                  <option value="{{ $visaServiceType->VisaServices->id }}">
+                                                  <option value="{{ $visaServiceType->VisaServices->id }}" data-id="{{$visaServiceType->id}}">
                                                       {{ $visaServiceType->VisaServices->name }}
                                                   </option>
                                               @endif
@@ -172,7 +172,16 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
 
+$(document).ready(function () {
+    $('#typeof').on('change', function () {
+        let dataId = $(this).find(':selected').data('id');
+        $('#selectionid').val(dataId);
+    });
+});
+
 $(document).ready(function() {
+
+    
    
         $('#existingUserDropdown').select2({
             placeholder: "---Select USer---",

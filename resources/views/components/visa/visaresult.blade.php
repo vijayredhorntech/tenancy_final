@@ -26,9 +26,9 @@
 </style>
     @section('title') Visa View @endsection
     <!-- In your Blade template head section -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
 <!-- Before closing body tag -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
 
 @php
     // Collect all non-null title images into an array
@@ -270,31 +270,31 @@
         </div>
 
 
-
-        @section('scripts')
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
             <script>
                 
                         $(document).ready(function() {
-                            $('#origincountry').select2({
-                                placeholder: "---Select Country---",
-                                allowClear: true,
-                                containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
-                            });
-                            $('#destinationcountry').select2({
-                                placeholder: "---Select Country---",
-                                allowClear: true,
-                                containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
-                            });
-                            $('#livingCountry').select2({
-                                placeholder: "---Select Country---",
-                                allowClear: true,
-                                containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
-                            });
-                            $('#visatype').select2({
-                                placeholder: "---Select Country---",
-                                allowClear: true,
-                                containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
-                            });
+
+                //             $('#origincountry').select2({
+                //                 placeholder: "---Select Country---",
+                //                 allowClear: true,
+                //                 containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
+                //             });
+                //             $('#destinationcountry').select2({
+                //                 placeholder: "---Select Country---",
+                //                 allowClear: true,
+                //                 containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
+                //             });
+                //             $('#livingCountry').select2({
+                //                 placeholder: "---Select Country---",
+                //                 allowClear: true,
+                //                 containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
+                //             });
+                //             $('#visatype').select2({
+                //                 placeholder: "---Select Country---",
+                //                 allowClear: true,
+                //                 containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
+                //             });
 
                             
                  });
@@ -312,5 +312,3 @@
                     });
                 });
             </script>
-
-        @endsection
