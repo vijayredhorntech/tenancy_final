@@ -109,6 +109,7 @@ class ClientLoginController extends Controller
 
     public function hsClientApplication(){
         // $client_data= Auth::guard('client')->user();
+        
         $storedata= $this->agencyService->getLoginClient(); 
         $client_data= $storedata['agencydatabaseclient'];
 
@@ -137,6 +138,59 @@ class ClientLoginController extends Controller
         // dd($client_data);
         $agency=Agency::where('id',$client_data->agency_id)->first();
         return view('clients.support',compact('messages','client_data','agency'));
+    }
+
+    /****Client Application View *** */
+    public function hsClientApplicationView($id){
+        $storedata= $this->agencyService->getLoginClient(); 
+        $client_data= $storedata['agencydatabaseclient'];
+        
+        // Get the booking data
+        $booking = $this->visaRepository->bookingDataById($id);
+        
+        // Check if the booking belongs to the logged-in client
+        if (!$booking || $booking->client_id != $client_data->id) {
+            return redirect()->route('client.application')->with('error', 'You are not authorized to access this application.');
+        }
+        
+        // Get forms data for the visa type
+        $origin_id = $booking->origin_id;
+        $destination_id = $booking->destination_id;
+        $forms = \App\Models\VisaServiceTypeDocument::with('from')
+            ->where('origin_id', $origin_id)
+            ->where('destination_id', $destination_id)
+            ->get();
+            
+        // Get term conditions for invoice
+        $termconditon = \App\Models\TermType::with([
+            'terms' => function ($q) {
+                $q->where('display_invoice', 1);
+            },
+        ])->get();
+        
+        return view('clients.applicationview', compact('booking', 'forms', 'termconditon'));
+    }
+
+    /****Client Conversation *** */
+    public function hsClientConversation($id){
+        $storedata= $this->agencyService->getLoginClient(); 
+        $client_data= $storedata['agencydatabaseclient'];
+        
+        // Get the booking data
+        $booking = $this->visaRepository->bookingDataById($id);
+        
+        // Check if the booking belongs to the logged-in client
+        if (!$booking || $booking->client_id != $client_data->id) {
+            return redirect()->route('client.application')->with('error', 'You are not authorized to access this conversation.');
+        }
+        
+        // Get agency data
+        $agency = Agency::where('id', $client_data->agency_id)->first();
+        
+        // Get messages for this client
+        $messages = Message::where('client_id', $client_data->id)->get();
+        
+        return view('clients.conversation', compact('client_data', 'agency', 'messages', 'booking'));
     }
   
 
@@ -240,29 +294,22 @@ class ClientLoginController extends Controller
     $bookingApplication= $this->visaRepository->bookingDataById($request->booking_id);
   
 
-    $user=$this->agencyService->getCurrentLoginUser(); 
-    // $storebooking = $this->visaRepository->storeClientDocuemtn($request->all());
-    
-
-    
-    
-    // dd($application);
-    // Mail::to(env('SUPERADMIN_EMAIL'))
-    // ->send(new DocumentVerificationRequestMail(
-    //     $application->application_number
-    // ));
-    
-   
+    // For client uploads, we don't need user data from agency service
     if($request->type=='agency') {
-
-        $save=$this->agencyService->saveLog($bookingApplication,'agency','Uploaded Document', $user->id);
+        $user=$this->agencyService->getCurrentLoginUser(); 
+        if(!$user) {
+            return redirect()->route('agency.application',['type' => 'all'])->with('error', 'Agency session not found. Please login again.');
+        }
+        
+        if($user) {
+            $save=$this->agencyService->saveLog($bookingApplication,'agency','Uploaded Document', $user->id);
+        }
         return redirect()->route('agency.application',['type' => 'all'])->with('success', 'Documents uploaded successfully.');
     }
+    
+    // For client uploads, use a default user ID or handle differently
     $save=$this->agencyService->saveLog($bookingApplication,'Client','Uploaded Document', '1');
     return redirect()->route('client.notification')->with('success', 'Documents uploaded successfully.');
-       
-
-    return back()->with('success', 'Documents uploaded successfully.');   
     }
 
 
@@ -284,6 +331,10 @@ class ClientLoginController extends Controller
         if($type=='agency') {
             // check agency data
             $agency = $this->agencyService->getAgencyData();
+            if (!$agency) {
+                return redirect()->route('agency.application')->with('error', 'Agency session not found. Please login again.');
+            }
+            
             if (isset($booking->agency_id) && $booking->agency_id == $agency->id) {
                 return view('agencies.pages.clients.download',compact('booking'));
             }

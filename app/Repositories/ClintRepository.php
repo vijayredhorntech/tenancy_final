@@ -367,16 +367,27 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
     // dd($data);
     // Assuming this gets visa booking data from default DB
     $visabooking = $this->visaRepository->bookingDataById($data['bookingid']);
-    $agency = $this->agencyService->getAgencyData();
-    $user = $this->agencyService->getCurrentLoginUser();
-    $userDbConnection = 'user_database'; // Your second DB connection name
-    $client = ClientDetails::on($userDbConnection)->where('id', $visabooking->client_id)->first();
-    $this->updateClientData($data, $client,  'user_database');
-    $moreInfo = ClientMoreInfo::on($userDbConnection)->where('clientid', $visabooking->client_id)->first();
-    // $clientDefault = ClientDetails::where('id', $visabooking->client_id)->first();
-    //  $moreInfoDefault = ClientMoreInfo::where('clientid', $clientDefault->id ?? 0)->first();
-     $this->updateMoreClientInfo($moreInfo, $data, 'user_database');
-    // $this->updateMoreClientInfo($visabooking->client_id, $moreInfoDefault, $data, 'mysql');   // You can return something or continue your flow here
+    
+    // Check if this is a client submission or agency submission
+    $isClientSubmission = ($data['type'] ?? '') === 'client';
+    
+    if ($isClientSubmission) {
+        // For client submissions, we don't need agency data
+        $userDbConnection = 'user_database'; // Your second DB connection name
+        $client = ClientDetails::on($userDbConnection)->where('id', $visabooking->client_id)->first();
+        $this->updateClientData($data, $client, $userDbConnection);
+        $moreInfo = ClientMoreInfo::on($userDbConnection)->where('clientid', $visabooking->client_id)->first();
+        $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
+    } else {
+        // For agency submissions, get agency data
+        $agency = $this->agencyService->getAgencyData();
+        $user = $this->agencyService->getCurrentLoginUser();
+        $userDbConnection = 'user_database'; // Your second DB connection name
+        $client = ClientDetails::on($userDbConnection)->where('id', $visabooking->client_id)->first();
+        $this->updateClientData($data, $client, $userDbConnection);
+        $moreInfo = ClientMoreInfo::on($userDbConnection)->where('clientid', $visabooking->client_id)->first();
+        $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
+    }
 }
 
 

@@ -1,6 +1,42 @@
 <x-agency.layout>
     @section('title') Visa Application @endsection
 
+    <!-- Success Alert for Updated Applications -->
+    @if (session('success'))
+        <div id="success-alert" class="alert flex items-center justify-between p-4 mb-4 text-sm font-medium text-white border-2 border-success/30 rounded-lg bg-success shadow-md transition-all duration-300" role="alert">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-4l-3-3 1.414-1.414L9 11.172l4.586-4.586L15 8l-6 6z" clip-rule="evenodd" />
+                </svg>
+                <span>{{ session('success') }}</span>
+            </div>
+            <button onclick="dismissAlert('success-alert')" class="alert ml-4 text-white hover:text-gray-200 focus:outline-none">
+                <span class="sr-only">Close</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    @endif
+
+    <!-- Info Alert for Updated Applications -->
+    @if (session('info'))
+        <div id="info-alert" class="alert flex items-center justify-between p-4 mb-4 text-sm font-medium text-white border-2 border-blue-500/30 rounded-lg bg-blue-500 shadow-md transition-all duration-300" role="alert">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                </svg>
+                <span>{{ session('info') }}</span>
+            </div>
+            <button onclick="dismissAlert('info-alert')" class="alert ml-4 text-white hover:text-gray-200 focus:outline-none">
+                <span class="sr-only">Close</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+    @endif
+
 <!-- Include Select2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
@@ -162,6 +198,7 @@
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date  </th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Passport Submit</th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application status</th>
+                        <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Update Status</th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</th>
 
 
@@ -247,6 +284,23 @@
                                             {{ $status }}
                                         </span>
                                     </td>
+
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                @if($booking->sendtoadmin == 3)
+                                    <span class="bg-orange-200 text-orange-700 px-2 py-1 rounded-[3px] font-medium" title="Application has been updated and needs to be sent to admin again">
+                                        <i class="fas fa-sync-alt mr-1"></i>Updated
+                                    </span>
+                                    <br><span class="text-xs text-orange-600">Needs re-send</span>
+                                @elseif($booking->sendtoadmin == 1)
+                                    <span class="bg-green-200 text-green-700 px-2 py-1 rounded-[3px] font-medium" title="Application has been sent to admin">
+                                        <i class="fas fa-check mr-1"></i>Sent
+                                    </span>
+                                @else
+                                    <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded-[3px] font-medium" title="Application is pending">
+                                        <i class="fas fa-clock mr-1"></i>Pending
+                                    </span>
+                                @endif
+                            </td>
 
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 @if($booking->confirm_application==0 || $booking->confirm_application==2 )
@@ -364,6 +418,33 @@
             width: '100%'
         });
     });
+</script>
+
+<script>
+    // Auto-hide all alerts with class 'alert' after 5 seconds
+    setTimeout(() => {
+        const alerts = [...document.getElementsByClassName('alert')];
+        alerts.forEach(hideAlert);
+    }, 5000);
+
+    function hideAlert(element) {
+        if (!element) return;
+
+        // Add Tailwind classes to fade out and collapse
+        element.classList.add('opacity-0', 'h-0', 'overflow-hidden', 'mb-0', 'transition-all', 'duration-300');
+
+        // Remove the element after transition (300ms)
+        setTimeout(() => {
+            element.style.display = 'none';
+        }, 300);
+    }
+
+    function dismissAlert(alertId) {
+        const alert = document.getElementById(alertId);
+        if (alert) {
+            hideAlert(alert);
+        }
+    }
 </script>
 
         

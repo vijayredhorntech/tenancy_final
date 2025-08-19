@@ -2147,7 +2147,7 @@
                                     <div class="mt-2" id="criminal-history" style="{{ old('criminalhistory', $visahistory->criminalhistory ?? '') == 'yes' ? '' : 'display:none;' }}">
                                                 <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
                                                 <textarea name="criminal_history" id="criminal_history"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previous_visas_held', $visahistory->criminal_history ?? '') }}</textarea>
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 auto-expand">{{ old('previous_visas_held', $visahistory->criminal_history ?? '') }}</textarea>
                                     </div>
                                 @endif
 
@@ -2170,7 +2170,7 @@
                                     <div class="mt-2" id="denied-entery-details" style="{{ old('deniedentryanywhere', $visahistory->deniedentryanywhere ?? '') == 'yes' ? '' : 'display:none;' }}">
                                                 <label class="block text-sm font-medium text-gray-700">Please provide details:</label>
                                                 <textarea name="denied_entry_anywhere" id="denied_entry_anywhere"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('previous_visas_held', $visahistory->denied_entry_anywhere ?? '') }}</textarea>
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 auto-expand">{{ old('previous_visas_held', $visahistory->denied_entry_anywhere ?? '') }}</textarea>
                                     </div>
                                 @endif
 
@@ -2179,7 +2179,7 @@
                                     <label for="securitybackgroundquestions" class="font-semibold text-ternary/90 text-sm">Security Background Questions</label>
                                     <div class="w-full relative">
                                         <textarea name="securitybackgroundquestions" id="securitybackgroundquestions"
-                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ old('securitybackgroundquestions', $visahistory->securitybackgroundquestions ?? '') }}</textarea>
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 auto-expand">{{ old('securitybackgroundquestions', $visahistory->securitybackgroundquestions ?? '') }}</textarea>
                                         <i class="fa fa-globe-europe absolute right-3 top-4 text-sm text-secondary/80"></i>
                                     </div>
                                 </div>

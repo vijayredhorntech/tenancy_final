@@ -380,7 +380,7 @@ public function hsvisaApplication(Request $request, $type = null)
      $agencyData= $this->agencyService->getAgencyData();
      
 
-    if (isset($agencyData)) {
+    if (isset($agencyData) && $agencyData !== null) {
        
         $allbookings = $this->visaRepository->getSuperadminshotedapplication($request,$agencyData->id);
 

@@ -65,7 +65,7 @@ public function getSuperadminAllApplication($request){
 
         // Base query
         $query->with(['downloadDocument', 'clientapplciation']) // clint will be overridden manually
-              ->where('sendtoadmin', '1')
+              ->whereIn('sendtoadmin', [1, 3]) // Include both sent to admin (1) and updated applications (3)
               ->orderBy('created_at', 'desc');
 
         // Filters
@@ -237,7 +237,7 @@ public function getSuperadminshotedapplication($request)
 
         // Base query
         $query->with(['downloadDocument', 'clientapplciation']) // clint will be overridden manually
-              ->where('sendtoadmin', '1')
+              ->whereIn('sendtoadmin', [1, 3]) // Include both sent to admin (1) and updated applications (3)
               ->orderBy('created_at', 'desc');
 
         // Filters
@@ -335,7 +335,7 @@ public function getagencyVisaApplication($request,$id)
         'clint',
         'clientapplciation'
     ])
-    ->where('sendtoadmin', '1')
+    ->whereIn('sendtoadmin', [1, 3]) // Include both sent to admin (1) and updated applications (3)
     ->where('agency_id',$id)
     ->orderBy('created_at', 'desc');
 

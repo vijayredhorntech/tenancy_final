@@ -718,18 +718,23 @@ public function hsVisaBook(Request $request)
 
 
        /*******Visa Application form *******/
-    public function hs_visaApplication($type,Request $request){
-
-
+        public function hs_visaApplication($type,Request $request){
+ 
+ 
         /***Ger Agency Rerod in the Visa Application ****/
         $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            return redirect()->route('agency.application', ['type' => 'all'])->with('error', 'Agency session not found. Please login again.');
+        }
+        
         $allbookings = $this->visaRepository->getBookingByid($agency->id,$type,$request);
         $countries=Country::get();
       
      
         return view('superadmin.pages.visa.visaApplication', compact('allbookings','countries'));
-
-
+ 
+ 
     }
 
 
@@ -741,6 +746,11 @@ public function hsVisaBook(Request $request)
       /*****Visa View *****/
       public function hsVisaVisa($id){
         $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            return redirect()->route('agency.application', ['type' => 'all'])->with('error', 'Agency session not found. Please login again.');
+        }
+        
         $checkuser = $this->visaRepository->bookingDataById($id);
 
         if (isset($checkuser) && $checkuser->agency_id == $agency->id) {
@@ -770,6 +780,11 @@ public function hsVisaBook(Request $request)
     public function viewForm($formname,$id)
     {
         $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            return redirect()->route('agency.application', ['type' => 'all'])->with('error', 'Agency session not found. Please login again.');
+        }
+        
         $checkuser = $this->visaRepository->bookingDataById($id);
 
             $clientData = $this->visaRepository->bookingDataById($id);
@@ -793,6 +808,11 @@ public function hsVisaBook(Request $request)
     public function hsEditVisaApplication($id){
 
         $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            return redirect()->route('agency.application', ['type' => 'all'])->with('error', 'Agency session not found. Please login again.');
+        }
+        
         $clientData = $this->visaRepository->bookingDataById($id);
 
         if (isset($clientData) && $clientData->agency_id == $agency->id) {
@@ -1173,6 +1193,8 @@ public function hsconfirmApplication(Request $request)
     // Step 6: Redirect
     if ($request->type === 'superadmin') {
         return redirect()->route('superadminvisa.applicationview', ['id' => $request->bookingid]);
+    } elseif ($request->type === 'client') {
+        return redirect()->route('client.application.view', ['id' => $request->bookingid]);
     }
 
     return redirect()->route('visa.applicationview', ['id' => $request->bookingid]);
@@ -1192,6 +1214,11 @@ public function hsconfirmApplication(Request $request)
     if (!$bookingData->viewed_once) {
         $bookingData->update(['viewed_once' => true]);
         return redirect()->route('verifyvisa.application', ['id' => $id, 'type' => $type]);
+    }
+
+    // ✅ If type is client, redirect to the client application view instead
+    if ($type === 'client') {
+        return redirect()->route('client.application.view', ['id' => $id]);
     }
 
     // ✅ Load correct view based on type

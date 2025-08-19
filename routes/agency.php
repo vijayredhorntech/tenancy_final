@@ -274,9 +274,11 @@ Route::controller(ClientLoginController::class)->group(function () {
     Route::get('/{d}/clientlogin','hsClientLogin')->name('client.login');
     Route::post('/clientlogin','hsClientLoginStore')->name('clientloginstore');
     Route::get('/client/application','hsClientApplication')->name('client.application');
+    Route::get('/client/application/view/{id}','hsClientApplicationView')->name('client.application.view');
     Route::get('/client/profile','hsClientProfile')->name('client.profile');
     Route::get('/client/support','hsClientSupport')->name('client.support');
     Route::get('/client/notification','hsClientNotification')->name('client.notification');
+    Route::get('/client/conversation/{id}','hsClientConversation')->name('client.conversation');
     Route::post('/client/store/','hsClientStoreMessage')->name('client.send_message');
     // Route::get('{type}/uploade/document/{id}','hsClientUploadDocument')->name('clientuplaode.document');
     Route::get('{id}/{type?}/uploade/document', 'hsClientUploadDocument')->name('clientuplaode.document');

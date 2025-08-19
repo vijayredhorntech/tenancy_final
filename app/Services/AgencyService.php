@@ -26,7 +26,7 @@ class AgencyService
     public function getAgencyData()
     {
         $userData = session('user_data');
-        if (!$userData) {
+        if (!$userData || !isset($userData['database']) || !isset($userData['email'])) {
             return null; // Handle case where session data is missing
         }
         // Set dynamic database connection
@@ -87,7 +87,7 @@ class AgencyService
      {
         $userData = session('user_data');
        
-        if (!$userData) {
+        if (!$userData || !isset($userData['database']) || !isset($userData['email'])) {
             return null; // Handle case where session data is missing
         }
 

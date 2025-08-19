@@ -190,7 +190,7 @@
                                     </div>
                                 </a> -->
 
-                                <a href="{{ route('superadminvisa.applicationview', ['id' => $booking->id]) }}" title="Assign to Visa Request">
+                                <a href="{{ route('client.application.view', ['id' => $booking->id]) }}" title="View Application">
                                     <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
                                         <i class="fa fa-eye"></i> <!-- FontAwesome icon -->
                                     </div>

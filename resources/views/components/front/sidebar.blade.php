@@ -1,12 +1,12 @@
 <div id="sideBarDiv" class="z-20 w-72 p-4 h-[100vh] bg-ternary overflow-x-hidden overflow-y-auto flex-none xl:static lg:static absolute top-0 left-0 xl:block lg:block hidden ">
     <div class="w-full flex flex-col justify-center items-center border-b-[1px] pb-2 border-b-gray-100/20 shadow-lg shadow-gray-700/10">
-        @if(isset($user->profile))
+        @if(isset($user) && isset($user->profile))
         <img src="{{ asset('images/user/profile/' . $user->profile) }}" alt="Cloud Travel" class="h-16 w-auto" class="h-24 mr-4" />
         @else
         <img src="{{asset('assets/images/logo.png')}}" class="h-16 w-auto" alt="">
         @endif
         {{-- <img src="" class="h-16 w-auto" alt="Cloud Travel"> --}}
-        <span class="font-semibold text-white/90 mt-2 text-2xl">{{$user->name}}</span>
+        <span class="font-semibold text-white/90 mt-2 text-2xl">{{ isset($user) && isset($user->name) ? $user->name : 'Guest' }}</span>
         <p class="text-secondary/90 text-xs"><i class="fa-regular fa-calendar-days mr-1"></i> <span id="clockDiv"></span> </p>
     </div>
 
