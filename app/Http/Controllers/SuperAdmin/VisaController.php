@@ -801,7 +801,30 @@ public function hsVisaBook(Request $request)
             ->where('destination_id', $destination_id)
             ->get();
 
-        return view("forms.$formname", compact('clientData', 'forms'));
+        // Map the slug to the actual form filename
+        $formMapping = [
+            'visadepartment' => 'VisaDepartment',
+            'letterofauthorisation' => 'LetterofAuthorisation',
+            'selfdeclarationform-4' => 'SelfDeclarationForm-4',
+            'form-no-10-certificate-to-carry-crem' => 'Form No. 10 - Certificate to Carry Crem',
+            'affidavit' => 'Affidavit',
+            'annexure-c' => 'Annexure-c',
+            'ppform' => 'ppform',
+            'additional' => 'additional',
+            'annexure-d' => 'Annexure-d',
+            'annexure-e' => 'Annexure-e',
+            'annexure-f' => 'Annexure-f',
+            'beijing-form' => 'beijing-form'
+        ];
+        
+        $actualFormName = $formMapping[$formname] ?? $formname;
+        
+        // Check if the view file exists
+        if (!view()->exists("forms.$actualFormName")) {
+            return redirect()->back()->with('error', "Form '$actualFormName' not found.");
+        }
+
+        return view("forms.$actualFormName", compact('clientData', 'forms'));
     }
 
 
