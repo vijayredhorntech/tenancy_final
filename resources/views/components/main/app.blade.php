@@ -61,9 +61,6 @@
     </style>
 
     
-    @livewireStyles
-    @livewireScripts
-
 </head>
 
 <body style="font-family: 'Public Sans', serif; background-color: white">

@@ -22,6 +22,13 @@ use Illuminate\Support\Facades\Session;
 use DB; 
 use App\Models\Domain;
 use App\Services\AgencyService;
+use App\Models\ContactRequest;
+use App\Models\AgencyRequest;
+
+
+
+
+
 
 class AuthController extends Controller
 {
@@ -34,6 +41,31 @@ class AuthController extends Controller
         
         $this->agencyService = $agencyService;
        
+    }
+
+
+    public function hs_agencyRequestIndex()
+    {
+        $user = auth()->user();
+        if (!$user->can('view agency requests') && !$user->can('manage everything')) {
+            abort(403); // Forbidden
+        }
+      
+        $agencies = AgencyRequest::latest()->paginate(10); // latest first
+     return view('superadmin.agency-request', compact('agencies'));
+     
+    }
+
+    public function hs_agencyEnquiry()
+    {
+        $user = auth()->user();
+        if (!$user->can('view enquiries') && !$user->can('manage everything')) {
+            abort(403); // Forbidden
+        }
+
+          $contacts = ContactRequest::latest()->paginate(10);
+
+    return view('superadmin.enquiry', compact('contacts'));
     }
 
 

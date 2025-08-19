@@ -120,6 +120,21 @@
                 </a>
 
                 @else
+
+                @php
+                        $agencyDomain = session('agency_domain'); // get agency_domain from session
+                    @endphp
+
+                    @if($agencyDomain)
+                        <a href="{{ route('client.login', ['d' => $agencyDomain]) }}" 
+                        class="bg-transparent hover:bg-secondary text-primary hover:text-red border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">
+                            Client Login
+                        </a>
+                    @else
+                        <span class="text-red-500 font-bold">Agency domain not found in session</span>
+                    @endif
+
+
                <a href="{{ route('agency.login') }}" 
                         class="bg-transparent hover:bg-secondary text-primary hover:text-red border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">
                             Login
