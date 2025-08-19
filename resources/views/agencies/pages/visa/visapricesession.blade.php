@@ -1,3 +1,11 @@
 <x-main.layout>
-     <livewire:visa.visa-price-section :visas="$visas" :status="$status" />
+ 
+<x-visa.visaclientform 
+    :visas="$visas" 
+    :status="$status" 
+    :visaTypes=[]
+    :processingTimes=[]
+/>
+
+
 </x-main.layout>

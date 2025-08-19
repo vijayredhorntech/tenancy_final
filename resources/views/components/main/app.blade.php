@@ -72,6 +72,7 @@
     <main style="position: relative">
         {{ $slot }}
     </main>
+    @yield('scripts')
     <x-footer/>
 </div>
 

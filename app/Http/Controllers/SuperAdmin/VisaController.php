@@ -36,6 +36,9 @@ use App\Models\ClientApplicationDocument;
 use App\Models\TermsCondition;
 
 use App\Models\ClientInfoForCountry;
+use App\Models\RequestApplication;
+
+
 
 class VisaController extends Controller
 {
@@ -553,17 +556,65 @@ public function hsViewEditSection($id){
             ])->get();
    
         $agency = $this->agencyService->getAgencyData();
+      
+        // $agencypart=session('agency_domain');
 
-        if (!$agency) {
-            return response()->json(['error' => 'Agency not found'], 404);
-        }
-        $balance = Balance::where('agency_id', $agency->id)->first();
+        // if (!$agency  &&  $agencypart) {
+        //     return response()->json(['error' => 'Agency not found'], 404);
+        // }
+        // $balance = Balance::where('agency_id', $agency->id)->first();
 
 
         return response()->json([
             'visa_subtypes' => $visasub,
             'balance' => $balance ?? '0'
         ]);
+    }
+
+    public function him_storeClientVisaRequest(Request $request){
+        $request->validate([
+        'typeof'        => 'required',   // selectedVisaCategory
+        'category'      => 'required',   // selectedVisaType
+        'first_name'    => 'required|string|max:255',
+        'last_name'     => 'required|string|max:255',
+        'email'         => 'required|email|max:255',
+        'phone_number'  => 'required|string|max:20',
+        'nationality'   => 'required|string|max:255',
+        'address'       => 'required|string|max:500',
+        'city'          => 'required|string|max:255',
+        'date_of_entry' => 'required|date',
+    ]);
+
+    $allSessionData = session()->all();
+
+    $agencyData = Agency::with('domains')
+        ->whereHas('domains', function ($query) use ($allSessionData) {
+            $query->where('domain_name', $allSessionData['agency_domain']);
+        })
+        ->first();
+
+    $data = [
+        'service_type'   => 'Visa',
+        'agency_id'      => $agencyData->id ?? null,
+        'country_id'     => $request->selectionid ?? 0,
+        'visa_id'        => $request->typeof,
+        'visa_subtype'   => $request->category,
+        'first_name'     => $request->first_name,
+        'last_name'      => $request->last_name,
+        'full_name'      => $request->first_name . ' ' . $request->last_name,
+        'email'          => $request->email,
+        'phone_number'   => $request->phone_number,
+        'nationality'    => $request->nationality,
+        'zipcode'        => $request->zip_code,
+        'address'        => $request->address,
+        'city'           => $request->city,
+        'date_of_entry'  => $request->date_of_entry,
+        'status'         => 'pending',
+    ];
+
+    RequestApplication::create($data);
+
+    return redirect()->route('visa.thank-you');
     }
 
 
