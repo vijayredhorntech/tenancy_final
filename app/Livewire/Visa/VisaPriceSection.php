@@ -135,7 +135,7 @@ class VisaPriceSection extends Component
         'status'        => 'pending',
     ];
 
-    // dd($data);
+    //  dd($data);
     RequestApplication::create($data);
 
 
@@ -149,6 +149,7 @@ public function updatedSelectedVisaType($visaTypeId)
 {
     $selectedType = collect($this->visaTypes)->firstWhere('id', $visaTypeId);
 
+    dd("hello");
 
     if ($selectedType) {
         // If processing_time is an array, pick the first one

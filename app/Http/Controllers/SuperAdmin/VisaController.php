@@ -718,18 +718,23 @@ public function hsVisaBook(Request $request)
 
 
        /*******Visa Application form *******/
-    public function hs_visaApplication($type,Request $request){
-
-
+        public function hs_visaApplication($type,Request $request){
+ 
+ 
         /***Ger Agency Rerod in the Visa Application ****/
         $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            return redirect()->route('agency.application', ['type' => 'all'])->with('error', 'Agency session not found. Please login again.');
+        }
+        
         $allbookings = $this->visaRepository->getBookingByid($agency->id,$type,$request);
         $countries=Country::get();
       
      
         return view('superadmin.pages.visa.visaApplication', compact('allbookings','countries'));
-
-
+ 
+ 
     }
 
 
@@ -741,6 +746,11 @@ public function hsVisaBook(Request $request)
       /*****Visa View *****/
       public function hsVisaVisa($id){
         $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            return redirect()->route('agency.application', ['type' => 'all'])->with('error', 'Agency session not found. Please login again.');
+        }
+        
         $checkuser = $this->visaRepository->bookingDataById($id);
 
         if (isset($checkuser) && $checkuser->agency_id == $agency->id) {
@@ -769,21 +779,52 @@ public function hsVisaBook(Request $request)
       /*****View Client Form  View *****/
     public function viewForm($formname,$id)
     {
+        // Try to get agency data, but don't fail if it's not available (for client users)
         $agency = $this->agencyService->getAgencyData();
+        
         $checkuser = $this->visaRepository->bookingDataById($id);
+        $clientData = $this->visaRepository->bookingDataById($id);
+        
+        if (!$clientData) {
+            return redirect()->back()->with('error', 'Application not found.');
+        }
+        
+        // If agency data is available, check authorization
+        if ($agency && isset($checkuser->agency_id) && $checkuser->agency_id != $agency->id) {
+            return redirect()->route('agency.application', ['type' => 'all'])->with('error', 'You are not authorized to access this application.');
+        }
+        
+        $origin_id = $clientData->origin_id;
+        $destination_id = $clientData->destination_id;
+        $forms = VisaServiceTypeDocument::with('from')
+            ->where('origin_id', $origin_id)
+            ->where('destination_id', $destination_id)
+            ->get();
 
-            $clientData = $this->visaRepository->bookingDataById($id);
-            // dd($clientData);
-            // dd($clientData);
-            $origin_id=$clientData->origin_id;
-            $destination_id=$clientData->destination_id;
-            $forms=VisaServiceTypeDocument::with('from')->
-            where('origin_id',$origin_id)->where('destination_id',$destination_id)->get();
+        // Map the slug to the actual form filename
+        $formMapping = [
+            'visadepartment' => 'VisaDepartment',
+            'letterofauthorisation' => 'LetterofAuthorisation',
+            'selfdeclarationform-4' => 'SelfDeclarationForm-4',
+            'form-no-10-certificate-to-carry-crem' => 'Form No. 10 - Certificate to Carry Crem',
+            'affidavit' => 'Affidavit',
+            'annexure-c' => 'Annexure-c',
+            'ppform' => 'ppform',
+            'additional' => 'additional',
+            'annexure-d' => 'Annexure-d',
+            'annexure-e' => 'Annexure-e',
+            'annexure-f' => 'Annexure-f',
+            'beijing-form' => 'beijing-form'
+        ];
+        
+        $actualFormName = $formMapping[$formname] ?? $formname;
+        
+        // Check if the view file exists
+        if (!view()->exists("forms.$actualFormName")) {
+            return redirect()->back()->with('error', "Form '$actualFormName' not found.");
+        }
 
-
-            return view("forms.$formname",compact('clientData','forms')); // Use double quotes or concatenation
-
-
+        return view("forms.$actualFormName", compact('clientData', 'forms'));
     }
 
 
@@ -793,6 +834,11 @@ public function hsVisaBook(Request $request)
     public function hsEditVisaApplication($id){
 
         $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            return redirect()->route('agency.application', ['type' => 'all'])->with('error', 'Agency session not found. Please login again.');
+        }
+        
         $clientData = $this->visaRepository->bookingDataById($id);
 
         if (isset($clientData) && $clientData->agency_id == $agency->id) {
@@ -1173,6 +1219,8 @@ public function hsconfirmApplication(Request $request)
     // Step 6: Redirect
     if ($request->type === 'superadmin') {
         return redirect()->route('superadminvisa.applicationview', ['id' => $request->bookingid]);
+    } elseif ($request->type === 'client') {
+        return redirect()->route('client.application.view', ['id' => $request->bookingid]);
     }
 
     return redirect()->route('visa.applicationview', ['id' => $request->bookingid]);
@@ -1192,6 +1240,11 @@ public function hsconfirmApplication(Request $request)
     if (!$bookingData->viewed_once) {
         $bookingData->update(['viewed_once' => true]);
         return redirect()->route('verifyvisa.application', ['id' => $id, 'type' => $type]);
+    }
+
+    // ✅ If type is client, redirect to the client application view instead
+    if ($type === 'client') {
+        return redirect()->route('client.application.view', ['id' => $id]);
     }
 
     // ✅ Load correct view based on type
