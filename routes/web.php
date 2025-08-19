@@ -49,6 +49,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\InvoiceController;
 
 use App\Http\Controllers\DocumentSignController;
+use App\Http\Controllers\SuperAdmin\HomeController;
 
 
 
@@ -59,7 +60,7 @@ use App\Events\MessageSent;
 use function PHPSTORM_META\type;
 
 Route::fallback(function() {
-    return redirect('/login');
+    return redirect('/');
 });
 
 Route::get('/test',function (){
@@ -71,13 +72,17 @@ Route::get('/test',function (){
 });
 
 
-Route::get('/viewtest',function (){
-return view('');
+/*****Home Controller */
+      Route::controller(HomeController::class)->group(function () {
+                    Route::get('/', 'index')->name('superadmin.home');
+                    Route::post('/submit-agency-request', 'submitAgencyRequest')->name('superadmin.agency.submit');
+                    Route::post('/submit-contact-request', 'submitContactRequest')->name('superadmin.contact.submit');
+         
+                });
 
-// return view('viewtest');
-});
 
-
+Route::get('/', [HomeController::class, 'index']);
+  Route::get('agency-requests', [AgencyController::class, 'pendingRequests'])->name('admin.agency_requests');
 
 Route::get('/home',[ClientController::class,'home'])->name('home');
 
@@ -106,8 +111,22 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
                 Route::get('/invoice/{invoice_number}', [ServiceController::class, 'hs_generateinvocie'])->name('superadmingenerateInvoice');
                 Route::get('/booking/{booking_number}', [ServiceController::class, 'hs_invoice'])->name('superadminbooking');
+
+
+
     
                 Route::get('/dashboard', [AuthController::class, 'hs_dashbord'])->name('dashboard');
+
+                          
+                            // Agency Request routes
+               Route::get('/agency-request', [AuthController::class, 'hs_agencyRequestIndex'])
+                    ->name('superadmin.agency.request')
+                    ->middleware('auth');
+
+                Route::get('/enquiry', [AuthController::class, 'hs_agencyEnquiry'])
+                    ->name('superadmin.enquiry')
+                    ->middleware('auth');
+
 
               /*** Service Routes ***/
                 Route::controller(SuperadminserviceController::class)->group(function () {
@@ -120,6 +139,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                   
                 });
 
+             
 
 
 

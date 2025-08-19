@@ -23,63 +23,7 @@
         </a>
         @endcanany
 
-        <!-- Services Part -->
-        <!-- @canany(['service view', 'manage everything'])
-        <div class="">
-            <div onclick="document.getElementById('servicesDiv').classList.toggle('hidden');document.getElementById('servicesArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='service'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                <div class="flex items-center">
-                    <i class="fa fa-plane-departure mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Services</span>
-                </div>
-                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="servicesArrow"> </i>
-            </div>
-            <ul id="servicesDiv" class="pl-10 mt-2 flex flex-col hidden">
-                <a href="">
-                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa fa-plane-departure mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Flights</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-                <a href="">
-                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa fa-hotel mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Hotels</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-                <a href="">
-                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Visa</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-                <a href="">
-                    <li class="{{Route::currentRouteName()==='services'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa fa-network-wired mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Others</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-
-            </ul>
-        </div>
-        @endcanany -->
-
-        <!-- Flights Part -->
-
-           <!-- end flights part -->
-        <!-- Hotels Part -->
+    
 
         <!-- Doc sign part -->
 
@@ -95,29 +39,15 @@
         </a>
        @endcanany
 
-     {{--   @canany(['doc sign', 'manage everything'])
-            <div class="">
-                <div onclick="document.getElementById('docSignDiv').classList.toggle('hidden');document.getElementById('docArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='visa'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                    <div class="flex items-center">
-                      <i class="fas fa-file-signature mr-2 text-sm"></i>
-                        <span class="text-lg font-medium">Document Sign</span>
-                    </div>
-                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="docArrow"> </i>
-                </div>
-                <ul id="docSignDiv" class="pl-10 mt-2 flex flex-col hidden">
-                    <a href="{{route('supplier.hotel')}}">
-                        <li class="{{Route::currentRouteName()==='supplier.hotel'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                            <div class="flex items-center">
-                            <i class="fa-solid fa-handshake mr-2 text-sm" ></i>
-                                <span class="text-lg font-medium"></span>
-                            </div>
-                            <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                        </li>
-                    </a>
-                </ul>
-            </div>
-        @endcanany  --}}
+
+          <!-- Doc sign part -->
+
+   
+ 
+
+
+
+
 
           <!-- Visa Part -->
         @canany(['hotel view', 'manage everything'])
@@ -243,6 +173,32 @@
         </a>
 
         @endcanany
+
+        @canany(['view agency requests','manage everything'])
+            <a href="{{ route('superadmin.agency.request') }}">
+                <div class="{{ Route::currentRouteName() === 'superadmin.agency.request' ? 'border-gray-100/60 bg-secondary/90' : 'border-ternary' }} w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-2000">
+                    <div class="flex items-center">
+                        <i class="fas fa-file-signature mr-2 text-sm"></i>
+                        <span class="text-lg font-medium"> Agency Request </span>
+                    </div>
+                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                </div>
+            </a>
+        @endcanany
+
+        @canany(['view enquiries','manage everything'])
+            <a href="{{ route('superadmin.enquiry') }}">
+                <div class="{{ Route::currentRouteName() === 'superadmin.enquiry' ? 'border-gray-100/60 bg-secondary/90' : 'border-ternary' }} w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-2000">
+                    <div class="flex items-center">
+                        <i class="fas fa-file-signature mr-2 text-sm"></i>
+                        <span class="text-lg font-medium"> Enquiry </span>
+                    </div>
+                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                </div>
+            </a>
+        @endcanany
+
+
 
  
 
@@ -396,58 +352,7 @@
             </ul>
         </div>
         @endcanany
-{{--
-        @canany(['supplier view', 'manage everything'])
-        <div class="">
-            <div onclick="document.getElementById('cancelinvoiceDiv').classList.toggle('hidden');document.getElementById('cancelArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='visa'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                <div class="flex items-center">
-                    <i class="fa-solid fa-file-invoice mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Invoice</span>
-                </div>
-                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="cancelArrow"> </i>
-            </div>
-            <ul id="cancelinvoiceDiv" class="pl-10 mt-2 flex flex-col hidden">
-          
 
-
-               <a href="{{ route('superadmin.allinvoices') }}">
-               <li class="{{ Route::currentRouteName() === 'superadmin.allinvoices' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-2000">
-                  <div class="flex items-center">
-                      <i class="fas fa-file-invoice mr-2 text-sm"></i>
-                      <span class="text-lg font-medium">All Invoices</span>
-                  </div>
-                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                </li>
-                </a>
-
-                <a href="{{ route('editindex') }}">
-                    <li class="{{ Route::currentRouteName() === 'editindex' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fas fa-edit mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Edited Invoices</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-
-                <a href="{{route('superadmin.cancelindex')}}">
-                    <li class="{{Route::currentRouteName()==='superadmin.cancelindex'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                              <i class="fas fa-times-circle mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Cancel Invoice</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-                
-
-
-
-            </ul>
-        </div>
-        @endcanany
-        --}}
         @canany(['supplier view', 'manage everything'])
         <div class="">
             @php
