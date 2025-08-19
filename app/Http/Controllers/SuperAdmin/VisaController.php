@@ -779,26 +779,29 @@ public function hsVisaBook(Request $request)
       /*****View Client Form  View *****/
     public function viewForm($formname,$id)
     {
+        // Try to get agency data, but don't fail if it's not available (for client users)
         $agency = $this->agencyService->getAgencyData();
         
-        if (!$agency) {
-            return redirect()->route('agency.application', ['type' => 'all'])->with('error', 'Agency session not found. Please login again.');
+        $checkuser = $this->visaRepository->bookingDataById($id);
+        $clientData = $this->visaRepository->bookingDataById($id);
+        
+        if (!$clientData) {
+            return redirect()->back()->with('error', 'Application not found.');
         }
         
-        $checkuser = $this->visaRepository->bookingDataById($id);
+        // If agency data is available, check authorization
+        if ($agency && isset($checkuser->agency_id) && $checkuser->agency_id != $agency->id) {
+            return redirect()->route('agency.application', ['type' => 'all'])->with('error', 'You are not authorized to access this application.');
+        }
+        
+        $origin_id = $clientData->origin_id;
+        $destination_id = $clientData->destination_id;
+        $forms = VisaServiceTypeDocument::with('from')
+            ->where('origin_id', $origin_id)
+            ->where('destination_id', $destination_id)
+            ->get();
 
-            $clientData = $this->visaRepository->bookingDataById($id);
-            // dd($clientData);
-            // dd($clientData);
-            $origin_id=$clientData->origin_id;
-            $destination_id=$clientData->destination_id;
-            $forms=VisaServiceTypeDocument::with('from')->
-            where('origin_id',$origin_id)->where('destination_id',$destination_id)->get();
-
-
-            return view("forms.$formname",compact('clientData','forms')); // Use double quotes or concatenation
-
-
+        return view("forms.$formname", compact('clientData', 'forms'));
     }
 
 
