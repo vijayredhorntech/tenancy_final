@@ -1480,4 +1480,40 @@ public function getBookingByid($id, $type, $request)
         $visa->save();
     }
     
+    /**
+     * Store client application data
+     */
+    public function storeClientApplicationData($bookingId, $applicationData)
+    {
+        $booking = VisaBooking::find($bookingId);
+        
+        if (!$booking) {
+            throw new \Exception('Booking not found');
+        }
+        
+        // Update client details if provided
+        if (isset($applicationData['client_details'])) {
+            $client = ClientDetails::find($booking->client_id);
+            if ($client) {
+                $client->update($applicationData['client_details']);
+            }
+        }
+        
+        // Update client info if provided
+        if (isset($applicationData['passport_details'])) {
+            $clientInfo = $booking->clientinfo;
+            if ($clientInfo) {
+                $clientInfo->update([
+                    'passport_ic_number' => $applicationData['passport_details']['passport_number'] ?? $clientInfo->passport_ic_number,
+                    'passport_issue_place' => $applicationData['passport_details']['passport_issue_place'] ?? $clientInfo->passport_issue_place,
+                    'passport_issue_date' => $applicationData['passport_details']['passport_issue_date'] ?? $clientInfo->passport_issue_date,
+                    'passport_expiry_date' => $applicationData['passport_details']['passport_expiry_date'] ?? $clientInfo->passport_expiry_date,
+                    'religion' => $applicationData['passport_details']['religion'] ?? $clientInfo->religion,
+                    'past_nationality' => $applicationData['passport_details']['nationality'] ?? $clientInfo->past_nationality,
+                ]);
+            }
+        }
+        
+        return true;
+    }
 }

@@ -172,38 +172,38 @@
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                             <div class="flex gap-2 items-center">
                                 @if($booking->applicationworkin_status == "Complete")              
-                                    <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                        <i class="fa fa-check"></i> <!-- FontAwesome icon -->
+                                    <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200" title="Application Complete">
+                                        <i class="fa fa-check"></i>
                                     </div> 
-                                @else
-                                    
-                                        <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
+                                @elseif($booking->applicationworkin_status == "Under Process")
+                                    <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200" title="Under Process">
                                         <i class="fa fa-clock"></i>
-                                        </div>
-                                    
-
+                                    </div>
+                                @elseif($booking->applicationworkin_status == "Rejected")
+                                    <div class="bg-red-100 text-red-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-red-600 hover:text-white transition ease-in duration-200" title="Application Rejected">
+                                        <i class="fa fa-times"></i>
+                                    </div>
+                                @else
+                                    <div class="bg-yellow-100 text-yellow-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-yellow-600 hover:text-white transition ease-in duration-200" title="Pending">
+                                        <i class="fa fa-hourglass-half"></i>
+                                    </div>
                                 @endif
 
-                                <!-- <a href="{{ route('visa.assign', ['id' => $booking->id]) }}" title="Assign to Visa Request">
-                                    <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
-                                        <i class="fa fa-clipboard-check"></i> 
-                                    </div>
-                                </a> -->
-
-                                <a href="{{ route('client.application.view', ['id' => $booking->id]) }}" title="View Application">
-                                    <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                        <i class="fa fa-eye"></i> <!-- FontAwesome icon -->
-                                    </div>
-                                </a>
-
-                           
-                                <!-- <a href="" title="View Dashboard">
-                                    <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
-                                        <i class="fa fa-computer"></i>
-                                    </div>
-                                </a> -->
-
-
+                                @if($booking->sendtoadmin == 1 || $booking->sendtoadmin == 3)
+                                    {{-- Application has been submitted, show View Application --}}
+                                    <a href="{{ route('client.application.view', ['id' => $booking->id]) }}" title="View Application">
+                                        <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
+                                            <i class="fa fa-eye"></i>
+                                        </div>
+                                    </a>
+                                @else
+                                    {{-- Application not submitted yet, show Fill Application --}}
+                                    <a href="{{ route('application.client', ['id' => $booking->id, 'token' => $booking->agency->agencytoken ?? '']) }}" title="Fill Application">
+                                        <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
+                                            <i class="fa fa-edit"></i>
+                                        </div>
+                                    </a>
+                                @endif
                             </div>
                         </td>
                     </tr>

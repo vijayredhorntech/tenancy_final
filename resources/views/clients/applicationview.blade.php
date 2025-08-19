@@ -35,28 +35,21 @@
         <div class="w-full overflow-x-auto p-4">
                 <div class="w-full flex flex-wrap ">
                     
-                <div data-tid="ViewApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] bg-secondary/40 border-[2px] border-secondary/60 border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                <div data-tid="ViewApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-file-alt text-ternary"></i>
                     Payment Receipt
                 </div>
 
-                @if($booking->sendtoadmin == 3)  
-                    <div data-tid="viewApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                            <i class="fas fa-file-alt"></i>
-                            View Application
-                    </div>
-                @elseif($booking->sendtoadmin == 1)
-                    <div data-tid="viewApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-file-alt"></i>
-                        View Application
-                    </div>
-                @else
-                    <a href="{{ route('application.client', ['id' => $booking->id, 'token' => $booking->agency->agencytoken]) }}">
-                        <div  class=" w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                        <i class="fas fa-file-alt"></i>
-                            Fill  Application
-                        </div>
-                    </a>
+                <div data-tid="viewApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] bg-secondary/40 border-[2px] border-secondary/60 border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-file-alt text-ternary"></i>
+                    View Application
+                </div>
+
+                @if($booking->sendtoadmin == 0)
+                <div data-tid="fillApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-edit text-ternary"></i>
+                    Fill Application
+                </div>
                 @endif
 
                 <div data-tid="uploadeDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
@@ -103,20 +96,31 @@
 
                 <div class="w-full mt-4 ">
                 <!-- Payment Receipt -->
-                <div id="ViewApplicationDiv" class="tab ">
+                <div id="ViewApplicationDiv" class="tab hidden">
                     <x-common.viewapplication :clientData="$booking" />
                 </div>
 
-                <!-- View Application -->
-                <div id="viewApplicationDiv" class="tab hidden">
-                    @if($booking->destination->countryName == 'China')
-                        @include('components.application.chinaviewapplication', ['bookingData' => $booking,'type'=>'client'])
-                    @elseif($booking->visa->name == 'Schengen Visa')
-                        @include('components.application.Scheneganviewapplication', ['bookingData' => $booking,'type'=>'client'])
-                    @else
-                        @include('components.application.viewapplication', ['bookingData' => $booking,'type'=>'client'])
-                    @endif
-                </div>
+                                 <!-- View Application -->
+                 <div id="viewApplicationDiv" class="tab">
+                     @if($booking->destination->countryName == 'China')
+                         @include('components.application.chinaviewapplication', ['bookingData' => $booking,'type'=>'client'])
+                     @elseif($booking->visa->name == 'Schengen Visa')
+                         @include('components.application.Scheneganviewapplication', ['bookingData' => $booking,'type'=>'client'])
+                     @else
+                         @include('components.application.viewapplication', ['bookingData' => $booking,'type'=>'client'])
+                     @endif
+                 </div>
+
+                 <!-- Fill Application -->
+                 <div id="fillApplicationDiv" class="tab hidden">
+                     @if($booking->destination->countryName == 'China')
+                         @include('components.application.chinafillapplication', ['bookingData' => $booking,'type'=>'client'])
+                     @elseif($booking->visa->name == 'Schengen Visa')
+                         @include('components.application.Scheneganfillapplication', ['bookingData' => $booking,'type'=>'client'])
+                     @else
+                         @include('components.application.fillapplication', ['bookingData' => $booking,'type'=>'client'])
+                     @endif
+                 </div>
 
                 <!-- Upload Document -->
                 <div id="uploadeDocumentDiv" class="tab hidden">

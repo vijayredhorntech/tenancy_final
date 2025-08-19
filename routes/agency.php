@@ -322,6 +322,7 @@ Route::controller(VisaController::class)->group(function () {
         Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
         Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
         Route::get('/fillapplication/{id}/{token}','hsfillApplication')->name('application.client');
+        Route::post('/client/submit-application','hsClientSubmitApplication')->name('client.submit.application');
         Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
         Route::get('/download-fill-application/{id}', 'hs_')->name('download.fillapplication');
         Route::get('/agencies/get-visa-services','him_getService' )->name('get.visa.services');

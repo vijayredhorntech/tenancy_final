@@ -291,6 +291,11 @@
                                         <i class="fas fa-sync-alt mr-1"></i>Updated
                                     </span>
                                     <br><span class="text-xs text-orange-600">Needs re-send</span>
+                                @elseif($booking->sendtoadmin == 2)
+                                    <span class="bg-blue-200 text-blue-700 px-2 py-1 rounded-[3px] font-medium" title="Client has filled application, waiting for agency review">
+                                        <i class="fas fa-user-edit mr-1"></i>Client Filled
+                                    </span>
+                                    <br><span class="text-xs text-blue-600">Ready for review</span>
                                 @elseif($booking->sendtoadmin == 1)
                                     <span class="bg-green-200 text-green-700 px-2 py-1 rounded-[3px] font-medium" title="Application has been sent to admin">
                                         <i class="fas fa-check mr-1"></i>Sent
@@ -345,14 +350,12 @@
                                         </div>
                                     </a>
 
-                                    @if($booking->sendtoadmin == 0)  
-                                  {{--  <a href="{{ route('visa.sendtoadmin', ['id' => $booking->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
-                                        <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
-                                            <i class="fa fa-paper-plane"></i> <!-- "Send" icon -->
-                                        </div>
-                                    </a>--}}
-                                   
-                                  
+                                    @if($booking->sendtoadmin == 0 || $booking->sendtoadmin == 2)  
+                                        <a href="{{ route('visa.sendtoadmin', ['id' => $booking->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
+                                            <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
+                                                <i class="fa fa-paper-plane"></i> <!-- "Send" icon -->
+                                            </div>
+                                        </a>
                                     @endif
                                     @endif
                                     <!-- <a href="" title="View Dashboard">
