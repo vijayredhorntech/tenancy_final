@@ -10,6 +10,7 @@
         <span class="font-semibold text-ternary text-xl">Visa Forms</span>
     </div>
 
+
     {{-- === Visa Forms Section === --}}
 
     <div class="w-full p-4 bg-gray-50 border-b-[2px] border-b-ternary/10">

@@ -809,12 +809,19 @@ public function hsVisaBook(Request $request)
             'form-no-10-certificate-to-carry-crem' => 'Form No. 10 - Certificate to Carry Crem',
             'affidavit' => 'Affidavit',
             'annexure-c' => 'Annexure-c',
-            'ppform' => 'ppform',
-            'additional' => 'additional',
-            'annexure-d' => 'Annexure-d',
+            'annexure-d' => 'annexure-d',
+            'annexure-dform' => 'annexure-dform',
             'annexure-e' => 'Annexure-e',
             'annexure-f' => 'Annexure-f',
-            'beijing-form' => 'beijing-form'
+            'beijing-form' => 'beijing-form',
+            'ppform' => 'ppform',
+            'additional' => 'additional',
+            'specimenaffidavit' => 'specimenaffidavit',
+            'tatkalundertaking' => 'tatkalundertaking',
+            'srilankannationals-additionalforms' => 'srilankannationals-additionalforms',
+            'changeofappearance-minor' => 'changeofappearance-minor',
+            'declarartionform' => 'declarartionform',
+            'lossofpassport-formno03' => 'lossofpassport-formno03'
         ];
         
         $actualFormName = $formMapping[$formname] ?? $formname;

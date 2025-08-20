@@ -60,7 +60,7 @@
                 @endif
 
         @else
-        @if($user && $user->status == 'offline')
+        @if($user_data->type=="staff")
             <a href="{{ route('agency.attendance') }}"> {{-- Replace with your actual route --}}
                 <button type="button" class="cursor-pointer w-full flex justify-between items-center py-0.5 px-4 rounded-[3px] text-black border-[1px] border-b-[3px] border-r-[3px] border-ternary relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
                     <div class="flex items-center">
