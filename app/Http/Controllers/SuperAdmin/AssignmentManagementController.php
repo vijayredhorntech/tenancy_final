@@ -27,7 +27,7 @@ class AssignmentManagementController extends Controller
     }
 
 
-    public function hs_index(){
+    public function hs_index(Request $request){
       
          $user = auth()->user(); 
         $teams = $this->teamRepository->getAllTeams();
@@ -37,7 +37,15 @@ class AssignmentManagementController extends Controller
         // $assignments =Assignment::with('user')->get();
       
             // Superadmin can see all records
-            $assignments = Assignment::with('user')->get();
+            $assignmentsQuery = Assignment::with('user');
+            
+            // Apply search filter if search parameter exists
+            if ($request->filled('search')) {
+                $assignmentsQuery->where('title', 'like', '%' . $request->search . '%');
+            }
+            
+            $assignments = $assignmentsQuery->get();
+            
             $studentteams = Assignment::with('team', 'teammember')
             ->where('assign_to', 'team')
             ->whereNotIn('status', ['completed', 'canceled']) // Excludes both statuses

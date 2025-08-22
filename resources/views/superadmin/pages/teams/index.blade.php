@@ -82,8 +82,7 @@
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Name</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Manager</td>
                         <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Total Member</td>
-            
-                        <!-- <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td> -->
+                        <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">View</td>
                     </tr>
     
 
@@ -93,45 +92,30 @@
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$team->team_name}}</td>
                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$team->manager->name}}</td>
-                           <!-- <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">0</td> -->
+                           <td class="border-[2px] border-secondary/40 px-4 py-1.5 text-ternary/80 font-medium text-sm">
+                                {{ $team->members->count() ? $team->members->count() : 0 }}
+                           </td>
                            <td class="border-[2px] border-secondary/40 px-4 py-1.5 text-ternary/80 font-medium text-sm">
                                 <div class="flex items-center gap-2">
-                                {{ $team->members->count() ? $team->members->count() : 0 }} 
-                                <a href="{{route('superadmin.teamuser',['id' => $team->id])}}"><button  title="Add Accessory" class="bg-success/20 text-success h-6 w-6 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white cursor-pointer transition ease-in duration-2000" fdprocessedid="sl25i6">
-                                        <i class="fa fa-plus text-xs"></i>
-                                    </button></a>
-
-                                    <a href="{{route('superadmin.teamuserview',['id' => $team->id])}}"><button  title="Add Accessory" class="bg-success/20 text-success h-6 w-6 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white cursor-pointer transition ease-in duration-2000" fdprocessedid="sl25i6">
-                                        <i class="fa fa-eye text-xs"></i>
-                                    </button></a>
-
-                                 </div>
-                            </td>
-                           
-        
-                         {{--   <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                <div class="flex gap-2 items-center">
-                                    <a href="" title="Remind for funds">
-                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-eye"></i>
-                                        </div>
+                                    <a href="{{route('superadmin.teamuser',['id' => $team->id])}}" title="Add Member">
+                                        <button class="bg-success/20 text-success h-6 w-6 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white cursor-pointer transition ease-in duration-2000">
+                                            <i class="fa fa-plus text-xs"></i>
+                                        </button>
                                     </a>
-                                    <a href="{{route('superadmin.termedit',['id' => $team->id])}}" title="View Invoices">
-                                        <div class=" bg-success/10 text-info h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-info hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-pencil"></i>
-                                        </div>
+
+                                    <a href="{{route('superadmin.teamuserview',['id' => $team->id])}}" title="View Team">
+                                        <button class="bg-primary/20 text-primary h-6 w-6 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white cursor-pointer transition ease-in duration-2000">
+                                            <i class="fa fa-eye text-xs"></i>
+                                        </button>
                                     </a>
-                               
-
-
                                 </div>
-                            </td> --}}
+                            </td>
                         </tr>
 
 
                     @empty
                         <tr>
-                            <td colspan="9" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
+                            <td colspan="5" class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">No Record Found</td>
                         </tr>
                     @endforelse
 

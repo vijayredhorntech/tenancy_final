@@ -44,6 +44,15 @@
                         </div>
                     </div>
 
+                    {{-- === 4-digit validity field ===--}}
+                    <div class="w-full relative group flex flex-col gap-1">
+                        <label for="validity" class="font-semibold text-ternary/90 text-sm">Validity (Days)</label>
+                        <div class="w-full relative">
+                            <input type="number" name="validity" id="validity" min="1" max="9999" placeholder="Enter validity in days" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                            <i class="fa fa-clock absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                        </div>
+                    </div>
+
                     <!-- 
                          <div class="w-full relative group flex flex-col gap-1">
                              <label for="name" class="font-semibold text-ternary/90 text-sm">Attachment</label>
@@ -160,10 +169,15 @@
                     @endcanany
                 </div>
                 <div class="flex items-center gap-2">
-                    <input type="text" placeholder="Assignment  name....." class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000">
-                    <button class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
-                        <i class="fa fa-search mr-1"></i> Search
-                    </button>
+                    <form method="GET" action="{{ request()->url() }}" class="flex items-center gap-2">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Assignment name....." class="w-[200px] px-2 py-0.5 border-[1px] text-ternary border-success/80 placeholder-success rounded-l-[3px] focus:outline-none focus:ring-0 focus:border-success transition ease-in duration-2000">
+                        <button type="submit" class="bg-success/60 px-2 py-0.5 rounded-r-[3px] text-ternary font-bold border-[1px] border-success/80 hover:bg-success hover:text-white transition ease-in duration-2000">
+                            <i class="fa fa-search mr-1"></i> Search
+                        </button>
+                        <a href="{{ request()->url() }}" class="bg-gray-500 px-2 py-0.5 rounded-[3px] text-white font-bold border-[1px] border-gray-500 hover:bg-gray-600 transition ease-in duration-2000">
+                            Clear
+                        </a>
+                    </form>
                 </div>
             </div>
             @if( auth()->user()->type === 'superadmin')
@@ -223,8 +237,18 @@
                 newInput.name = 'attachment[]';
                 newInput.className = "file-input w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200";
 
-                // Append input to wrapper
+                // Create cancel button for this file input
+                let cancelBtn = document.createElement('button');
+                cancelBtn.type = 'button';
+                cancelBtn.className = 'p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition';
+                cancelBtn.innerHTML = '×';
+                cancelBtn.onclick = function() {
+                    container.removeChild(fileWrapper);
+                };
+
+                // Append input and cancel button to wrapper
                 fileWrapper.appendChild(newInput);
+                fileWrapper.appendChild(cancelBtn);
 
                 // Append wrapper to container
                 container.appendChild(fileWrapper);

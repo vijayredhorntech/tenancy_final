@@ -5,7 +5,7 @@
 
     {{-- home slider section here--}}
     <div class="w-full">
-        <div class="homeBanner">
+        <div class="homeBanner" id="homeSlider">
             @php
                 $sliderImages = [
                     'https://cloud-travel.co.uk/live_flight/frontend/assets/images/book-holiday.jpg',
@@ -15,11 +15,26 @@
                 ];
             @endphp
 
-            @foreach($sliderImages as $image)
-                <div><img src="{{ $image }}"
-                          class="w-full lg:h-[500px] md:h-[400px] sm:h-[400px] h-[350px] object-cover" alt="Image 1">
+            @foreach($sliderImages as $index => $image)
+                <div class="slide {{ $index === 0 ? 'active' : '' }}">
+                    <img src="{{ $image }}"
+                         class="w-full lg:h-[500px] md:h-[400px] sm:h-[400px] h-[350px] object-cover" 
+                         alt="Slider Image {{ $index + 1 }}">
                 </div>
             @endforeach
+            
+            <!-- Slider Navigation -->
+            <div class="slider-nav">
+                <button class="prev-btn" onclick="changeSlide(-1)">❮</button>
+                <button class="next-btn" onclick="changeSlide(1)">❯</button>
+            </div>
+            
+            <!-- Slider Dots -->
+            <div class="slider-dots">
+                @foreach($sliderImages as $index => $image)
+                    <span class="dot {{ $index === 0 ? 'active' : '' }}" onclick="currentSlide({{ $index + 1 }})"></span>
+                @endforeach
+            </div>
         </div>
     </div>
     {{-- home slider section ends here--}}
@@ -69,6 +84,8 @@
     </div>
 </div>
 
+
+
 {{-- Main Content Sections --}}
 <div class="w-full lg:px-6 px-4 lg:mt-[100px] md:mt-[100px] sm:mt-[100px] mt-[100px] bg-white">
 
@@ -97,6 +114,20 @@
     </div>
     <p class="text-gray-600 mb-6">Choose your destination, discover activities, and build personalized itineraries with ease.</p>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10" id="trip-planners"></div>
+
+    {{-- ===== Visa Forms Section ===== --}}
+    <section class="py-10 bg-gray-50 rounded-lg">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-semibold text-gray-800 mb-4">📋 Visa Application Forms</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Access all the necessary forms for your visa applications. Forms are automatically populated with your information and ready to print.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="visa-forms">
+                <!-- Forms will be loaded here dynamically -->
+            </div>
+        </div>
+    </section>
 
     {{-- ===== Traveler Experience ===== --}}
     <section class="bg-blue-50 py-12 px-4 text-center rounded-lg">
@@ -199,6 +230,50 @@
             {name: "Tokyo", img: "https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?auto=format&fit=crop&w=500&q=80"},
             {name: "Bali", img: "https://images.unsplash.com/photo-1539367628448-4bc5c9d171c8?auto=format&fit=crop&w=500&q=80"},
             {name: "New York", img: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=500&q=80"}
+        ],
+        visaForms: [
+            {
+                name: "Visa Application Form",
+                description: "Complete visa application with all required details",
+                icon: "📝",
+                category: "Application",
+                status: "Ready to fill"
+            },
+            {
+                name: "Passport Declaration",
+                description: "Official declaration for passport applications",
+                icon: "📋",
+                category: "Legal",
+                status: "Auto-populated"
+            },
+            {
+                name: "Financial Statement",
+                description: "Proof of financial means for visa approval",
+                icon: "💰",
+                category: "Financial",
+                status: "Template ready"
+            },
+            {
+                name: "Travel Insurance",
+                description: "Travel insurance coverage documentation",
+                icon: "🛡️",
+                category: "Insurance",
+                status: "Available"
+            },
+            {
+                name: "Accommodation Details",
+                description: "Proof of accommodation during stay",
+                icon: "🏠",
+                category: "Accommodation",
+                status: "Ready to fill"
+            },
+            {
+                name: "Employment Letter",
+                description: "Employment verification letter template",
+                icon: "💼",
+                category: "Employment",
+                status: "Template ready"
+            }
         ]
     };
 
@@ -238,6 +313,164 @@
             <img src="${p.img}" alt="${p.name}" class="w-full h-32 object-cover">
             <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-2 text-sm font-bold">${p.name}</div>
           </div>`).join(""));
+
+        // Load visa forms
+        load("visa-forms", data.visaForms.map(form => 
+          `<div class="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-primary/30 overflow-hidden group">
+            <div class="p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-3 mb-2">
+                            <span class="text-2xl">${form.icon}</span>
+                            <span class="bg-primary/10 text-primary px-2 py-1 rounded-full text-xs font-medium">${form.category}</span>
+                        </div>
+                        <h4 class="font-bold text-gray-800 text-lg mb-2 group-hover:text-primary transition-colors">${form.name}</h4>
+                        <p class="text-gray-600 text-sm leading-relaxed mb-4">${form.description}</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-xs text-gray-500">
+                        <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span>${form.status}</span>
+                    </div>
+                    <button class="inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-all duration-300 font-medium text-sm group-hover:shadow-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                        </svg>
+                        View Form
+                    </button>
+                </div>
+            </div>
+        </div>`).join(""));
+    });
+</script>
+
+<style>
+    .homeBanner {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    .slide {
+        display: none;
+        width: 100%;
+    }
+    
+    .slide.active {
+        display: block;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .slider-nav {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        transform: translateY(-50%);
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        z-index: 10;
+    }
+    
+    .prev-btn, .next-btn {
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        padding: 15px 20px;
+        cursor: pointer;
+        border-radius: 50%;
+        font-size: 18px;
+        transition: all 0.3s ease;
+    }
+    
+    .prev-btn:hover, .next-btn:hover {
+        background: rgba(0, 0, 0, 0.8);
+        transform: scale(1.1);
+    }
+    
+    .slider-dots {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 10;
+    }
+    
+    .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .dot.active {
+        background: white;
+        transform: scale(1.2);
+    }
+    
+    .dot:hover {
+        background: rgba(255, 255, 255, 0.8);
+    }
+</style>
+
+<script>
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    let slideInterval;
+
+    function showSlide(index) {
+        // Hide all slides
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
+        
+        // Show current slide
+        if (index >= slides.length) currentSlideIndex = 0;
+        if (index < 0) currentSlideIndex = slides.length - 1;
+        
+        slides[currentSlideIndex].classList.add('active');
+        dots[currentSlideIndex].classList.add('active');
+    }
+
+    function changeSlide(direction) {
+        currentSlideIndex += direction;
+        showSlide(currentSlideIndex);
+        resetInterval();
+    }
+
+    function currentSlide(index) {
+        currentSlideIndex = index - 1;
+        showSlide(currentSlideIndex);
+        resetInterval();
+    }
+
+    function resetInterval() {
+        clearInterval(slideInterval);
+        startAutoSlide();
+    }
+
+    function startAutoSlide() {
+        slideInterval = setInterval(() => {
+            currentSlideIndex++;
+            showSlide(currentSlideIndex);
+        }, 4000); // Change slide every 4 seconds
+    }
+
+    // Initialize slider
+    document.addEventListener('DOMContentLoaded', function() {
+        showSlide(currentSlideIndex);
+        startAutoSlide();
     });
 </script>
 

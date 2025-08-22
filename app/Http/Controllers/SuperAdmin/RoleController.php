@@ -11,14 +11,25 @@ use App\Models\Service;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\RoleExport;
 
 class RoleController extends Controller
 {
        /**** Function for Roles *****/
 
-       public function hs_roleindex(){
+       public function hs_roleindex(Request $request){
 
-        $roles = Role::all();
+        // Build query with search functionality
+        $query = Role::with('permissions');
+        
+        // Apply search filter
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+        
+        $roles = $query->paginate(10)->withQueryString();
          $id = Auth::user()->id;
         $user = User::find($id);
         $permissions = Permission::all();
@@ -103,5 +114,40 @@ class RoleController extends Controller
         return redirect()->route('superadmin.role')->with('success', 'Permissions assigned successfully!');
     }
 
+    /*** Export Role to Excel ***/
+    public function exportExcel(Request $request)
+    {
+        $query = Role::with('permissions');
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $roles = $query->get();
+
+        return Excel::download(new RoleExport($roles), 'roles.xlsx');
+    }
+
+    /*** Export Role to PDF ***/
+    public function exportPDF(Request $request)
+    {
+        $query = Role::with('permissions');
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $roles = $query->get();
+
+        $data = [
+            'roles' => $roles,
+            'request' => $request
+        ];
+
+        $pdf = Pdf::loadView('pdf.roles_report', $data);
+        return $pdf->download('roles.pdf');
+    }
 
 }

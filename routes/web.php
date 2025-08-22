@@ -242,6 +242,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                             Route::get('/roledelete/{id}', 'hs_roledelete')->middleware('can:role delete')->name('superadmin_roledelete');
                             Route::get('/permissionassign/{id}', 'hs_permissionassign')->middleware('can:role update')->name('superadmin_permissionassign');
                             Route::post('/permissionassign', 'hs_permissioned')->middleware('can:role update')->name('superadmin_assignpermission');
+                            Route::get('/role/export/excel', 'exportExcel')->name('superadmin.role.export.excel');
+                            Route::get('/role/export/pdf', 'exportPDF')->name('superadmin.role.export.pdf');
                         });
 
 
@@ -251,6 +253,8 @@ Route::middleware([LogUserActivity::class])->group(function () {
                         Route::get('/permission', 'hs_permissionindex')->middleware('can:permission view')->name('superadmin.permission');
                         Route::post('/permissionstore', 'hs_permissionstore')->name('superadmin_permissionstore');
                         Route::get('/permissiondelete/{id}', 'hs_permissiondelete')->middleware('can:permission delete')->name('superadmin_permissiondelete');
+                        Route::get('/permission/export/excel', 'exportExcel')->name('superadmin.permission.export.excel');
+                        Route::get('/permission/export/pdf', 'exportPDF')->name('superadmin.permission.export.pdf');
 
                     });
 

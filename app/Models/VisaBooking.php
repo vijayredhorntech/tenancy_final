@@ -15,6 +15,13 @@ class VisaBooking extends Model
     // Define relationships
     protected $fillable = ['viewed_once', 'client_filled_at', 'client_filled_by'];
     
+    // Add proper date casting
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+        'dateofentry' => 'date',
+    ];
 
     
     public function user()

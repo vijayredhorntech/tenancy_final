@@ -34,6 +34,21 @@
 
 <h2>Visa Booking Report</h2>
 
+<!-- Add summary information -->
+<div style="margin-bottom: 20px; padding: 10px; background-color: #f5f5f5; border: 1px solid #ddd;">
+    <strong>Report Summary:</strong><br>
+    Total Records: {{ $bookings->count() }}<br>
+    Generated On: {{ now()->format('Y-m-d H:i:s') }}<br>
+    @if(isset($request) && ($request->date_from || $request->date_to))
+        Date Range: {{ $request->date_from ?? 'N/A' }} to {{ $request->date_to ?? 'N/A' }}<br>
+    @endif
+    @if(isset($request) && $request->search)
+        Search Term: {{ $request->search }}<br>
+    @endif
+</div>
+
+
+
 <table>
     <thead>
         <tr>
@@ -66,6 +81,29 @@
                 $phone = isset($booking->clint) && isset($booking->clint) && isset($booking->clint->phone_number) 
                         ? $booking->clint->phone_number 
                         : '';
+
+                // Fix date formatting with proper null checks
+                $bookingDate = '';
+                if (isset($booking->created_at) && $booking->created_at) {
+                    try {
+                        $bookingDate = $booking->created_at->format('Y-m-d');
+                    } catch (Exception $e) {
+                        $bookingDate = 'N/A';
+                    }
+                } else {
+                    $bookingDate = 'N/A';
+                }
+
+                // Additional fallback: try to get date from different sources
+                if ($bookingDate === 'N/A' && isset($booking->created_at)) {
+                    if (is_string($booking->created_at)) {
+                        $bookingDate = date('Y-m-d', strtotime($booking->created_at));
+                    } elseif (is_object($booking->created_at) && method_exists($booking->created_at, 'format')) {
+                        $bookingDate = $booking->created_at->format('Y-m-d');
+                    } else {
+                        $bookingDate = 'N/A';
+                    }
+                }
                 @endphp
                 <td>{{ $fullName }}</td>
                 <td>{{ $email }}</td>
@@ -75,7 +113,7 @@
                 <td>{{$booking->origin->countryName }}  </td>
                 <td>{{$booking->destination->countryName }}</td>
                 <td>{{ $booking->applicationworkin_status }}</td>
-                <td>{{ $booking->created_at->format('Y-m-d') }}</td>
+                <td>{{ $bookingDate }}</td>
             </tr>
         @endforeach
     </tbody>

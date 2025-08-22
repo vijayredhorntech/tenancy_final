@@ -54,7 +54,7 @@
                         {{ ucfirst($assignment->status) }}
                     </span>
                 </p>
-                <p class="text-gray-700 mt-4"><strong>Description:</strong> {{ $assignment->description }}</p>
+                <p class="text-gray-700 mt-4"><strong>Description:</strong> {!! $assignment->description !!}</p>
             </div>
         </div>
 

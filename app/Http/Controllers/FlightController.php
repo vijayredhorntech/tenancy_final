@@ -27,7 +27,7 @@ use App\Services\AgencyService;
 class FlightController extends Controller
 {
     protected $agencyService;
-    use FlightDataTrait;
+    use App\harry\travelport\src\FlightDataTrait;
 
     public function __construct(AgencyService $agencyService)
     {
@@ -79,7 +79,7 @@ class FlightController extends Controller
         if ($type == 'return') {
             $query['returndeptime'] = $returnDeptime;
         }
-    //   dd('heelo');
+    //    dd('heelo');
         // \Log::info('Query Parameters:', $query);
         return redirect()->route('flight.results', $query);
     }

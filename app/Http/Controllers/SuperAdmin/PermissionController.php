@@ -11,17 +11,27 @@ use App\Models\Service;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\PermissionExport;
 
 class PermissionController extends Controller
 {
    
     /*** Permission index ***/
-    public function hs_permissionindex(){
+    public function hs_permissionindex(Request $request){
         $id = Auth::user()->id;
         $user = User::find($id);
-        // $permissions = Permission::all();
-        $permissions = Permission::paginate(10);
+        
+        // Build query with search functionality
+        $query = Permission::query();
+        
+        // Apply search filter
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+        
+        $permissions = $query->paginate(10)->withQueryString();
         $service=Service::get();
     
         return view('superadmin.pages.permission.permission', ['user_data' => $user,'services' => $service,'permissions'=>$permissions]);
@@ -53,5 +63,41 @@ class PermissionController extends Controller
         $permission = Permission::findOrFail($id);
         $permission->delete();
         return redirect()->back()->with('success', 'Permission deleted successfully');
+    }
+
+    /*** Export Permission to Excel ***/
+    public function exportExcel(Request $request)
+    {
+        $query = Permission::query();
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $permissions = $query->get();
+
+        return Excel::download(new PermissionExport($permissions), 'permissions.xlsx');
+    }
+
+    /*** Export Permission to PDF ***/
+    public function exportPDF(Request $request)
+    {
+        $query = Permission::query();
+
+        // Apply search filter
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $permissions = $query->get();
+
+        $data = [
+            'permissions' => $permissions,
+            'request' => $request
+        ];
+
+        $pdf = Pdf::loadView('pdf.permissions_report', $data);
+        return $pdf->download('permissions.pdf');
     }
 }

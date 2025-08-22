@@ -158,7 +158,8 @@ trait BookingExportTrait
     {
         $data = [
             'title' =>  $title,
-            'bookings' => $bookings
+            'bookings' => $bookings,
+            'request' => request() // Pass the request object to the view
         ];
 
         $pdf = Pdf::loadView('pdf.visa-report', $data); // Ensure you have 'pdf.bookingpdf' Blade file

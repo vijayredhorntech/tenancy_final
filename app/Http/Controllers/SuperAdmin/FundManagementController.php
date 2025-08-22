@@ -283,7 +283,7 @@ public function hsGeneratePDF(Request $request)
 
     $records = $query->get();
 
-    $pdf = PDF::loadView('pdf.funds_report', compact('records'));
+    $pdf = PDF::loadView('pdf.funds_report', compact('records', 'request'));
     return $pdf->download('funds_report.pdf');
 }
 
