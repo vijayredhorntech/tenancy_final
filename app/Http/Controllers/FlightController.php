@@ -26,6 +26,8 @@ use App\Services\AgencyService;
 
 class FlightController extends Controller
 {
+    use FlightDataTrait;
+    
     protected $agencyService;
 
     public function __construct(AgencyService $agencyService)
