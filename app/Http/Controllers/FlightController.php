@@ -9,8 +9,8 @@ use App\Models\Flight\FlightSetting;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
-use App\harry\Travelport\src\FlightDataTrait;
-use App\harry\Travelport\src\Travelport;
+use App\harry\travelport\src\FlightDataTrait;
+use App\harry\travelport\src\Travelport;
 use App\Models\User;
 use App\Models\Service;
 use App\Models\Agency;
@@ -27,7 +27,6 @@ use App\Services\AgencyService;
 class FlightController extends Controller
 {
     protected $agencyService;
-    use App\harry\travelport\src\FlightDataTrait;
 
     public function __construct(AgencyService $agencyService)
     {
