@@ -34,6 +34,7 @@ use App\Http\Controllers\AgencyAdmin\AgencyRoleController;
 use App\Http\Controllers\AgencyAdmin\AgencyPermissionController;
 // use App\Http\Middleware\CheckUserSession;
 use App\Http\Controllers\FlightController;
+use App\Http\Controllers\PublicFlightController;
 
 
 use App\Http\Controllers\Agencies\ClientController;
@@ -96,7 +97,19 @@ Route::post('/login',[AuthController::class,'superadmin_login'])->name("superadm
 Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
 Route::get('/agencylogout',[AuthController::class,'agency_logout'])->name("agency_logout");
 Route::get('/getflight',[ServiceController::class,'getflight']);
-Route::get('/{d}', [AgencyController::class, 'him_agencyhomepage']);
+
+// Public Flight Routes for Homepage
+Route::controller(PublicFlightController::class)->group(function () {
+    Route::post('/public/flight/search', 'search')->name('public.flight.search');
+    Route::get('/public/flight/results', 'results')->name('public.flight.results');
+    Route::get('/public/flight/form', 'showForm')->name('public.flight.form');
+    Route::post('/public/flight/store', 'storeRequest')->name('public.flight.store');
+    Route::get('/public/flight/thank-you', function() {
+        return view('agencies.pages.flight.thank_you');
+    })->name('flight.request.thank-you');
+});
+
+ Route::get('/{d}', [AgencyController::class, 'him_agencyhomepage'])->name('agency.homepage');
 Route::get('/agency/login/', [AgencyController::class, 'him_agencylogin'])->name('agency.login');
     // Service Management
 

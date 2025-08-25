@@ -54,7 +54,7 @@
         $airports = \App\Models\Airport::all();
         //  dd($airports);
     @endphp
-    <form  action="{{ route('flight.search') }}" method="post" autocomplete="off" id="flightSearch">
+    <form  action="{{ auth()->check() ? route('flight.search') : route('public.flight.search') }}" method="post" autocomplete="off" id="flightSearch">
         @csrf
         <div class="flex gap-4 lg:flex-row md:flex-row sm:flex-row flex-col ">
             <div data-validation-key="type" class="flex gap-2 items-center">

@@ -23,6 +23,7 @@ use App\Mail\BookingConfirmationMail;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Country;
 use App\Models\RequestApplication;
+use App\Models\FlightRequest;
 use App\Services\AgencyService;
 use App\Repositories\Interfaces\ClintRepositoryInterface;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
@@ -154,7 +155,6 @@ dd("heelo");
     
     // Data array
 
-    dd("hello");
     // Convert data array to query string
     $queryString = http_build_query($data);
     
@@ -774,6 +774,55 @@ public function airport($input){
 
                     
             
+    }
+
+    /**
+     * Display flight requests for the agency
+     */
+    public function hsFlightRequests()
+    {
+        $agencyData = $this->agencyService->getAgencyData();
+        
+        $flightRequests = FlightRequest::where('agency_id', $agencyData->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+        
+        return view('agencies.pages.service.flight-requests', compact('flightRequests'));
+    }
+
+    /**
+     * View a specific flight request
+     */
+    public function hsFlightRequestView($id)
+    {
+        $agencyData = $this->agencyService->getAgencyData();
+        
+        $flightRequest = FlightRequest::where('id', $id)
+            ->where('agency_id', $agencyData->id)
+            ->firstOrFail();
+        
+        return view('agencies.pages.service.view-flight-request', compact('flightRequest'));
+    }
+
+    /**
+     * Update flight request status
+     */
+    public function hsFlightRequestUpdateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:pending,approved,rejected,completed'
+        ]);
+
+        $agencyData = $this->agencyService->getAgencyData();
+        
+        $flightRequest = FlightRequest::where('id', $id)
+            ->where('agency_id', $agencyData->id)
+            ->firstOrFail();
+        
+        $flightRequest->status = $request->status;
+        $flightRequest->save();
+        
+        return redirect()->back()->with('success', 'Flight request status updated successfully.');
     }
 
     

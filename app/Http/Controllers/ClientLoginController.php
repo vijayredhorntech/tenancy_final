@@ -44,6 +44,7 @@ class ClientLoginController extends Controller
     /***Client handle*** */
     public function hsClientLogin(){
         return view('clients.login');
+        
     }
 
     public function hsClientLoginStore(Request $request){
@@ -114,8 +115,14 @@ class ClientLoginController extends Controller
         $client_data= $storedata['agencydatabaseclient'];
 
        $allbookings=$this->visaRepository->getDataByClientId($client_data->id);
+       
+       // Get flight requests for this client
+       $flightRequests = \App\Models\FlightRequest::where('email', $client_data->email)
+           ->orWhere('phone_number', $client_data->phone_number)
+           ->orderBy('created_at', 'desc')
+           ->get();
    
-        return view('clients.allapplicatoin',compact('allbookings'));
+        return view('clients.allapplicatoin',compact('allbookings', 'flightRequests'));
     }
 
     /****Application Details *** */

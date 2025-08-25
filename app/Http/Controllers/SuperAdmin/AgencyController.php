@@ -409,6 +409,7 @@ class AgencyController extends Controller
     public function him_agencyhomepage($domain)
     {
 
+    
       
  
         $agency = Agency::with('details')->whereHas('domains', function ($query) use ($domain) {
