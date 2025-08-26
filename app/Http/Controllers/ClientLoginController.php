@@ -116,31 +116,6 @@ class ClientLoginController extends Controller
        $allbookings=$this->visaRepository->getDataByClientId($client_data->id);
    
         return view('clients.allapplicatoin',compact('allbookings'));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
     }
 
     /****Application Details *** */
@@ -395,8 +370,19 @@ class ClientLoginController extends Controller
 
       /****public function *** */
       public function hsClientLogout(){
+        // Store domain information before clearing session
+        $userData = session('user_data');
+        $domain = $userData['domain'] ?? null;
+        
         Auth::guard('client')->logout();
         Session::flush();
-        return redirect()->route('client.login');
+        
+        // Redirect to agency homepage using the domain
+        if ($domain) {
+            return redirect('/' . $domain);
+        } else {
+            // Fallback to home page if domain is not available
+            return redirect('/');
+        }
     }
 }

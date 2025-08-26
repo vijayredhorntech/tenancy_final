@@ -1,7 +1,7 @@
 <x-client.layout>
 
 @section('title')
-       Staff
+       Client Profile
     @endsection
 
     <style> 
@@ -138,7 +138,7 @@
                 </div>
                 <div class="text-right">
                     <div class="text-sm text-ternary/60">Client ID</div>
-                    <div class="font-mono text-lg font-bold text-primary">{{ $client->id ?? 'N/A' }}</div>
+                    <div class="font-mono text-lg font-bold text-primary">{{ $client->clientuid ?? 'N/A' }}</div>
                 </div>
             </div>
         </div>
@@ -157,16 +157,16 @@
                          
                 
                     <div id="profileDiv" class="tab  ">
-                        <div class="w-full border-[1px] border-success/40 rounded-lg overflow-hidden">
-                            <div class="flex bg-gradient-to-r from-success/50 to-success/30 px-6 py-3">
-                                <i class="fas fa-user-circle text-success mr-3 text-xl"></i>
+                        <div class="w-full border-[1px] border-primary/40 rounded-lg overflow-hidden">
+                            <div class="flex bg-gradient-to-r from-primary/50 to-primary/30 px-6 py-3">
+                                <i class="fas fa-user-circle text-primary mr-3 text-xl"></i>
                                 <span class="font-bold text-ternary text-xl">Client Details</span>
                             </div>
                             <div class="w-full p-6 grid lg:grid-cols-3 gap-x-6 gap-y-8 bg-white">
                                 <div class="w-full flex flex-col overflow-x-auto">
-                                    <div class="pb-3 pr-12 border-b-[2px] border-b-success">
+                                    <div class="pb-3 pr-12 border-b-[2px] border-b-primary">
                                         <div class="flex items-center gap-2">
-                                            <i class="fas fa-info-circle text-success text-lg"></i>
+                                            <i class="fas fa-info-circle text-primary text-lg"></i>
                                             <span class="font-bold text-ternary text-lg">Basic Information</span>
                                         </div>
                                     </div>
@@ -208,9 +208,9 @@
                                     </div>
                                 </div>
                                 <div class="w-full flex flex-col overflow-x-auto">
-                                    <div class="pb-3 pr-12 border-b-[2px] border-b-success">
+                                    <div class="pb-3 pr-12 border-b-[2px] border-b-primary">
                                         <div class="flex items-center gap-2">
-                                            <i class="fas fa-phone text-success text-lg"></i>
+                                            <i class="fas fa-phone text-primary text-lg"></i>
                                             <span class="font-bold text-ternary text-lg">Contact Information</span>
                                         </div>
                                     </div>
@@ -232,9 +232,9 @@
                                 </div>
                             
                                 <div class="w-full flex flex-col overflow-x-auto">
-                                    <div class="pb-3 pr-12 border-b-[2px] border-b-success">
+                                    <div class="pb-3 pr-12 border-b-[2px] border-b-primary">
                                         <div class="flex items-center gap-2">
-                                            <i class="fas fa-map-marker-alt text-success text-lg"></i>
+                                            <i class="fas fa-map-marker-alt text-primary text-lg"></i>
                                             <span class="font-bold text-ternary text-lg">Address Information</span>
                                         </div>
                                     </div>
@@ -256,7 +256,7 @@
 
                                         <div class="flex items-center py-2 px-3 bg-gray-50 rounded-lg mb-2">
                                             <span class="w-[150px] font-semibold text-md text-ternary">Nationality:</span>
-                                            <span class="text-ternary text-medium font-medium">{{$client->clientinfo->past_nationality ?? 'N/A'}}</span>
+                                            <span class="text-ternary text-medium font-medium">{{$client->clientinfo->nationality ?? 'N/A'}}</span>
                                         </div>
                                      
                                      
@@ -267,9 +267,9 @@
                           
 
                                 <div class="w-full flex flex-col overflow-x-auto">
-                                    <div class="pb-3 pr-12 border-b-[2px] border-b-success">
+                                    <div class="pb-3 pr-12 border-b-[2px] border-b-primary">
                                         <div class="flex items-center gap-2">
-                                            <i class="fas fa-passport text-success text-lg"></i>
+                                            <i class="fas fa-passport text-primary text-lg"></i>
                                             <span class="font-bold text-ternary text-lg">Passport Details</span>
                                         </div>
                                     </div>
@@ -299,9 +299,9 @@
 
 
                                 <div class="w-full flex flex-col overflow-x-auto">
-                                    <div class="pb-3 pr-12 border-b-[2px] border-b-success">
+                                    <div class="pb-3 pr-12 border-b-[2px] border-b-primary">
                                         <div class="flex items-center gap-2">
-                                            <i class="fas fa-users text-success text-lg"></i>
+                                            <i class="fas fa-users text-primary text-lg"></i>
                                             <span class="font-bold text-ternary text-lg">Family Details</span>
                                         </div>
                                     </div>

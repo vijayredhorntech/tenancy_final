@@ -114,11 +114,17 @@
             <div class="flex gap-2 items-center ">
 
                 @if(isset($allSessionData['user_data']))
-                <a href="{{ route('agency_dashboard') }}" 
-                                        class="bg-transparent hover:bg-secondary text-primary hover:text-red border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">
-                                            Dashboard
-                </a>
-
+                    @if(session('type') === 'client')
+                        <a href="{{ route('client.profile') }}" 
+                            class="bg-transparent hover:bg-secondary text-primary hover:text-red border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">
+                            Dashboard
+                        </a>
+                    @else
+                        <a href="{{ route('agency_dashboard') }}" 
+                            class="bg-transparent hover:bg-secondary text-primary hover:text-red border-[1px] border-primary hover:border-secondary px-4 py-1 rounded-sm font-semibold w-max hover:scale-105 transition ease-in text-lg duration-2000">
+                            Dashboard
+                        </a>
+                    @endif
                 @else
 
                 @php
