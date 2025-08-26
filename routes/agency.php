@@ -62,7 +62,6 @@ Route::group([
 
     // Service Management
     Route::controller(ServiceController::class)->group(function () {
-        Route::get('test', 'him_test')->name('test');
         Route::get('flight', 'him_flight')->name('Flight');
         Route::get('hotel', 'him_hotel')->name('Hotel');
         Route::get('visa', 'him_visa')->name('Visa');

@@ -32,6 +32,7 @@ use App\Repositories\Interfaces\VisaRepositoryInterface;
 
 
 
+
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
 use App\Traits\ClientTrait;
@@ -55,26 +56,8 @@ class ServiceController extends Controller
     }
     
  /**** */
- public function him_test(){
 
-    $id = Auth::user()->id;
-    // dd($id); 
-    $userData = \session('user_data');
-    DatabaseHelper::setDatabaseConnection($userData['database']);
-    $user = User::on('user_database')->where('id', $id)->first();
-    $agency_record=Agency::where('email',$user->email)->first(); 
-    $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-   
-    $services = $agency->userAssignments->pluck('service.name', 'service.icon');
-      return view('agencies.pages.test',[
-        'user_data' => $user,
-        'services' => $services,
-        'agency'=>$agency_record,
-        'all_agency'=>$agency
-        ]);
-
- }
-
+/*****Flight Serach Function **** */
  public function him_flight(){
 
  
@@ -107,197 +90,44 @@ class ServiceController extends Controller
         ]);
  }
 
- public function him_flightsearch(FlightSearchRequest $request){
-
-dd("heelo");
-    // http://127.0.0.1:8002/
-
-    $origin = $request->origin;
-    $destination = $request->destination;
-    $type = $request->type;
-    $cabinClass = $request->cabinClass;
-    $adult = $request->adult;
-    $child = $request->child;
-    $infant = $request->infant;
-    $currency = $request->currency;
-    $fareType = $request->fareType;
-    $flexi = $request->flexi ? true : false;
-    $preferredAirline = $request->preferredAirline;
-    $directFlight = $request->directFlight ? true : false;
-    $deptime = $request->departureDate;
-    if ($type == 'return') {
-        $returnDeptime = $request->returnDate;
-    }
-
-    $data = [
-        'origin' => $origin,
-        'destination' => $destination,
-        'deptime' => $deptime,
-        'preferredAirline' => $preferredAirline,
-        'directFlight' => $directFlight,
-        'flexi' => $flexi,
-        'type' => $type,
-        'cabinClass' => $cabinClass,
-        'adult' => $adult,
-        'child' => $child,
-        'infant' => $infant,
-        'currency' => $currency,
-        'fareType' => $fareType,
-    ];
-    if ($type == 'return') {
-        $data['returndeptime'] = $returnDeptime;
-    }
-
- 
-
-    $token = 'JSDkdhf73hdkHFKjdsf7Hkdsf83hskfd7HsdjfKJHdf738dhskfjhS';
-    
-    // Data array
-
-    // Convert data array to query string
-    $queryString = http_build_query($data);
-    
-    // Append query string to URL
-    $baseUrl = env('APP_BASE_URL');  
-    // $url = 'http://127.0.0.1:8006/api/flight/search/results?' . $queryString;
-    $url = $baseUrl . '/api/flight/search/results?' . $queryString;
-
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: Bearer $token",
-        "Content-Type: application/json"
-    ]);
-
-    // Remove CURLOPT_POSTFIELDS (not needed for GET)
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET"); // Explicitly set GET request
-
-    $response = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    // Decode JSON response
-    $responseData = json_decode($response, true);
-
-    // Print response
-    if ($httpCode === 200) {
-      
-    //   dd($responseData);
-        return view('agencies.pages.flight.result')
-        ->with('airlines', $responseData['data']['airlines'])
-        ->with('defaultSettings', $responseData['data']['defaultSettings'])
-        ->with('customSettings', $responseData['data']['customSettings'])
-        ->with('flights', collect($responseData['data']['flights'])->sortBy('totalPrice'))
-        ->with('uniqueStops', $responseData['data']['uniqueStops'])
-        ->with('uniqueAirlines', $responseData['data']['uniqueAirlines'])
-        ->with('costliestFlight', $responseData['data']['costliestFlight'])
-        ->with('costliestPrice', $responseData['data']['costliestPrice'])
-        ->with('cheapestFlight', $responseData['data']['cheapestFlight'])
-        ->with('cheapestPrice', $responseData['data']['cheapestPrice'])
-        ->with('flightSearch', $responseData['data']['flightSearch']);
-
-        
-
-    } else {
-        echo "Error: " . $httpCode . "<br>";
-        echo "Response: " . $response;
-    }
-}
-
 
 /****For Flight Price  ****/
 
-public function him_flightprice(Request $request)
-{
-    // Retrieve JSON-encoded flight data from the request
-
-    $data = $request->input('flight');
- 
-
-
-    // Ensure it's properly formatted
-    $formattedData = [
-        "flight" => json_encode(json_decode($data, true), JSON_UNESCAPED_SLASHES) 
-    ];
-
-
-    $baseUrl = env('APP_BASE_URL'); 
-
-    $token = 'JSDkdhf73hdkHFKjdsf7Hkdsf83hskfd7HsdjfKJHdf738dhskfjhS'; // API Token
-
-    $curl = curl_init();
-    
-    curl_setopt_array($curl, [
-        CURLOPT_URL => $baseUrl . '/api/flight/pricing',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 30, // Better timeout for API requests
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => json_encode($formattedData, JSON_UNESCAPED_SLASHES), // Encode data properly
-        CURLOPT_HTTPHEADER => [
-            "Authorization: Bearer $token", // Fixed string interpolation issue
-            "Content-Type: application/json",
-        ],
-    ]);
-    
-    $response = curl_exec($curl);
-    $responseData = json_decode($response, true);
-
-   
-
-    $userData = session('user_data');
-
-    DatabaseHelper::setDatabaseConnection($userData['database']);
-    
-    // $user = User::on('user_database')->where('id', $id)->first();
-    $user = User::on('user_database')->where('email', $userData['email'])->first();
-  
-    if($user->type=="staff"){
-        $agency_record=Agency::where('database_name',$userData['database'])->first(); 
-        $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-    }else{
-        $agency_record=Agency::where('email',$user->email)->first(); 
-        $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-    }
-
-
-    $balance = Balance::where('agency_id', $agency->id)->first();
-    return view('agencies.pages.flight.pricing')
-    ->with('details', $responseData['details'])
-    ->with('flightSearch', json_decode($request->flightSearch))
-    ->with('airports', $responseData['airports'])
-    ->with('balance', $balance);;
-
-}
 
 
 /****For passangerDetails  */
 public function passengerDetails(Request $request){
 
-        $userData = session('user_data');
-        $agency = Agency::where('email', $userData['email'])->first();
+ 
+    //    dd($agency);
+       
+  
 
        $details = json_decode($request->details);
         $flightSearch =json_decode($request->flightSearch);
         $service=Service::where('name','Flight')->first();
 
-        $userData = session('user_data');
+    
+        // $userData = session('user_data');
+        // $agency = Agency::where('email', $userData['email'])->first();
 
-        DatabaseHelper::setDatabaseConnection($userData['database']);
+        // DatabaseHelper::setDatabaseConnection($userData['database']);
         
-        // $user = User::on('user_database')->where('id', $id)->first();
-        $user = User::on('user_database')->where('email', $userData['email'])->first();
+        // // $user = User::on('user_database')->where('id', $id)->first();
+        // $user = User::on('user_database')->where('email', $userData['email'])->first();
       
-        if($user->type=="staff"){
-            $agency_record=Agency::where('database_name',$userData['database'])->first(); 
-            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-        }else{
-            $agency_record=Agency::where('email',$user->email)->first(); 
-            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-        }
+        // if($user->type=="staff"){
+        //     $agency_record=Agency::where('database_name',$userData['database'])->first(); 
+        //     $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+        // }else{
+        //     $agency_record=Agency::where('email',$user->email)->first(); 
+        //     $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+        // }
+
+        // echo "Heelo";
+        // dd($agency);
+
+       $agency = $this->agencyService->getAgencyData();
 
         $balance = Balance::where('agency_id', $agency->id)->first();
      
@@ -313,21 +143,28 @@ public function passengerDetails(Request $request){
 
 public function payment(Request $request)
 {
-    // Retrieve session data
-    $userData = session('user_data');
 
+
+    // Retrieve session data
 
     $price_data=json_decode($request->details);
-    
     $userData = session('user_data');
-
-    DatabaseHelper::setDatabaseConnection($userData['database']);
+    // DatabaseHelper::setDatabaseConnection($userData['database']);
     
     // $user = User::on('user_database')->where('id', $id)->first();
-    $user = User::on('user_database')->where('email', $userData['email'])->first();
+    // $user = User::on('user_database')->where('email', $userData['email'])->first();
+       $user = $this->agencyService->getCurrentLoginUser();
+            $agency = $this->agencyService->getAgencyData();
+
+ 
+    if (!$agency) {
+        return response()->json(['error' => 'Agency not found'], 404);
+    }
+
 
  
     $data = $request->all(); // Use $request->all() as $data
+ 
 
 
     $adults = [];
@@ -338,20 +175,42 @@ public function payment(Request $request)
     $childCount = count($data['childTitle'] ?? []);
     $infantCount = count($data['infantPrefix'] ?? []);
 
+      $clientData = [
+                    "agency_id"        => $agency->id,
+                    "first_name"       => $data['adultFirstName']['0'] ?? null,
+                    "last_name"        => $data['adultLastName']['0'] ?? null,
+                    "email"            => $data['email'] ?? null,
+                    "phone_number"     => $data['phone'] ?? null,
+                    "nationality"      => $data['adultnationality']['0'] ?? null,
+                    "zip_code"         => $data['postcode'] ?? null,
+                    "address"          => $data['addressLine1'] ?? null,
+                    "permanent_address"=> $data['addressLine2'] ?? null,
+                    "street"           => $data['state'] ?? null,
+                    "city"             => $data['city'] ?? null,
+                    "country"          => $data['country'] ?? null,
+                ];
+
+                // dd($clientData);
+                $this->clintRepository->getStoreclint($clientData);
+
     // Process Adults
-    for ($i = 0; $i < $adultCount; $i++) {
-        $adults[] = [
-            'prefix' => $data['adultPrefix'][$i] ?? null,
-            'firstName' => $data['adultFirstName'][$i] ?? null,
-            'middleName' => $data['adultMiddleName'][$i] ?? null,
-            'lastName' => $data['adultLastName'][$i] ?? null,
-            'gender' => $data['adultGender'][$i] ?? null,
-            'dob' => $data['adultDateOfBirth'][$i] ?? null,
-            'seatingPreference' => $data['adultSeatingPreference'][$i] ?? null,
-            'assistance' => $data['adultAssistance'][$i] ?? null,
-            'mealPreference' => $data['adultMealPreference'][$i] ?? null,
-        ];
-    }
+ // Process Adults
+        for ($i = 0; $i < $adultCount; $i++) {
+
+         
+            $adults[] = [
+                'prefix'            => $data['adultPrefix'][$i] ?? null,
+                'firstName'         => $data['adultFirstName'][$i] ?? null,
+                'middleName'        => $data['adultMiddleName'][$i] ?? null,
+                'lastName'          => $data['adultLastName'][$i] ?? null,
+                'gender'            => $data['adultGender'][$i] ?? null,
+                'dob'               => $data['adultDateOfBirth'][$i] ?? null,
+                'seatingPreference' => $data['adultSeatingPreference'][$i] ?? null,
+                'assistance'        => $data['adultAssistance'][$i] ?? null,
+                'mealPreference'    => $data['adultMealPreference'][$i] ?? null,
+            ];
+        }
+
 
     // Process Children
     for ($i = 0; $i < $childCount; $i++) {
@@ -385,18 +244,15 @@ public function payment(Request $request)
 
     // Fetch agency based on email
  
-     if($user->type=="staff"){
-        // dd("heelo");
-            $agency_record=Agency::where('database_name',$userData['database'])->first(); 
-            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-        }else{
-            $agency_record=Agency::where('email',$user->email)->first(); 
-            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-        }
- 
-    if (!$agency) {
-        return response()->json(['error' => 'Agency not found'], 404);
-    }
+    //  if($user->type=="staff"){
+    //     // dd("heelo");
+    //         $agency_record=Agency::where('database_name',$userData['database'])->first(); 
+    //         $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+    //     }else{
+    //         $agency_record=Agency::where('email',$user->email)->first(); 
+    //         $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+    //     }
+  
 
 
     try {
@@ -410,7 +266,7 @@ public function payment(Request $request)
 
         // Create Flight Booking
         $flight = new FlightBooking();
-        $flight->agnecy_email = $userData['email'];
+        $flight->agnecy_email = $agency->email;
         $flight->domain = $userData['domain'];
         $flight->database = $userData['database'];
         $flight->agency_id = $agency->id;
@@ -477,7 +333,8 @@ public function payment(Request $request)
         $balance->balance -= $price;
         $balance->save();
      
-        Mail::to($request->email)->send(new BookingConfirmationMail($flight,$agency));
+        // dd("here");
+        // Mail::to($request->email)->send(new BookingConfirmationMail($flight,$agency));
 
         return redirect()->route('agency_booking', ['booking_number' => $invoiceNumber])
         ->with('success', 'Your booking is confirmed!');
@@ -486,6 +343,7 @@ public function payment(Request $request)
 
    
     } catch (\Exception $e) {
+        dd($e);
         return response()->json(['error' => 'Failed to process booking: ' . $e->getMessage()], 500);
     }
 

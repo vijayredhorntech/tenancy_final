@@ -1,6 +1,6 @@
 <?php
 
-namespace App\harry\Travelport\src;
+namespace App\harry\travelport\src;
 
 use \Exception;
 
