@@ -146,7 +146,6 @@ public function payment(Request $request)
 
 
     // Retrieve session data
-
     $price_data=json_decode($request->details);
     $userData = session('user_data');
     // DatabaseHelper::setDatabaseConnection($userData['database']);
