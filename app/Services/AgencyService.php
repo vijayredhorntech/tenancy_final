@@ -98,9 +98,12 @@ class AgencyService
      }
 
      public function getAgencyDataWithToken($token){
-        $agency = Agency::where('agencytoken',$token)->first();
+        $agency = Agency::where('agencytoken', $token)->first();
+        if ($agency) {
+            DatabaseHelper::setDatabaseConnection($agency->database_name);
+        }
         return $agency;
-     }
+    }
 
      public function setDatabaseConnection(){
     //    dd('here');

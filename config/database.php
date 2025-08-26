@@ -72,7 +72,6 @@ return [
             'password' => env('DB_PASSWORD', ''),
         ],
 
-
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),

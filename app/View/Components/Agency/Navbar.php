@@ -51,12 +51,7 @@ class Navbar extends Component
         $agency = $this->agencyService->getAgencyData();  
     
         // Extract services safely
-        $this->services = $agency->userAssignments->map(function ($assignment) {
-            return [
-                'name' => $assignment->service->name ?? null,
-                'icon' => $assignment->service->icon ?? null,
-            ];
-        })->filter(); // Remove null values
+        $this->services = $agency->userAssignments->pluck('service.name', 'service.icon'); // Remove null values
     }
 
 

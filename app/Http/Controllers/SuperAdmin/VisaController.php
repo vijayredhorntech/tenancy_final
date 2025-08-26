@@ -809,12 +809,19 @@ public function hsVisaBook(Request $request)
             'form-no-10-certificate-to-carry-crem' => 'Form No. 10 - Certificate to Carry Crem',
             'affidavit' => 'Affidavit',
             'annexure-c' => 'Annexure-c',
-            'ppform' => 'ppform',
-            'additional' => 'additional',
-            'annexure-d' => 'Annexure-d',
+            'annexure-d' => 'annexure-d',
+            'annexure-dform' => 'annexure-dform',
             'annexure-e' => 'Annexure-e',
             'annexure-f' => 'Annexure-f',
-            'beijing-form' => 'beijing-form'
+            'beijing-form' => 'beijing-form',
+            'ppform' => 'ppform',
+            'additional' => 'additional',
+            'specimenaffidavit' => 'specimenaffidavit',
+            'tatkalundertaking' => 'tatkalundertaking',
+            'srilankannationals-additionalforms' => 'srilankannationals-additionalforms',
+            'changeofappearance-minor' => 'changeofappearance-minor',
+            'declarartionform' => 'declarartionform',
+            'lossofpassport-formno03' => 'lossofpassport-formno03'
         ];
         
         $actualFormName = $formMapping[$formname] ?? $formname;
@@ -1276,6 +1283,68 @@ public function showVisaApplicationLogs()
     return view('components.common.visalog', compact('logs'));
 }
 
+/**
+ * Handle client application submission
+ * Client can fill application but cannot send to admin
+ * Only agency can send to admin
+ */
+public function hsClientSubmitApplication(Request $request)
+{
+    try {
+        $request->validate([
+            'booking_id' => 'required|exists:visabookings,id',
+            'application_data' => 'required|array'
+        ]);
 
+        $booking = $this->visaRepository->bookingDataById($request->booking_id);
+        
+        if (!$booking) {
+            return response()->json(['error' => 'Booking not found'], 404);
+        }
+
+        // Check if client is authorized to submit for this booking
+        $agency = $this->agencyService->getAgencyData();
+        if (!$agency || $booking->agency_id != $agency->id) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        // Store the application data
+        $applicationData = $request->application_data;
+        
+        // Update client details if provided
+        if (isset($applicationData['client_details'])) {
+            $this->clintRepository->updateClientDetails($booking->client_id, $applicationData['client_details']);
+        }
+
+        // Store visa application data
+        $this->visaRepository->storeClientApplicationData($request->booking_id, $applicationData);
+
+        // Update booking status to indicate client has filled application
+        $booking->update([
+            'sendtoadmin' => 2, // 2 = Client filled, waiting for agency review
+            'client_filled_at' => now(),
+            'client_filled_by' => 'client'
+        ]);
+
+        // Log the action
+        $this->agencyService->saveLog(
+            $booking, 
+            'client', 
+            'Client filled application', 
+            $booking->client_id
+        );
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Application submitted successfully. Agency will review and send to admin.',
+            'redirect' => route('client.application.view', ['id' => $request->booking_id])
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Failed to submit application: ' . $e->getMessage()
+        ], 500);
+    }
+}
 
 }

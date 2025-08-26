@@ -744,9 +744,20 @@ if(($data['step']?? null)=="previewname_permission"){
     return $info;
 }
 
-
-
-  
-
+/**
+ * Update client details
+ */
+public function updateClientDetails($clientId, $clientData)
+{
+    $client = ClientDetails::find($clientId);
+    
+    if (!$client) {
+        throw new \Exception('Client not found');
+    }
+    
+    $client->update($clientData);
+    
+    return $client;
+}
 
 }
