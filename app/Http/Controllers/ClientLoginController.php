@@ -116,6 +116,10 @@ class ClientLoginController extends Controller
        $allbookings=$this->visaRepository->getDataByClientId($client_data->id);
    
         return view('clients.allapplicatoin',compact('allbookings'));
+
+
+
+        
     }
 
     /****Application Details *** */
