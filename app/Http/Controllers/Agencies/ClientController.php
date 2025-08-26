@@ -89,6 +89,7 @@ class ClientController extends Controller
 
     public function hs_ClientStore(Request $request){
    
+
         $request->validate([
             'agency_id' => 'required|integer',
             'first_name' => 'required|string|max:255',
@@ -98,6 +99,7 @@ class ClientController extends Controller
             'nationality' => 'required|string|max:255',
         ]);
 
+        dd($request->all());
         $clients = $this->clintRepository->getStoreclint($request->all());
         // dd($clients);    
         return redirect()->route('client.index')->with('success', 'Client added successfully.');

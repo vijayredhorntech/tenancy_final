@@ -144,11 +144,11 @@ public function getStoreclint(array $data)
         $defaultDb->commit();
 
         // Send welcome email
-        try {       
-            Mail::to($data['email'])->send(new ClientWelcomeEmail($client, $agency));
-        } catch (\Exception $e) {   
-            \Log::error('Failed to send welcome email: ' . $e->getMessage());
-        }           
+        // try {       
+        //     Mail::to($data['email'])->send(new ClientWelcomeEmail($client, $agency));
+        // } catch (\Exception $e) {   
+        //     \Log::error('Failed to send welcome email: ' . $e->getMessage());
+        // }           
 
         return $client;
 
@@ -420,117 +420,6 @@ private function updateClientData(array $data, ClientDetails $client, string $co
 
 
 
-// private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string $connection = null)
-// {
-//     if ($connection) {
-//         $info->setConnection($connection);
-//     }
-
-//     // Step 4: Spouse Details
-//     if (($data['marital_status'] ?? null) === 'married') {
-//         $info->spouse_details = json_encode([
-//             'name' => $data['spouse_name'] ?? null,
-//             'nationality' => $data['spouse_nationality'] ?? null,
-//             'birth_place' => $data['spouse_birth_place'] ?? null,
-//             'previous_nationality' => $data['spouse_previous_nationality'] ?? null,
-//             'dob' => $data['spouse_dob'] ?? null,
-//             'employementstatus' => $data['spouse_employment'] ?? null,
-//             'address' => $data['spouse_address'] ?? null,
-//         ]);
-//     }
-
-//     // Step 5: Children
-//     if (($data['step'] ?? null) == 5) {
-//         $children = [];
-//         $childNames = $data['child_name'] ?? [];
-//         $childDobs = $data['child_dob'] ?? [];
-//         $childNationalities = $data['child_nationality'] ?? [];
-//         $childAddresses = $data['child_address'] ?? [];
-
-//         for ($i = 0; $i < count($childNames); $i++) {
-//             $children[] = [
-//                 'name' => $childNames[$i] ?? '',
-//                 'dob' => $childDobs[$i] ?? '',
-//                 'nationality' => $childNationalities[$i] ?? '',
-//                 'address' => $childAddresses[$i] ?? '',
-//             ];
-//         }
-
-//         $info->children = json_encode($children);
-//     }
-
-//     // Step 7: Father & Mother
-//     if (($data['step'] ?? null) == 7) {
-//         $info->father_details = json_encode([
-//             'name' => $data['father_name'] ?? null,
-//             'nationality' => $data['father_nationality'] ?? null,
-//             'birth_place' => $data['father_birth_place'] ?? null,
-//             'previous_nationality' => $data['father_previous_nationality'] ?? null,
-//             'dob' => $data['father_dob'] ?? null,
-//             'employementstatus' => $data['father_employment'] ?? null,
-//             'address' => $data['father_address'] ?? null,
-//         ]);
-
-//         $info->mother_details = json_encode([
-//             'name' => $data['mother_name'] ?? null,
-//             'nationality' => $data['mother_nationality'] ?? null,
-//             'birth_place' => $data['mother_birth_place'] ?? null,
-//             'previous_nationality' => $data['mother_previous_nationality'] ?? null,
-//             'dob' => $data['mother_dob'] ?? null,
-//             'employementstatus' => $data['mother_employment'] ?? null,
-//             'address' => $data['mother_address'] ?? null,
-//         ]);
-//     }
-
-//     if (($data['step'] ?? null) == 8) {
-//         if ($info->haspassportidenty === 'yes') {
-//             $otherDetails = [
-//                 'country' => $data['other_passport_country'] ?? '',
-//                 'issue_place' => $data['other_passport_issue_place'] ?? '',
-//                 'ic_number' => $data['other_passport_ic_number'] ?? '',
-//                 'issue_date' => $data['other_passport_issue_date'] ?? '',
-//             ];
-    
-//             $other_passport_details = json_encode($otherDetails);
-//     }
-//     }
-//     // Common info
-//     $info->previous_name = $data['previous_name'] ?? $info->previous_name;
-//     $info->passport_issue_date = $data['passport_issue_date'] ?? $info->passport_issue_date;
-//     $info->religion = $data['religion'] ?? $info->religion;
-//     $info->place_of_birth = $data['place_of_birth'] ?? $info->place_of_birth;
-//     $info->country_of_birth = $data['country_of_birth'] ?? $info->country_of_birth;
-//     $info->citizenship_id = $data['citizenship_id'] ?? $info->citizenship_id;
-//     $info->identification_marks = $data['identification_marks'] ?? $info->identification_marks;
-//     $info->educational_qualification = $data['educational_qualification'] ?? $info->educational_qualification;
-//     $info->nationality = $data['nationality'] ?? $info->nationality;
-//     $info->past_nationality = $data['past_nationality'] ?? $info->past_nationality;
-//     $info->passport_country = $data['passport_country'] ?? $info->passport_country;
-//     $info->passport_issue_place = $data['passport_issue_place'] ?? $info->passport_issue_place;
-//     $info->passport_ic_number = $data['passport_ic_number'] ?? $info->passport_ic_number;
-//     $info->passport_expiry_date = $data['passport_expiry_date'] ?? $info->passport_expiry_date;
-//     $info->previous_visa_number = $data['previous_visa_number'] ?? $info->previous_visa_number;
-//     $info->previous_visa_place = $data['previous_visa_place'] ?? $info->previous_visa_place;
-//     $info->previous_visa_issue_date = $data['previous_visa_issue_date'] ?? $info->previous_visa_issue_date;
-//     $info->cities_visited = $data['cities_visited'] ?? $info->cities_visited;
-//     $info->countries_visited_last_10_years = $data['countries_visited_last_10_years'] ?? $info->countries_visited_last_10_years;
-//     $info->present_occupation = $data['present_occupation'] ?? $info->present_occupation;
-//     $info->designation = $data['designation'] ?? $info->designation;
-//     $info->employer_name = $data['employer_name'] ?? $info->employer_name;
-//     $info->employer_address = $data['employer_address'] ?? $info->employer_address;
-//     $info->employer_phone = $data['employer_phone'] ?? $info->employer_phone;
-//     $info->past_occupation = $data['past_occupation'] ?? $info->past_occupation;
-//     $info->reference_name = $data['reference_name'] ?? $info->reference_name;
-//     $info->reference_address = $data['reference_address'] ?? $info->reference_address;
-
-//     $info->haspassportidenty = $data['haspassportidenty'] ?? $info->haspassportidenty;
-//     $info->other_passport_details = $other_passport_details ?? $info->other_passport_details;
-
-
-//     $info->save();
-
-//     return $info;
-// }
 
 private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string $connection = null)
 {
