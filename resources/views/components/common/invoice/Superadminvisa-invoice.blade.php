@@ -120,16 +120,13 @@
         <section>
             @php
             use Carbon\Carbon;       // Carbon alias
-            use Illuminate\Support\Str;
+                use Illuminate\Support\Str;
 
+            
             // dd($booking->clint);
             /* 1. Safely grab the Invoice model (may be null) */
             $invoice = $booking;
 
-            /* 2. Split "TO" address if it exists, otherwise empty array */
-            $toParts = $invoice && $invoice->clint && $invoice->clint->permanent_address
-            ? array_filter(array_map('trim', explode(',', $invoice->clint->permanent_address)))
-            : [];
 
             /* 3. Split "ISSUED BY" address if it exists, otherwise empty array */
             $issue = $booking->agency && $booking->agency->address
