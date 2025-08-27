@@ -99,9 +99,6 @@ class ServiceController extends Controller
 public function passengerDetails(Request $request){
 
  
-    //    dd($agency);
-       
-  
 
        $details = json_decode($request->details);
         $flightSearch =json_decode($request->flightSearch);

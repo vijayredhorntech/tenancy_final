@@ -371,6 +371,8 @@ Route::controller(DocumentSignController::class)->group(function () {
 
     Route::controller(ServiceController::class)->group(function () {
 
+                Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
+        Route::post('/payment',  'payment')->name('flight.payment');
         Route::get('agencies/airport/{input}', 'airport')->name('search.airport');
     });
 
@@ -383,8 +385,7 @@ Route::controller(DocumentSignController::class)->group(function () {
         Route::post('/search', 'search')->name('flight.search');
         Route::get('/search/results', 'results')->name('flight.results');
         Route::post('/pricing', 'pricing')->name('flight.pricing');
-          Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
-        Route::post('/payment',  'payment')->name('flight.payment');
+  
     
         Route::get('/pricing', 'pricing')->name('flight.pricing'); // Added name for consistency
         // Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
