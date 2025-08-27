@@ -163,7 +163,7 @@ Route::group([
         Route::get('/viewapplication/{type}', 'hs_visaApplication')->name('agency.application');
       
       
-        Route::get('/get-visa-services','him_getService' )->name('get.visa.services');
+        // Route::get('/get-visa-services','him_getService' )->name('get.visa.services');
         Route::post('/visabook','hsVisaBook')->name('visa.book');
         Route::post('/visa-application-client-store','him_storeClientVisaRequest')->name('visa.applicationclient.store');
         Route::get('/verifyapplication/{id}','hs_verifyapplication')->name('verify.application');   
@@ -400,6 +400,7 @@ Route::controller(DocumentSignController::class)->group(function () {
 
          Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
            Route::get('/payment/{id}','him_payment')->name('visa.payment');
+           Route::get('agencies/get-visa-services','him_getService' )->name('get.visa.services');
     });
 
 
