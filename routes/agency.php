@@ -48,6 +48,8 @@ use App\Events\MessageSent;
 
 Route::post('agencies/agencies_store', [AgencyController::class, 'him_agencies_store'])->name('agency_login');
 
+// Flight request route for homepage users (no authentication required)
+Route::post('/agencies/flight-request', [ServiceController::class, 'hs_flightRequest'])->name('flight.request');
 
 Route::group([
     'prefix' => 'agencies',
@@ -70,6 +72,10 @@ Route::group([
         // Route::post('flight_price','him_flightprice')->name('flight.pricing');
         // Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
         // Route::post('/payment',  'payment')->name('flight.payment');
+        
+        // Add this route for flight requests from homepage
+        // Route::post('/flight-request', 'hs_flightRequest')->name('flight.request'); // This line is moved outside
+        
         Route::get('/invoice/{invoice_number}','hs_generateinvocie')->name('generateInvoice');
         Route::get('/booking/{booking_number}','hs_invoice')->name('agency_booking');
         
@@ -165,7 +171,6 @@ Route::group([
       
         // Route::get('/get-visa-services','him_getService' )->name('get.visa.services');
         Route::post('/visabook','hsVisaBook')->name('visa.book');
-        Route::post('/visa-application-client-store','him_storeClientVisaRequest')->name('visa.applicationclient.store');
         Route::get('/verifyapplication/{id}','hs_verifyapplication')->name('verify.application');   
         Route::get('/verifyvisa-application/{id}/{type}','hs_verifyapplication')->name('verifyvisa.application');
         Route::get('/application/{id}/{token}/client','hsfillApplication')->name('application.client');
@@ -401,6 +406,7 @@ Route::controller(DocumentSignController::class)->group(function () {
          Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
            Route::get('/payment/{id}','him_payment')->name('visa.payment');
            Route::get('agencies/get-visa-services','him_getService' )->name('get.visa.services');
+           Route::post('agencies/visa-application-client-store','him_storeClientVisaRequest')->name('visa.applicationclient.store');
     });
 
 

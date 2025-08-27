@@ -12,7 +12,7 @@
 
 
 
-    <form action="{{ route('flight.payment') }}" method="POST">
+    <form action="{{ route('flight.request') }}" method="POST">
           @csrf
                     <section class=" w-full mx-auto grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-8 pt-6 px-4">
                             <div class="w-full h-max bg-white p-4 rounded-[3px] border-[1px] border-ternary/20 lg:col-span-3 md:col-span-2 col-span-1">

@@ -127,7 +127,7 @@
             $invoice = $booking;
 
             /* 2. Split "TO" address if it exists, otherwise empty array */
-            $toParts = $invoice && $invoice->clint->permanent_address
+            $toParts = $invoice && $invoice->clint && $invoice->clint->permanent_address
             ? array_filter(array_map('trim', explode(',', $invoice->clint->permanent_address)))
             : [];
 
