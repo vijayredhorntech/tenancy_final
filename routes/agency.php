@@ -172,16 +172,17 @@ Route::group([
         // Route::get('/get-visa-services','him_getService' )->name('get.visa.services');
         Route::post('/visabook','hsVisaBook')->name('visa.book');
         Route::get('/verifyapplication/{id}','hs_verifyapplication')->name('verify.application');   
-        Route::get('/verifyvisa-application/{id}/{type}','hs_verifyapplication')->name('verifyvisa.application');
+        // Route::get('/verifyvisa-application/{id}/{type}','hs_verifyapplication')->name('verifyvisa.application');
         Route::get('/application/{id}/{token}/client','hsfillApplication')->name('application.client');
         Route::post('visapayment/{id}','him_visaApplicationPay')->name('visaapplication.pay');
+        Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
 
 
         Route::get('/documentpending','hsVisaDocumentpending')->name('visa.documentpending');
         Route::get('/visaview/{id}','hsVisaVisa')->name('visa.applicationview');
         Route::get('/editapplication/{id}','hsEditVisaApplication')->name('visaedit.application');    
         Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
-        Route::post('/visadocument-update','hsupdateapplication')->name('visadocument.update');
+        Route::post('/visadocument-update','hs_VisaStoreAjax')->name('visadocument.update');
         Route::post('/confirmapplication','hsconfirmApplication')->name('comfirm.application');
         Route::get('/exportpdf', 'hsexportPdf')->name('exportpdf.application');
         Route::get('/exportexcel', 'hsexportExcel')->name('exportexcel.application');

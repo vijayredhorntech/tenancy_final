@@ -1097,6 +1097,7 @@ public function getBookingByid($id, $type, $request)
 
 
     public function assignUpdateBooking($id,$data){
+
       $visabooking=VisaBooking::with('agency')->where('id',$id)->first(); 
 
 

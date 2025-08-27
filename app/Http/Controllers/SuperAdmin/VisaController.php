@@ -978,13 +978,9 @@ public function hsFromindex(Request $request)
 
     if (isset($request->type) && $request->type === 'superadmin') {
         $data = $request->validate([
-            'applciationid' => 'required',
-            'paymentstatus' => 'in:Paid,Pending',
-            'document_status' => 'in:Pending,Done',
-            'application_status' => 'required|in:Under Process,Pending,Complete,Rejected',
-            'description' => 'nullable|string',
-            'rejection_reason' => 'nullable|string|max:255',
-        ]);
+                        'bookingid' => 'required', // Ensure ID exists in the applications table
+                    
+                    ]);
 
         $booking = VisaBooking::find($request->applciationid);
         $original = $booking->only([
@@ -1013,23 +1009,25 @@ public function hsFromindex(Request $request)
 
         Mail::to($updatedBooking->agency->email)->send(new DocumentDownloadedNotificationMail($updatedBooking));
 
+     
         return redirect()->route('superadminview.allapplication');
     }
 
         $agency = $this->agencyService->getAgencyData();
-        $clientData = $this->visaRepository->bookingDataById($request->applciationid);
+        
+        $clientData = $this->visaRepository->bookingDataById($request->bookingid);
 
+       
         if (isset($clientData) && $clientData->agency_id == $agency->id) {
-            $data = $request->validate([
-                'applciationid' => 'required', // Ensure ID exists in the applications table
-                'paymentstatus' => 'required|in:Paid,Pending',
-                'document_status' => 'required|in:Pending,Handed Over',
-                'description' => 'nullable|string',
-                'rejection_reason' => 'nullable|string|max:255',
-            ]);
-            $forms = $this->visaRepository->assignUpdateBooking($request->applciationid,$request->all());
+       
+            // $forms = $this->visaRepository->assignUpdateBooking($request->bookingid,$request->all());
+            $forms = $this->visaRepository->visadocumentstore($request->bookingid,$request->all());
+
+
             // Route::get('/viewapplication/{type}', 'hs_visaApplication')->name('agency.application');
-            return redirect()->route('agency.application', ['type' => 'all']);
+          
+            // return redirect()->route('agency.application', ['type' => 'all']);
+        
         }
         return redirect()->route('agency.application', ['type' => 'all']);
    }

@@ -45,7 +45,7 @@
 
             {{-- Step 1: Personal Information --}}
    
-            <div class="form-step  active hidden" id="form-step1" data-step="1">
+            <div class="form-step  " id="form-step1" data-step="1">
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
    
                     <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
@@ -128,7 +128,7 @@
        
 
             {{-- Step 2: Contact Details --}}
-            <div class="form-step   hidden" id="form-step2" data-step="2">
+            <div class="form-step  active hidden" id="form-step2" data-step="2">
                 <div class="w-full flex flex-col gap-2 px-4 mt-4">
                     <div class="border-b-[2px] border-b-secondary/50 w-max pr-20">
                         <span class="text-lg font-bold text-ternary">Travel Details</span>
@@ -415,6 +415,8 @@
 
     
         $(document).ready(function () {    
+
+   
             $.ajaxSetup({
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -422,7 +424,7 @@
                         });
 
                     $('.ajax-form').on('submit', function (e) {
-
+                               
                         e.preventDefault();
                         let $form = $(this);
                         let formData = $form.serializeArray(); // ✅ make sure this returns an array
@@ -472,7 +474,8 @@ $(document).ready(function () {
                         });
 
                     $('.visaajax-form').on('submit', function (e) {
-
+                            
+                    
                         e.preventDefault();
                         let $form = $(this);
                         let formData = $form.serializeArray(); // ✅ make sure this returns an array
@@ -498,6 +501,7 @@ $(document).ready(function () {
                                                 $("#" + previewStep).hide();
                                                 $("#previewstep").val(nextStep);
                                             }else{
+                                               
                                                let redirectUrl = "{{ route('verifyvisa.application', ['id' => 'booking_id_placeholder', 'type' => 'agency']) }}";
                                                redirectUrl = redirectUrl.replace('booking_id_placeholder', bookingid);
                                                window.location.href = redirectUrl;
