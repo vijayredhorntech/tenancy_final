@@ -68,8 +68,8 @@ Route::group([
        
         // Route::post('flight_search','him_flightsearch')->name('flight.search');
         // Route::post('flight_price','him_flightprice')->name('flight.pricing');
-        Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
-        Route::post('/payment',  'payment')->name('flight.payment');
+        // Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
+        // Route::post('/payment',  'payment')->name('flight.payment');
         Route::get('/invoice/{invoice_number}','hs_generateinvocie')->name('generateInvoice');
         Route::get('/booking/{booking_number}','hs_invoice')->name('agency_booking');
         
@@ -375,14 +375,16 @@ Route::controller(DocumentSignController::class)->group(function () {
     });
 
         Route::group(['prefix' => 'agencies/flight', 'controller' => FlightController::class], function () {
-        Route::group(['prefix' => 'modal'], function () {
-            Route::get('/details', 'detailModal')->name('flight.detail-modal');
-        });
-    
+            Route::group(['prefix' => 'modal'], function () {
+                Route::get('/details', 'detailModal')->name('flight.detail-modal');
+            });
+        
         Route::get('/details', 'detailModal')->name('flight.detail-modal');
         Route::post('/search', 'search')->name('flight.search');
         Route::get('/search/results', 'results')->name('flight.results');
         Route::post('/pricing', 'pricing')->name('flight.pricing');
+          Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
+        Route::post('/payment',  'payment')->name('flight.payment');
     
         Route::get('/pricing', 'pricing')->name('flight.pricing'); // Added name for consistency
         // Route::post('/passenger-details', 'passengerDetails')->name('flight.passenger-details');
@@ -390,6 +392,8 @@ Route::controller(DocumentSignController::class)->group(function () {
         // Route::post('/payment', 'payment')->name('flight.payment');
     });
 // 
+
+
 
    Route::controller(VisaController::class)->group(function () {
 

@@ -99,7 +99,7 @@ class ClientController extends Controller
             'nationality' => 'required|string|max:255',
         ]);
 
-        dd($request->all());
+        // dd($request->all());
         $clients = $this->clintRepository->getStoreclint($request->all());
         // dd($clients);    
         return redirect()->route('client.index')->with('success', 'Client added successfully.');

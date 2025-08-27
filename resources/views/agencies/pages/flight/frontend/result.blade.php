@@ -1,4 +1,5 @@
-<x-agency.layout>
+<x-main.layout>
+
 <x-flight.result 
     :airlines="$airlines"
     :default-settings="$defaultSettings"
@@ -12,5 +13,5 @@
     :cheapest-price="$cheapestPrice"
     :flight-search="$flightSearch"
 />
-</x-agency.layout>
+</x-main.layout>
 

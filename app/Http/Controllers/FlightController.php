@@ -204,20 +204,25 @@ class FlightController extends Controller
         $costliestPrice = $settings->markupType == 'percentage' ? $costliestPrice + ($costliestPrice * $settings->markupValue / 100) : $costliestPrice + $settings->markupValue;
 
 
-        // dd($customSettings);
-        //        $end = microtime(true);
-//        $timeTaken = $end - $start;
-//        $timeTaken = round($timeTaken, 2);
-        // paginate SearchedFlights
-//        $searchedFlights = new LengthAwarePaginator($searchedFlights, count($searchedFlights), 15);
-//        $searchedFlights->setPath(url()->current());
-        //   dd($flightSearch,$defaultSettings,$customSettings);
 
 
 
-
-            //   dd($searchedFlights->sortBy('totalPrice'));
-
+          $agency = $this->agencyService->getAgencyData();
+        if($agency==null){
+           
+             return view('agencies.pages.flight.frontend.result')
+            ->with('airlines', $airlines)
+            ->with('defaultSettings', $defaultSettings)
+            ->with('customSettings', $customSettings)
+            ->with('flights', $searchedFlights->sortBy('totalPrice'))
+            ->with('uniqueStops', $uniqueStops)
+            ->with('uniqueAirlines', $uniqueAirlines)
+            ->with('costliestFlight', $costliestFlight)
+            ->with('costliestPrice', $costliestPrice)
+            ->with('cheapestFlight', $cheapestFlight)
+            ->with('cheapestPrice', $cheapestPrice)
+            ->with('flightSearch', $flightSearch);
+        }
 
 
         return view('agencies.pages.flight.result')
@@ -239,7 +244,7 @@ class FlightController extends Controller
 
     public function pricing(Request $request)
     {
-      
+     
    
         if (\Route::current()->methods()[0] == "POST") {
      
@@ -256,31 +261,49 @@ class FlightController extends Controller
              $airports = Airport::all();
              
             //  feach balance
-            $userData = session('user_data');
+            // $userData = session('user_data');
 
-            DatabaseHelper::setDatabaseConnection($userData['database']);
+            // DatabaseHelper::setDatabaseConnection($userData['database']);
             
-            // $user = User::on('user_database')->where('id', $id)->first();
-            $user = User::on('user_database')->where('email', $userData['email'])->first();
+            // // $user = User::on('user_database')->where('id', $id)->first();
+            // $user = User::on('user_database')->where('email', $userData['email'])->first();
         
-            if($user->type=="staff"){
-                $agency_record=Agency::where('database_name',$userData['database'])->first(); 
-                $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-            }else{
-                $agency_record=Agency::where('email',$user->email)->first(); 
-                $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-            }
+            // if($user->type=="staff"){
+            //     $agency_record=Agency::where('database_name',$userData['database'])->first(); 
+            //     $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+            // }else{
+            //     $agency_record=Agency::where('email',$user->email)->first(); 
+            //     $agency = Agency::with('userAssignments.service')->find($agency_record->id);
+            // }
           
 
-            $balance = Balance::where('agency_id', $agency->id)->first();
             //        dd($details[3]);
         
             // dd($details);agencies.pages.flight.pricing
+
+                      $agency = $this->agencyService->getAgencyData();
+        if($agency==null){
+           
+            $balance=0;
+           return view('agencies.pages.flight.frontend.pricing')
+            ->with('details', $details)
+            ->with('flightSearch', json_decode($request->flightSearch))
+            ->with('airports', $airports)
+            ->with('canbook',true)
+            ->with('balance', $balance);
+        }
+                 
+
+            $balance = Balance::where('agency_id', $agency->id)->first();
+
+
             return view('agencies.pages.flight.pricing')
             ->with('details', $details)
             ->with('flightSearch', json_decode($request->flightSearch))
             ->with('airports', $airports)
+            ->with('canbook',false)
             ->with('balance', $balance);
+
             // return view('agencies.pages.flight.pricing')->with('details', $details)->with('flightSearch', $request->flightSearch)->with('airports', $airports);
         } else {
             return redirect()->route('agency_dashboard');

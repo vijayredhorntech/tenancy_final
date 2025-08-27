@@ -129,13 +129,27 @@ public function passengerDetails(Request $request){
 
        $agency = $this->agencyService->getAgencyData();
 
-        $balance = Balance::where('agency_id', $agency->id)->first();
      
 
+        
+                
+        if($agency==null){
+           
+            $balance=0;
+           return view('agencies.pages.flight.frontend.passengerdetails')
+              ->with('details', $details)->with('flightSearch', $flightSearch)
+            ->with('service', $service)
+            ->with('canbook',true)
+            ->with('balance', $balance);
+           
+        }
+
+        $balance = Balance::where('agency_id', $agency->id)->first();
 
         return view('agencies.pages.flight.passengerdetails')
         ->with('details', $details)->with('flightSearch', $flightSearch)
         ->with('service', $service)
+        ->with('canbook',false)
         ->with('balance', $balance);
 
 }

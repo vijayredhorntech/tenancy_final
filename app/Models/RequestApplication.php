@@ -24,6 +24,11 @@ class RequestApplication extends Model
         'city',
         'date_of_entry',
         'status',
+        'adultdetails',
+        'childrendetails',
+        'infantsdetails',
+        'details',
+        'flightserach',
     ];
 
       public function visa()

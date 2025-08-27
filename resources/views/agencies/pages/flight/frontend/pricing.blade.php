@@ -1,12 +1,10 @@
-<x-agency.layout>
+<x-main.layout>
 
-   <x-flight.pricing 
+    <x-flight.pricing 
         :details="$details"
         :flight-search="$flightSearch"
         :airports="$airports"
         :canbook="$canbook"
         :balance="$balance"
     />
-
-
-    </x-agency.layout>
+</x-main.layout>
