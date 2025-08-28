@@ -233,7 +233,8 @@ public function getClientinfo($invoices){
 
  /***Get Booking by Visacontroller **** */
  public function getClientinfoVisaBookingById($invoice){
-    if ($invoice->agency ) {
+    
+    if ($invoice->agency_id) {
         //   dd($invoice);
            $this->setConnectionByDatabase($invoice->agency->database_name);
            $clientId = $invoice->client_id;
