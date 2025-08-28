@@ -186,7 +186,7 @@ Route::group([
         Route::post('/confirmapplication','hsconfirmApplication')->name('comfirm.application');
         Route::get('/exportpdf', 'hsexportPdf')->name('exportpdf.application');
         Route::get('/exportexcel', 'hsexportExcel')->name('exportexcel.application');
-        Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
+
         Route::get('/preparedemail/{id}', 'hsPreparedEmail')->name('visasendemail.application');
         Route::post('/sendemail','hsSendEmail')->name('sendclintemail');
         Route::get('/sendadmin/{id}', 'hsSendAdmin')->name('visa.sendtoadmin');
@@ -406,6 +406,7 @@ Route::controller(DocumentSignController::class)->group(function () {
 
          Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
            Route::get('/payment/{id}','him_payment')->name('visa.payment');
+           Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
            Route::get('agencies/get-visa-services','him_getService' )->name('get.visa.services');
            Route::post('agencies/visa-application-client-store','him_storeClientVisaRequest')->name('visa.applicationclient.store');
     });

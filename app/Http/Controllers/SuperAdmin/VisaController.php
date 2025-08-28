@@ -1128,7 +1128,10 @@ public function hsFromindex(Request $request)
 
 
 public function hsconfirmApplication(Request $request)
+
 {
+
+    
     $booking = $this->visaRepository->bookingDataById($request->bookingid);
     $newData = $request->all();
 
