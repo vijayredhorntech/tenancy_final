@@ -974,11 +974,9 @@ public function hsFromindex(Request $request)
     public function hsupdateapplication(Request $request)
 {
 
-
-
     if (isset($request->type) && $request->type === 'superadmin') {
         $data = $request->validate([
-                        'bookingid' => 'required', // Ensure ID exists in the applications table
+                        'applciationid' => 'required', // Ensure ID exists in the applications table
                     
                     ]);
 
@@ -1007,29 +1005,13 @@ public function hsFromindex(Request $request)
         // Save log with details of what was changed
         $this->agencyService->saveLog($updatedBooking, 'Super Admin', 'Finish Application', Auth::id(), $description);
 
-        Mail::to($updatedBooking->agency->email)->send(new DocumentDownloadedNotificationMail($updatedBooking));
+        // Mail::to($updatedBooking->agency->email)->send(new DocumentDownloadedNotificationMail($updatedBooking));
 
      
         return redirect()->route('superadminview.allapplication');
     }
 
-        $agency = $this->agencyService->getAgencyData();
-        
-        $clientData = $this->visaRepository->bookingDataById($request->bookingid);
-
-       
-        if (isset($clientData) && $clientData->agency_id == $agency->id) {
-       
-            // $forms = $this->visaRepository->assignUpdateBooking($request->bookingid,$request->all());
-            $forms = $this->visaRepository->visadocumentstore($request->bookingid,$request->all());
-
-
-            // Route::get('/viewapplication/{type}', 'hs_visaApplication')->name('agency.application');
-          
-            // return redirect()->route('agency.application', ['type' => 'all']);
-        
-        }
-        return redirect()->route('agency.application', ['type' => 'all']);
+      
    }
 
 
