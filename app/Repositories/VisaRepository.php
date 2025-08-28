@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
 use App\Services\FileUploadService;
 use Auth; 
+use Illuminate\Support\Arr;
+
 use Illuminate\Support\Str;
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
@@ -1323,6 +1325,61 @@ public function getBookingByid($id, $type, $request)
         return true;
     }
     
+
+    /****Store Application Log ***** */
+
+    public function createApplicationLog($booking,$newData){
+
+
+       $ignoreFields = ['_token', '_method', 'bookingid'];
+        $oldData = [];
+       // Main booking model
+        $oldData = array_merge($oldData, $booking->getAttributes());
+       // Add clint model if exists
+        if ($booking->clint) {
+            $oldData = array_merge($oldData, $booking->clint->getAttributes());
+
+            // Add clientinfo inside clint
+            if ($booking->clint->clientinfo) {
+                $oldData = array_merge($oldData, $booking->clint->clientinfo->getAttributes());
+            }
+        }
+
+        // Add clientrequiremtsinfo directly (flat)
+        if ($booking->clientrequiremtsinfo) {
+            $oldData = array_merge($oldData, $booking->clientrequiremtsinfo->getAttributes());
+        }
+
+        // Step 2: Compare and log changes
+        foreach ($newData as $key => $newValue) {
+            if (in_array($key, $ignoreFields)) {
+                continue; // Skip ignored/system fields
+            }
+
+            $oldValue = Arr::get($oldData, $key);
+
+            // Skip logging if the field doesn't exist in the original model
+            if (is_null($oldValue)) {
+                continue;
+            }
+
+            $oldValue = trim((string) $oldValue);
+            $newValue = is_null($newValue) ? null : trim((string) $newValue);
+
+            // Only log if changed
+            if ($oldValue !== $newValue) {
+                \App\Models\VisaApplicationLog::create([
+                    'booking_id' => $booking->id,
+                    'application_number' => $booking->application_number,
+                    'field_name' => $key,
+                    'old_value' => $oldValue,
+                    'new_value' => $newValue,
+                    'type' => $newData['type'] === 'superadmin' ? 'superadmin' : 'agency',
+                ]);
+            }
+        }
+
+    }
 
 
     /****Store Visa doucment **** */

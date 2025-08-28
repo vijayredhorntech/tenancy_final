@@ -1130,98 +1130,48 @@ public function hsFromindex(Request $request)
 public function hsconfirmApplication(Request $request)
 
 {
-
-    
+  
     $booking = $this->visaRepository->bookingDataById($request->bookingid);
     $newData = $request->all();
 
-    // Fields that should be ignored during comparison/logging
-    $ignoreFields = ['_token', '_method', 'bookingid'];
+    $updateBooking = $this->visaRepository->createApplicationLog($booking, $newData);
 
-    // Step 1: Flatten the current stored data from all necessary models
-    $oldData = [];
-
-    // Main booking model
-    $oldData = array_merge($oldData, $booking->getAttributes());
-
-    // Add clint model if exists
-    if ($booking->clint) {
-        $oldData = array_merge($oldData, $booking->clint->getAttributes());
-
-        // Add clientinfo inside clint
-        if ($booking->clint->clientinfo) {
-            $oldData = array_merge($oldData, $booking->clint->clientinfo->getAttributes());
-        }
-    }
-
-    // Add clientrequiremtsinfo directly (flat)
-    if ($booking->clientrequiremtsinfo) {
-        $oldData = array_merge($oldData, $booking->clientrequiremtsinfo->getAttributes());
-    }
-
-    // Step 2: Compare and log changes
-    foreach ($newData as $key => $newValue) {
-        if (in_array($key, $ignoreFields)) {
-            continue; // Skip ignored/system fields
-        }
-
-        $oldValue = Arr::get($oldData, $key);
-
-        // Skip logging if the field doesn't exist in the original model
-        if (is_null($oldValue)) {
-            continue;
-        }
-
-        $oldValue = trim((string) $oldValue);
-        $newValue = is_null($newValue) ? null : trim((string) $newValue);
-
-        // Only log if changed
-        if ($oldValue !== $newValue) {
-            \App\Models\VisaApplicationLog::create([
-                'booking_id' => $booking->id,
-                'application_number' => $booking->application_number,
-                'field_name' => $key,
-                'old_value' => $oldValue,
-                'new_value' => $newValue,
-                'type' => $request->type === 'superadmin' ? 'superadmin' : 'agency',
-            ]);
-        }
-    }
-
+    
     // Step 3: Save updates
     $this->clintRepository->step1createclient($newData);
     $this->visaRepository->visadocumentstore($newData);
 
     // Step 4: Auto insert missing documents
-    $checkDocument = VisaServiceType::where('origin', $booking->origin_id)
-        ->where('destination', $booking->destination_id)
-        ->where('visa_id', $booking->visa_id)
-        ->first();
+    // $checkDocument = VisaServiceType::where('origin', $booking->origin_id)
+    //     ->where('destination', $booking->destination_id)
+    //     ->where('visa_id', $booking->visa_id)
+    //     ->first();
 
-    if ($checkDocument) {
-        $documents = json_decode($checkDocument->required_document, true);
+    // if ($checkDocument) {
+    //     $documents = json_decode($checkDocument->required_document, true);
 
-        if (is_array($documents)) {
-            foreach ($documents as $docName) {
-                $exists = \App\Models\ClientApplicationDocument::where('application_id', $booking->id)
-                    ->where('document_name', $docName)
-                    ->exists();
+    //     if (is_array($documents)) {
+    //         foreach ($documents as $docName) {
+    //             $exists = \App\Models\ClientApplicationDocument::where('application_id', $booking->id)
+    //                 ->where('document_name', $docName)
+    //                 ->exists();
 
-                if (!$exists) {
-                    \App\Models\ClientApplicationDocument::create([
-                        'application_id' => $booking->id,
-                        'application_number' => $booking->application_number,
-                        'agency_id' => $booking->agency_id,
-                        'document_name' => $docName,
-                        'document_status' => 0,
-                    ]);
-                }
-            }
-        }
-    }
+    //             if (!$exists) {
+    //                 \App\Models\ClientApplicationDocument::create([
+    //                     'application_id' => $booking->id,
+    //                     'application_number' => $booking->application_number,
+    //                     'agency_id' => $booking->agency_id,
+    //                     'document_name' => $docName,
+    //                     'document_status' => 0,
+    //                 ]);
+    //             }
+    //         }
+    //     }
+    // }
 
     // Step 5: Update application flag
-    $booking->sendtoadmin = 3;
+    // dd($booking);
+    // $booking->sendtoadmin = 1;
     $booking->save();
 
     // Step 6: Redirect

@@ -181,9 +181,7 @@ Route::group([
         Route::get('/documentpending','hsVisaDocumentpending')->name('visa.documentpending');
         Route::get('/visaview/{id}','hsVisaVisa')->name('visa.applicationview');
         Route::get('/editapplication/{id}','hsEditVisaApplication')->name('visaedit.application');    
-        Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
         Route::post('/visadocument-update','hs_VisaStoreAjax')->name('visadocument.update');
-        Route::post('/confirmapplication','hsconfirmApplication')->name('comfirm.application');
         Route::get('/exportpdf', 'hsexportPdf')->name('exportpdf.application');
         Route::get('/exportexcel', 'hsexportExcel')->name('exportexcel.application');
 
@@ -404,7 +402,10 @@ Route::controller(DocumentSignController::class)->group(function () {
 
    Route::controller(VisaController::class)->group(function () {
 
-         Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
+          Route::post('/confirmapplication','hsconfirmApplication')->name('comfirm.application');
+          Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
+
+           Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
            Route::get('/payment/{id}','him_payment')->name('visa.payment');
            Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
            Route::get('agencies/get-visa-services','him_getService' )->name('get.visa.services');
