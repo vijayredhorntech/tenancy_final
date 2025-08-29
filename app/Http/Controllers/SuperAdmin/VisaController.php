@@ -1153,7 +1153,7 @@ public function hsconfirmApplication(Request $request)
 
     // Step 5: Update application flag
     // dd($booking);
-    // $booking->sendtoadmin = 1;
+    $booking->sendtoadmin = 1;
     $booking->save();
 
     // Step 6: Redirect
