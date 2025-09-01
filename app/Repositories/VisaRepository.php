@@ -1254,9 +1254,11 @@ public function getBookingByid($id, $type, $request)
 
 
     public function getBookingBySingleId($id){
-        $bookingData= VisaBooking::with(['visa', 'agency','origin', 'destination', 'visasubtype','otherclients','downloadDocument'])
+
+        $bookingData= VisaBooking::with(['visa','agency','origin', 'destination', 'visasubtype','otherclients','downloadDocument'])
         ->where('id', $id)
         ->first();
+ 
         
      $clientInfo = $this->agencyService->getClientinfoVisaBookingById($bookingData);
      return $clientInfo;

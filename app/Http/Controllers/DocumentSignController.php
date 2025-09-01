@@ -163,7 +163,7 @@ public function hsDownloadeSignDocument($id){
     public function hs_docIndex(Request $request)
     {
         $documents=$this->documentSignRepository->getAllDocuments();
-        dd($documents);
+        // dd($documents);
    
       return view('agencies.pages.docsign.index',compact('documents'));
     }
@@ -197,7 +197,8 @@ public function hsDownloadeSignDocument($id){
             $validatedData['mimetype'] = $request->file('documentfile')->getMimeType();
             $validatedData['size'] = $request->file('documentfile')->getSize();
         }
-
+        
+        
         $documents = $this->documentSignRepository->createDocument($validatedData);
         // dd($documents);
         // return view('agencies.document.create');
@@ -206,8 +207,9 @@ public function hsDownloadeSignDocument($id){
     }
 
     public function hs_generateInvoice($id, $type){
+    
         $documents = $this->documentSignRepository->createDocumentAgency($id, $type);
-        
+     
         
         return redirect()
         ->back()

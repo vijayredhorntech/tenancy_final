@@ -148,12 +148,15 @@ public function sendEmailForSign(Request $request, int $documentId): void
     public function createDocumentAgency($id, $type)
 {
 
+     
     $user = $this->agencyService->getCurrentLoginUser();
-
+  
     if($type=="Visa"){
+    
        $data=$this->getVisaInformation($id);
     //    dd($data->agency_id);
     //    dd($data);
+
 
     }
     // 1. Fetch the booking with all needed relations
@@ -184,7 +187,7 @@ public function sendEmailForSign(Request $request, int $documentId): void
     $document = DocSignDocument::create($docData);
     $fakeRequest = request();
     $saveDocument=$this->saveDocumentForSign($document,$fakeRequest);
-    // dd($document);
+    dd($saveDocument);
 
     return $document;
 }
@@ -223,6 +226,7 @@ protected function saveDocumentForSign($document, $request)
 
     // ✅ FIX: You had an undefined $id — retrieve ID from the document or related field
     if (isset($document->related_id)) {
+
         return $this->visaRepository->getBookingBySingleId($document->related_id);
     }
 
@@ -404,6 +408,7 @@ public function getDataById($id){
     //     'visaBooking.visasubtype',])->where('id', $id)->first();
 
     $bookingApplication = VisaBooking::with('agency')->where('id', $id)->first();
+
  
     
   

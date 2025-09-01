@@ -234,8 +234,10 @@ public function getClientinfo($invoices){
  /***Get Booking by Visacontroller **** */
  public function getClientinfoVisaBookingById($invoice){
     
-    if ($invoice->agency_id) {
+
+    if ($invoice->agency) {
         //   dd($invoice);
+   
            $this->setConnectionByDatabase($invoice->agency->database_name);
            $clientId = $invoice->client_id;
            $bookingId = $invoice->id;
@@ -251,6 +253,7 @@ public function getClientinfo($invoices){
            // Attach dynamically loaded relations
            $invoice->setRelation('client', $clientFromUserDB);
            $invoice->setRelation('otherclients', $otherMembers);
+         
            return $invoice; // Return the modified invoice objec
        }
        return false;
