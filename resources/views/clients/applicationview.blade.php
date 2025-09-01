@@ -45,28 +45,13 @@
                     View Application
                 </div>
 
-                @if($booking->sendtoadmin == 0)
-                <div data-tid="fillApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-edit text-ternary"></i>
-                    Fill Application
-                </div>
-                @endif
 
                 <div data-tid="uploadeDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                  <i class="fas fa-arrow-up-from-bracket text-ternary"></i>
                     Upload Document
                 </div>
 
-                <div data-tid="conversationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-comments text-ternary"></i>
-                    Conversation
-                </div>
-
-               <div data-tid="VisaupdationlogDataDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-eye text-ternary"></i>
-                    Visa Updation Log Data
-                </div>
-
+                
                 @if($booking->applicationworkin_status !== "Complete")   
                 @else
                     <div data-tid="downaloadDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
@@ -111,17 +96,7 @@
                      @endif
                  </div>
 
-                 <!-- Fill Application -->
-                 <div id="fillApplicationDiv" class="tab hidden">
-                     @if($booking->destination->countryName == 'China')
-                         @include('components.application.chinafillapplication', ['bookingData' => $booking,'type'=>'client'])
-                     @elseif($booking->visa->name == 'Schengen Visa')
-                         @include('components.application.Scheneganfillapplication', ['bookingData' => $booking,'type'=>'client'])
-                     @else
-                         @include('components.application.fillapplication', ['bookingData' => $booking,'type'=>'client'])
-                     @endif
-                 </div>
-
+             
                 <!-- Upload Document -->
                 <div id="uploadeDocumentDiv" class="tab hidden">
                     <x-common.documentupload :booking="$booking" />             

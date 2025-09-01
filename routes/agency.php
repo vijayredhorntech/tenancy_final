@@ -173,9 +173,9 @@ Route::group([
         Route::post('/visabook','hsVisaBook')->name('visa.book');
         Route::get('/verifyapplication/{id}','hs_verifyapplication')->name('verify.application');   
         // Route::get('/verifyvisa-application/{id}/{type}','hs_verifyapplication')->name('verifyvisa.application');
-        Route::get('/application/{id}/{token}/client','hsfillApplication')->name('application.client');
+ 
         Route::post('visapayment/{id}','him_visaApplicationPay')->name('visaapplication.pay');
-        Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
+        // Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
 
 
         Route::get('/documentpending','hsVisaDocumentpending')->name('visa.documentpending');
@@ -404,12 +404,16 @@ Route::controller(DocumentSignController::class)->group(function () {
 
           Route::post('/confirmapplication','hsconfirmApplication')->name('comfirm.application');
           Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
+           Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
+           Route::post('/client/submit/application','hsClientSubmitApplication')->name('client.submit.application');
 
            Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
            Route::get('/payment/{id}','him_payment')->name('visa.payment');
            Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
            Route::get('agencies/get-visa-services','him_getService' )->name('get.visa.services');
            Route::post('agencies/visa-application-client-store','him_storeClientVisaRequest')->name('visa.applicationclient.store');
+           Route::get('/{type}/application/{id}/{token}', 'hsfillApplication')->name('application.fill');
+
     });
 
 

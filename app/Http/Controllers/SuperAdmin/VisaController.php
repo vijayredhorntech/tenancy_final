@@ -1071,7 +1071,7 @@ public function hsFromindex(Request $request)
 
 
 
-   public function hsfillApplication(Request $request, $id, $token)
+   public function hsfillApplication(Request $request, $type,$id, $token)
    {
     //    dd($id);
        $agency = $this->agencyService->getAgencyData();
@@ -1079,14 +1079,30 @@ public function hsFromindex(Request $request)
        
     //    dd($bookingData);
        if($bookingData->viewed_once==1){
+
+        if($agency==null){
            return redirect()->route('verifyvisa.application', [
             'id' => $id,
-            'type' => 'agency' // or use 'admin' if needed
+            'type' => 'client' // or use 'admin' if needed
         ]);
+        }
+        else{
+            return redirect()->route('verifyvisa.application', [
+                'id' => $id,
+                'type' => 'agency' // or use 'admin' if needed
+            ]);
+        }
        }
        $sections = VisaSection::all();
+
+       if($type == 'agencies'){
+            return view('agencies.pages.clients.clientapplication', compact('agency', 'bookingData','sections'));
+       }
+       else {
+          
+           return view('clients.pages.clients.clientapplication', compact('agency', 'bookingData','sections'));
+       }
    
-       return view('agencies.pages.clients.clientapplication', compact('agency', 'bookingData','sections'));
    
        }
    
@@ -1124,40 +1140,44 @@ public function hsconfirmApplication(Request $request)
     $this->visaRepository->visadocumentstore($newData);
 
     // Step 4: Auto insert missing documents
-    // $checkDocument = VisaServiceType::where('origin', $booking->origin_id)
-    //     ->where('destination', $booking->destination_id)
-    //     ->where('visa_id', $booking->visa_id)
-    //     ->first();
+    $checkDocument = VisaServiceType::where('origin', $booking->origin_id)
+        ->where('destination', $booking->destination_id)
+        ->where('visa_id', $booking->visa_id)
+        ->first();
 
-    // if ($checkDocument) {
-    //     $documents = json_decode($checkDocument->required_document, true);
+    if ($checkDocument) {
+        $documents = json_decode($checkDocument->required_document, true);
 
-    //     if (is_array($documents)) {
-    //         foreach ($documents as $docName) {
-    //             $exists = \App\Models\ClientApplicationDocument::where('application_id', $booking->id)
-    //                 ->where('document_name', $docName)
-    //                 ->exists();
+        if (is_array($documents)) {
+            foreach ($documents as $docName) {
+                $exists = \App\Models\ClientApplicationDocument::where('application_id', $booking->id)
+                    ->where('document_name', $docName)
+                    ->exists();
 
-    //             if (!$exists) {
-    //                 \App\Models\ClientApplicationDocument::create([
-    //                     'application_id' => $booking->id,
-    //                     'application_number' => $booking->application_number,
-    //                     'agency_id' => $booking->agency_id,
-    //                     'document_name' => $docName,
-    //                     'document_status' => 0,
-    //                 ]);
-    //             }
-    //         }
-    //     }
-    // }
+                if (!$exists) {
+                    \App\Models\ClientApplicationDocument::create([
+                        'application_id' => $booking->id,
+                        'application_number' => $booking->application_number,
+                        'agency_id' => $booking->agency_id,
+                        'document_name' => $docName,
+                        'document_status' => 0,
+                    ]);
+                }
+            }
+        }
+    }
+
 
     // Step 5: Update application flag
     // dd($booking);
-    // $booking->sendtoadmin = 1;
+    $booking->sendtoadmin = 3;
     $booking->save();
 
     // Step 6: Redirect
     if ($request->type === 'superadmin') {
+        
+    $booking->sendtoadmin = 1;
+    $booking->save();
         return redirect()->route('superadminvisa.applicationview', ['id' => $request->bookingid]);
     } elseif ($request->type === 'client') {
         return redirect()->route('client.application.view', ['id' => $request->bookingid]);
@@ -1174,9 +1194,11 @@ public function hsconfirmApplication(Request $request)
 
  public function hs_veriryvisaapplication($id, $type)
 {
+   
     $bookingData = $this->visaRepository->bookingDataById($id);
 
     // ✅ First-time view: set flag and redirect to self
+
     if (!$bookingData->viewed_once) {
         $bookingData->update(['viewed_once' => true]);
         return redirect()->route('verifyvisa.application', ['id' => $id, 'type' => $type]);
@@ -1194,6 +1216,8 @@ public function hsconfirmApplication(Request $request)
 
     return view($view, compact('bookingData', 'type'));
 }
+
+
 
 public function showFromInvoice($id)
 {
