@@ -352,7 +352,7 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::get('agency/cancel', 'hs_cancelInvoice')->name('agencypay.invoice.cancel');   
     Route::post('generateinvoice', 'hsGenerateInvoice')->name('generateinvoice');
     Route::get('/{type}/invoice', 'hsAllinvoice')->name('invoice.all');
-    Route::get('/viewinvoice/{id}','hsviewInvoice')->name('viewinvoice');
+    Route::get('{type}/retail-invoices',  'hsRetailInvoices')->name('retail.invoices');
     Route::get('/editinvoice/{id}','hs_editInvoice')->name('editinvoice');
     Route::get('/editindex', 'hsEditedInvoices')->name('editindex');
     Route::post('/allinvoices/updateinvoice/{id}', 'hs_updateInvoice')->name('allinvoices.updateinvoice');
@@ -409,10 +409,12 @@ Route::controller(DocumentSignController::class)->group(function () {
            Route::post('agencies/visa-application-client-store','him_storeClientVisaRequest')->name('visa.applicationclient.store');
     });
 
-
     Route::get('/visa/thank-you', function () {
     return view('visa.thank-you', [
         'applicationId' => 'VS-' . strtoupper(uniqid()),
         'destination' => 'United States' // You can pass the actual destination from your form
     ]);
 })->name('visa.thank-you');
+
+Route::get('/viewinvoice/{id}', [InvoiceController::class, 'hsviewInvoice'])->name('viewinvoice');
+Route::get('/superadmin/retail-invoice/{id}', [InvoiceController::class, 'hsSuperadminRetailInvoiceView'])->name('superadmin.retail.invoice.view');

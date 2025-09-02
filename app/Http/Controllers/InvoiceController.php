@@ -705,26 +705,27 @@ public function hs_allInvoices(Request $request)
 
 
     public function hsviewInvoice(Request $request,$id){
+        // Treat $id as VisaBooking ID and fetch booking used by the component
+        $booking = app(\App\Repositories\DocumentSignRepository::class)->checkSignDocument($id);
+        $termconditon = app(\App\Repositories\TermConditionRepository::class)->allTeamTypes();
 
-        $invoice = Invoice::with([
-            'invoiceDetails.agency',
-            'invoiceDetails.visaBooking',
-            'invoiceDetails.hotelBooking',
-            'invoiceDetails.flightBooking',
-            'invoiceDetails.visaApplicant',
-            'invoiceDetails.visaBooking.visasubtype',
-            'invoiceDetails.visaBooking.visa',
-            'invoiceDetails.visaBooking.origin',            
-        ])->first();
+        return view('superadmin.pages.invoicehandling.invoiceview', [
+            'booking' => $booking,
+            'termconditon' => $termconditon,
+        ]);
+    }
 
-       $termconditon = $this->termConditionRepo->allTeamTypes();
-       return view('superadmin.pages.invoicehandling.invoiceview', [
-           'booking' => $invoice,
-           'termconditon' => $termconditon
-       ]);
-        // Step 3: Fetch records with or without pagination
-        // Step 4: Load dynamic data from user databases
-        // Step 5: Render view if type matches
+    public function hsRetailInvoices(Request $request)
+    {
+        // Load recent Visa bookings with related deduction (superadmin invoice number)
+        $bookings = \App\Models\VisaBooking::with(['deduction'])
+            ->orderByDesc('id')
+            ->limit(100)
+            ->get();
+
+        return view('agencies.pages.invoicehandling.retail-invoices', [
+            'bookings' => $bookings,
+        ]);
     }
 
     

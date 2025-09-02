@@ -180,6 +180,19 @@
 
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-1/2 -translate-y-1/2"></i>
                     </a>
+
+                    <a href="{{ route('retail.invoices', ['type' => 'agencies']) }}"
+                    class="border-ternary w-full flex justify-between items-center py-2 px-4 rounded-[3px]
+                            text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative
+                            hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-2000 mt-2">
+
+                        <div class="flex items-center">
+                            <i class="fas fa-receipt mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Retail Invoices</span>
+                        </div>
+
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-1/2 -translate-y-1/2"></i>
+                    </a>
                 </li>
             </ul>
         </div>
