@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Models\Agency;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class DatabaseHelper
 {
@@ -121,6 +123,7 @@ class DatabaseHelper
             'password' =>  $password,
        
     ]]);
+    
 }
 
     /****Drop Data base ***** */

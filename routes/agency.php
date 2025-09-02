@@ -110,8 +110,11 @@ Route::group([
         Route::get('role/{id}/edit', 'hs_roleedit')->name('agency.role.edit');
         Route::post('role/{id}/update', 'hs_roleupdate')->name('agency.role.update');
         Route::get('role/{id}/delete', 'hs_roledelete')->name('agency.role.delete');
-        Route::get('role/{id}/permission', 'hs_permissionassign')->name('agency_permissionassign');
+        Route::get('role/{id}/permission', 'hs_permissionassign')->name('agency_permissionassign'); 
         Route::post('role/permission', 'hs_permissioned')->name('agency.assignpermission');
+
+        Route::get('/clone/permission','hsCLonePermission')->name('agency.clone.permission');
+        
     });
 /*****Fund Managment *** */
 
@@ -126,7 +129,7 @@ Route::group([
         Route::get('/staffcreate', 'hs_staffcreate')->name('agency_staffcreate');
         Route::post('/staffstore', 'hs_staffstore')->name('agency_staffstore');
         Route::get('/staffupdate/{id}', 'hs_staffupdate')->name('agency_staffupdate');
-        Route::post('/staffupdate', 'hs_supdatedstore')->name('agency.staffupdatestore');
+        Route::post('/staffupdate', 'hs_staffUpdateStore')->name('agency.staffupdatestore');
 
         Route::get('/staffdelete/{id}', 'hs_staffdelete')->middleware('can:staff delete')->name('agency_staffdelete');
         Route::get('/staffDetails/{id}', 'hs_staffDetails')->middleware('can:view staffdetails')->name('agency_staffDetails');
@@ -173,9 +176,9 @@ Route::group([
         Route::post('/visabook','hsVisaBook')->name('visa.book');
         Route::get('/verifyapplication/{id}','hs_verifyapplication')->name('verify.application');   
         // Route::get('/verifyvisa-application/{id}/{type}','hs_verifyapplication')->name('verifyvisa.application');
- 
+        Route::get('/application/{id}/{token}/client','hsfillApplication')->name('application.client');
         Route::post('visapayment/{id}','him_visaApplicationPay')->name('visaapplication.pay');
-        // Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
+        Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
 
 
         Route::get('/documentpending','hsVisaDocumentpending')->name('visa.documentpending');
@@ -225,12 +228,6 @@ Route::group([
       
     });
 
-    // Permissions
-    Route::controller(AgencyPermissionController::class)->group(function () {
-        Route::get('/permission', 'hs_permissionindex')->name('agency.permission');
-        Route::post('/permissionstore', 'hs_permissionstore')->name('agency_permissionstore');
-        Route::get('/permissiondelete/{id}', 'hs_permissiondelete')->middleware('can:permission delete')->name('agency_permissiondelete');
-    });
 
 
 
@@ -404,16 +401,12 @@ Route::controller(DocumentSignController::class)->group(function () {
 
           Route::post('/confirmapplication','hsconfirmApplication')->name('comfirm.application');
           Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
-           Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
-           Route::post('/client/submit/application','hsClientSubmitApplication')->name('client.submit.application');
 
            Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
            Route::get('/payment/{id}','him_payment')->name('visa.payment');
            Route::get('/view/form/{viewid}/{id}', 'viewForm')->name('view.form');
            Route::get('agencies/get-visa-services','him_getService' )->name('get.visa.services');
            Route::post('agencies/visa-application-client-store','him_storeClientVisaRequest')->name('visa.applicationclient.store');
-           Route::get('/{type}/application/{id}/{token}', 'hsfillApplication')->name('application.fill');
-
     });
 
 

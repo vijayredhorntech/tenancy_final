@@ -45,7 +45,7 @@ interface VisaRepositoryInterface
     public function visadocumentstore($data);
     public function createApplicationLog($booking,$newData);
 
-
+ 
    
 
     
