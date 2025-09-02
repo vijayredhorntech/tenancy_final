@@ -47,12 +47,11 @@
                                         <!-- <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->payment_type}}</td> -->
 
 
-                                        
-                               
                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                             <div class="flex gap-2 items-center">
                                                         <!-- Edit Button -->
-                                                        <a href="{{ route('viewinvoice', $invoice->id) }}"
+
+                                                        <a href="{{ route('client.viewinvoice', $invoice->flight_booking_id) }}"
                                                             class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white">
                                                             <i class="fa fa-eye"></i>
                                                         </a>
