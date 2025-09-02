@@ -303,6 +303,8 @@ Route::controller(ClientLoginController::class)->group(function () {
     Route::get('/{type?}/document/download/{id}', 'hsdownloadDocument')->name('clientupload.documentdownload');
 
     Route::get('/client/invoice', 'hsclientInvoice')->name('client.invoice');
+   Route::get('client/viewinvoice/{id}', 'hsviewInvoice')->name('client.viewinvoice');
+
 
 
     Route::get('/clientupload/document/download', 'downloadJsonDocument')->name('clientupload.documentdownloadjson');
@@ -423,6 +425,7 @@ Route::controller(DocumentSignController::class)->group(function () {
         'destination' => 'United States' // You can pass the actual destination from your form
     ]);
 })->name('visa.thank-you');
+
 
 Route::get('/viewinvoice/{id}', [InvoiceController::class, 'hsviewInvoice'])->name('viewinvoice');
 Route::get('/superadmin/retail-invoice/{id}', [InvoiceController::class, 'hsSuperadminRetailInvoiceView'])->name('superadmin.retail.invoice.view');
