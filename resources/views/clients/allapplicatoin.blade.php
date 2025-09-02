@@ -198,7 +198,12 @@
                                     </a>
                                 @else
                                     {{-- Application not submitted yet, show Fill Application --}}
-                                    <a href="{{ route('application.client', ['id' => $booking->id, 'token' => $booking->agency->agencytoken ?? '']) }}" title="Fill Application">
+                                    <a href="{{ route('application.fill', [
+                                            'type' => 'client',   // or 'agency'
+                                            'id'   => $booking->id,
+                                            'token'=> $booking->agency->agencytoken ?? ''
+                                        ]) }}" 
+                                    title="Fill Application">
                                         <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
                                             <i class="fa fa-edit"></i>
                                         </div>
