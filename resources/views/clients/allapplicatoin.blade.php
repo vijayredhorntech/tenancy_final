@@ -197,6 +197,7 @@
                                         </div>
                                     </a>
                                 @else
+                           
                                     {{-- Application not submitted yet, show Fill Application --}}
                                     <a href="{{ route('application.fill', [
                                             'type' => 'client',   // or 'agency'

@@ -176,7 +176,7 @@ Route::group([
         Route::post('/visabook','hsVisaBook')->name('visa.book');
         Route::get('/verifyapplication/{id}','hs_verifyapplication')->name('verify.application');   
         // Route::get('/verifyvisa-application/{id}/{type}','hs_verifyapplication')->name('verifyvisa.application');
-        Route::get('/application/{id}/{token}/client','hsfillApplication')->name('application.client');
+        // Route::get('/application/{id}/{token}/client','hsfillApplication')->name('application.agency');
         Route::post('visapayment/{id}','him_visaApplicationPay')->name('visaapplication.pay');
         Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
 
@@ -404,8 +404,12 @@ Route::controller(DocumentSignController::class)->group(function () {
 
    Route::controller(VisaController::class)->group(function () {
 
+        //   Route::get('/application/{id}/{token}/client','hsfillApplication')->name('application.fill');
+          Route::get('/application/{type}/{id}/{token}','hsfillApplication')->name('application.fill');
+
+
           Route::post('/confirmapplication','hsconfirmApplication')->name('comfirm.application');
-          Route::post('/confirmapplication','hsconfirmApplication')->name('application.fill');
+        //   Route::post('/confirmapplication','hsconfirmApplication')->name('application.fill');
 
 
 

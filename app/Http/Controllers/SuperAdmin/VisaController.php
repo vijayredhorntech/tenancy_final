@@ -1073,11 +1073,13 @@ public function hsFromindex(Request $request)
 
    public function hsfillApplication(Request $request, $type,$id, $token)
    {
-    //    dd($id);
+   
+
+  
        $agency = $this->agencyService->getAgencyData();
        $bookingData = $this->visaRepository->bookingDataById($id);
        
-    //    dd($bookingData);
+   
        if($bookingData->viewed_once==1){
 
         if($agency==null){
