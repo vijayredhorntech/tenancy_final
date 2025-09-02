@@ -728,6 +728,18 @@ public function hs_allInvoices(Request $request)
         ]);
     }
 
+    public function hsSuperadminRetailInvoiceView($id)
+    {
+        // $id is VisaBooking ID
+        $booking = app(\App\Repositories\DocumentSignRepository::class)->checkSignDocument($id);
+        $termconditon = app(\App\Repositories\TermConditionRepository::class)->allTeamTypes();
+
+        return view('components.common.invoice.Superadminvisa-invoice', [
+            'booking' => $booking,
+            'termconditon' => $termconditon,
+        ]);
+    }
+
     
 
 
