@@ -244,7 +244,7 @@
                             </a>
                         @endif
 
-                        @if(in_array('Visa', $availableRoutes))
+                       <!-- @if(in_array('Visa', $availableRoutes))
                           <li class="{{ Route::currentRouteName() === 'agencyvisa.booking' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }} w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
                                         <a href="{{ route('agencyvisa.booking', ['type' => 'agency']) }}" class="flex justify-between items-center w-full h-full">
                                             <div class="flex items-center">
@@ -254,7 +254,7 @@
                                             <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                                         </a>
                                     </li>
-                        @endif
+                        @endif -->
                     </ul>
                 </div>
             @endif

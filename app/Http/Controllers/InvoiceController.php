@@ -305,7 +305,6 @@ public function hs_CancelInvoiceSubmit(Request $request, $id)
     public function hs_invoice(Request $request, $type)
     {
      
-  
         $agency=$this->agencyService->getAgencyData();
     
         // Step 1: Validate and get filters
@@ -718,31 +717,24 @@ public function hs_allInvoices(Request $request)
 
     public function hsRetailInvoices(Request $request)
     {
-        // Load recent Visa bookings with related deduction (superadmin invoice number)
-        $bookings = \App\Models\VisaBooking::with(['deduction'])
+        // Load recent retail invoices from deductions with related booking
+        $invoices = Deduction::with(['visaBooking'])
             ->orderByDesc('id')
             ->limit(100)
             ->get();
 
-        return view('agencies.pages.invoicehandling.retail-invoices', [
-            'bookings' => $bookings,
-        ]);
+        return view('agencies.pages.invoicehandling.retail-invoices', compact('invoices'));
     }
 
     public function hsSuperadminRetailInvoiceView($id)
     {
-        // $id is VisaBooking ID
         $booking = app(\App\Repositories\DocumentSignRepository::class)->checkSignDocument($id);
         $termconditon = app(\App\Repositories\TermConditionRepository::class)->allTeamTypes();
 
-        return view('components.common.invoice.Superadminvisa-invoice', [
+        return view('superadmin.pages.invoicehandling.retailinvoices', [
             'booking' => $booking,
             'termconditon' => $termconditon,
         ]);
     }
-
-    
-
-
 
 }
