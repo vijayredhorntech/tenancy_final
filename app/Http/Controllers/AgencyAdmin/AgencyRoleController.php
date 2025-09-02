@@ -110,51 +110,60 @@ class AgencyRoleController extends Controller
       }
 
 
-    public function hsCLonePermission()
-    {
-        $agency = $this->agencyService->getAgencyData();
-        $user = $this->agencyService->getCurrentLoginUser();
+public function hsCLonePermission()
+{
+    $agency = $this->agencyService->getAgencyData();
+    $user   = $this->agencyService->getCurrentLoginUser();
 
-        $permissions = [
-            'visa view',
-            'service view',
-            'manage everything',
-            'requestform',
-            'client',
-            'invoice',
-            'booking view',
-            'flightbooking',
-            'hotelbooking',
-            'staff view',
-            'team',
-            'expensive',
-            'role view',
-            'term condition',
-        ];
-            $createdPermissions = [];
-        foreach ($permissions as $permName) {
-            // Check if permission exists in user_database
-            $exists = Permission::on('user_database')
-                ->where('name', $permName)
-                ->exists();
+    $permissions = [
+        'visa view',
+        'service view',
+        'manage everything',
+        'requestform',
+        'client',
+        'invoice',
+        'booking view',
+        'flightbooking',
+        'hotelbooking',
+        'staff view',
+        'team',
+        'expensive',
+        'role view',
+        'term condition',
+    ];
 
-            if (!$exists) {
-                // Not exists → create in user_database
-                Permission::on('user_database')->create([
-                    'name' => $permName,
-                    'guard_name' => 'web',
-                ]);
-                 $createdPermissions[] = $perm->id;
-            }
+    $createdPermissions = [];
+
+    foreach ($permissions as $permName) {
+        // Check if permission exists in user_database
+        $perm = Permission::on('user_database')
+            ->where('name', $permName)
+            ->where('guard_name', 'web')
+            ->first();
+
+        if (!$perm) {
+            // Not exists → create in user_database
+            $perm = Permission::on('user_database')->create([
+                'name'       => $permName,
+                'guard_name' => 'web',
+            ]);
         }
-          $superAdmin = Role::on('user_database')->firstOrCreate(
+
+        // Collect ID (or you could collect name instead)
+        $createdPermissions[] = $perm->id;
+    }
+
+    // Create/find super admin role in user_database
+    $superAdmin = Role::on('user_database')->firstOrCreate(
         ['name' => 'super admin', 'guard_name' => 'web']
     );
 
     // Assign all permissions to superadmin
     $superAdmin->syncPermissions($createdPermissions);
-        return "Permissions synced successfully!";
-    }
+
+    return "Permissions synced successfully!";
+}
+
 
 
     /*** Assigend permssion ***/
