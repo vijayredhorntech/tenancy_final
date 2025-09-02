@@ -717,7 +717,11 @@ public function hs_allInvoices(Request $request)
             'invoiceDetails.visaBooking.origin',            
         ])->first();
 
-       return view('superadmin.pages.invoicehandling.invoiceview', compact('invoice'));
+       $termconditon = $this->termConditionRepo->allTeamTypes();
+       return view('superadmin.pages.invoicehandling.invoiceview', [
+           'booking' => $invoice,
+           'termconditon' => $termconditon
+       ]);
         // Step 3: Fetch records with or without pagination
         // Step 4: Load dynamic data from user databases
         // Step 5: Render view if type matches

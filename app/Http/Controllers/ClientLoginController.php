@@ -370,7 +370,7 @@ class ClientLoginController extends Controller
 
       /****public function *** */
       public function hsClientLogout(){
-        // Store domain information before clearing session
+hsClientApplicationView        // Store domain information before clearing session
         $userData = session('user_data');
         $domain = $userData['domain'] ?? null;
         

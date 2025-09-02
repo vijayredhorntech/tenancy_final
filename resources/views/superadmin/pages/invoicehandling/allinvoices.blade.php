@@ -1,5 +1,5 @@
 <x-agency.layout>
-    @section('title')All Invoices @endsection
+    @section('title')Client Invoices @endsection
     <div class="w-full grid xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 mb-4">
 
     </div>
@@ -9,7 +9,7 @@
 
            {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl"> All Invoices</span>
+                <span class="font-semibold text-ternary text-xl">Client Invoices</span>
             </div>
              {{--        === heading section code ends here===--}}
 
