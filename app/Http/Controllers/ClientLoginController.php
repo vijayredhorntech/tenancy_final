@@ -18,6 +18,7 @@ use App\Traits\ChatTrait;
 use App\Mail\DocumentVerificationRequestMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
+use App\Models\Deduction;
 
 
 
@@ -385,4 +386,54 @@ class ClientLoginController extends Controller
             return redirect('/');
         }
     }
+
+
+
+
+    /*******Client Invoice Handler /**** */ 
+
+    public function hsclientInvoice(Request $request)
+    {
+        $clientInformation= $this->agencyService->getLoginClient();
+        $clientData=$clientInformation['agencydatabaseclient'];
+
+
+        // ✅ Pagination value
+        $perPage = $request->filled('per_page') && is_numeric($request->per_page)
+            ? (int) $request->per_page
+            : null;
+
+        // ✅ Query with relations and filters
+        $invoicesQuery = Deduction::with([
+            'service_name',
+            'agency',
+            'visaBooking.visa',
+            'visaBooking.origin',
+            'visaBooking.destination',
+            'visaBooking.visasubtype',
+            'visaBooking.clint',
+            'visaApplicant',
+            'flightBooking',
+            'hotelBooking',
+            'hotelDetails',
+            'cancelinvoice',
+            'invoice',
+            'docsign'
+        ])
+        ->where(function ($q) {
+            $q->whereNull('invoicestatus')
+            ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
+        })
+        ->where('client_id', $clientData->id)
+        ->where('agency_id', $clientData->agency_id);
+
+        // ✅ Get paginated or full results
+        $invoices = $perPage 
+            ? $invoicesQuery->paginate($perPage) 
+            : $invoicesQuery->get();
+
+        return view('clients.pages.invoice.invoicehandling', compact('invoices'));
+    }
+
+
 }
