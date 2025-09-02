@@ -302,6 +302,9 @@ Route::controller(ClientLoginController::class)->group(function () {
     // Route::get('/{type}/document/download/{id}', 'hsdownloadDocument')->name('clientupload.documentdownload');
     Route::get('/{type?}/document/download/{id}', 'hsdownloadDocument')->name('clientupload.documentdownload');
 
+    Route::get('/client/invoice', 'hsclientInvoice')->name('client.invoice');
+
+
     Route::get('/clientupload/document/download', 'downloadJsonDocument')->name('clientupload.documentdownloadjson');
 
 
@@ -400,6 +403,11 @@ Route::controller(DocumentSignController::class)->group(function () {
    Route::controller(VisaController::class)->group(function () {
 
           Route::post('/confirmapplication','hsconfirmApplication')->name('comfirm.application');
+          Route::post('/confirmapplication','hsconfirmApplication')->name('application.fill');
+
+
+
+          
           Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
 
            Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 

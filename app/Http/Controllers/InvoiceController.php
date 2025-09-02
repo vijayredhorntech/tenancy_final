@@ -305,6 +305,7 @@ public function hs_CancelInvoiceSubmit(Request $request, $id)
     public function hs_invoice(Request $request, $type)
     {
      
+  
         $agency=$this->agencyService->getAgencyData();
     
         // Step 1: Validate and get filters
