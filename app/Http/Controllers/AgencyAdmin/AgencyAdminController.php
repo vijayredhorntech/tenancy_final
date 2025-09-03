@@ -28,6 +28,7 @@ use App\Services\AgencyService;
 use App\Models\AddBalance;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Spatie\Permission\PermissionRegistrar;
 
 
 
@@ -340,61 +341,146 @@ class AgencyAdminController extends Controller
 
 
     /*** Update Staff ***/
-    public function hs_supdatedstore(Request $request)
-    {
+    // public function hs_staffUpdateStore(Request $request)
+    // {
+    //     $setConnection= $this->agencyService->setDatabaseConnection();   
+    //     $validated = $request->validate([
+    //         'name'    => 'string',
+    //         'email'   => 'email',
+    //     ]);
+    //     DB::beginTransaction();
+    //     try {
+    //         $user = User::on('user_database')->findOrFail($request->id);
     
-        $setConnection= $this->agencyService->setDatabaseConnection();   
-        $validated = $request->validate([
-            'name'    => 'string',
-            'email'   => 'email',
-        ]);
-        DB::beginTransaction();
-        try {
-            $user = User::on('user_database')->findOrFail($request->id);
-            $user->name = $request->name;
-            $user->email = $request->email;
+            
+    //         $user->name = $request->name;
+    //         $user->email = $request->email;
+            
+    //         // $user->profile = $this->uploadProfile($request, $user);
 
-            // $user->profile = $this->uploadProfile($request, $user);
+    //         if ($request->role && $request->role !== 'Select Role') {
+    //            $role = Role::on('user_database')
+    //             ->where('name', $request->role)
+    //             ->where('guard_name', 'web')
+    //             ->firstOrFail();
+    //             $value=DB::('user_database')->table('model_has_roles')->where('model_id', $user->id)->first();
+    //             if($value){
+    //                 DB::('user_database')->table('model_has_roles')->where('model_id', $user->id)->update([
+    //                     'role_id' => $role->id,
+    //                 ]);
+    //             }
 
-            if ($request->role && $request->role !== 'Select Role') {
-                $user->syncRoles([$request->role]);
-            } else {
-                $user->syncRoles(['simple user']);
-            }
+    //         // Sync using the role instance (from same connection)
+    //         $user->syncRoles([$role->name]);
+    //         } else {
+    //              $user->syncRoles(['simple user']);
+    //         }
 
-            $user->save();
+    //         $user->save();
 
-            UserMeta::on('user_database')->updateOrCreate(
-                ['user_id' => $user->id],
-                [
-                    'phone_number' => $request->phone,
-                ]
-            );
+    //         UserMeta::on('user_database')->updateOrCreate(
+    //             ['user_id' => $user->id],
+    //             [
+    //                 'phone_number' => $request->phone,
+    //             ]
+    //         );
 
-            $leave = LeaveAssign::on('user_database')->where('user_id', $request->id)->get();
-            // Delete previous leave assignments if they exist
-            if ($leave->isNotEmpty()) {
-                $leave->each->delete();
-            }
-          if (!empty($request->leaves) && is_array($request->leaves)) {
-                $staff_id = $request->id;
+    //         $leave = LeaveAssign::on('user_database')->where('user_id', $request->id)->get();
+    //         // Delete previous leave assignments if they exist
+    //         if ($leave->isNotEmpty()) {
+    //             $leave->each->delete();
+    //         }
+    //       if (!empty($request->leaves) && is_array($request->leaves)) {
+    //             $staff_id = $request->id;
 
-                foreach ($request->leaves as $leave) {
-                    $leave_add = new LeaveAssign();
-                    $leave_add->setConnection('user_database');
-                    $leave_add->user_id = $staff_id;
-                    $leave_add->leave_type = $leave; // Use loop variable instead of $request->leave
-                    $leave_add->save();
-                }
-            }
-            // Debugging output (optional)
-            DB::commit();
-            return redirect()->route('agency.staff')->with('success', 'User updated successfully.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('agency.staff')->with('error', 'Failed to update user: ' . $e->getMessage());
+    //             foreach ($request->leaves as $leave) {
+    //                 $leave_add = new LeaveAssign();
+    //                 $leave_add->setConnection('user_database');
+    //                 $leave_add->user_id = $staff_id;
+    //                 $leave_add->leave_type = $leave; // Use loop variable instead of $request->leave
+    //                 $leave_add->save();
+    //             }
+    //         }
+    //         // Debugging output (optional)
+    //         DB::commit();
+    //         return redirect()->route('agency.staff')->with('success', 'User updated successfully.');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         return redirect()->route('agency.staff')->with('error', 'Failed to update user: ' . $e->getMessage());
+    //     }
+    // }
+
+    public function hs_staffUpdateStore(Request $request)
+{
+    // 1) Ensure tenant connection is set
+    $this->agencyService->setDatabaseConnection();
+
+    // 2) Tell Spatie to use the tenant DB for this request and reset cache
+    config(['permission.connection' => 'user_database']);
+    app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+    $validated = $request->validate([
+        'name'  => 'required|string',
+        'email' => 'required|email',
+    ]);
+
+    DB::connection('user_database')->beginTransaction();
+
+    try {
+        // User on tenant DB
+        $user = User::on('user_database')->findOrFail($request->id);
+        $user->name  = $request->name;
+        $user->email = $request->email;
+
+        // --- Roles ---
+        if ($request->role && $request->role !== 'Select Role') {
+            // Fetch the Role INSTANCE from tenant DB
+            $role = Role::on('user_database')
+                ->where('name', $request->role)
+                ->where('guard_name', 'web')
+                ->firstOrFail();
+
+            // IMPORTANT: pass the ROLE INSTANCE, not the name
+            $user->syncRoles([$role]);   // or: $user->syncRoles($role);
+        } else {
+            // Also fetch default role instance from tenant DB
+            $defaultRole = Role::on('user_database')
+                ->where('name', 'simple user')
+                ->where('guard_name', 'web')
+                ->firstOrFail();
+
+            $user->syncRoles([$defaultRole]);
         }
+
+        $user->save();
+
+        // Meta on tenant DB
+        UserMeta::on('user_database')->updateOrCreate(
+            ['user_id' => $user->id],
+            ['phone_number' => $request->phone]
+        );
+
+        // Leaves on tenant DB
+        LeaveAssign::on('user_database')->where('user_id', $user->id)->delete();
+
+        if (!empty($request->leaves) && is_array($request->leaves)) {
+            foreach ($request->leaves as $leave) {
+                $leaveAdd = new LeaveAssign();
+                $leaveAdd->setConnection('user_database');
+                $leaveAdd->user_id    = $user->id;
+                $leaveAdd->leave_type = $leave;
+                $leaveAdd->save();
+            }
+        }
+
+        DB::connection('user_database')->commit();
+
+        return redirect()->route('agency.staff')->with('success', 'User updated successfully.');
+    } catch (\Throwable $e) {
+        DB::connection('user_database')->rollBack();
+        return redirect()->route('agency.staff')->with('error', 'Failed to update user: '.$e->getMessage());
     }
+}
 
     /*** Handle Profile Upload ***/
     private function uploadProfile(Request $request, $user)

@@ -1,5 +1,5 @@
-<x-agency.layout>
-    @section('title')Client Invoices @endsection
+<x-client.layout>
+    @section('title')All Invoices @endsection
     <div class="w-full grid xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 mb-4">
 
     </div>
@@ -9,7 +9,7 @@
 
            {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl">Client Invoices</span>
+                <span class="font-semibold text-ternary text-xl"> All Invoices</span>
             </div>
              {{--        === heading section code ends here===--}}
 
@@ -47,29 +47,17 @@
                                         <!-- <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->payment_type}}</td> -->
 
 
-                                        
-                               
                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                             <div class="flex gap-2 items-center">
                                                         <!-- Edit Button -->
-                                                        <a href="{{ route('viewinvoice', $invoice->flight_booking_id) }}"
+
+                                                        <a href="{{ route('client.viewinvoice', $invoice->flight_booking_id) }}"
                                                             class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white">
                                                             <i class="fa fa-eye"></i>
                                                         </a>
 
                                                         
-                                                        <a href="{{ route('editinvoice', $invoice->id) }}"
-                                                            class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white">
-                                                            <i class="fa fa-pen"></i>
-                                                        </a>
-
-
-                                                      <!-- Cancel Button -->
-                                                            <a href="{{ route('cancelinvoice', ['id' => $invoice->id]) }}"
-                                                                onclick="return confirm('Are you sure you want to cancel this invoice?')"
-                                                                class="bg-red-100 text-red-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-red-600 hover:text-white">
-                                                                <i class="fa fa-times"></i>
-                                                            </a>
+                                                  
                                                                                                                 
                                             </div>
                                         </td>
@@ -112,4 +100,4 @@
         </form>
 
     </div>
-</x-agency.layout>
+</x-client.layout>

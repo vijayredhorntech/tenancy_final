@@ -18,7 +18,7 @@
 
 {{--        === this is code for table section ===--}}
             <div class="w-full overflow-x-auto p-4">
-            <form action="{{ route('agency_assignpermission') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('agency.assignpermission') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
                 <input type="hidden" value="{{$roles->name}}" name="role_name">
@@ -52,8 +52,9 @@
                         
                     
                          <label class="flex items center space-x-2 cursor-pointer" style="justify-content: space-evenly" >
-                          <input type="checkbox" value="{{$permission->name}}"   name="permissions[]"   class="hidden peer" {{ $roles->hasPermissionTo($permission->name) ? 'checked' : '' }}>
-                                 <div class="w-[20px] h-[20px] border-2 border-gray-400 rounded-full peer-checked:rounded-[3px] flex items-center justify-center peer-checked:bg-secondary/60 peer-checked:border-secondary/90 transition">
+                          {{-- <input type="checkbox" value="{{$permission->name}}"   name="permissions[]"   class="hidden peer" {{ $roles->hasPermissionTo($permission->name) ? 'checked' : '' }}> --}}
+                          <input type="checkbox" value="{{$permission->name}}"   name="permissions[]"   class="hidden peer" {{ in_array($permission->name, $active_permissions) ? 'checked' : '' }}>
+                            <div class="w-[20px] h-[20px] border-2 border-gray-400 rounded-full peer-checked:rounded-[3px] flex items-center justify-center peer-checked:bg-secondary/60 peer-checked:border-secondary/90 transition">
                                  </div>
                                  <span class="text-gray-400  peer-checked:text-secondary font-medium ">{{$permission['name']}}</span>
                                 </label>

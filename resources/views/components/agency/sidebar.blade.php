@@ -23,7 +23,7 @@
         <i class="fa-regular fa-calendar-days mr-1"></i> 
         <span id="clockDiv"></span>
     </p>
-{{-- </a> --}}
+</a>
     </div>
 
 
@@ -113,35 +113,7 @@
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                     </li>
                 </a>
-       
-                @if($user_data->getAllPermissions()->pluck('name')->intersect(['notification', 'manage everything'])->isNotEmpty())
-                {{--    <li>  <a href="{{route('agency.notification')}}">
-                <div class="{{Route::currentRouteName()==='agency.notification'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                    <div class="flex items-center">
-                        <i class="fas fa-bell mr-2 text-sm"></i>
-                        <span class="text-lg font-medium">Notification </span>
-                    </div>
-                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                </div>
-            </a>
-         </li> --}}
-            @endif
-            @if($user_data->getAllPermissions()->pluck('name')->intersect(['downloadcenter', 'manage everything'])->isNotEmpty())
-
-        {{--   <li>
-             <a href="{{route('agency.document.download')}}">
-                <div class="{{Route::currentRouteName()==='agency.document.download'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                    <div class="flex items-center">
-                        <i class="fas fa-download mr-2 text-sm"></i>
-                        <span class="text-lg font-medium">Download Center </span>
-                    </div>
-                    <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                </div>
-            </a>
-         </li>--}}
-            @endif 
-
-            </ul>
+         </ul>
         </div>
         @endif
         @endif
@@ -159,7 +131,7 @@
 
         @endif
 
-        @if($user_data->getAllPermissions()->pluck('name')->intersect(['clint', 'manage everything'])->isNotEmpty())
+        @if($user_data->getAllPermissions()->pluck('name')->intersect(['client', 'manage everything'])->isNotEmpty())
         <a href="{{route('client.index')}}">
             <div class="{{Route::currentRouteName()==='client.index'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
@@ -203,36 +175,25 @@
 
                         <div class="flex items-center">
                             <i class="fas fa-file-invoice mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">All Invoices</span>
+                            <span class="text-lg font-medium">Client Invoices</span>
+                        </div>
+
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-1/2 -translate-y-1/2"></i>
+                    </a>
+
+                    <a href="{{ route('retail.invoices', ['type' => 'agencies']) }}"
+                    class="border-ternary w-full flex justify-between items-center py-2 px-4 rounded-[3px]
+                            text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative
+                            hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-2000 mt-2">
+
+                        <div class="flex items-center">
+                            <i class="fas fa-receipt mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Retail Invoices</span>
                         </div>
 
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-1/2 -translate-y-1/2"></i>
                     </a>
                 </li>
-
-                <!-- <a href="{{ route('editindex') }}">
-                    <li class="{{ Route::currentRouteName() === 'editindex' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fas fa-edit mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Edited Invoices</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-
-                <a href="{{route('superadmin.cancelindex')}}">
-                    <li class="{{Route::currentRouteName()==='superadmin.cancelindex'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                              <i class="fas fa-times-circle mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Cancel Invoice</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a> -->
-                
-
-
-
             </ul>
         </div>
        @endif
@@ -242,8 +203,7 @@
         @if($user_data->getAllPermissions()->pluck('name')->intersect(['booking view', 'manage everything'])->isNotEmpty())
                     @php
                         $availableRoutes = array_values($services->toArray()); // Get route names from $services
-
-                        @endphp
+                    @endphp
 
             @if(in_array('Hotel', $availableRoutes) || in_array('Hotel', $availableRoutes) || in_array('superadminvisa.booking', $availableRoutes))
                 <div>
@@ -284,7 +244,7 @@
                             </a>
                         @endif
 
-                        @if(in_array('Visa', $availableRoutes))
+                       <!-- @if(in_array('Visa', $availableRoutes))
                           <li class="{{ Route::currentRouteName() === 'agencyvisa.booking' ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }} w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60 hover:bg-secondary/90 transition ease-in duration-200">
                                         <a href="{{ route('agencyvisa.booking', ['type' => 'agency']) }}" class="flex justify-between items-center w-full h-full">
                                             <div class="flex items-center">
@@ -294,7 +254,7 @@
                                             <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
                                         </a>
                                     </li>
-                        @endif
+                        @endif -->
                     </ul>
                 </div>
             @endif
@@ -402,40 +362,6 @@
         </a>
         @endif
 
-        @if($user_data->getAllPermissions()->pluck('name')->intersect(['leave', 'manage everything'])->isNotEmpty())
-        <!-- <div class="">
-            <div onclick="document.getElementById('leaveDiv').classList.toggle('hidden');document.getElementById('leaveArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='service'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                <div class="flex items-center">
-                    <i class="fa-solid fa-umbrella-beach mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Leave Managment</span>
-                </div>
-                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="leaveArrow"> </i>
-            </div>
-            <ul id="leaveDiv" class="pl-10 mt-2 flex flex-col hidden">
-
-                <a href="{{ route('add.agency.leave', ['type' => 'agency']) }}">
-                    <li class="{{Route::currentRouteName()==='add.agency.leave'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa fa-hotel mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Add Leave</span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-
-                <a href="{{ route('agency.pending.leave', ['type' => 'agency']) }}">
-                    <li class="{{Route::currentRouteName()==='agency.pending.leave'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
-                        <div class="flex items-center">
-                            <i class="fa-brands fa-cc-visa mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Leave Application </span>
-                        </div>
-                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
-                    </li>
-                </a>
-            </ul>
-        </div> -->
-        @endif
      
     @if($user_data->type == 'staff')
         <a href="{{route('agency.profile')}}">
@@ -468,7 +394,7 @@
 
         @endif
 
-        @if($user_data->getAllPermissions()->pluck('name')->intersect(['role view', 'manage everything'])->isNotEmpty())
+        @if($user_data->getAllPermissions()->pluck('name')->intersect(['term condition', 'manage everything'])->isNotEmpty())
 
         <a href="">
             <div class="{{Route::currentRouteName()==='superadmin.termtype'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">

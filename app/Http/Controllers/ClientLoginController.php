@@ -18,6 +18,10 @@ use App\Traits\ChatTrait;
 use App\Mail\DocumentVerificationRequestMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
+use App\Models\Deduction;
+use App\Models\Invoice; 
+use App\Repositories\Interfaces\DocumentSignRepositoryInterface;
+use App\Repositories\Interfaces\TermConditionRepositoryInterface;
 
 
 
@@ -26,16 +30,17 @@ class ClientLoginController extends Controller
 
     use ChatTrait;
 
-    protected $agencyService,$visaRepository,$clintRepository;
+    protected $agencyService,$visaRepository,$clintRepository,$termConditionRepository,$documentSignRepository;
   
  
 
-    public function __construct(ClintRepositoryInterface $clintRepository ,VisaRepositoryInterface $visaRepository,AgencyService $agencyService)
+    public function __construct(ClintRepositoryInterface $clintRepository ,VisaRepositoryInterface $visaRepository,AgencyService $agencyService,DocumentSignRepositoryInterface $documentSignRepository,TermConditionRepositoryInterface $termConditionRepo)
     {
         $this->clintRepository = $clintRepository;
         $this->visaRepository = $visaRepository;
         $this->agencyService = $agencyService;
-
+        $this->documentSignRepository = $documentSignRepository;
+        $this->termConditionRepo = $termConditionRepo;      
        
     }
 
@@ -370,7 +375,7 @@ class ClientLoginController extends Controller
 
       /****public function *** */
       public function hsClientLogout(){
-        // Store domain information before clearing session
+     // Store domain information before clearing session
         $userData = session('user_data');
         $domain = $userData['domain'] ?? null;
         
@@ -385,4 +390,78 @@ class ClientLoginController extends Controller
             return redirect('/');
         }
     }
+
+
+
+
+    /*******Client Invoice Handler /**** */ 
+
+    public function hsclientInvoice(Request $request)
+    {
+        $clientInformation= $this->agencyService->getLoginClient();
+        $clientData=$clientInformation['agencydatabaseclient'];
+
+
+        // ✅ Pagination value
+        $perPage = $request->filled('per_page') && is_numeric($request->per_page)
+            ? (int) $request->per_page
+            : null;
+
+        // ✅ Query with relations and filters
+        $invoicesQuery = Deduction::with([
+            'service_name',
+            'agency',
+            'visaBooking.visa',
+            'visaBooking.origin',
+            'visaBooking.destination',
+            'visaBooking.visasubtype',
+            'visaBooking.clint',
+            'visaApplicant',
+            'flightBooking',
+            'hotelBooking',
+            'hotelDetails',
+            'cancelinvoice',
+            'invoice',
+            'docsign'
+        ])
+        ->where(function ($q) {
+            $q->whereNull('invoicestatus')
+            ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
+        })
+        ->where('client_id', $clientData->id)
+        ->where('agency_id', $clientData->agency_id);
+
+        // ✅ Get paginated or full results
+        $invoices = $perPage 
+            ? $invoicesQuery->paginate($perPage) 
+            : $invoicesQuery->get();
+
+        return view('clients.pages.invoice.invoicehandling', compact('invoices'));
+    }
+
+
+     public function hsviewInvoice(Request $request,$id){
+
+    
+        // Treat $id as VisaBooking ID and fetch booking used by the component
+        
+        $booking=$this->documentSignRepository->checkSignDocument($id); 
+
+    
+        $termconditon = $this->termConditionRepo->allTeamTypes();      
+
+        return view('clients.pages.invoice.view-invoice', [
+            'booking' => $booking,
+            'termconditon' => $termconditon,
+        ]);
+    
+      
+    //    return view('clients.pages.invoice.view-invoice', compact('invoice'));
+        // Step 3: Fetch records with or without pagination
+        // Step 4: Load dynamic data from user databases
+        // Step 5: Render view if type matches
+    }
+
+
+
 }

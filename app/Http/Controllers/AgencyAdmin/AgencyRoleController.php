@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\Agency;
+use App\Services\AgencyService;
+
+
 
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
@@ -19,31 +22,23 @@ use Illuminate\Support\Facades\Config;
 
 class AgencyRoleController extends Controller
 {
+
+    
+    protected $agencyService;
+
+    public function __construct( AgencyService $agencyService) {
+               $this->agencyService = $agencyService;
+        }
+
     /**** Function for Roles *****/
 
     public function hs_roleindex(){
 
-        // $roles = Role::all();
+ 
+        
+        $agency = $this->agencyService->getAgencyData();
+        $user = $this->agencyService->getCurrentLoginUser();
 
-        $userData = session('user_data');
-
-        // Set the dynamic database connection
-        DatabaseHelper::setDatabaseConnection($userData['database']);
-        
-        // Get the user from the corresponding database
-        $user = User::on('user_database')->where('email', $userData['email'])->first();
-        // $roles = $user->getRoleNames(); // Get role names
-    //    $permissions = $user->getAllPermissions()->pluck('name');
-     
-        
-        if ($user->type == "staff") {
-            $agency_record = Agency::where('database_name', $userData['database'])->first();
-            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-        } else {
-            $agency_record = Agency::where('email', $user->email)->first();
-            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-        }
-        
         // Fetch user roles dynamically
         $roles = Role::on('user_database')->get(); 
         $permissions = Permission::on('user_database')->get();
@@ -57,22 +52,22 @@ class AgencyRoleController extends Controller
     }
 
 
- /** Register  role  **/
-    public function hs_rolecreate(){
-        $id = Auth::user()->id;
-        $user = User::find($id);
-        $alluser=User::get();
-        $service=Service::get();
-        return view('auth.admin.pages.Roles.role_form', ['user_data' => $user,'services' => $service,'users'=>$alluser]);
-    }
+ 
 
     /** Store role  **/
     public function hs_rolestore(Request $request){
         $validated = $request->validate([
             'name' => 'required|unique:roles,name',
          ]);
-         Role::create(['name' => $request->name]);
-         return redirect()->route('superadmin.role')->with('success', 'Role created successfully.');
+
+         
+        $agency = $this->agencyService->getAgencyData();
+        $user = $this->agencyService->getCurrentLoginUser();
+        Role::on('user_database')->create([
+                    'name' => $validated['name'],
+                    'guard_name' => 'web', // required if Spatie Permission is used
+                ]);
+         return redirect()->route('agency.role')->with('success', 'Role created successfully.');
     }
 
 
@@ -90,32 +85,21 @@ class AgencyRoleController extends Controller
       public function hs_permissionassign($id)
       {
 
-        $userData = session('user_data');
-
-        // Set the dynamic database connection
-        DatabaseHelper::setDatabaseConnection($userData['database']);
-        
-        // Get the user from the corresponding database
-        $user = User::on('user_database')->where('email', $userData['email'])->first();
-        
-        if ($user->type == "staff") {
-            $agency_record = Agency::where('database_name', $userData['database'])->first();
-            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-        } else {
-            $agency_record = Agency::where('email', $user->email)->first();
-            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-        }
+       
+        $agency = $this->agencyService->getAgencyData();
+        $user = $this->agencyService->getCurrentLoginUser();
         
         // Fetch user roles dynamically
    
           $role = Role::on('user_database')->findOrFail($id);
           $permissions = Permission::on('user_database')->get();
-     
-          $active_permissions = $role->permissions->pluck('name');
+
+          $active_permissions = $role->permissions->pluck('name')->toArray();
+        //   dd($active_permissions);
       
           // Get all services (if needed)
         //   $services = Service::all();
-      
+
           // Pass data to Blade view
           return view('agencies.pages.role.single_role', [
               'user_data' => $user,
@@ -124,43 +108,87 @@ class AgencyRoleController extends Controller
               'active_permissions' => $active_permissions, // Fixed variable name
           ]);
       }
-      
+
+
+public function hsCLonePermission()
+{
+    $agency = $this->agencyService->getAgencyData();
+    $user   = $this->agencyService->getCurrentLoginUser();
+
+    $permissions = [
+        'visa view',
+        'service view',
+        'manage everything',
+        'requestform',
+        'client',
+        'invoice',
+        'booking view',
+        'flightbooking',
+        'hotelbooking',
+        'staff view',
+        'team',
+        'expensive',
+        'role view',
+        'term condition',
+    ];
+
+    $createdPermissions = [];
+
+    foreach ($permissions as $permName) {
+        // Check if permission exists in user_database
+        $perm = Permission::on('user_database')
+            ->where('name', $permName)
+            ->where('guard_name', 'web')
+            ->first();
+
+        if (!$perm) {
+            // Not exists → create in user_database
+            $perm = Permission::on('user_database')->create([
+                'name'       => $permName,
+                'guard_name' => 'web',
+            ]);
+        }
+
+        // Collect ID (or you could collect name instead)
+        $createdPermissions[] = $perm->id;
+    }
+
+    // Create/find super admin role in user_database
+    $superAdmin = Role::on('user_database')->firstOrCreate(
+        ['name' => 'super admin', 'guard_name' => 'web']
+    );
+
+    // Assign all permissions to superadmin
+    $superAdmin->syncPermissions($createdPermissions);
+
+    return "Permissions synced successfully!";
+}
+
+
 
     /*** Assigend permssion ***/
 
     public function hs_permissioned(Request $request){
      
-       
+  
         $request->validate([
-            'role_name' => 'required|string|exists:roles,name',
+            'role_name' => 'required|string',
             'permissions' => 'array',
         ]);
     
-        $userData = session('user_data');
-
-        // Set the dynamic database connection
-        DatabaseHelper::setDatabaseConnection($userData['database']);
-        
-        // Get the user from the corresponding database
-        $user = User::on('user_database')->where('email', $userData['email'])->first();
-        
-        if ($user->type == "staff") {
-            $agency_record = Agency::where('database_name', $userData['database'])->first();
-            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-        } else {
-            $agency_record = Agency::where('email', $user->email)->first();
-            $agency = Agency::with('userAssignments.service')->find($agency_record->id);
-        }
-        
+        $agency = $this->agencyService->getAgencyData();
+        $user = $this->agencyService->getCurrentLoginUser();       
         // Fetch user roles dynamically
    
-          $role = Role::on('user_database')->where('name', $request->role_name)->firstOrFail();
+        $role = Role::on('user_database')->where('name', $request->role_name)->firstOrFail();
 
-        // Find the role by name
-       
-    
-        // Assign permissions to the role
-        $role->syncPermissions($request->permissions);
+            // Fetch the permissions from the same connection as the role
+            $permissions = Permission::on('user_database')
+                ->whereIn('name', $request->permissions)
+                ->get();
+
+            // Now sync using the models, not just names
+            $role->syncPermissions($permissions);
     
         // return back()->with('success', 'Permissions Test!');
         return redirect()->route('agency.role')->with('success', 'Permissions assigned successfully!');

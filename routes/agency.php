@@ -110,8 +110,11 @@ Route::group([
         Route::get('role/{id}/edit', 'hs_roleedit')->name('agency.role.edit');
         Route::post('role/{id}/update', 'hs_roleupdate')->name('agency.role.update');
         Route::get('role/{id}/delete', 'hs_roledelete')->name('agency.role.delete');
-        Route::get('role/{id}/permission', 'hs_permissionassign')->name('agency_permissionassign');
+        Route::get('role/{id}/permission', 'hs_permissionassign')->name('agency_permissionassign'); 
         Route::post('role/permission', 'hs_permissioned')->name('agency.assignpermission');
+
+        Route::get('/clone/permission','hsCLonePermission')->name('agency.clone.permission');
+        
     });
 /*****Fund Managment *** */
 
@@ -126,7 +129,7 @@ Route::group([
         Route::get('/staffcreate', 'hs_staffcreate')->name('agency_staffcreate');
         Route::post('/staffstore', 'hs_staffstore')->name('agency_staffstore');
         Route::get('/staffupdate/{id}', 'hs_staffupdate')->name('agency_staffupdate');
-        Route::post('/staffupdate', 'hs_supdatedstore')->name('agency.staffupdatestore');
+        Route::post('/staffupdate', 'hs_staffUpdateStore')->name('agency.staffupdatestore');
 
         Route::get('/staffdelete/{id}', 'hs_staffdelete')->middleware('can:staff delete')->name('agency_staffdelete');
         Route::get('/staffDetails/{id}', 'hs_staffDetails')->middleware('can:view staffdetails')->name('agency_staffDetails');
@@ -173,7 +176,7 @@ Route::group([
         Route::post('/visabook','hsVisaBook')->name('visa.book');
         Route::get('/verifyapplication/{id}','hs_verifyapplication')->name('verify.application');   
         // Route::get('/verifyvisa-application/{id}/{type}','hs_verifyapplication')->name('verifyvisa.application');
-        Route::get('/application/{id}/{token}/client','hsfillApplication')->name('application.client');
+        // Route::get('/application/{id}/{token}/client','hsfillApplication')->name('application.agency');
         Route::post('visapayment/{id}','him_visaApplicationPay')->name('visaapplication.pay');
         Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
 
@@ -225,12 +228,6 @@ Route::group([
       
     });
 
-    // Permissions
-    Route::controller(AgencyPermissionController::class)->group(function () {
-        Route::get('/permission', 'hs_permissionindex')->name('agency.permission');
-        Route::post('/permissionstore', 'hs_permissionstore')->name('agency_permissionstore');
-        Route::get('/permissiondelete/{id}', 'hs_permissiondelete')->middleware('can:permission delete')->name('agency_permissiondelete');
-    });
 
 
 
@@ -305,6 +302,11 @@ Route::controller(ClientLoginController::class)->group(function () {
     // Route::get('/{type}/document/download/{id}', 'hsdownloadDocument')->name('clientupload.documentdownload');
     Route::get('/{type?}/document/download/{id}', 'hsdownloadDocument')->name('clientupload.documentdownload');
 
+    Route::get('/client/invoice', 'hsclientInvoice')->name('client.invoice');
+   Route::get('client/viewinvoice/{id}', 'hsviewInvoice')->name('client.viewinvoice');
+
+
+
     Route::get('/clientupload/document/download', 'downloadJsonDocument')->name('clientupload.documentdownloadjson');
 
 
@@ -355,7 +357,7 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::get('agency/cancel', 'hs_cancelInvoice')->name('agencypay.invoice.cancel');   
     Route::post('generateinvoice', 'hsGenerateInvoice')->name('generateinvoice');
     Route::get('/{type}/invoice', 'hsAllinvoice')->name('invoice.all');
-    Route::get('/viewinvoice/{id}','hsviewInvoice')->name('viewinvoice');
+    Route::get('{type}/retail-invoices',  'hsRetailInvoices')->name('retail.invoices');
     Route::get('/editinvoice/{id}','hs_editInvoice')->name('editinvoice');
     Route::get('/editindex', 'hsEditedInvoices')->name('editindex');
     Route::post('/allinvoices/updateinvoice/{id}', 'hs_updateInvoice')->name('allinvoices.updateinvoice');
@@ -402,7 +404,16 @@ Route::controller(DocumentSignController::class)->group(function () {
 
    Route::controller(VisaController::class)->group(function () {
 
+        //   Route::get('/application/{id}/{token}/client','hsfillApplication')->name('application.fill');
+          Route::get('/application/{type}/{id}/{token}','hsfillApplication')->name('application.fill');
+
+
           Route::post('/confirmapplication','hsconfirmApplication')->name('comfirm.application');
+        //   Route::post('/confirmapplication','hsconfirmApplication')->name('application.fill');
+
+
+
+          
           Route::post('/updateapplication','hsupdateapplication')->name('updatevisa.application');
 
            Route::post('/visasection','hsviewSearchvisa')->name('searchvisa'); 
@@ -412,10 +423,13 @@ Route::controller(DocumentSignController::class)->group(function () {
            Route::post('agencies/visa-application-client-store','him_storeClientVisaRequest')->name('visa.applicationclient.store');
     });
 
-
     Route::get('/visa/thank-you', function () {
     return view('visa.thank-you', [
         'applicationId' => 'VS-' . strtoupper(uniqid()),
         'destination' => 'United States' // You can pass the actual destination from your form
     ]);
 })->name('visa.thank-you');
+
+
+Route::get('/viewinvoice/{id}', [InvoiceController::class, 'hsviewInvoice'])->name('viewinvoice');
+Route::get('/superadmin/retail-invoice/{id}', [InvoiceController::class, 'hsSuperadminRetailInvoiceView'])->name('superadmin.retail.invoice.view');
