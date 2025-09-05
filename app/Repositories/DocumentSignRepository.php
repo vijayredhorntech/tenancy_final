@@ -341,7 +341,7 @@ protected function saveDocumentForSign($document, $request)
    /*****Document Save *** */
 
    
-public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $clientId, $agencyId, $bookingType)
+public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $clientId, $agencyId, $bookingType, $returnableArray = [])
 {
     $newDocs = [];
 
@@ -350,10 +350,13 @@ public function saveDocumentData($documents, $files, $bookingId, $invoiceId, $cl
 
         $fileName = time() . '_' . $file->getClientOriginalName();
         $filePath = $file->storeAs('documents/clientuploadDocument', $fileName, 'public');
+        
+        $isReturnable = isset($returnableArray[$index]) && $returnableArray[$index] == '1';
 
         $newDocs[] = [
             'name' => $docName,
             'file' => $filePath,
+            'returnable' => $isReturnable,
         ];
     }
 

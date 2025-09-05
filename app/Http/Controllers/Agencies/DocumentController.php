@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Services\AgencyService;
 use App\Models\VisaServiceType;
+use Illuminate\Support\Facades\Auth;
 
 
 class DocumentController extends Controller
@@ -145,10 +146,12 @@ class DocumentController extends Controller
             'documents.*' => 'required|string',
             'files' => 'required|array',
             'files.*' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'returnable' => 'nullable|array',
         ]);
        
                 $bookingId = $request->input('bookingid');
                 $booking = $this->documentSignRepository->uploadeDocumentById($bookingId);
+                $returnableArray = $request->input('returnable', []);
           
                 $documents = $request->input('documents');
                 $files = $request->file('files');
@@ -157,6 +160,34 @@ class DocumentController extends Controller
                 $agencyId = $booking->agency_id;
                 $bookingType = 'Visa';
                 
+                // Check if any documents are marked as returnable
+                $hasReturnableDocuments = false;
+                foreach ($returnableArray as $index => $isReturnable) {
+                    if ($isReturnable == '1') {
+                        $hasReturnableDocuments = true;
+                        break;
+                    }
+                }
+                
+                // If there are returnable documents, create request document entries
+                if ($hasReturnableDocuments) {
+                    foreach ($documents as $index => $docName) {
+                        $isReturnable = isset($returnableArray[$index]) && $returnableArray[$index] == '1';
+                        if ($isReturnable) {
+                            // Create request document entry
+                            \App\Models\ClientApplicationDocument::create([
+                                'application_id'     => $bookingId,
+                                'client_id'          => $clientId,       
+                                'application_number' => $invoiceId,
+                                'document_name'      => $docName,
+                                'returnable'         => true,
+                                'agency_id'          => $agencyId,
+                                'user_id'            => Auth::id(),
+                            ]);
+                        }
+                    }
+                }
+                
              $booking=$this->documentSignRepository->saveDocumentData(
                     $documents, 
                     $files, 
@@ -164,7 +195,8 @@ class DocumentController extends Controller
                     $invoiceId, 
                     $clientId, 
                     $agencyId, 
-                    $bookingType
+                    $bookingType,
+                    $returnableArray
                 );
                 return redirect()->route('superadminview.allapplication')->with('success', 'Documents uploaded successfully.');  
               

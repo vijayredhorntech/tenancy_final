@@ -106,14 +106,24 @@
                                             'Pending' => ['bg' => 'bg-red-200', 'text' => 'text-red-700'],
                                             'Complete' => ['bg' => 'bg-green-200', 'text' => 'text-green-700'],
                                             'Under Process' => ['bg' => 'bg-blue-200', 'text' => 'text-blue-700'],
-                                            'Rejected' => ['bg' => 'bg-red-200', 'text' => 'text-red-700']
+                                            'Rejected' => ['bg' => 'bg-red-200', 'text' => 'text-red-700'],
+                                            'Custom Message' => ['bg' => 'bg-blue-100', 'text' => 'text-blue-600']
                                         ];
                                         $colors = $statusColors[$status] ?? ['bg' => 'bg-gray-200', 'text' => 'text-gray-700'];
                                     @endphp
 
-                                    <span class="{{ $colors['bg'] }} {{ $colors['text'] }} px-2 py-1 rounded-[3px] font-medium">
-                                        {{ $status }}
-                                    </span>
+                                            @if($status === 'Custom Message' && !empty($booking->custom_message))
+            <span class="px-2 py-1 rounded-[3px] font-medium cursor-pointer text-sm" 
+                  style="background-color: #26ace2; color: white;"
+                  title="Click on it"
+                  onclick="showCustomMessage('{{ addslashes($booking->custom_message) }}')">
+                Message
+            </span>
+        @else
+            <span class="{{ $colors['bg'] }} {{ $colors['text'] }} px-2 py-1 rounded-[3px] font-medium">
+                {{ $status }}
+            </span>
+        @endif
                                 </td>
 
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
@@ -173,5 +183,56 @@
 
 
         </div>
+
+<script>
+    // Custom Message Modal Functions
+    function showCustomMessage(message) {
+        // Create modal if it doesn't exist
+        let modal = document.getElementById('customMessageModal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'customMessageModal';
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+            modal.innerHTML = `
+                <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 relative">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Custom Message</h3>
+                        <button onclick="closeCustomMessage()" class="text-gray-500 hover:text-gray-700 text-xl">&times;</button>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-gray-700 leading-relaxed" id="customMessageText"></p>
+                    </div>
+                    <div class="flex justify-end">
+                        <button onclick="closeCustomMessage()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        // Set the message content
+        document.getElementById('customMessageText').textContent = message;
+        
+        // Show modal
+        modal.style.display = 'flex';
+    }
+
+    function closeCustomMessage() {
+        const modal = document.getElementById('customMessageModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Close modal when clicking outside
+    document.addEventListener('click', function(e) {
+        const modal = document.getElementById('customMessageModal');
+        if (modal && e.target === modal) {
+            closeCustomMessage();
+        }
+    });
+</script>
 
  </x-client.layout>

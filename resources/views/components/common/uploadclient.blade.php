@@ -198,6 +198,24 @@
         inputFile.name = 'files[]';
         inputFile.classList.add('mb-3');
 
+        // Add Mark as Returnable checkbox
+        const returnableDiv = document.createElement('div');
+        returnableDiv.classList.add('mb-3', 'flex', 'items-center', 'gap-2');
+
+        const returnableCheckbox = document.createElement('input');
+        returnableCheckbox.type = 'checkbox';
+        returnableCheckbox.name = 'returnable[]';
+        returnableCheckbox.id = 'returnable_' + Date.now();
+        returnableCheckbox.classList.add('rounded', 'border-gray-300', 'text-blue-600', 'focus:ring-blue-500');
+
+        const returnableLabel = document.createElement('label');
+        returnableLabel.textContent = 'Mark as Returnable';
+        returnableLabel.setAttribute('for', returnableCheckbox.id);
+        returnableLabel.classList.add('text-sm', 'font-medium', 'text-gray-700');
+
+        returnableDiv.appendChild(returnableCheckbox);
+        returnableDiv.appendChild(returnableLabel);
+
         const btnRemove = document.createElement('button');
         btnRemove.textContent = 'Remove';
         btnRemove.type = 'button';
@@ -217,6 +235,7 @@
         box.appendChild(inputDocName);
         box.appendChild(labelFileUpload);
         box.appendChild(inputFile);
+        box.appendChild(returnableDiv);
         box.appendChild(btnRemove);
         outerDiv.appendChild(box);
         documentInputWrapper.appendChild(outerDiv);

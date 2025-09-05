@@ -185,7 +185,7 @@
         </div>
 
 
-             @if($clientData->applicationworkin_status !== "Complete")
+             @if($clientData->applicationworkin_status !== "Complete" && $clientData->applicationworkin_status !== "Custom Message")
 
                 <div data-tid="visaRequestDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                     <i class="fas fa-eye text-ternary"></i>
@@ -204,6 +204,28 @@
                     Application Status 
                 </div>
             
+             @elseif($clientData->applicationworkin_status == "Custom Message")
+                <!-- Custom Message Status: Show both request and upload functionality -->
+                <div data-tid="visaRequestDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-eye text-ternary"></i>
+                    View Request Document
+                </div>
+
+                <div data-tid="requestDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-file-signature text-ternary"></i>
+                    Request Document
+                </div>
+
+                <div data-tid="uploadDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-upload text-ternary"></i>
+                    Upload Document
+                </div>
+
+                <div data-tid="editApplicationDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
+                    <i class="fas fa-edit text-ternary"></i>
+                    Application Status 
+                </div>
+             
              @else           
                   <div data-tid="uploadDocumentDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer flex items-center gap-2">
                         <i class="fas fa-upload text-ternary"></i>
