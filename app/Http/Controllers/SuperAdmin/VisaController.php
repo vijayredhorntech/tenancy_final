@@ -974,6 +974,26 @@ public function hsFromindex(Request $request)
     public function hsupdateapplication(Request $request)
 {
 
+
+    if ($request->application_status =='Complete') {
+
+
+        // Check if any required documents are missing
+        // $application = ClientApplicationDocument::get(); 
+        // dd($request->all());
+
+        $application = ClientApplicationDocument::where('application_id',$request->applciationid) 
+        ->whereIn('document_status', [0, 2, 3])
+        ->first();
+  
+        if ($application) {
+            return redirect()
+                ->route('superadminvisa.applicationview', ['id' => $request->applciationid])
+                ->with('error', 'Document Status is Pending Yet. Please Change the Document Status');
+        }
+    }
+
+
     if (isset($request->type) && $request->type === 'superadmin') {
         $data = $request->validate([
                         'applciationid' => 'required', // Ensure ID exists in the applications table
@@ -1073,10 +1093,7 @@ public function hsFromindex(Request $request)
 
    public function hsfillApplication(Request $request, $type,$id, $token)
    {
-   
-
-  
-       $agency = $this->agencyService->getAgencyData();
+        $agency = $this->agencyService->getAgencyData();
        $bookingData = $this->visaRepository->bookingDataById($id);
        
    
@@ -1131,6 +1148,7 @@ public function hsconfirmApplication(Request $request)
 
 {
   
+  
     $booking = $this->visaRepository->bookingDataById($request->bookingid);
     $newData = $request->all();
 
@@ -1140,7 +1158,7 @@ public function hsconfirmApplication(Request $request)
     // Step 3: Save updates
     $this->clintRepository->step1createclient($newData);
     $this->visaRepository->visadocumentstore($newData);
-
+//   dd($request->all());
     // Step 4: Auto insert missing documents
     $checkDocument = VisaServiceType::where('origin', $booking->origin_id)
         ->where('destination', $booking->destination_id)

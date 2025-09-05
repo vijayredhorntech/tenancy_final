@@ -374,7 +374,7 @@
                 <!-- end applicatoin  -->
 
                 <div id="uploadeDocumentDiv" class="tab hidden">
-                    <x-common.documentupload :booking="$clientData" />             
+                    <x-common.documentupload :booking="$clientData" :type="'agency'" />             
                 </div>
 
       <!-- end joing letter  -->

@@ -17,7 +17,8 @@
     <form action="{{ route('client.document.upload') }}" method="POST" enctype="multipart/form-data">
     @csrf
         <input type="hidden" name="booking_id" value="{{ $booking->id }}">
-        <input type="hidden" name="type" value="agency">
+        {{-- <input type="hidden" name="type" value="agency"> --}}
+        <input type="hidden" name="type" value="{{ $type }}">
 
         <div class="grid grid-cols-2 gap-4">
             @foreach($booking->clientapplciation as $doc)

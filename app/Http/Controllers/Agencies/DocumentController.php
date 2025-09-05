@@ -138,7 +138,7 @@ class DocumentController extends Controller
 
     public function hsuploadDocument(Request $request){
         
-    // dd($request->all());
+
         // Validate the request data
         $request->validate([
             'bookingid' => 'required|numeric',
@@ -151,6 +151,7 @@ class DocumentController extends Controller
        
                 $bookingId = $request->input('bookingid');
                 $booking = $this->documentSignRepository->uploadeDocumentById($bookingId);
+            
                 $returnableArray = $request->input('returnable', []);
           
                 $documents = $request->input('documents');
@@ -163,7 +164,7 @@ class DocumentController extends Controller
                 // Check if any documents are marked as returnable
                 $hasReturnableDocuments = false;
                 foreach ($returnableArray as $index => $isReturnable) {
-                    if ($isReturnable == '1') {
+                    if ($isReturnable == 'on') {
                         $hasReturnableDocuments = true;
                         break;
                     }
@@ -172,7 +173,7 @@ class DocumentController extends Controller
                 // If there are returnable documents, create request document entries
                 if ($hasReturnableDocuments) {
                     foreach ($documents as $index => $docName) {
-                        $isReturnable = isset($returnableArray[$index]) && $returnableArray[$index] == '1';
+                         $isReturnable = isset($request->returnable[$index]) && $request->returnable[$index] === "on";
                         if ($isReturnable) {
                             // Create request document entry
                             \App\Models\ClientApplicationDocument::create([

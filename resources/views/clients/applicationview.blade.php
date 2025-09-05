@@ -99,7 +99,7 @@
              
                 <!-- Upload Document -->
                 <div id="uploadeDocumentDiv" class="tab hidden">
-                    <x-common.documentupload :booking="$booking" />             
+                    <x-common.documentupload :booking="$booking" :type="'client'" />             
                 </div>
 
                 <!-- Conversation -->
@@ -157,6 +157,31 @@
                 </div>
             </div>
         </div>
+
+        <script>
+    jQuery(document).ready(function () {
+        var defaultTab = "{{ request()->get('tab', 'viewApplicationDiv') }}"; // default tab
+
+        // Hide all tabs first
+        jQuery(".tab").hide();
+        jQuery("#" + defaultTab).show();
+
+        // Apply active class to correct tab button
+        jQuery(".agency_tab").removeClass("bg-secondary/40 border-[2px] border-secondary/60");
+        jQuery('[data-tid="'+defaultTab+'"]').addClass("bg-secondary/40 border-[2px] border-secondary/60");
+
+        // Handle clicks
+        jQuery(document).on("click", ".agency_tab", function () {
+            var id = jQuery(this).data('tid');
+            jQuery(".agency_tab").removeClass("bg-secondary/40 border-[2px] border-secondary/60");
+            jQuery(this).addClass("bg-secondary/40 border-[2px] border-secondary/60");
+
+            jQuery(".tab").hide();
+            jQuery("#" + id).show();
+        });
+    });
+</script>
+
 
         <script>
         jQuery(document).ready(function () {

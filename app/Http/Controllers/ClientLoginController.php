@@ -288,6 +288,7 @@ class ClientLoginController extends Controller
     /*** Store Function ****/
     public function hsClientStoreDocument(Request $request){
      
+   
        
         $request->validate([
             'documents' => 'required|max:2048', // 2MB max    
@@ -314,7 +315,10 @@ class ClientLoginController extends Controller
     
     // For client uploads, use a default user ID or handle differently
     $save=$this->agencyService->saveLog($bookingApplication,'Client','Uploaded Document', '1');
-    return redirect()->route('client.notification')->with('success', 'Documents uploaded successfully.');
+   return redirect()
+    ->route('client.application.view', ['id' => $request->booking_id, 'tab' => 'uploadeDocumentDiv'])
+    ->with('success', 'Documents uploaded successfully.');
+    
     }
 
 
