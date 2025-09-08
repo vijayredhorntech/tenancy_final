@@ -978,9 +978,7 @@ public function hsFromindex(Request $request)
     if ($request->application_status =='Complete') {
 
 
-        // Check if any required documents are missing
-        // $application = ClientApplicationDocument::get(); 
-        // dd($request->all());
+
 
         $application = ClientApplicationDocument::where('application_id',$request->applciationid) 
         ->whereIn('document_status', [0, 2, 3])
