@@ -26,6 +26,8 @@ class Invoice extends Model
         'amount',
         'discount',
         'payment_type',
+        'visa_fee',
+        'service_charge',
     ];
 
     /**

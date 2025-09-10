@@ -148,17 +148,6 @@ class InvoiceController extends Controller
     
 
 
-    public function hs_editInvoice($id){
-        
-    $invoice = Deduction::with('service_name')->findOrFail($id);
-    
-     
-    if ($invoice->invoicestatus === 'edited') {
-        return redirect()->route('invoice.all')->with('error', 'This invoice can only be edited once.');
-    }
-
-    return view('superadmin.pages.invoicehandling.editinvoice', compact('invoice'));
-    } 
     
 
 public function hs_EditedInvoices(Request $request)
@@ -186,32 +175,63 @@ public function hs_EditedInvoices(Request $request)
  public function hs_updateInvoice(Request $request, $id)
 {
     $request->validate([
-        'amount' => 'required|numeric|min:0',
+        'receiver_name' => 'nullable|string|max:255',
+        'receiver_address' => 'nullable|string|max:500',
+        'visa_applicant_name' => 'required|string|max:255',
+        'payment_mode' => 'required|string|in:CREDIT CARD,DEBIT CARD,CASH,BANK TRANSFER',
+        'discount' => 'nullable|numeric|min:0',
+        'total' => 'required|numeric|min:0',
+        'visa_fee' => 'nullable|numeric|min:0',
+        'service_charge' => 'nullable|numeric|min:0',
     ]);
 
-    $invoice = Deduction::with('service_name')->findOrFail($id);
+    $invoice = Deduction::with(['service_name', 'visaBooking.clint', 'invoice'])->findOrFail($id);
     
-    $originalInvoiceNumber = $invoice->invoice_number;
-
-    
-    $serviceName = $invoice->service_name->name;
-    $prefix = strtoupper(substr($serviceName, 0, 3)); // e.g., "TOU"
-
-    
-    $newInvoiceNumber =  'EID'.'-'.$prefix . '-' . $originalInvoiceNumber;
-
-    if ($invoice->invoice_number !== $newInvoiceNumber) {
-        $invoice->oldinvoiceno = $originalInvoiceNumber;
-        $invoice->invoice_number = $newInvoiceNumber;
-        $invoice->invoicestatus = 'edited';
-    }
-
-    
-    $invoice->amount = $request->amount;
-
+    // Update deduction amount
+    $invoice->amount = $request->total;
     $invoice->save();
 
-    return redirect()->route('superadmin.allinvoices')->with('success', 'Invoice updated successfully.');
+    // Update or create invoice record
+    $invoiceData = [
+        'receiver_name' => $request->receiver_name ?: $invoice->visaBooking->clint->client_name ?? 'N/A',
+        'address' => $request->receiver_address ?: $invoice->visaBooking->clint->permanent_address ?? 'N/A',
+        'visa_applicant' => $request->visa_applicant_name,
+        'amount' => $request->total,
+        'discount' => $request->discount ?? 0,
+        'payment_type' => $request->payment_mode,
+        'invoice_date' => now()->toDateString(),
+        'visa_fee' => $request->visa_fee ?? 0,
+        'service_charge' => $request->service_charge ?? 0,
+    ];
+
+    if ($invoice->invoice) {
+        $invoice->invoice->update($invoiceData);
+    } else {
+        $invoiceData['bookingid'] = $invoice->id;
+        $invoice->invoice()->create($invoiceData);
+    }
+
+    // Update client details if visa_applicant_name is provided
+    if ($request->visa_applicant_name && $invoice->visaBooking && $invoice->visaBooking->clint) {
+        try {
+            // Set database connection for client details
+            $this->agencyService->setDatabaseConnection($invoice->agency->database_name);
+            
+            $clientDetails = \App\Models\ClientDetails::on('user_database')
+                ->where('id', $invoice->visaBooking->client_id)
+                ->first();
+                
+            if ($clientDetails) {
+                $clientDetails->client_name = $request->visa_applicant_name;
+                $clientDetails->save();
+            }
+        } catch (\Exception $e) {
+            // Log error but don't fail the request
+            \Log::error('Failed to update client details: ' . $e->getMessage());
+        }
+    }
+
+    return redirect()->route('invoice.all', ['type' => 'agencies'])->with('success', 'Invoice edited successfully.');
 }
      
   
@@ -475,7 +495,7 @@ public function hs_allInvoices(Request $request)
             'docsign'
             ])->where(function ($query) {
             $query->whereNull('invoicestatus')
-                ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
+                ->orWhereNotIn('invoicestatus', ['canceled']);
             })->paginate($perPage);
 
 
@@ -656,7 +676,7 @@ public function hs_allInvoices(Request $request)
     ])
     ->where(function ($q) {
         $q->whereNull('invoicestatus')
-          ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
+          ->orWhereNotIn('invoicestatus', ['canceled']);
     });
 
     // ✅ Filter by agency if agency is logged in
@@ -672,14 +692,18 @@ public function hs_allInvoices(Request $request)
 
     public function hseditInvoice($id){
         
-    $invoice = Deduction::with('service_name')->findOrFail($id);
-    
-     
-    if ($invoice->invoicestatus === 'edited') {
-        return redirect()->route('invoice.all')->with('error', 'This invoice can only be edited once.');
-    }
+    $invoice = Deduction::with(['service_name', 'visaBooking.clint', 'visaBooking.origin', 'visaBooking.destination', 'visaBooking.visasubtype', 'visaBooking.visa', 'invoice'])->findOrFail($id);
 
-    return view('superadmin.pages.invoicehandling.editinvoice', compact('invoice'));
+    // Check if user is agency or superadmin
+    $agency = $this->agencyService->getAgencyData();
+    
+    if ($agency) {
+        // Agency user - return agency view
+        return view('agencies.pages.invoicehandling.editinvoice', compact('invoice'));
+    } else {
+        // Superadmin user - return superadmin view
+        return view('superadmin.pages.invoicehandling.editinvoice', compact('invoice'));
+    }
     } 
 
 
@@ -708,6 +732,9 @@ public function hs_allInvoices(Request $request)
         // Treat $id as VisaBooking ID and fetch booking used by the component
         $booking = app(\App\Repositories\DocumentSignRepository::class)->checkSignDocument($id);
         $termconditon = app(\App\Repositories\TermConditionRepository::class)->allTeamTypes();
+
+        // Load additional relationships for invoice display
+        $booking->load('deduction.invoice', 'origin', 'destination', 'visasubtype', 'visa', 'clint');
 
         return view('superadmin.pages.invoicehandling.invoiceview', [
             'booking' => $booking,

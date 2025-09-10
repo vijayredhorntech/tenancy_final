@@ -175,7 +175,7 @@
 
                         <div class="flex items-center">
                             <i class="fas fa-file-invoice mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Client Invoices</span>
+                            <span class="text-lg font-medium">Retail Invoices</span>
                         </div>
 
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-1/2 -translate-y-1/2"></i>
@@ -188,7 +188,7 @@
 
                         <div class="flex items-center">
                             <i class="fas fa-receipt mr-2 text-sm"></i>
-                            <span class="text-lg font-medium">Retail Invoices</span>
+                            <span class="text-lg font-medium">Trade Invoices</span>
                         </div>
 
                         <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-1/2 -translate-y-1/2"></i>

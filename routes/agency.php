@@ -358,7 +358,7 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::post('generateinvoice', 'hsGenerateInvoice')->name('generateinvoice');
     Route::get('/{type}/invoice', 'hsAllinvoice')->name('invoice.all');
     Route::get('{type}/retail-invoices',  'hsRetailInvoices')->name('retail.invoices');
-    Route::get('/editinvoice/{id}','hs_editInvoice')->name('editinvoice');
+    Route::get('/editinvoice/{id}','hseditInvoice')->name('editinvoice');
     Route::get('/editindex', 'hsEditedInvoices')->name('editindex');
     Route::post('/allinvoices/updateinvoice/{id}', 'hs_updateInvoice')->name('allinvoices.updateinvoice');
     

@@ -20,12 +20,10 @@
                         <tr>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Sr. No.</td>          
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice No.</td>
-                            <!-- <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">receiver_name</td>             -->
+                            <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Receiver Name</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Service</td>
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice Date</td>
-
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</td>
-                            <!-- <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Payment Type</td> -->
                             <td class="border-[1px] border-secondary/50 bg-gray-100/90 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</td>
                         </tr>
 
@@ -38,37 +36,58 @@
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>                         
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
                                          {{$invoice->invoice_number ?? 'N/A'}} </td> 
-                                         
-
-                                        <!-- <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->client_name}}</td> -->
+                                        
+                                        <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">
+                                            @php
+                                                $receiverName = 'N/A';
+                                                // Priority: Use receiver_name from invoice if available (for edited invoices)
+                                                if (!empty($invoice->invoice->receiver_name)) {
+                                                    $receiverName = strtoupper($invoice->invoice->receiver_name);
+                                                } elseif (!empty($invoice->visaBooking->clint->client_name)) {
+                                                    $receiverName = strtoupper($invoice->visaBooking->clint->client_name);
+                                                } elseif (!empty($invoice->visaBooking->clientDetailsFromUserDB->client_name)) {
+                                                    $receiverName = strtoupper($invoice->visaBooking->clientDetailsFromUserDB->client_name);
+                                                } else {
+                                                    // Try to manually load client details if needed
+                                                    try {
+                                                        $clientDetails = \App\Models\ClientDetails::where('id', $invoice->visaBooking->client_id)->first();
+                                                        if ($clientDetails && !empty($clientDetails->client_name)) {
+                                                            $receiverName = strtoupper($clientDetails->client_name);
+                                                        }
+                                                    } catch (\Exception $e) {
+                                                        // If all else fails, show N/A
+                                                    }
+                                                }
+                                            @endphp
+                                            {{ $receiverName }}
+                                        </td>
+                                        
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->service_name->name}}</td>
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->date ? \Carbon\Carbon::parse($invoice->date)->format('d-m-Y') : '—'}}</td>
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm"> {{$invoice['amount']}}</td>
-                                        <!-- <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->payment_type}}</td> -->
 
 
                                         
                                
                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                             <div class="flex gap-2 items-center">
-                                                        <!-- Edit Button -->
+                                                        <!-- View Button -->
                                                         <a href="{{ route('viewinvoice', $invoice->flight_booking_id) }}"
-                                                            class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white">
-                                                            <i class="fa fa-eye"></i>
+                                                            class="bg-primary/10 text-primary px-2 py-1 rounded-[3px] hover:bg-primary hover:text-white text-xs">
+                                                            View
                                                         </a>
 
-                                                        
+                                                        <!-- Edit Button -->
                                                         <a href="{{ route('editinvoice', $invoice->id) }}"
-                                                            class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white">
-                                                            <i class="fa fa-pen"></i>
+                                                            class="bg-primary/10 text-primary px-2 py-1 rounded-[3px] hover:bg-primary hover:text-white text-xs">
+                                                            Edit
                                                         </a>
-
 
                                                       <!-- Cancel Button -->
                                                             <a href="{{ route('cancelinvoice', ['id' => $invoice->id]) }}"
                                                                 onclick="return confirm('Are you sure you want to cancel this invoice?')"
-                                                                class="bg-red-100 text-red-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-red-600 hover:text-white">
-                                                                <i class="fa fa-times"></i>
+                                                                class="bg-red-100 text-red-600 px-2 py-1 rounded-[3px] hover:bg-red-600 hover:text-white text-xs">
+                                                                Cancel
                                                             </a>
                                                                                                                 
                                             </div>
@@ -78,7 +97,7 @@
 
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
+                                        <td colspan="7" class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
                                     </tr>
                                 @endforelse
 

@@ -18,25 +18,6 @@
             <form action="{{ route('allinvoices.updateinvoice', $invoice->id) }}" method="POST" class="space-y-6">
                 @csrf
 
-                {{-- Invoice Header Section --}}
-                <div class="bg-gray-50 p-4 rounded-lg">
-                    <h3 class="text-lg font-semibold text-ternary mb-4">Invoice Header</h3>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block font-semibold text-sm text-ternary/90 mb-1">Invoice No</label>
-                    <input type="text" name="invoice_number" value="{{ $invoice->invoice_number }}" readonly
-                    class="w-full bg-gray-100 border border-secondary/40 rounded-md px-3 py-2 text-sm cursor-not-allowed">
-                </div>
-
-                        <div>
-                            <label class="block font-semibold text-sm text-ternary/90 mb-1">Service Name</label>
-                            <input type="text" value="{{ $invoice->service_name->name ?? 'N/A' }}" readonly
-                                class="w-full bg-gray-100 border border-secondary/40 rounded-md px-3 py-2 text-sm cursor-not-allowed">
-                        </div>
-                    </div>
-                </div>
-
                 {{-- Receiver (Bill To) Section --}}
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <div class="flex items-center mb-4">
@@ -49,18 +30,6 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block font-semibold text-sm text-ternary/90 mb-1">Original Client Name</label>
-                            <input type="text" value="{{ $invoice->visaBooking->clint->client_name ?? 'N/A' }}" readonly
-                                class="w-full bg-gray-100 border border-secondary/40 rounded-md px-3 py-2 text-sm cursor-not-allowed">
-                        </div>
-
-                <div>
-                            <label class="block font-semibold text-sm text-ternary/90 mb-1">Client ID</label>
-                            <input type="text" value="{{ $invoice->visaBooking->client_id ?? 'N/A' }}" readonly
-                                class="w-full bg-gray-100 border border-secondary/40 rounded-md px-3 py-2 text-sm cursor-not-allowed">
-                        </div>
-                        
                         <div id="receiverNameField" class="hidden">
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Receiver Name <span class="text-red-500">*</span></label>
                             <input type="text" name="receiver_name" value="{{ old('receiver_name', $invoice->invoice->receiver_name ?? '') }}"
@@ -83,10 +52,10 @@
                         <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Name Of Visa Applicant <span class="text-red-500">*</span></label>
                             <input type="text" name="visa_applicant_name" value="{{ old('visa_applicant_name', $invoice->invoice->visa_applicant ?? $invoice->visaBooking->clint->client_name ?? '') }}"
-                        class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm" required>
-                </div>
-
-                <div>
+                                class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm" required>
+                        </div>
+                        
+                        <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Passport Origin</label>
                             <input type="text" name="passport_origin" value="{{ old('passport_origin', $invoice->visaBooking->origin->name ?? 'N/A') }}"
                                 class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
@@ -100,7 +69,7 @@
                         
                         <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Passport Member DOB</label>
-                            <input type="date" name="passport_dob" value="{{ old('passport_dob', $invoice->visaBooking->clint->date_of_birth ?? $invoice->visaBooking->clientDetailsFromUserDB->date_of_birth ?? '') }}"
+                            <input type="date" name="passport_dob" value="{{ old('passport_dob', $invoice->visaBooking->clint->date_of_birth ?? $invoice->visaBooking->clientDetailsFromUserDB->date_of_birth ?? $invoice->visaBooking->clint->clientDetailsFromUserDB->date_of_birth ?? '') }}"
                                 class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
                         </div>
                         
@@ -161,10 +130,10 @@
                         <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">SubTotal (£)</label>
                             <input type="number" step="0.01" id="subtotal" value="{{ old('subtotal', $invoice->amount ?? 0) }}" readonly
-                        class="w-full bg-gray-100 border border-secondary/40 rounded-md px-3 py-2 text-sm cursor-not-allowed">
-                </div>
-
-                <div>
+                                class="w-full bg-gray-100 border border-secondary/40 rounded-md px-3 py-2 text-sm cursor-not-allowed">
+                        </div>
+                        
+                        <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Visa Fee (£)</label>
                             <input type="number" step="0.01" id="visa_fee" name="visa_fee" value="{{ old('visa_fee', $invoice->invoice->visa_fee ?? 0) }}" 
                                 oninput="calculateTotal()" class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
@@ -180,9 +149,9 @@
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Discount (£)</label>
                             <input type="number" step="0.01" id="discount" name="discount" value="{{ old('discount', $invoice->invoice->discount ?? 0) }}" 
                                 oninput="calculateTotal()" class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
-                </div>
-
-                <div>
+                        </div>
+                        
+                        <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Total (£) <span class="text-red-500">*</span></label>
                             <input type="number" step="0.01" id="total" name="total" value="{{ old('total', $invoice->amount ?? 0) }}" readonly
                                 class="w-full bg-gray-100 border border-secondary/40 rounded-md px-3 py-2 text-sm cursor-not-allowed">
