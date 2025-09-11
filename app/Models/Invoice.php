@@ -27,10 +27,13 @@ class Invoice extends Model
         'discount',
         'payment_type',
         'visa_fee',
+<<<<<<< HEAD
         'new_price',
         'type',
         'new_invoice_number',
         'status',
+=======
+>>>>>>> 42306492a4676e4ba81226987d40e9ec96046823
         'service_charge',
     ];
 
