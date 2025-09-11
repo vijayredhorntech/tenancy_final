@@ -368,7 +368,7 @@ public function hsupdateRefundInvoice(Request $request)
 {
 
     $request->validate([
-        'invoice_id'   => 'required|exists:invoices,id',
+        'application_id'   => 'required|exists:deductions,id',
         'reason'       => 'nullable|string',
         'refundamount' => 'nullable|numeric|min:0',
         'payment_mode' => 'required|string',
