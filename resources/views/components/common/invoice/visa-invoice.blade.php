@@ -291,13 +291,13 @@
 
          $price = 0;
 
-  if (optional($invoiceData)->status === 'edited') {
-    $price = (float) $invoiceData->new_price;
-} else {
-    $price = is_numeric(optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
-        ? (float) (optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
-        : 0;
-}
+    if (optional($invoiceData)->status === 'edited') {
+        $price = (float) $invoiceData->new_price;
+    } else {
+        $price = is_numeric(optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
+            ? (float) (optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
+            : 0;
+    }
 
 
     $price = number_format($price, 2);
@@ -354,10 +354,7 @@
     <div class="mt-4 w-full">
         <h2 class="text-md font-bold bg-[#26ace2] p-3 w-max text-white">VISA SERVICES</h2>
         
-<<<<<<< HEAD
         
-=======
->>>>>>> 42306492a4676e4ba81226987d40e9ec96046823
         <div class="w-full overflow-hidden mt-2">
             <table class="w-full">
                 <tr class="bg-[#aed6f1] text-black font-bold text-sm">
@@ -378,25 +375,14 @@
                     <td class="p-1">{{ strtoupper($visaType) }}</td>
                     <td class="p-1">{{ $currency }}{{ number_format($visaFee, 2) }}</td>
                     <td class="p-1">{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td>
-<<<<<<< HEAD
                     <td class="p-1">{{ $currency }}{{ $price }}</td>
-=======
-                    <td class="p-1">{{ $currency }}{{ number_format(is_numeric($invoiceData?->amount ?? $booking->total_amount ?? 0) ? (float)($invoiceData?->amount ?? $booking->total_amount ?? 0) : 0, 2) }}</td>
->>>>>>> 42306492a4676e4ba81226987d40e9ec96046823
                 </tr>
             </table>
         </div>
         
         <div class="w-full flex justify-end mt-2">
-<<<<<<< HEAD
             <span class="text-sm font-bold">Total: <span class="text-blue-600">{{ $currency }}{{ $price }}</span></span>
         </div>
-=======
-            <span class="text-sm font-bold">Total: <span class="text-blue-600">{{ $currency }}{{ number_format(is_numeric($invoiceData?->amount ?? $booking->total_amount ?? 0) ? (float)($invoiceData?->amount ?? $booking->total_amount ?? 0) : 0, 2) }}</span></span>
-        </div>
-        
-        
->>>>>>> 42306492a4676e4ba81226987d40e9ec96046823
 
         <div class="w-auto max-w-xs mt-2">
             <table class="w-full">
@@ -407,13 +393,9 @@
                 </tr>
                 <tr class="text-black text-xs border-b-[1px] border-blue-100">
                     <td class="p-1">{{strtoupper($invoiceData?->payment_type ?? 'Cash')}}</td>
-<<<<<<< HEAD
                     <td class="p-1"> {{ $price }}</td>
 
 
-=======
-                    <td class="p-1">{{ $currency }}{{ number_format(is_numeric($invoiceData?->amount ?? $booking->total_amount ?? 0) ? (float)($invoiceData?->amount ?? $booking->total_amount ?? 0) : 0, 2) }}</td>
->>>>>>> 42306492a4676e4ba81226987d40e9ec96046823
                     <td class="p-1">{{$booking->created_at->format('Y-m-d')}}</td>
                 </tr>
             </table>
