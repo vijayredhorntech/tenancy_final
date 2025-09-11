@@ -291,13 +291,14 @@
 
          $price = 0;
 
-    if ($invoiceData->status === 'edited') {
-        $price = (float) $invoiceData->new_price;
-    } else {
-        $price = is_numeric($invoiceData?->amount ?? $booking->total_amount ?? 0)
-            ? (float) ($invoiceData?->amount ?? $booking->total_amount ?? 0)
-            : 0;
-    }
+  if (optional($invoiceData)->status === 'edited') {
+    $price = (float) $invoiceData->new_price;
+} else {
+    $price = is_numeric(optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
+        ? (float) (optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
+        : 0;
+}
+
 
     $price = number_format($price, 2);
 

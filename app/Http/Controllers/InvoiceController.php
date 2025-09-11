@@ -897,9 +897,9 @@ public function hsAllinvoice(Request $request)
         'invoice',
         'docsign'
     ])
-    ->where(function ($q) {
-        $q->whereNull('invoicestatus')
-          ->orWhereNotIn('invoicestatus', ['canceled']);
+   ->where(function ($q) {
+        $q->whereNull('status')
+          ->orWhereNotIn('status', ['canceled']);
     });
 
     // ✅ Filter by agency if agency is logged in
