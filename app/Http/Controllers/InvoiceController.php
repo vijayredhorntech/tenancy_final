@@ -881,7 +881,7 @@ public function hsAllinvoice(Request $request)
 
     $agency = $this->agencyService->getAgencyData(); // null for superadmin, agency model for agency users
 
-    $invoicesQuery = Deduction::with([
+ $invoicesQuery = Deduction::with([
         'service_name',
         'agency',
         'visaBooking.visa',
@@ -898,9 +898,10 @@ public function hsAllinvoice(Request $request)
         'docsign'
     ])
     ->where(function ($q) {
-        $q->whereNull('invoicestatus')
-          ->orWhereNotIn('invoicestatus', ['canceled']);
+        $q->whereNull('invoicestatus')   // Deduction table column
+          ->orWhere('invoicestatus', '!=', 'canceled'); // Deduction table column
     });
+   
 
     // ✅ Filter by agency if agency is logged in
     if ($agency) {
@@ -909,37 +910,36 @@ public function hsAllinvoice(Request $request)
 
     // ✅ Apply filters
     // 🔎 Filter by invoice relation
-    $invoicesQuery->whereHas('invoice', function ($q) use ($request) {
-        if ($request->filled('status')) {
-            $q->where('status', $request->status);
-        }
 
-        if ($request->filled('date_from')) {
-            $q->whereDate('created_at', '>=', $request->date_from);
-        }
-        if ($request->filled('date_to')) {
-            $q->whereDate('created_at', '<=', $request->date_to);
-        }
-
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $q->where(function ($subQ) use ($search) {
-                $subQ->where('invoice_no', 'like', "%{$search}%")
-                     ->orWhere('client_name', 'like', "%{$search}%");
-            });
-        }
+  
+ if ($request->filled('status') || $request->filled('date_from') || $request->filled('date_to') || $request->filled('search')) {
+    $invoicesQuery->where(function ($q) use ($request) {
+        $q->whereHas('invoice', function ($subQ) use ($request) {
+            if ($request->filled('status')) {
+           
+                $subQ->where('status', $request->status);
+            }
+            if ($request->filled('date_from')) {
+                $subQ->whereDate('created_at', '>=', $request->date_from);
+            }
+            if ($request->filled('date_to')) {
+                $subQ->whereDate('created_at', '<=', $request->date_to);
+            }
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $subQ->where(function ($innerQ) use ($search) {
+                    $innerQ->where('invoice_no', 'like', "%{$search}%")
+                           ->orWhere('client_name', 'like', "%{$search}%");
+                });
+            }
+        })
+        ->orWhereDoesntHave('invoice'); // ✅ include rows without invoice
     });
-
-    // 🔎 Filter by service_name relation
-    if ($request->filled('service_name')) {
-        $invoicesQuery->whereHas('service_name', function ($q) use ($request) {
-            $q->where('name', 'like', '%' . $request->service_name . '%');
-        });
-    }
-
+}
     $invoices = $perPage
         ? $invoicesQuery->paginate($perPage)->appends($request->query())
         : $invoicesQuery->get();
+     
 
     return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices'));
 }

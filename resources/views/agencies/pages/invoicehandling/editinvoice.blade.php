@@ -52,7 +52,6 @@
                         <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Name Of Visa Applicant <span class="text-red-500">*</span></label>
                             <input type="text" name="visa_applicant_name" value="{{ old('visa_applicant_name', $invoice->invoice->visa_applicant ?? $invoice->visaBooking->clint->client_name ?? '') }}"
-<<<<<<< HEAD
                                 class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm" disabled>
                         </div>
                         
@@ -81,39 +80,6 @@
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Visa Sub Type</label>
                             <input type="text" name="visa_type" value="{{ old('visa_type', $invoice->visaBooking->visasubtype->name ?? 'N/A') }} "
                                 class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm" disabled>
-=======
-                                class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm" required>
-                        </div>
-                        
-                        <div>
-                            <label class="block font-semibold text-sm text-ternary/90 mb-1">Passport Origin</label>
-                            <input type="text" name="passport_origin" value="{{ old('passport_origin', $invoice->visaBooking->origin->name ?? 'N/A') }}"
-                                class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
-                        </div>
-                        
-                        <div>
-                            <label class="block font-semibold text-sm text-ternary/90 mb-1">Passport No.</label>
-                            <input type="text" name="passport_number" value="{{ old('passport_number', $invoice->visaBooking->clint->passport_number ?? $invoice->visaBooking->clientDetailsFromUserDB->passport_number ?? 'N/A') }}"
-                                class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
-                        </div>
-                        
-                        <div>
-                            <label class="block font-semibold text-sm text-ternary/90 mb-1">Passport Member DOB</label>
-                            <input type="date" name="passport_dob" value="{{ old('passport_dob', $invoice->visaBooking->clint->date_of_birth ?? $invoice->visaBooking->clientDetailsFromUserDB->date_of_birth ?? $invoice->visaBooking->clint->clientDetailsFromUserDB->date_of_birth ?? '') }}"
-                                class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
-                        </div>
-                        
-                        <div>
-                            <label class="block font-semibold text-sm text-ternary/90 mb-1">Visa Country</label>
-                            <input type="text" name="visa_country" value="{{ old('visa_country', $invoice->visaBooking->destination->name ?? 'N/A') }}"
-                                class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
-                        </div>
-                        
-                        <div>
-                            <label class="block font-semibold text-sm text-ternary/90 mb-1">Visa Type</label>
-                            <input type="text" name="visa_type" value="{{ old('visa_type', $invoice->visaBooking->visasubtype->name ?? 'N/A') }}"
-                                class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
->>>>>>> 42306492a4676e4ba81226987d40e9ec96046823
                         </div>
                     </div>
                 </div>

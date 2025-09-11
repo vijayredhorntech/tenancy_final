@@ -120,7 +120,7 @@
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>                         
                                         <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
                                             @if($invoice->invoice && $invoice->invoice->status === 'edited')
-                                                {{ $invoice->invoice->new_invoice_number }}
+                                                {{ $invoice->invoice->new_invoice_number }} <span class="text-xs">(Edited)</span>
                                             @else
                                                 {{ $invoice->invoice_number ?? 'N/A' }}
                                             @endif
