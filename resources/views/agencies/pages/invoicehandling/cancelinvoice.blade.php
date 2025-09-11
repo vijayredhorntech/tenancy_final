@@ -48,7 +48,7 @@
 
  
         <input type="hidden" name="application_id" value="{{ $invoice->id }}">
-        <input type="hidden" name="invoice_id" value="{{ $invoice->invoice->id }}">
+        {{-- <input type="hidden" name="invoice_id" value="{{ $invoice->invoice->id }}"> --}}
         <input type="hidden" name="application_number" value="{{ $invoiceNumber }}">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
