@@ -379,11 +379,10 @@ public function hsupdateRefundInvoice(Request $request)
     $agencyId = $agency->id;
 
     // Find deduction with invoice relation
-    $deduction = Deduction::with('invoice')
+    $deduction = Deduction::with('invoice','visabooking')
         ->where('id', $request->application_id) // fixed: use invoice_id
         ->where('agency_id', $agencyId)
         ->first();
-
 
     if (!$deduction) {
         return back()->with('error', 'Invoice not found.');
@@ -402,17 +401,27 @@ public function hsupdateRefundInvoice(Request $request)
     }
 
     // Prepare invoice update data
-    $invoiceData = [
-         'receiver_name' => $request->receiver_name ?? 'Default Name', // <-- Add this
-    'receiver_address' => $request->receiver_address ?? 'Default Address',
-        'discount'         => $request->discount ?? 0,
-        'payment_type'     => $request->payment_mode,
-        'new_price'        => $request->total,
-        'type'             => 'agency',
-        'new_invoice_number' => $formattedInvoice,
-        'status'           => 'Canceled',
-        'invoicestatus'    => 'Canceled',
-    ];
+$invoiceData = [
+    'receiver_name'      => $request->receiver_name ?? 'Dummy Client',
+    'invoice_date'       => $request->invoice_date ?? Carbon::now()->format('Y-m-d'),
+    'due_date'           => $request->invoice_date ?? Carbon::now()->addDays(14)->format('Y-m-d'), // optional
+    'different_name'     => $request->different_name ?? null,
+    'address'            => $request->address ?? 'Dummy Address',
+    'bookingid'          => $request->bookingid ?? null,
+    'visa_applicant'     => $request->visa_applicant_name ?? 'Self',
+    'service_id'         => $request->service_id ?? null,
+    'billing_id'         => $request->billing_id ?? null,
+    'applicant_id'       => $request->applicant_id ?? null,
+    'amount'             => $request->total ?? '0',
+    'discount'           => $request->discount ?? 0,
+    'payment_type'       => $request->payment_mode ?? 'CASH',
+    'visa_fee'           => $request->visa_fee ?? 0,
+    'service_charge'     => $request->service_charge ?? 0,
+    'new_invoice_number' => $formattedInvoice,
+    'status'             => 'Canceled',
+    'new_price'          => $request->total ?? '0',
+    'type'               => 'agency',
+];
 
     // Update or create invoice
     if ($deduction->invoice) {
