@@ -23,14 +23,27 @@
     <div class="bg-gray-50 p-4 rounded-lg">
         <h3 class="text-lg font-semibold text-ternary mb-4">Service Details</h3>
         @php 
-            $invoiceNumber = $invoice->invoice->invoice_number;
-            if($invoice->invoice->status=='edited'){
-                $invoiceNumber = $invoice->invoice->new_invoice_number;
-                $amount=$invoice->invoice->new_price;
-            }else{
-                $invoiceNumber = $invoice->invoice_number;
-                $amount=$invoice->amount;
-            }
+            // $invoiceNumber = $invoice->invoice->invoice_number;
+            // if($invoice->invoice->status=='edited'){
+            //     $invoiceNumber = $invoice->invoice->new_invoice_number;
+            //     $amount=$invoice->invoice->new_price;
+            // }else{
+            //     $invoiceNumber = $invoice->invoice_number;
+            //     $amount=$invoice->amount;
+            // }
+              if ($invoice->invoice) {
+                        $invoiceNumber = $invoice->invoice->status === 'edited'
+                            ? $invoice->invoice->new_invoice_number
+                            : $invoice->invoice->invoice_number;
+
+                        $amount = $invoice->invoice->status === 'edited'
+                            ? $invoice->invoice->new_price
+                            : $invoice->amount ?? 0;
+                    } else {
+                        // Fallback if invoice relation is missing
+                        $invoiceNumber = $invoice->invoice_number ?? 'N/A';
+                        $amount = $invoice->amount ?? 0;
+                    }
         @endphp
 
  
