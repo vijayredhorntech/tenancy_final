@@ -196,7 +196,7 @@
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Total</th> 
                       
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date  </th>
-                        <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Passport Submit</th>
+                        <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Document Submit</th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application status</th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Update Status</th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</th>
@@ -260,13 +260,6 @@
                                         </span>
                                     </td>
 
-                            {{--        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
-                                        <span class="bg-{{ $booking->applicationworkin_status === 'Pending' ? 'danger' : 'success' }}/10 
-                                                    text-{{ $booking->applicationworkin_status === 'Pending' ? 'danger' : 'success' }} 
-                                                    px-2 py-1 rounded-[3px] font-medium">
-                                            {{ $booking->applicationworkin_status }}
-                                        </span>
-                                    </td> --}}
 
                                     <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
                                         @php
@@ -282,12 +275,13 @@
                                         @endphp
 
                                         @if($status === 'Custom Message' && !empty($booking->custom_message))
-                                            <span class="px-2 py-1 rounded-[3px] font-medium cursor-pointer text-sm" 
+                                            {{-- <span class="px-2 py-1 rounded-[3px] font-medium cursor-pointer text-sm" 
                                                   style="background-color: #26ace2; color: white;"
                                                   title="Click on it"
                                                   onclick="showCustomMessage('{{ addslashes($booking->custom_message) }}')">
-                                                Message
-                                            </span>
+                                              {{$booking->custom_message}}
+                                            </span> --}}
+                                          <p>  {{$booking->custom_message}} </p>
                                         @else
                                             <span class="{{ $colors['bg'] }} {{ $colors['text'] }} px-2 py-1 rounded-[3px] font-medium">
                                                 {{ $status }}

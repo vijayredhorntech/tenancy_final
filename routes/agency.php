@@ -352,13 +352,17 @@ Route::controller(ClientLoginController::class)->group(function () {
 
 Route::controller(InvoiceController::class)->group(function () {
     Route::get('{type}/invoice/', 'hs_invoice')->name('invoice.index');
+    Route::get('/{type}/refund', 'hsrefundInvoice')->name('invoice.refund');
     Route::get('/invoice/view/{id}', 'hs_viewInvoice')->name('invoice.view');
     Route::post('agency/amount/store', 'hs_payamountstore')->name('agencypay.invoice.ammount');   
-    Route::get('agency/cancel', 'hs_cancelInvoice')->name('agencypay.invoice.cancel');   
+    Route::get('agency/cancel/{id}', 'hs_cancelInvoice')->name('cancel.invoice');   
+  Route::post('/cancel-invoices/update', 'hsupdateRefundInvoice')->name('cancelinvoices.update'); 
+
+
     Route::post('generateinvoice', 'hsGenerateInvoice')->name('generateinvoice');
     Route::get('/{type}/invoice', 'hsAllinvoice')->name('invoice.all');
     Route::get('{type}/retail-invoices',  'hsRetailInvoices')->name('retail.invoices');
-    Route::get('/editinvoice/{id}','hs_editInvoice')->name('editinvoice');
+    Route::get('/editinvoice/{id}','hseditInvoice')->name('editinvoice');
     Route::get('/editindex', 'hsEditedInvoices')->name('editindex');
     Route::post('/allinvoices/updateinvoice/{id}', 'hs_updateInvoice')->name('allinvoices.updateinvoice');
     

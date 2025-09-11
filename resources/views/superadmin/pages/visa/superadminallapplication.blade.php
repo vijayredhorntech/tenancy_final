@@ -162,7 +162,7 @@
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Total Amount(£)</th> 
                   
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Application Submission Date  </th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Passport Submit</th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Document Submit</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md whitespace-nowrap">Application status</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md ">Action</th>
 
@@ -228,13 +228,6 @@
                             <span class="block font-medium text-xs leading-tight">{{ $booking->visasubtype->name }}</span>
                         </td>
 
-                      
-                        <!-- <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
-                        
-                                <span class="font-medium text-xs" >Total :  {{ $booking->clientapplciation->count() ?: 0 }}</span><br>
-                                <span class="font-medium text-xs"> Pending :  {{ $booking->clientapplciation()->where('document_status', '0')->count() }}</span><br>
-                                <span class="font-medium text-xs"> Done :      {{ $booking->clientapplciation()->where('document_status', '1')->count() }}</span>
-                            </td> -->
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm whitespace-nowrap">
                                 <div class="flex justify-between items-center">
                                     <span class="font-medium text-xs ">
@@ -260,14 +253,6 @@
                                     </span>
                                 </td>
 
-                        {{--        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
-                                    <span class="bg-{{ $booking->applicationworkin_status === 'Pending' ? 'danger' : 'success' }}/10 
-                                                text-{{ $booking->applicationworkin_status === 'Pending' ? 'danger' : 'success' }} 
-                                                px-2 py-1 rounded-[3px] font-medium">
-                                        {{ $booking->applicationworkin_status }}
-                                    </span>
-                                </td> --}}
-
                                 <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
                                     @php
                                         $status = $booking->applicationworkin_status;
@@ -282,12 +267,13 @@
                                     @endphp
 
                                                                             @if($status === 'Custom Message' && !empty($booking->custom_message))
-                                            <span class="px-2 py-1 rounded-[3px] font-medium cursor-pointer text-sm" 
+                                            {{-- <span class="px-2 py-1 rounded-[3px] font-medium cursor-pointer text-sm" 
                                                   style="background-color: #26ace2; color: white;"
                                                   title="Click on it"
                                                   onclick="showCustomMessage('{{ addslashes($booking->custom_message) }}')">
-                                                Message
-                                            </span>
+                                               {{$booking->custom_message}}
+                                            </span> --}}
+                                             {{$booking->custom_message}}
                                         @else
                                             <span class="{{ $colors['bg'] }} {{ $colors['text'] }} px-2 py-1 rounded-[3px] font-medium">
                                                 {{ $status }}
@@ -295,72 +281,17 @@
                                         @endif
                                 </td>
 
-                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
+                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
                             <div class="flex gap-2 items-center">
-                                @if($booking->applicationworkin_status == "Complete")              
-                                    {{--<div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                        <i class="fa fa-check"></i> <!-- FontAwesome icon -->
-                                    </div> 
-
-                                    <a href="{{ route('superadminaad.document.upload', ['id' => $booking->id]) }}" title="Uploade Document">
-                                    <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
-                                       <i class="fas fa-upload"></i><!-- FontAwesome icon -->
-                                        </div> 
-                                    </a> --}}
-                                @else
-                                
-                                 {{--<a href="{{ route('superadminaad.document.application', ['id' => $booking->id]) }}" title="Remind for funds">
-                                    <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                            <i class="fa fa-plus"></i> <!-- FontAwesome icon -->
-                                        </div> 
-                                    </a>
-                                    <a href="{{ route('superadminvisaedit.application', ['id' => $booking->id]) }}" title="Remind for funds">
-                                        <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
-                                            <i class="fa fa-pencil"></i>
-                                        </div>
-                                    </a>
-
-                                    <a href="{{ route('superadminvisasendemail.application', ['id' => $booking->id]) }}" title="Remind for funds">
-                                        <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
-                                            <i class="fa fa-envelope"></i>
-                                        </div>
-                                    </a> --}}
-
-                                    {{-- <a href="{{route('superadminvisachat.client',['id' => $booking->client_id,'token'->$booking->agency->agencytoken])}}" title="Edit">
-                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fas fa-comment-dots"></i>
-                                        </div>
-                                      </a> --}}
-                                    {{--  <a href="{{ route('superadminvisachat.client', ['id' => $booking->client_id, 'token' => $booking->agency->agencytoken]) }}" title="Edit">
-                                        <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fas fa-comment-dots"></i>
-                                        </div>
-                                    </a>--}}
-
-                                @endif
-
-                                <!-- <a href="{{ route('visa.assign', ['id' => $booking->id]) }}" title="Assign to Visa Request">
-                                    <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
-                                        <i class="fa fa-clipboard-check"></i> 
-                                    </div>
-                                </a> -->
-
                                 <a href="{{ route('superadminvisa.applicationview', ['id' => $booking->id]) }}" title="Assign to Visa Request">
-                                    <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                        <i class="fa fa-eye"></i> <!-- FontAwesome icon -->
+                                    <div class="bg-green-100 text-green-600 px-3 py-1 flex gap-2 justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
+                                        <i class="fa fa-eye"></i>
+                                        <span>View Application</span>
                                     </div>
                                 </a>
-
-                           
-                                <!-- <a href="" title="View Dashboard">
-                                    <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
-                                        <i class="fa fa-computer"></i>
-                                    </div>
-                                </a> -->
-
-
                             </div>
                         </td>
+
                     </tr>
 
 

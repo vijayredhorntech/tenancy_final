@@ -20,6 +20,12 @@ class CancelInvoice extends Model
         'cancelled_by',
         'status',
         'amount',
+        'safi',
+        'atol',
+        'credit_charge',
+        'penalty',
+        'admin',
+        'misc',
         'cancelled_date',
     ];
 
@@ -27,4 +33,9 @@ class CancelInvoice extends Model
         'cancelled_date' => 'datetime',
         'amount' => 'decimal:2',
     ];
+
+        public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
 }

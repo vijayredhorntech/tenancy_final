@@ -26,8 +26,16 @@ class Invoice extends Model
         'amount',
         'discount',
         'payment_type',
+        'visa_fee',
+        'new_price',
+        'type',
+        'new_invoice_number',
+        'status',
+        'service_charge',
     ];
 
+
+        
     /**
      * Attribute casting.
      */
@@ -50,6 +58,11 @@ class Invoice extends Model
 
 
 }
+
+    public function cancel_invoice()
+    {
+        return $this->hasOne(CancelInvoice::class);
+    }
 
     
     /* ───── Optional relationships ─────

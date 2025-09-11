@@ -180,6 +180,7 @@ class AgencyService
 
 public function getClientinfo($invoices){
 
+     
     foreach ($invoices as $invoice) {
            
         if ($invoice->agency && $invoice->visaBooking) {
@@ -204,6 +205,7 @@ public function getClientinfo($invoices){
             $invoice->visaBooking->setRelation('otherMembersFromUserDB', $otherMembers);
         }
     }
+    return $invoices;
 
 }
 

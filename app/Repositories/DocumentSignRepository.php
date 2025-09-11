@@ -396,6 +396,7 @@ public function checkSignDocument($id){
 //     $realted_id=$id;
 //    $bookingData=Deduction::with('invoice','docsign')->where('id',$realted_id)->first(); 
    $clientData=$this->visaRepository->bookingDataById($id);
+  
    return $clientData;
 }
 

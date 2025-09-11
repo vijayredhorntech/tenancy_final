@@ -81,7 +81,7 @@
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Total</th> 
                   
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Booking Date  </th>
-                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Passport Submit</th>
+                    <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Document Submit</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Application status</th>
                     <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</th>
 
@@ -166,12 +166,13 @@
                                     @endphp
 
                                             @if($status === 'Custom Message' && !empty($booking->custom_message))
-            <span class="px-2 py-1 rounded-[3px] font-medium cursor-pointer text-sm" 
+            {{-- <span class="px-2 py-1 rounded-[3px] font-medium cursor-pointer text-sm" 
                   style="background-color: #26ace2; color: white;"
                   title="Click on it"
                   onclick="showCustomMessage('{{ addslashes($booking->custom_message) }}')">
                 Message
-            </span>
+            </span> --}}
+            {{$booking->custom_message}}
         @else
             <span class="{{ $colors['bg'] }} {{ $colors['text'] }} px-2 py-1 rounded-[3px] font-medium">
                 {{ $status }}
@@ -190,35 +191,35 @@
                                         <i class="fa fa-clock"></i>
                                     </div>
                                 @elseif($booking->applicationworkin_status == "Rejected")
-                                    <div class="bg-red-100 text-red-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-red-600 hover:text-white transition ease-in duration-200" title="Application Rejected">
-                                        <i class="fa fa-times"></i>
-                                    </div>
+                                 
                                 @else
-                                    <div class="bg-yellow-100 text-yellow-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-yellow-600 hover:text-white transition ease-in duration-200" title="Pending">
-                                        <i class="fa fa-hourglass-half"></i>
-                                    </div>
+                              
                                 @endif
 
                                 @if($booking->sendtoadmin == 1 || $booking->sendtoadmin == 3)
                                     {{-- Application has been submitted, show View Application --}}
                                     <a href="{{ route('client.application.view', ['id' => $booking->id]) }}" title="View Application">
-                                        <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                            <i class="fa fa-eye"></i>
-                                        </div>
-                                    </a>
+                                            <div class="bg-green-100 text-green-600 px-3 py-1 flex gap-2 items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
+                                                <i class="fa fa-eye"></i>
+                                                <span>View Application</span>
+                                            </div>
+                                        </a>
+
                                 @else
                            
                                     {{-- Application not submitted yet, show Fill Application --}}
-                                    <a href="{{ route('application.fill', [
+                                  <a href="{{ route('application.fill', [
                                             'type' => 'client',   // or 'agency'
                                             'id'   => $booking->id,
                                             'token'=> $booking->agency->agencytoken ?? ''
                                         ]) }}" 
-                                    title="Fill Application">
-                                        <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
-                                            <i class="fa fa-edit"></i>
+                                        title="Fill Application">
+                                        <div class="bg-blue-100 text-blue-600 px-3 py-1 flex items-center gap-2 rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
+                                            <i class="fa fa-clipboard-list"></i>
+                                            <span>Fill Application</span>
                                         </div>
                                     </a>
+
                                 @endif
                             </div>
                         </td>
