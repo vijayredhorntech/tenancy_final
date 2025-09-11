@@ -403,6 +403,8 @@ public function hsupdateRefundInvoice(Request $request)
 
     // Prepare invoice update data
     $invoiceData = [
+         'receiver_name' => $request->receiver_name ?? 'Default Name', // <-- Add this
+    'receiver_address' => $request->receiver_address ?? 'Default Address',
         'discount'         => $request->discount ?? 0,
         'payment_type'     => $request->payment_mode,
         'new_price'        => $request->total,
