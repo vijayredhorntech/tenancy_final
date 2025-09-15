@@ -1356,7 +1356,7 @@ public function getBookingByid($id, $type, $request)
         // Step 2: Compare and log changes
         foreach ($newData as $key => $newValue) {
             if (in_array($key, $ignoreFields)) {
-                continue; // Skip ignored/system fields
+                continue; // Skip ignored/system fieldsF
             }
 
             $oldValue = Arr::get($oldData, $key);
@@ -1576,5 +1576,11 @@ public function getBookingByid($id, $type, $request)
         }
         
         return true;
+    }
+
+
+    public function getBookingByClientId($clientId)
+    {
+        return VisaBooking::where('client_id', $clientId)->get();
     }
 }
