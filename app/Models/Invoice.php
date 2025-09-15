@@ -32,6 +32,8 @@ class Invoice extends Model
         'new_invoice_number',
         'status',
         'service_charge',
+        'payment_methods',
+        'card_last_4_digit',
     ];
 
 
@@ -43,6 +45,7 @@ class Invoice extends Model
         'invoice_date'   => 'date',
         'due_date'       => 'date',
         'discount'       => 'decimal:2',
+        'payment_methods' => 'array',
     ];
 
 

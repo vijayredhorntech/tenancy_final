@@ -14,7 +14,7 @@
              {{--        === heading section code ends here===--}}
 
              {{--        === this is code for table section ===--}}
-            <div class="w-full overflow-x-auto px-4 ">
+            <div class="w-full overflow-x-auto px-4 min-h-[600px]">
                 <div style="margin-bottom: 30px;">
                     <form id="filter-form" method="GET" action="" class="space-y-4">
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -180,33 +180,41 @@
                                                 
                                                 <!-- Dropdown Menu -->
                                                 <div id="action-{{ $invoice->id }}" 
-                                                     class="absolute right-0 mt-1 w-32 bg-white rounded-[3px] shadow-lg border border-gray-200 z-50 hidden"
-                                                     style="display: none;">
+                                                    class="absolute right-0 mt-1 w-32 bg-white rounded-[3px] shadow-lg border border-gray-200 z-50 hidden"
+                                                    style="display: none;">
+                                                    
                                                     <!-- View Option -->
                                                     <a href="{{ route('viewinvoice', $invoice->flight_booking_id) }}"
-                                                       class="block w-full px-3 py-2 text-xs text-white bg-cyan-500 hover:bg-cyan-600 rounded-t-[3px]">
+                                                    class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-cyan-500 hover:bg-cyan-600 rounded-t-[3px]">
                                                         View
                                                     </a>
                                                     
                                                     <!-- Edit Option -->
                                                     <a href="{{ route('editinvoice', $invoice->id) }}"
-                                                       class="block w-full px-3 py-2 text-xs text-white bg-purple-500 hover:bg-purple-600">
+                                                    class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-purple-500 hover:bg-purple-600">
                                                         Edit
                                                     </a>
                                                     
                                                     <!-- Cancel Option -->
                                                     <a href="{{ route('cancel.invoice', ['id' => $invoice->id]) }}"
-                                                       onclick="return confirm('Are you sure you want to cancel this invoice?')"
-                                                       class="block w-full px-3 py-2 text-xs text-white bg-red-500 hover:bg-red-600">
+                                                    onclick="return confirm('Are you sure you want to cancel this invoice?')"
+                                                    class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-red-500 hover:bg-red-600">
                                                         Cancel
                                                     </a>
                                                     
+                                                    <!-- Pay Option -->
+                                                    <button onclick="openPayModal('{{ $invoice->id }}', '{{ $invoice->invoice_number ?? 'N/A' }}', '{{ $invoice->amount ?? 0 }}', '{{ $receiverName }}', '{{ $invoice->visaBooking->clint->permanent_address ?? 'N/A' }}')"
+                                                            class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-blue-500 hover:bg-blue-600">
+                                                        Pay
+                                                    </button>
+                                                    
                                                     <!-- Refund Option -->
                                                     <button onclick="openRefundModal('{{ $invoice->id }}', '{{ $invoice->invoice_number ?? 'N/A' }}', '{{ $invoice->amount ?? 0 }}')"
-                                                            class="block w-full px-3 py-2 text-xs text-white bg-green-500 hover:bg-green-600 rounded-b-[3px]">
+                                                            class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-green-500 hover:bg-green-600 rounded-b-[3px]">
                                                         Refund
                                                     </button>
                                                 </div>
+
                                             </div>
                                         </td>
                                 </tr>
@@ -229,6 +237,9 @@
 
     <!-- Include Refund Modal -->
     @include('components.refund-modal')
+    
+    <!-- Include Pay Modal -->
+    @include('components.pay-modal')
 
     <script>
         function toggleDropdown(dropdownId) {

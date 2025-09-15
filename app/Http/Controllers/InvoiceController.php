@@ -761,10 +761,132 @@ public function processRefund(Request $request)
         ->with('success', 'Refund processed successfully.');
 }
 
+public function processPayment(Request $request)
+{
+    $request->validate([
+        'invoice_id' => 'required|exists:deductions,id',
+        'receiver_name' => 'required|string|max:255',
+        'receiver_address' => 'required|string|max:1000',
+        'card_last_4_digit' => 'nullable|string|max:4',
+        'payment_methods' => 'required|array|min:1',
+        'payment_methods.*' => 'in:credit_card,debit_card,cash,bank_transfer',
+        'credit_card_amount' => 'nullable|numeric|min:0',
+        'debit_card_amount' => 'nullable|numeric|min:0',
+        'cash_amount' => 'nullable|numeric|min:0',
+        'bank_transfer_amount' => 'nullable|numeric|min:0',
+    ]);
+
+    $agency = $this->agencyService->getAgencyData();
+    
+    if (!$agency) {
+        abort(403, 'Unauthorized. Agency not found.');
+    }
+
+    // Find the deduction/invoice
+    $deduction = Deduction::with(['invoice', 'visabooking'])
+        ->where('id', $request->invoice_id)
+        ->where('agency_id', $agency->id)
+        ->first();
+
+    if (!$deduction) {
+        return back()->with('error', 'Invoice not found.');
+    }
+
+    // Calculate total payment amount
+    $totalPayment = 0;
+    $paymentMethods = [];
+    
+    if (in_array('credit_card', $request->payment_methods) && $request->credit_card_amount) {
+        $totalPayment += $request->credit_card_amount;
+        $paymentMethods['credit_card'] = $request->credit_card_amount;
+    }
+    
+    if (in_array('debit_card', $request->payment_methods) && $request->debit_card_amount) {
+        $totalPayment += $request->debit_card_amount;
+        $paymentMethods['debit_card'] = $request->debit_card_amount;
+    }
+    
+    if (in_array('cash', $request->payment_methods) && $request->cash_amount) {
+        $totalPayment += $request->cash_amount;
+        $paymentMethods['cash'] = $request->cash_amount;
+    }
+    
+    if (in_array('bank_transfer', $request->payment_methods) && $request->bank_transfer_amount) {
+        $totalPayment += $request->bank_transfer_amount;
+        $paymentMethods['bank_transfer'] = $request->bank_transfer_amount;
+    }
+
+    if ($totalPayment <= 0) {
+        return back()->with('error', 'Please enter valid payment amounts.');
+    }
+
+    // Update deduction status to paid
+    $deduction->invoicestatus = 'Paid';
+    $deduction->save();
+
+    // Update visa booking status if exists
+    if ($deduction->visabooking) {
+        $deduction->visabooking->update([
+            'document_status' => 'Paid',
+            'applicationworkin_status' => 'Paid',
+        ]);
+    }
+
+    // Format invoice number with "P" for payment
+    $number = $deduction->invoice_number ?? null;
+    $formattedInvoice = $number && preg_match('/^([A-Za-z]+)(\d+)$/', $number, $matches)
+        ? $matches[1] . 'P' . $matches[2]
+        : 'INV' . uniqid();
+
+    // Prepare invoice data for payment
+    $invoiceData = [
+        'receiver_name'      => $request->receiver_name,
+        'invoice_date'       => now()->format('Y-m-d'),
+        'due_date'           => now()->format('Y-m-d'),
+        'address'            => $request->receiver_address,
+        'bookingid'          => $deduction->id,
+        'visa_applicant'     => $request->receiver_name,
+        'amount'             => $totalPayment,
+        'discount'           => 0,
+        'payment_type'       => 'PAYMENT',
+        'visa_fee'           => 0,
+        'service_charge'     => 0,
+        'new_invoice_number' => $formattedInvoice,
+        'status'             => 'Paid',
+        'new_price'          => $totalPayment,
+        'type'               => 'agency',
+        'payment_methods'    => json_encode($paymentMethods),
+        'card_last_4_digit'  => $request->card_last_4_digit,
+    ];
+
+    // Update or create invoice
+    $invoice = $deduction->invoice
+        ? tap($deduction->invoice)->update($invoiceData)
+        : $deduction->invoice()->create($invoiceData);
+
+    // Create payment record
+    CancelInvoice::create([
+        'invoice_id'         => $invoice->id,
+        'application_number' => $formattedInvoice,
+        'type'               => 'payment',
+        'remark'             => 'Payment processed via: ' . implode(', ', array_keys($paymentMethods)),
+        'reason'             => 'Payment Processed',
+        'cancelled_by'       => Auth::id(),
+        'status'             => 1,
+        'amount'             => $totalPayment,
+        'cancelled_date'     => now(),
+    ]);
+
+    return redirect()
+        ->route('invoice.all', ['type' => 'agencies'])
+        ->with('success', 'Payment processed successfully.');
+}
+
 public function hsrefundInvoice(Request $request, $type)
 {
     // Step 1: Get logged-in agency
     $agency = $this->agencyService->getAgencyData();
+    
 
     if (!$agency) {
         abort(403, 'Unauthorized. Agency not found.');
