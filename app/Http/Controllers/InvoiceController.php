@@ -900,6 +900,10 @@ public function hsCanceledInvoice(Request $request, $type)
             'hotelBooking',
             'hotelDetails'
         ])->where('agency_id', $agency->id)
+        ->where(function ($q) {
+            $q->whereNull('invoicestatus')
+              ->orWhereNotIn('invoicestatus', ['canceled', 'Refunded']);
+        })
         ->when($request->filled('search'), function ($query) use ($request) {
             $query->where(function ($q) use ($request) {
                 $q->where('invoice_number', 'like', '%' . $request->search . '%')
@@ -1049,7 +1053,7 @@ public function hs_allInvoices(Request $request)
             'docsign'
             ])->where(function ($query) {
             $query->whereNull('invoicestatus')
-                ->orWhereNotIn('invoicestatus', ['canceled']);
+                ->orWhereNotIn('invoicestatus', ['canceled', 'Refunded']);
             })->paginate($perPage);
 
 
@@ -1268,7 +1272,7 @@ public function hsAllinvoice(Request $request)
     ])
     ->where(function ($q) {
         $q->whereNull('invoicestatus')   // Deduction table column
-          ->orWhere('invoicestatus', '!=', 'canceled'); // Deduction table column
+          ->orWhereNotIn('invoicestatus', ['canceled', 'Refunded']); // Deduction table column
     });
    
 

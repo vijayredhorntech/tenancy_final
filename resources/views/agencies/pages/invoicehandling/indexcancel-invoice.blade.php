@@ -37,7 +37,13 @@
                
                         <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100/40' : '' }} hover:bg-secondary/10 cursor-pointer transition ease-in duration-200">
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $loop->iteration }}</td>
-                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">{{ $invoice->invoice_number ?? 'N/A' }}</td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
+                                @if($invoice->invoice && $invoice->invoice->new_invoice_number)
+                                    {{ $invoice->invoice->new_invoice_number }}
+                                @else
+                                    {{ $invoice->invoice_number ?? 'N/A' }}
+                                @endif
+                            </td>
 
                             <!-- Client Details (Assuming relation is client or user) -->
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
