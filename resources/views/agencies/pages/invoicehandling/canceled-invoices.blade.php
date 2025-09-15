@@ -1,5 +1,5 @@
 <x-agency.layout>
-    @section('title')Staff @endsection
+    @section('title')Canceled Invoices @endsection
     <div class="w-full grid xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 mb-4">
 
     </div>
@@ -8,7 +8,7 @@
 
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-                <span class="font-semibold text-ternary text-xl"> Refund Invoice</span>
+                <span class="font-semibold text-ternary text-xl">Canceled Invoices</span>
             </div>
 {{--        === heading section code ends here===--}}
 
@@ -25,10 +25,9 @@
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice Number</th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Client Details</th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Service Type</th>
-                        <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Refund Amount</th>
+                        <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Amount</th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Invoice Date</th>
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Status</th>
-
                         <th class="border-[2px] border-secondary/40 bg-secondary/10 px-4 py-1.5 text-ternary/80 font-bold text-md">Action</th>
                     </tr>
 
@@ -37,13 +36,7 @@
                
                         <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100/40' : '' }} hover:bg-secondary/10 cursor-pointer transition ease-in duration-200">
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{ $loop->iteration }}</td>
-                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
-                                @if($invoice->invoice && $invoice->invoice->new_invoice_number)
-                                    {{ $invoice->invoice->new_invoice_number }}
-                                @else
-                                    {{ $invoice->invoice_number ?? 'N/A' }}
-                                @endif
-                            </td>
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">{{ $invoice->invoice_number ?? 'N/A' }}</td>
 
                             <!-- Client Details (Assuming relation is client or user) -->
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
@@ -60,58 +53,57 @@
 
                             <!-- Amount -->
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                £ {{ number_format($invoice->invoice->cancel_invoice->amount ?? 0, 2) }}
+                                @if($invoice->invoice && $invoice->invoice->status === 'edited')
+                                    {{ $invoice->invoice->new_price }}
+                                @else
+                                    {{ $invoice->amount ?? 'N/A' }}
+                                @endif
                             </td>
 
                             <!-- Invoice Date -->
-                         
-
-                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                {{ $invoice->created_at ? $invoice->created_at->format('d M Y') : 'N/A' }}
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                {{ $invoice->date ? \Carbon\Carbon::parse($invoice->date)->format('d-m-Y') : '—' }}
                             </td>
 
-                              <td class="border-[2px] border-secondary/40 px-4 py-1">
-                              <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-sm font-medium">
-                                        Refunded
-                                    </span>
-                                </td>
-
-                            <!-- Actions (e.g., View, Download, Edit) -->
-
-                     
+                            <!-- Status -->
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                     <a href="{{ route('viewinvoice', $invoice->flight_booking_id) }}"
-                                    title="View"
-                                    class="inline-flex items-center gap-1 bg-success/10 text-success px-2 py-1 rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
-                                        <i class="fa fa-eye"></i> View Invoice
+                                <span class="bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs font-semibold">
+                                    Canceled
+                                </span>
+                            </td>
+
+                            <!-- Action -->
+                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                <div class="flex gap-2 items-center">
+                                    <!-- View Button -->
+                                    <a href="{{ route('viewinvoice', $invoice->flight_booking_id) }}"
+                                    class="bg-blue-100 text-blue-600 px-2 py-1 rounded-[3px] hover:bg-blue-200 text-xs">
+                                        View
                                     </a>
-                                  
-                                </td>
+
+
+                                    <!-- Retrieve Button -->
+                                    <a href="{{ route('retrieve.invoice', $invoice->id) }}"
+                                       onclick="return confirm('Are you sure you want to retrieve this invoice?')"
+                                       class="bg-green-100 text-green-600 px-2 py-1 rounded-[3px] hover:bg-green-200 text-xs">
+                                        Retrieve
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
+
                     @empty
                         <tr>
-                            <td colspan="7" class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
+                            <td colspan="8" class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm text-center">
+                                No Canceled Invoices Found
+                            </td>
                         </tr>
                     @endforelse
-            </table>
 
-                            <br>
-                 
+                </table>
             </div>
 {{--        === table section code ends here===--}}
 
-        </div>
-        <script>
-    document.querySelectorAll('input[type="date"]').forEach(function(input) {
-        input.addEventListener('input', function () {
-            const value = this.value;
-            const year = value.split('-')[0];
+    </div>
 
-            if (year.length > 4) {
-                alert('Year must be exactly 4 digits.');
-                this.value = '';
-            }
-        });
-    });
-</script>
 </x-agency.layout>
