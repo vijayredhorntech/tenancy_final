@@ -123,6 +123,7 @@ class ClientController extends Controller
    /**** View Agency Client *****/
 public function hs_viewAgencyClient($id)
 {
+    
     $agency = $this->agencyService->getAgencyData();
     $client = $this->clintRepository->getClientById($id);
 

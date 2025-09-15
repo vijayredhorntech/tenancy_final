@@ -353,11 +353,13 @@ Route::controller(ClientLoginController::class)->group(function () {
 Route::controller(InvoiceController::class)->group(function () {
     Route::get('{type}/invoice/', 'hs_invoice')->name('invoice.index');
     Route::get('/{type}/refund', 'hsrefundInvoice')->name('invoice.refund');
+    Route::get('/{type}/canceled', 'hsCanceledInvoice')->name('invoice.canceled');
     Route::get('/invoice/view/{id}', 'hs_viewInvoice')->name('invoice.view');
     Route::post('agency/amount/store', 'hs_payamountstore')->name('agencypay.invoice.ammount');   
     Route::get('agency/cancel/{id}', 'hs_cancelInvoice')->name('cancel.invoice');   
-  Route::post('/cancel-invoices/update', 'hsupdateRefundInvoice')->name('cancelinvoices.update'); 
-
+    Route::get('agency/retrieve/{id}', 'hs_retrieveInvoice')->name('retrieve.invoice');   
+    Route::post('/cancel-invoices/update', 'hsupdateRefundInvoice')->name('cancelinvoices.update'); 
+    Route::post('/refund/process', 'processRefund')->name('invoice.refund.process');
 
     Route::post('generateinvoice', 'hsGenerateInvoice')->name('generateinvoice');
     Route::get('/{type}/invoice', 'hsAllinvoice')->name('invoice.all');

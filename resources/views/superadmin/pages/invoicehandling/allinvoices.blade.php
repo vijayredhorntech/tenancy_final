@@ -121,6 +121,8 @@
                                         <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
                                             @if($invoice->invoice && $invoice->invoice->status === 'edited')
                                                 {{ $invoice->invoice->new_invoice_number }} <span class="text-xs">(Edited)</span>
+                                            @elseif($invoice->invoicestatus === 'Retrieved')
+                                                {{ $invoice->invoice_number ?? 'N/A' }} <span class="text-xs text-green-600">(Retrieved)</span>
                                             @else
                                                 {{ $invoice->invoice_number ?? 'N/A' }}
                                             @endif
@@ -166,26 +168,45 @@
                                         
                                
                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                            <div class="flex gap-2 items-center">
-                                                        <!-- View Button -->
-                                                        <a href="{{ route('viewinvoice', $invoice->flight_booking_id) }}"
-                                                            class="bg-primary/10 text-primary px-2 py-1 rounded-[3px] hover:bg-primary hover:text-white text-xs">
-                                                            View
-                                                        </a>
-
-                                                        <!-- Edit Button -->
-                                                        <a href="{{ route('editinvoice', $invoice->id) }}"
-                                                            class="bg-primary/10 text-primary px-2 py-1 rounded-[3px] hover:bg-primary hover:text-white text-xs">
-                                                            Edit
-                                                        </a>
-
-                                                      <!-- Cancel Button -->
-                                                            <a href="{{ route('cancel.invoice', ['id' => $invoice->id]) }}"
-                                                                onclick="return confirm('Are you sure you want to cancel this invoice?')"
-                                                                class="bg-red-100 text-red-600 px-2 py-1 rounded-[3px] hover:bg-red-600 hover:text-white text-xs">
-                                                                Cancel
-                                                            </a>
-                                                                                                                
+                                            <div class="relative inline-block">
+                                                <!-- Action Dropdown Button -->
+                                                <button onclick="toggleDropdown('action-{{ $invoice->id }}')" 
+                                                        class="bg-blue-100 text-blue-600 px-3 py-1 rounded-[3px] hover:bg-blue-200 text-xs flex items-center gap-1">
+                                                    Action
+                                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                </button>
+                                                
+                                                <!-- Dropdown Menu -->
+                                                <div id="action-{{ $invoice->id }}" 
+                                                     class="absolute right-0 mt-1 w-32 bg-white rounded-[3px] shadow-lg border border-gray-200 z-50 hidden"
+                                                     style="display: none;">
+                                                    <!-- View Option -->
+                                                    <a href="{{ route('viewinvoice', $invoice->flight_booking_id) }}"
+                                                       class="block w-full px-3 py-2 text-xs text-white bg-cyan-500 hover:bg-cyan-600 rounded-t-[3px]">
+                                                        View
+                                                    </a>
+                                                    
+                                                    <!-- Edit Option -->
+                                                    <a href="{{ route('editinvoice', $invoice->id) }}"
+                                                       class="block w-full px-3 py-2 text-xs text-white bg-purple-500 hover:bg-purple-600">
+                                                        Edit
+                                                    </a>
+                                                    
+                                                    <!-- Cancel Option -->
+                                                    <a href="{{ route('cancel.invoice', ['id' => $invoice->id]) }}"
+                                                       onclick="return confirm('Are you sure you want to cancel this invoice?')"
+                                                       class="block w-full px-3 py-2 text-xs text-white bg-red-500 hover:bg-red-600">
+                                                        Cancel
+                                                    </a>
+                                                    
+                                                    <!-- Refund Option -->
+                                                    <button onclick="openRefundModal('{{ $invoice->id }}', '{{ $invoice->invoice_number ?? 'N/A' }}', '{{ $invoice->amount ?? 0 }}')"
+                                                            class="block w-full px-3 py-2 text-xs text-white bg-green-500 hover:bg-green-600 rounded-b-[3px]">
+                                                        Refund
+                                                    </button>
+                                                </div>
                                             </div>
                                         </td>
                                 </tr>
@@ -205,4 +226,56 @@
 
 
     </div>
+
+    <!-- Include Refund Modal -->
+    @include('components.refund-modal')
+
+    <script>
+        function toggleDropdown(dropdownId) {
+            // Close all other dropdowns first
+            const allDropdowns = document.querySelectorAll('[id^="action-"]');
+            allDropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.classList.add('hidden');
+                }
+            });
+            
+            // Toggle the clicked dropdown
+            const dropdown = document.getElementById(dropdownId);
+            if (dropdown) {
+                dropdown.classList.toggle('hidden');
+                
+                // Ensure dropdown is visible and positioned correctly
+                if (!dropdown.classList.contains('hidden')) {
+                    dropdown.style.display = 'block';
+                    dropdown.style.position = 'absolute';
+                    dropdown.style.zIndex = '50';
+                } else {
+                    dropdown.style.display = 'none';
+                }
+            }
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const allDropdowns = document.querySelectorAll('[id^="action-"]');
+            allDropdowns.forEach(dropdown => {
+                const button = dropdown.previousElementSibling;
+                if (!dropdown.contains(event.target) && 
+                    !event.target.closest('button[onclick*="toggleDropdown"]') &&
+                    !button.contains(event.target)) {
+                    dropdown.classList.add('hidden');
+                    dropdown.style.display = 'none';
+                }
+            });
+        });
+
+        // Ensure dropdowns are properly initialized
+        document.addEventListener('DOMContentLoaded', function() {
+            const allDropdowns = document.querySelectorAll('[id^="action-"]');
+            allDropdowns.forEach(dropdown => {
+                dropdown.style.display = 'none';
+            });
+        });
+    </script>
 </x-agency.layout>
