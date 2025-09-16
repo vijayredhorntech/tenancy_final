@@ -150,9 +150,7 @@
 
                             </tr>
                             @empty
-                            <tr>
-                                <td colspan="4" class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm text-center">No Record Found</td>
-                            </tr>
+                            
                             @endforelse
                         </tbody>
             </table>
@@ -194,5 +192,5 @@
                 });
             });
         </script>
-
+     
     </x-agency.layout>
