@@ -111,6 +111,34 @@ public function saveDataByAgency($data){
 }
 
 
+/*** Delete User Data ***/
+public function deleteClientHistory(array $data)
+{
+    if ($data['type'] === 'agency') {
+        return $this->deleteAgencyClientHistory($data);
+    }
+
+    $history = HistoryAgencyClient::where('id', $data['historyid'])->first();
+    if ($history) {
+        $history->delete();
+    }
+
+    return true;
+}
+
+public function deleteAgencyClientHistory(array $data)
+{
+    // Assuming $this->agencyService->getAgencyData() is needed elsewhere
+    $agency = $this->agencyService->getAgencyData();
+
+    $history = HistoryAgencyClient::on('user_database')->where('id', $data['historyid'])->first();
+    if ($history) {
+        $history->delete();
+    }
+
+    return true;
+}
+
 
 
 }

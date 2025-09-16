@@ -130,14 +130,21 @@
 
                                 <!-- Action cell: smaller Delete button -->
                                 <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                        <a href="{{ route('agency.history.delete', [
-                                                'client' => $clientDetails->id,
-                                                'history' => $history->id
-                                            ]) }}" 
-                                            onclick="return confirm('Are you sure you want to delete this history?')"
-                                            class="bg-red-100 text-red-700 h-6 px-2 flex items-center gap-1 rounded-[3px] hover:bg-red-600 hover:text-white transition ease-in duration-200 text-xs">
-                                            <i class="fa fa-trash"></i> Delete
-                                        </a>
+                          
+                                        @if($user->getAllPermissions()->pluck('name')->intersect(['delete client history', 'manage everything'])->isNotEmpty())
+                                            <a href="{{ route('agency.history.delete', [
+                                                    'client' => $clientDetails->id,
+                                                    'history' => $history->id
+                                                ]) }}" 
+                                                onclick="return confirm('Are you sure you want to delete this history?')"
+                                                class="bg-red-100 text-red-700 h-6 px-2 flex items-center gap-1 rounded-[3px] hover:bg-red-600 hover:text-white transition ease-in duration-200 text-xs">
+                                                <i class="fa fa-trash"></i> Delete
+                                            </a>
+                                        @else
+                                            -
+                                        @endif
+
+
                                     </td>
 
 

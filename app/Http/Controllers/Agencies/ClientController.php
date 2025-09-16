@@ -367,6 +367,9 @@ public function hscallHistoryClient($id){
 
     $agency = $this->agencyService->getAgencyData();
     $user = $this->agencyService->getCurrentLoginUser();
+    $permissions = $user->getAllPermissions()->pluck('name');
+
+  
  
     $clientDetails = $this->agencyService->getClientDetails($id,$agency);
 
@@ -378,13 +381,13 @@ public function hscallHistoryClient($id){
      
 
 
-   return view('agencies.pages.clients.call-history', compact('histories','user','clientDetails'));
+   return view('agencies.pages.clients.call-history', compact('histories','user','clientDetails','permissions'));
 
 }
 
 
-public function hsstoreCommunication(Request $request){
-   
+public function hsstoreCommunication(Request $request)
+{
     $request->validate([
         'client_id'   => 'required|integer',
         'description' => 'required|string',
@@ -392,9 +395,10 @@ public function hsstoreCommunication(Request $request){
 
     $agency = $this->agencyService->getAgencyData();
     $user = $this->agencyService->getCurrentLoginUser();
-      // Save history using your ClientHistoryService
+
+    // Save history using your ClientHistoryService
     $this->historyService->save([
-        'user_id' =>    $user->id,
+        'user_id'     => $user->id,
         'client_id'   => $request->client_id,
         'agency_id'   => $agency->id ?? null, // if needed
         'description' => $request->description,
@@ -402,19 +406,25 @@ public function hsstoreCommunication(Request $request){
         'date_time'   => now(),
     ]);
 
+    return back()->with('success', 'Communication saved successfully.');
 }
 
 
-public function hsdeleteHistory($clientId, $historyId){
-    
-        $histories = $this->historyService->deleteClientHistory([
-                    'client_id'=> $clientId, 
-                    'historyid'=>$historyId,
-                    'type'      => 'agency',   // optional filter
-                ]);
-     
 
+
+
+/*** Controller method to call deletion ***/
+public function hsdeleteHistory($clientId, $historyId)
+{
+    $this->historyService->deleteClientHistory([
+        'client_id' => $clientId,
+        'historyid' => $historyId,
+        'type'      => 'agency', // optional filter
+    ]);
+
+    return back()->with('success', 'History deleted successfully.');
 }
+
 
 
 
