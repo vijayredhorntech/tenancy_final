@@ -459,14 +459,16 @@
 
 
 
-                 <a href="#"> 
+           
+                 
             <div class="w-full h-32 border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 items-center justify-between p-4">
                 <div class="flex flex-col gap-2">
-                        <span class="font-semibold text-ternary/70 text-md">History </span>
-                        <span class="font-bold text-2xl text-ternary">{{ $bookingCount ?? 0 }}</span>
+                        <span class="font-semibold text-ternary/70 text-md">History</span>
+                        <span class="text-ternary">Call History</span>
                 </div>
 
-                <div>
+                <div class="flex flex-col items-end gap-2">
+                    <div>
                     <svg xmlns="http://www.w3.org/2000/svg" height="60"
                         viewBox="0 0 876.27165 661.47277" xmlns:xlink="http://www.w3.org/1999/xlink" role="img"
                         artist="Katerina Limpitsouni" source="https://undraw.co/">
@@ -622,9 +624,13 @@
                             d="M369.06364,432.04239q.20986.38415.38766.79029a10.38021,10.38021,0,0,1-6.39269,14.10854,9.72022,9.72022,0,0,1-.98807.24953l-19.09943,49.40482a8.06134,8.06134,0,0,1-8.16324,5.09887l-.096-.01816-41.39664-12.46211a8.89853,8.89853,0,1,1,5.28606-16.99313l29.29033,9.40382,22.6764-40.20175a9.87622,9.87622,0,0,1-.51127-1.28942,10.38005,10.38005,0,0,1,19.0069-8.0913Z"
                             transform="translate(-180.86417 -106.46046)" fill="#a0616a"/>
                     </svg>
+                    </div>
+                        <a href="{{ route('agency.client.history', ['id' => $client->id]) }}" class="text-primary hover:text-primary/80 text-sm font-medium flex items-center gap-1">
+                            More info <i class="fa fa-arrow-circle-right"></i>
+                        </a>
                 </div>
             </div>
-            </a>
+
     </div>
 
 

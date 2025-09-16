@@ -17,20 +17,24 @@ use App\Services\AgencyService;
 use App\Traits\ClientTrait;
 use App\Traits\ChatTrait;
 use App\Models\Deduction;
+use App\Services\ClientHistoryService;
 
 
 class ClientController extends Controller
 {
     use ClientTrait, ChatTrait;
+ 
 
-    protected $clintRepository,$agencyService;
+    protected $clintRepository,$agencyService,$historyService;
    
  
 
-    public function __construct(ClintRepositoryInterface $clintRepository,AgencyService $agencyService)
+    public function __construct(ClintRepositoryInterface $clintRepository,AgencyService $agencyService,ClientHistoryService $historyService)
     {
         $this->clintRepository = $clintRepository;
         $this->agencyService = $agencyService;
+        $this->historyService = $historyService;
+
        
     }
 
@@ -338,23 +342,79 @@ public function hs_agencyUpdateClient(Request $request, $id)
     }
 
 
-    public function hs_ClientStoreAjax(Request $request)
-{
-    // You can log or debug the request if needed
-    // dd($request->all());
+        public function hs_ClientStoreAjax(Request $request)
+    {
+        // You can log or debug the request if needed
+        // dd($request->all());
 
-    // Store client using repository
-    $this->clintRepository->step1createclient($request->all());
+        // Store client using repository
+        $this->clintRepository->step1createclient($request->all());
 
-    // Return JSON response
-    return response()->json([
-        'status' => 'success',
-        'preview'=>$request->previewstep,
-        'step' => $request->step
-    ]);
+        // Return JSON response
+        return response()->json([
+            'status' => 'success',
+            'preview'=>$request->previewstep,
+            'step' => $request->step
+        ]);
+    }
+
+
+
+/*****History For Client ***** */
+
+public function hscallHistoryClient($id){
+
+
+    $agency = $this->agencyService->getAgencyData();
+    $user = $this->agencyService->getCurrentLoginUser();
+ 
+    $clientDetails = $this->agencyService->getClientDetails($id,$agency);
+
+
+      $histories = $this->historyService->getHistory([
+            'client_id'=> $id, 
+            'type'      => 'agency',   // optional filter
+        ]);
+     
+
+
+   return view('agencies.pages.clients.call-history', compact('histories','user','clientDetails'));
+
 }
 
 
+public function hsstoreCommunication(Request $request){
+   
+    $request->validate([
+        'client_id'   => 'required|integer',
+        'description' => 'required|string',
+    ]);
+
+    $agency = $this->agencyService->getAgencyData();
+    $user = $this->agencyService->getCurrentLoginUser();
+      // Save history using your ClientHistoryService
+    $this->historyService->save([
+        'user_id' =>    $user->id,
+        'client_id'   => $request->client_id,
+        'agency_id'   => $agency->id ?? null, // if needed
+        'description' => $request->description,
+        'type'        => 'agency',
+        'date_time'   => now(),
+    ]);
+
+}
+
+
+public function hsdeleteHistory($clientId, $historyId){
+    
+        $histories = $this->historyService->deleteClientHistory([
+                    'client_id'=> $clientId, 
+                    'historyid'=>$historyId,
+                    'type'      => 'agency',   // optional filter
+                ]);
+     
+
+}
 
 
 
