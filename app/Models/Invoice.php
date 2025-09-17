@@ -67,6 +67,11 @@ class Invoice extends Model
         return $this->hasOne(CancelInvoice::class);
     }
 
+    public function cancel_invoices()
+    {
+        return $this->hasMany(CancelInvoice::class);
+    }
+
     
     /* ───── Optional relationships ─────
    

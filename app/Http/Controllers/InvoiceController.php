@@ -602,9 +602,19 @@ public function hsupdateRefundInvoice(Request $request)
 
     // Format invoice number with "R" if original exists
     $number = $deduction->invoice_number ?? null;
-    $formattedInvoice = $number && preg_match('/^([A-Za-z]+)(\d+)$/', $number, $matches)
-        ? $matches[1] . 'R' . $matches[2]
-        : 'INV' . uniqid();
+    if ($number && preg_match('/^([A-Za-z]+)(\d+)$/', $number, $matches)) {
+        // For patterns like CLDAIR001, insert R after CLDAR to get CLDARRIR001
+        if (strpos($matches[1], 'CLDAR') === 0) {
+            $prefix = 'CLDAR';
+            $suffix = substr($matches[1], 5); // Get everything after CLDAR
+            $formattedInvoice = $prefix . 'R' . $suffix . $matches[2];
+        } else {
+            // For other patterns, add R at the end of letters
+            $formattedInvoice = $matches[1] . 'R' . $matches[2];
+        }
+    } else {
+        $formattedInvoice = 'INV' . uniqid();
+    }
 
     // Prepare invoice data
     $invoiceData = [
@@ -707,9 +717,19 @@ public function processRefund(Request $request)
 
     // Format invoice number with "R" if original exists
     $number = $deduction->invoice_number ?? null;
-    $formattedInvoice = $number && preg_match('/^([A-Za-z]+)(\d+)$/', $number, $matches)
-        ? $matches[1] . 'R' . $matches[2]
-        : 'INV' . uniqid();
+    if ($number && preg_match('/^([A-Za-z]+)(\d+)$/', $number, $matches)) {
+        // For patterns like CLDAIR001, insert R after CLDAR to get CLDARRIR001
+        if (strpos($matches[1], 'CLDAR') === 0) {
+            $prefix = 'CLDAR';
+            $suffix = substr($matches[1], 5); // Get everything after CLDAR
+            $formattedInvoice = $prefix . 'R' . $suffix . $matches[2];
+        } else {
+            // For other patterns, add R at the end of letters
+            $formattedInvoice = $matches[1] . 'R' . $matches[2];
+        }
+    } else {
+        $formattedInvoice = 'INV' . uniqid();
+    }
 
     // Prepare invoice data
     $invoiceData = [
@@ -892,7 +912,7 @@ public function hsrefundInvoice(Request $request, $type)
         abort(403, 'Unauthorized. Agency not found.');
     }
 
-    // Step 2: Build query (only refunded invoices, no filters)
+    // Step 2: Build query (canceled/refunded invoices for refund processing)
     $invoicesQuery = Deduction::with([
         'service_name',
         'agency',
@@ -905,11 +925,12 @@ public function hsrefundInvoice(Request $request, $type)
         'flightBooking',
         'hotelBooking',
         'invoice.cancel_invoice',
+        'invoice.cancel_invoices',
         'hotelDetails'
 
     ])
     ->where('agency_id', $agency->id)
-    ->where('invoicestatus', 'Refunded');
+    ->whereIn('invoicestatus', ['canceled', 'Refunded']);
 
     // Step 3: Get invoices (pagination optional)
     $perPage = $request->filled('per_page') && is_numeric($request->per_page)
@@ -920,6 +941,22 @@ public function hsrefundInvoice(Request $request, $type)
 
     // Step 4: Enrich invoices with client info
     $invoices = $this->agencyService->getClientinfo($invoices);
+    
+    // Step 4.5: Get retail invoices for adjustment modal
+    $retailInvoices = Deduction::with([
+        'service_name',
+        'agency',
+        'visaBooking',
+        'visaBooking.clint',
+        'invoice'
+    ])
+    ->where('agency_id', $agency->id)
+    ->whereNotIn('invoicestatus', ['Refunded', 'Canceled', 'canceled', 'refunded'])
+    ->orderByDesc('id')
+    ->get();
+    
+    // Enrich retail invoices with client info
+    $retailInvoices = $this->agencyService->getClientinfo($retailInvoices);
  
     // Step 5: Load service list (optional)
     $services = Service::whereIn('id', [1, 2, 3])->get();
@@ -929,6 +966,7 @@ public function hsrefundInvoice(Request $request, $type)
         return view('agencies.pages.invoicehandling.indexcancel-invoice', [
             'countries' => $countries ?? [],
             'invoices'  => $invoices,
+            'retailInvoices' => $retailInvoices,
             'services'  => $services ?? [],
         ]);
     }
@@ -1515,6 +1553,227 @@ public function hsAllinvoice(Request $request)
             'booking' => $booking,
             'termconditon' => $termconditon,
         ]);
+    }
+
+    public function processRefundPayment(Request $request)
+    {
+        $request->validate([
+            'invoice_id' => 'required|exists:deductions,id',
+            'card_last_4_digit' => 'nullable|string|max:4',
+            'credit_card_amount' => 'nullable|numeric|min:0',
+            'debit_card_amount' => 'nullable|numeric|min:0',
+            'cash_amount' => 'nullable|numeric|min:0',
+            'bank_transfer_amount' => 'nullable|numeric|min:0',
+            'remarks' => 'required|string|max:1000',
+        ]);
+
+        $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            abort(403, 'Unauthorized. Agency not found.');
+        }
+
+        // Find the deduction/invoice
+        $deduction = Deduction::with(['invoice', 'invoice.cancel_invoice', 'visabooking'])
+            ->where('id', $request->invoice_id)
+            ->where('agency_id', $agency->id)
+            ->first();
+
+        if (!$deduction) {
+            return back()->with('error', 'Invoice not found.');
+        }
+
+        // Check if payment has already been processed
+        if ($deduction->invoice->cancel_invoice && $deduction->invoice->cancel_invoice->type === 'payment') {
+            return back()->with('error', 'Payment has already been processed for this refund.');
+        }
+
+        // Calculate refund amount
+        $paidAmount = $deduction->amount ?? 0;
+        $cancelInvoice = $deduction->invoice->cancel_invoice;
+        $totalCharges = 0;
+        
+        if ($cancelInvoice) {
+            $totalCharges = ($cancelInvoice->safi ?? 0) + 
+                           ($cancelInvoice->atol ?? 0) + 
+                           ($cancelInvoice->credit_charge ?? 0) + 
+                           ($cancelInvoice->penalty ?? 0) + 
+                           ($cancelInvoice->admin ?? 0) + 
+                           ($cancelInvoice->misc ?? 0);
+        }
+        
+        $refundAmount = $paidAmount - $totalCharges;
+
+        if ($refundAmount <= 0) {
+            return back()->with('error', 'Invalid refund amount calculated.');
+        }
+
+        // Calculate total payment amount from all methods
+        $totalPayment = 0;
+        $paymentMethods = [];
+        
+        if ($request->credit_card_amount && $request->credit_card_amount > 0) {
+            $totalPayment += $request->credit_card_amount;
+            $paymentMethods['credit_card'] = $request->credit_card_amount;
+        }
+        
+        if ($request->debit_card_amount && $request->debit_card_amount > 0) {
+            $totalPayment += $request->debit_card_amount;
+            $paymentMethods['debit_card'] = $request->debit_card_amount;
+        }
+        
+        if ($request->cash_amount && $request->cash_amount > 0) {
+            $totalPayment += $request->cash_amount;
+            $paymentMethods['cash'] = $request->cash_amount;
+        }
+        
+        if ($request->bank_transfer_amount && $request->bank_transfer_amount > 0) {
+            $totalPayment += $request->bank_transfer_amount;
+            $paymentMethods['bank_transfer'] = $request->bank_transfer_amount;
+        }
+
+        if ($totalPayment <= 0) {
+            return back()->with('error', 'Please enter at least one payment amount.');
+        }
+
+        // Format invoice number with "P" for payment
+        $number = $deduction->invoice_number ?? null;
+        $formattedInvoice = $number && preg_match('/^([A-Za-z]+)(\d+)$/', $number, $matches)
+            ? $matches[1] . 'P' . $matches[2]
+            : 'PAY' . uniqid();
+
+        // Create payment record in cancel_invoices table
+        CancelInvoice::create([
+            'invoice_id'         => $deduction->invoice->id,
+            'application_number' => $formattedInvoice,
+            'type'               => 'payment',
+            'remark'             => $request->remarks,
+            'reason'             => 'Direct Refund - ' . implode(', ', array_keys($paymentMethods)),
+            'cancelled_by'       => Auth::id(),
+            'status'             => 1,
+            'amount'             => $totalPayment,
+            'cancelled_date'     => now(),
+        ]);
+
+        // Update visa booking status if exists
+        if ($deduction->visabooking) {
+            $deduction->visabooking->update([
+                'document_status' => 'Refund Paid',
+                'applicationworkin_status' => 'Refund Paid',
+            ]);
+        }
+
+        return redirect()
+            ->route('invoice.refund', ['type' => 'agencies'])
+            ->with('success', 'Direct refund processed successfully. Reference: ' . $formattedInvoice . ' | Amount: £' . number_format($totalPayment, 2));
+    }
+
+    public function processAdjustment(Request $request)
+    {
+        $request->validate([
+            'invoice_id' => 'required|exists:deductions,id',
+            'selected_invoices' => 'nullable|array',
+            'selected_invoices.*' => 'exists:deductions,id',
+            'processed_by' => 'nullable|string|max:255',
+            'internal_notes' => 'nullable|string|max:1000',
+        ]);
+
+        $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            abort(403, 'Unauthorized. Agency not found.');
+        }
+
+        // Find the main deduction/invoice
+        $deduction = Deduction::with(['invoice', 'visabooking'])
+            ->where('id', $request->invoice_id)
+            ->where('agency_id', $agency->id)
+            ->first();
+
+        if (!$deduction) {
+            return back()->with('error', 'Invoice not found.');
+        }
+
+        // Update deduction status to adjusted
+        $deduction->invoicestatus = 'Adjusted';
+        $deduction->save();
+
+        // Format invoice number with "A" for adjustment
+        $number = $deduction->invoice_number ?? null;
+        $formattedInvoice = $number && preg_match('/^([A-Za-z]+)(\d+)$/', $number, $matches)
+            ? $matches[1] . 'A' . $matches[2]
+            : 'ADJ' . uniqid();
+
+        // Prepare invoice data for adjustment
+        $invoiceData = [
+            'receiver_name'      => $deduction->visaBooking->clint->client_name ?? 'N/A',
+            'invoice_date'       => now()->format('Y-m-d'),
+            'due_date'           => now()->addDays(14)->format('Y-m-d'),
+            'address'            => $deduction->visaBooking->clint->permanent_address ?? 'N/A',
+            'bookingid'          => $deduction->id,
+            'visa_applicant'     => $deduction->visaBooking->clint->client_name ?? 'Self',
+            'amount'             => $deduction->amount ?? 0,
+            'discount'           => 0,
+            'payment_type'       => 'ADJUSTMENT',
+            'visa_fee'           => 0,
+            'service_charge'     => 0,
+            'new_invoice_number' => $formattedInvoice,
+            'status'             => 'Adjusted',
+            'new_price'          => $deduction->amount ?? 0,
+            'type'               => 'agency',
+        ];
+
+        // Update or create invoice
+        $invoice = $deduction->invoice
+            ? tap($deduction->invoice)->update($invoiceData)
+            : $deduction->invoice()->create($invoiceData);
+
+        // Create adjustment record in cancel_invoices table
+        CancelInvoice::create([
+            'invoice_id'         => $invoice->id,
+            'application_number' => $formattedInvoice,
+            'type'               => 'adjustment',
+            'remark'             => $request->internal_notes,
+            'reason'             => 'Invoice Adjustment Process',
+            'cancelled_by'       => Auth::id(),
+            'status'             => 1,
+            'amount'             => $deduction->amount ?? 0,
+            'cancelled_date'     => now(),
+        ]);
+
+        // Update visa booking status if exists
+        if ($deduction->visabooking) {
+            $deduction->visabooking->update([
+                'document_status' => 'Adjusted',
+                'applicationworkin_status' => 'Adjusted',
+            ]);
+        }
+
+        // Process selected invoices if any
+        if ($request->selected_invoices && count($request->selected_invoices) > 0) {
+            $selectedInvoices = Deduction::whereIn('id', $request->selected_invoices)
+                ->where('agency_id', $agency->id)
+                ->get();
+
+            foreach ($selectedInvoices as $selectedInvoice) {
+                // Create a note about the adjustment relationship
+                CancelInvoice::create([
+                    'invoice_id'         => $selectedInvoice->invoice->id ?? $selectedInvoice->id,
+                    'application_number' => $formattedInvoice . '-REL',
+                    'type'               => 'adjustment_related',
+                    'remark'             => "Related to adjustment: {$formattedInvoice}",
+                    'reason'             => 'Invoice included in adjustment process',
+                    'cancelled_by'       => Auth::id(),
+                    'status'             => 1,
+                    'amount'             => 0,
+                    'cancelled_date'     => now(),
+                ]);
+            }
+        }
+
+        return redirect()
+            ->route('invoice.refund', ['type' => 'agencies'])
+            ->with('success', 'Invoice adjustment processed successfully. Reference: ' . $formattedInvoice . ' | Amount: £' . number_format($deduction->amount ?? 0, 2));
     }
 
 }

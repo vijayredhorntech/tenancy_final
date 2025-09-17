@@ -361,6 +361,8 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::post('/cancel-invoices/update', 'hsupdateRefundInvoice')->name('cancelinvoices.update'); 
     Route::post('/refund/process', 'processRefund')->name('invoice.refund.process');
     Route::post('/pay/process', 'processPayment')->name('invoice.pay.process');
+    Route::post('/refund/payment', 'processRefundPayment')->name('invoice.refund.payment');
+    Route::post('/adjustment/process', 'processAdjustment')->name('invoice.adjustment');
 
     Route::post('generateinvoice', 'hsGenerateInvoice')->name('generateinvoice');
     Route::get('/{type}/invoice', 'hsAllinvoice')->name('invoice.all');
