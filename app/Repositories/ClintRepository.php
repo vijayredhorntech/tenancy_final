@@ -184,6 +184,11 @@ private function saveClientData(array $data, ClientDetails $client, string $clie
     $client->country = $data['country'] ?? null;
     $client->permanent_address = $data['permanent_address'] ?? null;
 
+    $client->passport_no = $data['passport_no'] ?? null;
+    $client->date_of_issue = $data['date_of_issue'] ?? null;
+    $client->date_of_expire = $data['date_of_expire'] ?? null;
+    $client->place_of_issue = $data['place_of_issue'] ?? null;
+
     $client->save();
 
     return $client;
@@ -321,8 +326,6 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         $clientdetails->arms_details = $data['arms_details'] ?? '';
         $clientdetails->reference_address = $data['reference_address'] ?? '';
 
-
-        
         $clientdetails->educational_qualification = $data['educational_qualification'] ?? '';
         $clientdetails->nationality = $data['nationality'] ?? '';
         $clientdetails->past_nationality = $data['past_nationality'] ?? '';
@@ -333,7 +336,13 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         $clientdetails->passport_issue_date = $data['passport_issue_date'] ?? '';
         $clientdetails->passport_expiry_date = $data['passport_expiry_date'] ?? '';
 
-        
+        // Update passport fields in client_details table
+        $client->passport_no = $data['passport_no'] ?? $client->passport_no;
+        $client->date_of_issue = $data['date_of_issue'] ?? $client->date_of_issue;
+        $client->date_of_expire = $data['date_of_expire'] ?? $client->date_of_expire;
+        $client->place_of_issue = $data['place_of_issue'] ?? $client->place_of_issue;
+        $client->save();
+        $clientdetails->passport_expiry_date = $data['passport_expiry_date'] ?? '';
 
         $clientdetails->father_details = $data['father_name'] ?? '';
         $clientdetails->mother_details = $data['mother_name'] ?? '';
@@ -357,8 +366,57 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         $clientdetails->past_occupation = $data['past_occupation'] ?? '';
         $clientdetails->reference_name = $data['reference_name'] ?? '';
         $clientdetails->reference_address = $data['reference_address'] ?? '';
+
+        // Process family members data from the dynamic form
+        $this->processFamilyMembersData($data, $clientdetails);
+
         $clientdetails->save();
         return $client;
+    }
+
+    /**
+     * Process family members data from the dynamic form and save to database
+     */
+    private function processFamilyMembersData($data, $clientdetails)
+    {
+        // Get family member data from the form arrays
+        $familyFirstNames = $data['family_first_name'] ?? [];
+        $familyLastNames = $data['family_last_name'] ?? [];
+        $familyRelationships = $data['family_relationship'] ?? [];
+        $familyDateOfBirths = $data['family_date_of_birth'] ?? [];
+        $familyNationalities = $data['family_nationality'] ?? [];
+        $familyPassportNumbers = $data['family_passport_number'] ?? [];
+        $familyEmails = $data['family_email'] ?? [];
+        $familyPhones = $data['family_phone'] ?? [];
+
+        // Delete existing family members for this client
+        \App\Models\ClientFamilyMember::on('user_database')->where('client_id', $clientdetails->clientid)->delete();
+
+        // Process each family member
+        foreach ($familyFirstNames as $index => $firstName) {
+            if (empty(trim($firstName))) continue;
+
+            $lastName = $familyLastNames[$index] ?? '';
+            $relationship = $familyRelationships[$index] ?? '';
+            $dob = $familyDateOfBirths[$index] ?? '';
+            $nationality = $familyNationalities[$index] ?? '';
+            $passportNumber = $familyPassportNumbers[$index] ?? '';
+            $email = $familyEmails[$index] ?? '';
+            $phone = $familyPhones[$index] ?? '';
+
+            \App\Models\ClientFamilyMember::on('user_database')->create([
+                'client_id' => $clientdetails->clientid,
+                'relationship' => $relationship,
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'date_of_birth' => $dob ?: null,
+                'nationality' => $nationality,
+                'passport_number' => $passportNumber,
+                'email' => $email,
+                'phone_number' => $phone,
+                'sort_order' => $index,
+            ]);
+        }
     }
 
 
@@ -411,6 +469,11 @@ private function updateClientData(array $data, ClientDetails $client, string $co
     $client->city = $data['city'] ?? $client->city;
     $client->country = $data['country'] ?? $client->country;
     $client->permanent_address = $data['permanent_address'] ?? $client->permanent_address;
+
+    $client->passport_no = $data['passport_no'] ?? $client->passport_no;
+    $client->date_of_issue = $data['date_of_issue'] ?? $client->date_of_issue;
+    $client->date_of_expire = $data['date_of_expire'] ?? $client->date_of_expire;
+    $client->place_of_issue = $data['place_of_issue'] ?? $client->place_of_issue;
 
     $client->save();
 

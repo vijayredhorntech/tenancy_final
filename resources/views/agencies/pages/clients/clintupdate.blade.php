@@ -71,6 +71,58 @@
                                 </div>
 
                                 <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="passport_no" class="font-semibold text-ternary/90 text-sm">Passport Number</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="passport_no" id="passport_no"
+                                            value="{{ old('passport_no', $client->passport_no ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('passport_no')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="date_of_birth" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
+                                    <div class="w-full relative">
+                                        <input type="date" name="date_of_birth" id="date_of_birth"
+                                            value="{{ old('date_of_birth', $client->date_of_birth ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('date_of_birth')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="date_of_issue" class="font-semibold text-ternary/90 text-sm">Date of Issue</label>
+                                    <div class="w-full relative">
+                                        <input type="date" name="date_of_issue" id="date_of_issue"
+                                            value="{{ old('date_of_issue', $client->date_of_issue ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('date_of_issue')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="date_of_expire" class="font-semibold text-ternary/90 text-sm">Date of Expiry</label>
+                                    <div class="w-full relative">
+                                        <input type="date" name="date_of_expire" id="date_of_expire"
+                                            value="{{ old('date_of_expire', $client->date_of_expire ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-calendar-times absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('date_of_expire')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="w-full relative group flex flex-col gap-1">
                                     <label for="phone_number" class="font-semibold text-ternary/90 text-sm">Phone Number *</label>
                                     <div class="w-full relative">
                                         <input type="text" name="phone_number" id="phone_number" required
@@ -143,6 +195,19 @@
                                 </div>
 
                                 <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="place_of_issue" class="font-semibold text-ternary/90 text-sm">Place of Issue</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="place_of_issue" id="place_of_issue"
+                                            value="{{ old('place_of_issue', $client->place_of_issue ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-map-marker absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                    @error('place_of_issue')
+                                    <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                    @enderror
+                                </div>
+
+                                <div class="w-full relative group flex flex-col gap-1">
                                     <label for="country" class="font-semibold text-ternary/90 text-sm">Country *</label>
                                     <div class="w-full relative">
                                         <input type="text" name="country" id="country" required
@@ -158,11 +223,32 @@
                             </div>  
                         </div>
 
+                        {{-- Family Members / Dependents Section --}}
+                            <div class="w-full flex flex-col gap-2 px-4 mt-8">
+                                <div class="border-b-[2px] border-b-secondary/50 w-max pr-20 flex items-center justify-between">
+                                    <span class="text-lg font-bold text-ternary">Family Members / Dependents</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-4">Add family members or dependents who will be traveling with the main applicant.</p>
+
+                                <div class="w-full flex justify-start mb-4">
+                                    <button type="button" id="addFamilyMemberBtn"
+                                        class="px-4 py-2 text-sm font-semibold rounded-[3px] rounded-tr-[8px] border-[1px] border-success text-success bg-success/10 hover:bg-success hover:text-white transition ease-in duration-200">
+                                        <i class="fa fa-plus mr-2"></i>Add Family Member
+                                    </button>
+                                </div>
+
+                                {{-- Dynamic Family Members Container --}}
+                                <div id="familyMembersContainer">
+                                    {{-- Existing family members will be populated here --}}
+                                </div>
+                            </div>
+
                         <div class="w-full flex justify-between px-4 pb-4 gap-2 mt-8">
                          <a href="{{ route('client.index', $client->id) }}" 
    class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-200">
    <i class="fa fa-check ml-1"></i> Edit Client Details
 </a>
+                        </div>
 </div>
                     </div>
 
@@ -231,7 +317,6 @@
                         $("#permanent_address").val(selected.val() || "");
                         $("#street").val(selected.data("street") || "");
                         $("#city").val(selected.data("city") || "");
-                        $("#county").val(selected.data("county") || "");
                         $("#country").val(selected.data("country") || "");
                     });
                 });
@@ -374,6 +459,296 @@
                         return isValid;
                     }
                 });
+
+                // Family Members Add More Functionality
+                let familyMemberCounter = 0;
+
+                document.getElementById('addFamilyMemberBtn').addEventListener('click', function () {
+                    // Get current number of family members and increment counter
+                    const currentMembers = document.querySelectorAll('.family-member-section').length;
+                    const memberNumber = currentMembers + 1;
+
+                    let container = document.getElementById('familyMembersContainer');
+
+                    // Create the main wrapper div
+                    let familyMemberWrapper = document.createElement('div');
+                    familyMemberWrapper.classList.add('family-member-section', 'border-[1px]', 'border-secondary/30', 'rounded-md', 'p-4', 'mb-4', 'bg-gray-50');
+                    familyMemberWrapper.setAttribute('data-member-id', memberNumber);
+
+                    // Create header with member number and remove button
+                    let headerDiv = document.createElement('div');
+                    headerDiv.classList.add('flex', 'justify-between', 'items-center', 'mb-4', 'pb-2', 'border-b', 'border-secondary/20');
+
+                    let headerTitle = document.createElement('h4');
+                    headerTitle.classList.add('text-md', 'font-semibold', 'text-ternary');
+                    headerTitle.textContent = `Family Member ${memberNumber}`;
+
+                    let removeBtn = document.createElement('button');
+                    removeBtn.setAttribute('type', 'button');
+                    removeBtn.classList.add('px-3', 'py-1', 'text-xs', 'font-semibold', 'rounded-sm', 'border-[1px]', 'border-red-500', 'text-red-500', 'bg-red-500/10', 'hover:bg-red-500', 'hover:text-white', 'transition', 'ease-in', 'duration-200');
+                    removeBtn.innerHTML = '<i class="fa fa-trash mr-1"></i>Remove';
+                    removeBtn.addEventListener('click', function () {
+                        container.removeChild(familyMemberWrapper);
+                        updateFamilyMemberNumbers();
+                    });
+
+                    headerDiv.appendChild(headerTitle);
+                    headerDiv.appendChild(removeBtn);
+
+                    // Create the grid container for form fields
+                    let gridContainer = document.createElement('div');
+                    gridContainer.classList.add('w-full', 'grid', 'xl:grid-cols-3', 'lg:grid-cols-3', 'md:grid-cols-2', 'sm:grid-cols-2', 'grid-cols-1', 'gap-4');
+
+                    // First Name Field
+                    let firstNameDiv = createFormField('text', `family_first_name[${memberNumber}]`, 'First Name', 'fa-user', true);
+
+                    // Last Name Field
+                    let lastNameDiv = createFormField('text', `family_last_name[${memberNumber}]`, 'Last Name', 'fa-user', true);
+
+                    // Relationship Field
+                    let relationshipDiv = createSelectField(`family_relationship[${memberNumber}]`, 'Relationship', [
+                        { value: '', text: 'Select Relationship' },
+                        { value: 'spouse', text: 'Spouse' },
+                        { value: 'child', text: 'Child' },
+                        { value: 'parent', text: 'Parent' },
+                        { value: 'sibling', text: 'Sibling' },
+                        { value: 'other', text: 'Other' }
+                    ], 'fa-users', true);
+
+                    // Date of Birth Field
+                    let dobDiv = createFormField('date', `family_date_of_birth[${memberNumber}]`, 'Date of Birth', 'fa-calendar', true);
+
+                    // Nationality Field
+                    let nationalityDiv = createFormField('text', `family_nationality[${memberNumber}]`, 'Nationality', 'fa-flag', true);
+
+                    // Passport Number Field
+                    let passportDiv = createFormField('text', `family_passport_number[${memberNumber}]`, 'Passport Number', 'fa-passport', false);
+
+                    // Email Field
+                    let emailDiv = createFormField('email', `family_email[${memberNumber}]`, 'Email Address', 'fa-envelope', false);
+
+                    // Phone Field
+                    let phoneDiv = createFormField('text', `family_phone[${memberNumber}]`, 'Phone Number', 'fa-phone', false);
+
+                    // Append all fields to grid
+                    gridContainer.appendChild(firstNameDiv);
+                    gridContainer.appendChild(lastNameDiv);
+                    gridContainer.appendChild(relationshipDiv);
+                    gridContainer.appendChild(dobDiv);
+                    gridContainer.appendChild(nationalityDiv);
+                    gridContainer.appendChild(passportDiv);
+                    gridContainer.appendChild(emailDiv);
+                    gridContainer.appendChild(phoneDiv);
+
+                    // Append header and grid to wrapper
+                    familyMemberWrapper.appendChild(headerDiv);
+                    familyMemberWrapper.appendChild(gridContainer);
+
+                    // Append wrapper to container
+                    container.appendChild(familyMemberWrapper);
+                });
+
+                // Helper function to create form fields
+                function createFormField(type, name, label, icon, required = false) {
+                    let fieldDiv = document.createElement('div');
+                    fieldDiv.classList.add('w-full', 'relative', 'group', 'flex', 'flex-col', 'gap-1');
+
+                    let labelElement = document.createElement('label');
+                    labelElement.setAttribute('for', name);
+                    labelElement.classList.add('font-semibold', 'text-ternary/90', 'text-sm');
+                    labelElement.textContent = label + (required ? ' *' : '');
+
+                    let inputWrapper = document.createElement('div');
+                    inputWrapper.classList.add('w-full', 'relative');
+
+                    let inputElement = document.createElement('input');
+                    inputElement.setAttribute('type', type);
+                    inputElement.setAttribute('name', name);
+                    inputElement.setAttribute('id', name);
+                    if (required) {
+                        inputElement.setAttribute('required', 'required');
+                    }
+                    inputElement.classList.add('w-full', 'pl-2', 'pr-8', 'py-1', 'rounded-[3px]', 'rounded-tr-[8px]', 'border-[1px]', 'border-b-[2px]', 'border-r-[2px]', 'border-secondary/40', 'focus:outline-none', 'focus:ring-0', 'focus:border-secondary/70', 'placeholder-ternary/70', 'transition', 'ease-in', 'duration-200');
+
+                    let iconElement = document.createElement('i');
+                    iconElement.classList.add('fa', icon, 'absolute', 'right-3', 'top-[50%]', 'translate-y-[-50%]', 'text-sm', 'text-secondary/80');
+
+                    inputWrapper.appendChild(inputElement);
+                    inputWrapper.appendChild(iconElement);
+
+                    fieldDiv.appendChild(labelElement);
+                    fieldDiv.appendChild(inputWrapper);
+
+                    return fieldDiv;
+                }
+
+                // Helper function to create select fields
+                function createSelectField(name, label, options, icon, required = false) {
+                    let fieldDiv = document.createElement('div');
+                    fieldDiv.classList.add('w-full', 'relative', 'group', 'flex', 'flex-col', 'gap-1');
+
+                    let labelElement = document.createElement('label');
+                    labelElement.setAttribute('for', name);
+                    labelElement.classList.add('font-semibold', 'text-ternary/90', 'text-sm');
+                    labelElement.textContent = label + (required ? ' *' : '');
+
+                    let inputWrapper = document.createElement('div');
+                    inputWrapper.classList.add('w-full', 'relative');
+
+                    let selectElement = document.createElement('select');
+                    selectElement.setAttribute('name', name);
+                    selectElement.setAttribute('id', name);
+                    if (required) {
+                        selectElement.setAttribute('required', 'required');
+                    }
+                    selectElement.classList.add('w-full', 'pl-2', 'pr-8', 'py-1', 'rounded-[3px]', 'rounded-tr-[8px]', 'border-[1px]', 'border-b-[2px]', 'border-r-[2px]', 'border-secondary/40', 'focus:outline-none', 'focus:ring-0', 'focus:border-secondary/70', 'placeholder-ternary/70', 'transition', 'ease-in', 'duration-200');
+
+                    // Add options
+                    options.forEach(option => {
+                        let optionElement = document.createElement('option');
+                        optionElement.setAttribute('value', option.value);
+                        optionElement.textContent = option.text;
+                        selectElement.appendChild(optionElement);
+                    });
+
+                    let iconElement = document.createElement('i');
+                    iconElement.classList.add('fa', icon, 'absolute', 'right-3', 'top-[50%]', 'translate-y-[-50%]', 'text-sm', 'text-secondary/80');
+
+                    inputWrapper.appendChild(selectElement);
+                    inputWrapper.appendChild(iconElement);
+
+                    fieldDiv.appendChild(labelElement);
+                    fieldDiv.appendChild(inputWrapper);
+
+                    return fieldDiv;
+                }
+
+                // Function to update family member numbers after removal
+                function updateFamilyMemberNumbers() {
+                    const familyMembers = document.querySelectorAll('.family-member-section');
+                    familyMembers.forEach((member, index) => {
+                        const headerTitle = member.querySelector('h4');
+                        headerTitle.textContent = `Family Member ${index + 1}`;
+                    });
+                }
+
+                // Populate existing family members on page load
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Get existing family member data from PHP
+                    @if(isset($client))
+                        @php
+                            $familyMembers = \App\Models\ClientFamilyMember::where('client_id', $client->id)->active()->orderBy('sort_order')->get();
+                        @endphp
+
+                        @foreach($familyMembers as $index => $member)
+                            populateFamilyMember({
+                                first_name: '{{ $member->first_name }}',
+                                last_name: '{{ $member->last_name }}',
+                                relationship: '{{ $member->relationship }}',
+                                date_of_birth: '{{ $member->date_of_birth ? $member->date_of_birth->format('Y-m-d') : '' }}',
+                                nationality: '{{ $member->nationality }}',
+                                passport_number: '{{ $member->passport_number }}',
+                                email: '{{ $member->email }}',
+                                phone_number: '{{ $member->phone_number }}'
+                            }, {{ $index + 1 }});
+                        @endforeach
+                    @endif
+                });
+
+                // Function to populate existing family member
+                function populateFamilyMember(memberData, memberNumber) {
+                    let container = document.getElementById('familyMembersContainer');
+
+                    // Create the main wrapper div
+                    let familyMemberWrapper = document.createElement('div');
+                    familyMemberWrapper.classList.add('family-member-section', 'border-[1px]', 'border-secondary/30', 'rounded-md', 'p-4', 'mb-4', 'bg-gray-50');
+                    familyMemberWrapper.setAttribute('data-member-id', memberNumber);
+
+                    // Create header with member number and remove button
+                    let headerDiv = document.createElement('div');
+                    headerDiv.classList.add('flex', 'justify-between', 'items-center', 'mb-4', 'pb-2', 'border-b', 'border-secondary/20');
+
+                    let headerTitle = document.createElement('h4');
+                    headerTitle.classList.add('text-md', 'font-semibold', 'text-ternary');
+                    headerTitle.textContent = `Family Member ${memberNumber}`;
+
+                    let removeBtn = document.createElement('button');
+                    removeBtn.setAttribute('type', 'button');
+                    removeBtn.classList.add('px-3', 'py-1', 'text-xs', 'font-semibold', 'rounded-sm', 'border-[1px]', 'border-red-500', 'text-red-500', 'bg-red-500/10', 'hover:bg-red-500', 'hover:text-white', 'transition', 'ease-in', 'duration-200');
+                    removeBtn.innerHTML = '<i class="fa fa-trash mr-1"></i>Remove';
+                    removeBtn.addEventListener('click', function () {
+                        container.removeChild(familyMemberWrapper);
+                        updateFamilyMemberNumbers();
+                    });
+
+                    headerDiv.appendChild(headerTitle);
+                    headerDiv.appendChild(removeBtn);
+
+                    // Create the grid container for form fields
+                    let gridContainer = document.createElement('div');
+                    gridContainer.classList.add('w-full', 'grid', 'xl:grid-cols-3', 'lg:grid-cols-3', 'md:grid-cols-2', 'sm:grid-cols-2', 'grid-cols-1', 'gap-4');
+
+                    // Split name into first and last name if needed
+                    let firstName = memberData.first_name || '';
+                    let lastName = memberData.last_name || '';
+
+                    // First Name Field
+                    let firstNameDiv = createFormField('text', `family_first_name[${memberNumber}]`, 'First Name', 'fa-user', true);
+                    firstNameDiv.querySelector('input').value = firstName;
+
+                    // Last Name Field
+                    let lastNameDiv = createFormField('text', `family_last_name[${memberNumber}]`, 'Last Name', 'fa-user', true);
+                    lastNameDiv.querySelector('input').value = lastName;
+
+                    // Relationship Field
+                    let relationshipDiv = createSelectField(`family_relationship[${memberNumber}]`, 'Relationship', [
+                        { value: '', text: 'Select Relationship' },
+                        { value: 'spouse', text: 'Spouse' },
+                        { value: 'child', text: 'Child' },
+                        { value: 'parent', text: 'Parent' },
+                        { value: 'sibling', text: 'Sibling' },
+                        { value: 'other', text: 'Other' }
+                    ], 'fa-users', true);
+                    relationshipDiv.querySelector('select').value = memberData.relationship || '';
+
+                    // Date of Birth Field
+                    let dobDiv = createFormField('date', `family_date_of_birth[${memberNumber}]`, 'Date of Birth', 'fa-calendar', true);
+                    dobDiv.querySelector('input').value = memberData.date_of_birth || '';
+
+                    // Nationality Field
+                    let nationalityDiv = createFormField('text', `family_nationality[${memberNumber}]`, 'Nationality', 'fa-flag', true);
+                    nationalityDiv.querySelector('input').value = memberData.nationality || '';
+
+                    // Passport Number Field
+                    let passportDiv = createFormField('text', `family_passport_number[${memberNumber}]`, 'Passport Number', 'fa-passport', false);
+                    passportDiv.querySelector('input').value = memberData.passport_number || '';
+
+                    // Email Field
+                    let emailDiv = createFormField('email', `family_email[${memberNumber}]`, 'Email Address', 'fa-envelope', false);
+                    emailDiv.querySelector('input').value = memberData.email || '';
+
+                    // Phone Field
+                    let phoneDiv = createFormField('text', `family_phone[${memberNumber}]`, 'Phone Number', 'fa-phone', false);
+                    phoneDiv.querySelector('input').value = memberData.phone_number || '';
+
+                    // Append all fields to grid
+                    gridContainer.appendChild(firstNameDiv);
+                    gridContainer.appendChild(lastNameDiv);
+                    gridContainer.appendChild(relationshipDiv);
+                    gridContainer.appendChild(dobDiv);
+                    gridContainer.appendChild(nationalityDiv);
+                    gridContainer.appendChild(passportDiv);
+                    gridContainer.appendChild(emailDiv);
+                    gridContainer.appendChild(phoneDiv);
+
+                    // Append header and grid to wrapper
+                    familyMemberWrapper.appendChild(headerDiv);
+                    familyMemberWrapper.appendChild(gridContainer);
+
+                    // Append wrapper to container
+                    container.appendChild(familyMemberWrapper);
+                }
+
     </script>
     <style>
         .step-indicator {

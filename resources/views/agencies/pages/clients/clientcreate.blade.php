@@ -208,8 +208,56 @@
                                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                
 
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="passport_no" class="font-semibold text-ternary/90 text-sm">Passport Number</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="passport_no" id="passport_no"
+                                            value="{{ old('passport_no', $bookingData->clint->passport_no ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="date_of_birth" class="font-semibold text-ternary/90 text-sm">Date of Birth</label>
+                                    <div class="w-full relative">
+                                        <input type="date" name="date_of_birth" id="date_of_birth"
+                                            value="{{ old('date_of_birth', $bookingData->clint->date_of_birth ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="date_of_issue" class="font-semibold text-ternary/90 text-sm">Date of Issue</label>
+                                    <div class="w-full relative">
+                                        <input type="date" name="date_of_issue" id="date_of_issue"
+                                            value="{{ old('date_of_issue', $bookingData->clint->date_of_issue ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="date_of_expire" class="font-semibold text-ternary/90 text-sm">Date of Expiry</label>
+                                    <div class="w-full relative">
+                                        <input type="date" name="date_of_expire" id="date_of_expire"
+                                            value="{{ old('date_of_expire', $bookingData->clint->date_of_expire ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-calendar-times absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
+
+                                <div class="w-full relative group flex flex-col gap-1">
+                                    <label for="place_of_issue" class="font-semibold text-ternary/90 text-sm">Place of Issue</label>
+                                    <div class="w-full relative">
+                                        <input type="text" name="place_of_issue" id="place_of_issue"
+                                            value="{{ old('place_of_issue', $bookingData->clint->place_of_issue ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <i class="fa fa-map-marker absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

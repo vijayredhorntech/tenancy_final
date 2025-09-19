@@ -49,31 +49,23 @@
         </tr>
         <tr class="border-b border-gray-100">
             <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Passport Number:</th>
-            <td class="text-ternary text-lg px-20 py-3">{{ strtoupper($client->clientinfo->passport_ic_number ?? 'N/A') }}</td>
-        </tr>
-        <tr class="border-b border-gray-100">
-            <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Date of Expire:</th>
-            <td class="text-ternary text-lg px-20 py-3">{{ strtoupper($client->clientinfo->passport_expiry_date ?? 'N/A') }}</td>
+            <td class="text-ternary text-lg px-20 py-3">{{ $client->passport_no ?? 'N/A' }}</td>
         </tr>
         <tr class="border-b border-gray-100">
             <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Date of Issue:</th>
-            <td class="text-ternary text-lg px-20 py-3">{{ strtoupper($client->clientinfo->passport_issue_date ?? 'N/A') }}</td>
+            <td class="text-ternary text-lg px-20 py-3">
+                {{ $client->date_of_issue ? \Carbon\Carbon::parse($client->date_of_issue)->format('d/m/Y') : 'N/A' }}
+            </td>
+        </tr>
+        <tr class="border-b border-gray-100">
+            <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Date of Expiry:</th>
+            <td class="text-ternary text-lg px-20 py-3">
+                {{ $client->date_of_expire ? \Carbon\Carbon::parse($client->date_of_expire)->format('d/m/Y') : 'N/A' }}
+            </td>
         </tr>
         <tr class="border-b border-gray-100">
             <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Place of Issue:</th>
-            <td class="text-ternary text-lg px-20 py-3">{{ strtoupper($client->clientinfo->passport_issue_place ?? 'N/A') }}</td>
-        </tr>
-        <tr class="border-b border-gray-100">
-            <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Passport Front:</th>
-            <td class="text-ternary text-lg px-20 py-3">N/A</td>
-        </tr>
-        <tr class="border-b border-gray-100">
-            <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Passport Back:</th>
-            <td class="text-ternary text-lg px-20 py-3">N/A</td>
-        </tr>
-        <tr>
-            <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Letter:</th>
-            <td class="text-ternary text-lg px-20 py-3">N/A</td>
+            <td class="text-ternary text-lg px-20 py-3">{{ $client->place_of_issue ?? 'N/A' }}</td>
         </tr>
     </tbody>
 </table>

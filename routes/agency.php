@@ -216,6 +216,12 @@ Route::group([
           Route::post('/store/communication','hsstoreCommunication')->name('agency.communication');
           Route::get('/client/{client}/history/{history}/delete','hsdeleteHistory')->name('agency.history.delete');
 
+          /*****Family Members**** */
+          Route::get('/client/{id}/family-members', 'hsGetFamilyMembers')->name('agency.client.family-members');
+          Route::get('/family-member/{id}/view', 'hsViewFamilyMember')->name('agency.family-member.view');
+          Route::get('/family-member/{id}/edit', 'hsEditFamilyMember')->name('agency.family-member.edit');
+          Route::post('/family-member/{id}/update', 'hsUpdateFamilyMember')->name('agency.family-member.update');
+
     });
 
        /****Document Controller **** */
