@@ -28,6 +28,7 @@ use App\Http\Controllers\SuperAdmin\HotelSettingsController;
 use App\Http\Controllers\SuperAdmin\AccountController;
 
 use App\Http\Controllers\SuperAdmin\SupplierController;
+use App\Http\Controllers\ApplicationController;
 /******Controler for agencies ***** */
 use App\Http\Controllers\AgencyAdmin\AgencyAdminController;
 use App\Http\Controllers\AgencyAdmin\AgencyRoleController;

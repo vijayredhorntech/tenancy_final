@@ -10,6 +10,7 @@ use App\Models\CLientDetails;
 use App\Models\ClientMoreInfo;
 use App\Models\AuthervisaApplication;
 use App\Models\VisaBooking;
+use App\Models\InvoiceAdjustment;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Services\AgencyService;
@@ -1447,26 +1448,36 @@ public function hsAllinvoice(Request $request)
   
  if ($request->filled('status') || $request->filled('date_from') || $request->filled('date_to') || $request->filled('search')) {
     $invoicesQuery->where(function ($q) use ($request) {
-        $q->whereHas('invoice', function ($subQ) use ($request) {
-            if ($request->filled('status')) {
-           
-                $subQ->where('status', $request->status);
-            }
-            if ($request->filled('date_from')) {
-                $subQ->whereDate('created_at', '>=', $request->date_from);
-            }
-            if ($request->filled('date_to')) {
-                $subQ->whereDate('created_at', '<=', $request->date_to);
-            }
-            if ($request->filled('search')) {
-                $search = $request->search;
-                $subQ->where(function ($innerQ) use ($search) {
-                    $innerQ->where('invoice_no', 'like', "%{$search}%")
-                           ->orWhere('client_name', 'like', "%{$search}%");
+        // Handle status filtering
+        if ($request->filled('status')) {
+            if ($request->status === 'Adjusted') {
+                // Filter by invoicestatus in deductions table for Adjusted
+                $q->where('invoicestatus', 'Adjusted');
+            } else {
+                // Filter by status in invoice table for other statuses
+                $q->whereHas('invoice', function ($subQ) use ($request) {
+                    $subQ->where('status', $request->status);
                 });
             }
-        })
-        ->orWhereDoesntHave('invoice'); // ✅ include rows without invoice
+        } else {
+            // Apply other filters
+            $q->whereHas('invoice', function ($subQ) use ($request) {
+                if ($request->filled('date_from')) {
+                    $subQ->whereDate('created_at', '>=', $request->date_from);
+                }
+                if ($request->filled('date_to')) {
+                    $subQ->whereDate('created_at', '<=', $request->date_to);
+                }
+                if ($request->filled('search')) {
+                    $search = $request->search;
+                    $subQ->where(function ($innerQ) use ($search) {
+                        $innerQ->where('invoice_no', 'like', "%{$search}%")
+                               ->orWhere('client_name', 'like', "%{$search}%");
+                    });
+                }
+            })
+            ->orWhereDoesntHave('invoice'); // ✅ include rows without invoice
+        }
     });
 }
     $invoices = $perPage
@@ -1672,8 +1683,7 @@ public function hsAllinvoice(Request $request)
     {
         $request->validate([
             'invoice_id' => 'required|exists:deductions,id',
-            'selected_invoices' => 'nullable|array',
-            'selected_invoices.*' => 'exists:deductions,id',
+            'selected_application_id' => 'nullable|integer',
             'processed_by' => 'nullable|string|max:255',
             'internal_notes' => 'nullable|string|max:1000',
         ]);
@@ -1691,7 +1701,49 @@ public function hsAllinvoice(Request $request)
             ->first();
 
         if (!$deduction) {
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Invoice not found.'], 404);
+            }
             return back()->with('error', 'Invoice not found.');
+        }
+
+        // Get selected application details if provided
+        $selectedApplication = null;
+        $selectedApplicationData = [];
+        
+        if ($request->selected_application_id) {
+            $selectedApplication = VisaBooking::with(['clint'])
+                ->where('id', $request->selected_application_id)
+                ->where('agency_id', $agency->id)
+                ->first();
+                
+            if (!$selectedApplication) {
+                if ($request->expectsJson()) {
+                    return response()->json(['error' => 'Selected application not found or does not belong to your agency.'], 404);
+                }
+                return back()->with('error', 'Selected application not found or does not belong to your agency.');
+            }
+            
+            // Set database connection for client details
+            $this->agencyService->setDatabaseConnection($agency->database_name);
+            
+            $clientDetails = \App\Models\ClientDetails::on('user_database')
+                ->where('id', $selectedApplication->client_id)
+                ->first();
+            
+            $selectedApplicationData = [
+                'id' => $selectedApplication->id,
+                'application_number' => $selectedApplication->application_number,
+                'client_name' => $clientDetails->client_name ?? 'N/A',
+                'amount' => $selectedApplication->total_amount ?? 0,
+            ];
+            
+            // Update selected application status to paid
+            $selectedApplication->update([
+                'payment_status' => 'paid',
+                'document_status' => 'Paid',
+                'applicationworkin_status' => 'Paid',
+            ]);
         }
 
         // Update deduction status to adjusted
@@ -1741,6 +1793,37 @@ public function hsAllinvoice(Request $request)
             'cancelled_date'     => now(),
         ]);
 
+        // Get the main database user ID if available
+        $mainDbUserId = null;
+        try {
+            // Check if current user exists in main database
+            $mainUser = \App\Models\User::where('email', Auth::user()->email)->first();
+            $mainDbUserId = $mainUser ? $mainUser->id : null;
+        } catch (\Exception $e) {
+            // If there's any issue getting the main user, just set to null
+            $mainDbUserId = null;
+        }
+
+        // Create detailed adjustment record in invoice_adjustments table
+        InvoiceAdjustment::create([
+            'original_invoice_id' => $deduction->id,
+            'selected_application_id' => $selectedApplication ? $selectedApplication->id : null,
+            'agency_id' => $agency->id,
+            'adjustment_number' => $formattedInvoice,
+            'original_invoice_number' => $deduction->invoice_number,
+            'original_amount' => $deduction->amount ?? 0,
+            'adjusted_amount' => $deduction->amount ?? 0,
+            'selected_application_number' => $selectedApplicationData['application_number'] ?? null,
+            'selected_client_name' => $selectedApplicationData['client_name'] ?? null,
+            'selected_application_amount' => $selectedApplicationData['amount'] ?? null,
+            'processed_by' => $request->processed_by,
+            'internal_notes' => $request->internal_notes,
+            'status' => 'completed',
+            'adjustment_type' => $selectedApplication ? 'application_adjustment' : 'manual_adjustment',
+            'processed_by_user_id' => $mainDbUserId,
+            'adjustment_date' => now(),
+        ]);
+
         // Update visa booking status if exists
         if ($deduction->visabooking) {
             $deduction->visabooking->update([
@@ -1749,31 +1832,94 @@ public function hsAllinvoice(Request $request)
             ]);
         }
 
-        // Process selected invoices if any
-        if ($request->selected_invoices && count($request->selected_invoices) > 0) {
-            $selectedInvoices = Deduction::whereIn('id', $request->selected_invoices)
-                ->where('agency_id', $agency->id)
-                ->get();
+        // Create additional record linking adjustment to selected application
+        if ($selectedApplication) {
+            CancelInvoice::create([
+                'invoice_id'         => $invoice->id,
+                'application_number' => $formattedInvoice,
+                'type'               => 'adjustment_application',
+                'remark'             => "Adjustment applied to application: {$selectedApplicationData['application_number']}",
+                'reason'             => 'Application payment via adjustment',
+                'cancelled_by'       => Auth::id(),
+                'status'             => 1,
+                'amount'             => $selectedApplicationData['amount'] ?? 0,
+                'cancelled_date'     => now(),
+            ]);
+        }
 
-            foreach ($selectedInvoices as $selectedInvoice) {
-                // Create a note about the adjustment relationship
-                CancelInvoice::create([
-                    'invoice_id'         => $selectedInvoice->invoice->id ?? $selectedInvoice->id,
-                    'application_number' => $formattedInvoice . '-REL',
-                    'type'               => 'adjustment_related',
-                    'remark'             => "Related to adjustment: {$formattedInvoice}",
-                    'reason'             => 'Invoice included in adjustment process',
-                    'cancelled_by'       => Auth::id(),
-                    'status'             => 1,
-                    'amount'             => 0,
-                    'cancelled_date'     => now(),
-                ]);
-            }
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Invoice adjustment processed successfully.',
+                'adjustment_number' => $formattedInvoice,
+                'amount' => number_format($deduction->amount ?? 0, 2),
+                'selected_application' => $selectedApplicationData
+            ]);
         }
 
         return redirect()
             ->route('invoice.refund', ['type' => 'agencies'])
             ->with('success', 'Invoice adjustment processed successfully. Reference: ' . $formattedInvoice . ' | Amount: £' . number_format($deduction->amount ?? 0, 2));
+    }
+
+    /**
+     * Get adjustment data for a specific invoice
+     */
+    public function getAdjustmentData($invoiceId)
+    {
+        $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            return response()->json(['error' => 'Unauthorized. Agency not found.'], 403);
+        }
+
+        $adjustment = InvoiceAdjustment::with(['originalInvoice', 'selectedApplication', 'processedByUser'])
+            ->where('original_invoice_id', $invoiceId)
+            ->where('agency_id', $agency->id)
+            ->first();
+
+        if (!$adjustment) {
+            return response()->json(['error' => 'No adjustment data found.'], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'adjustment' => [
+                'id' => $adjustment->id,
+                'adjustment_number' => $adjustment->adjustment_number,
+                'original_invoice_number' => $adjustment->original_invoice_number,
+                'original_amount' => $adjustment->formatted_original_amount,
+                'adjusted_amount' => $adjustment->formatted_adjusted_amount,
+                'selected_application_number' => $adjustment->selected_application_number,
+                'selected_client_name' => $adjustment->selected_client_name,
+                'selected_application_amount' => $adjustment->formatted_selected_application_amount,
+                'processed_by' => $adjustment->processed_by,
+                'internal_notes' => $adjustment->internal_notes,
+                'status' => $adjustment->status,
+                'adjustment_type' => $adjustment->adjustment_type,
+                'adjustment_date' => $adjustment->adjustment_date->format('Y-m-d H:i:s'),
+                'processed_by_user' => $adjustment->processedByUser ? $adjustment->processedByUser->name : null,
+            ]
+        ]);
+    }
+
+    /**
+     * Display all adjustments for the agency
+     */
+    public function adjustmentHistory(Request $request)
+    {
+        $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            abort(403, 'Unauthorized. Agency not found.');
+        }
+
+        $adjustments = InvoiceAdjustment::with(['originalInvoice', 'selectedApplication', 'processedByUser'])
+            ->forAgency($agency->id)
+            ->orderBy('adjustment_date', 'desc')
+            ->paginate(20);
+
+        return view('agencies.pages.invoicehandling.adjustment-history', compact('adjustments'));
     }
 
 }

@@ -56,6 +56,7 @@
                                         <option value="">All Status</option>
                                         <option value="confirm" {{ request('status') == 'confirm' ? 'selected' : '' }}>Confirm</option>
                                         <option value="edited" {{ request('status') == 'edited' ? 'selected' : '' }}>Edit</option>
+                                        <option value="Adjusted" {{ request('status') == 'Adjusted' ? 'selected' : '' }}>Adjusted</option>
                                     </select>
                                 </div>
 
@@ -120,9 +121,11 @@
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>                         
                                         <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
                                             @if($invoice->invoice && $invoice->invoice->status === 'edited')
-                                                {{ $invoice->invoice->new_invoice_number }} <span class="text-xs">(Edited)</span>
+                                                {{ $invoice->invoice->new_invoice_number }} <span class="bg-purple-100 text-purple-600 px-2 py-1 rounded text-xs font-medium">Edited</span>
+                                            @elseif($invoice->invoicestatus === 'Adjusted')
+                                                {{ $invoice->invoice->new_invoice_number ?? $invoice->invoice_number ?? 'N/A' }} <span class="bg-purple-100 text-purple-600 px-2 py-1 rounded text-xs font-medium">Adjusted</span>
                                             @elseif($invoice->invoicestatus === 'Retrieved')
-                                                {{ $invoice->invoice_number ?? 'N/A' }} <span class="text-xs text-green-600">(Retrieved)</span>
+                                                {{ $invoice->invoice_number ?? 'N/A' }} <span class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs font-medium">Retrieved</span>
                                             @else
                                                 {{ $invoice->invoice_number ?? 'N/A' }}
                                             @endif
@@ -158,9 +161,11 @@
                                         {{-- <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm"> {{$invoice['amount']}}</td> --}}
                                           <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
                                             @if($invoice->invoice && $invoice->invoice->status === 'edited')
-                                                {{ $invoice->invoice->new_price }}
+                                                £{{ number_format($invoice->invoice->new_price ?? 0, 2) }}
+                                            @elseif($invoice->invoicestatus === 'Adjusted')
+                                                £{{ number_format($invoice->invoice->amount ?? $invoice->amount ?? 0, 2) }}
                                             @else
-                                                {{ $invoice['amount'] ?? 'N/A' }}
+                                                £{{ number_format($invoice['amount'] ?? 0, 2) }}
                                             @endif
                                         </td>
 

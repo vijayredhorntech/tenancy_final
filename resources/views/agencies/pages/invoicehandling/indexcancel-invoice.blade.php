@@ -1,5 +1,5 @@
 <x-agency.layout>
-    @section('title')Staff @endsection
+    @section('title')Refunded Invoices @endsection
     <div class="w-full grid xl:grid-cols-5 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 mb-4">
 
     </div>
@@ -9,6 +9,10 @@
 {{--        === this is code for heading section ===--}}
             <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
                 <span class="font-semibold text-ternary text-xl"> Refund Invoice</span>
+                <a href="{{ route('invoice.adjustment.history') }}" 
+                   class="bg-purple-500 text-white px-4 py-2 rounded text-sm font-medium hover:bg-purple-600 transition ease-in duration-200">
+                    <i class="fa fa-history mr-1"></i> Adjustment History
+                </a>
             </div>
 {{--        === heading section code ends here===--}}
 
@@ -489,50 +493,49 @@
                         </div>
 
                         <!-- All Retail Invoices Section -->
-                        <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="bg-gray-50 p-4 rounded-lg" id="retailInvoicesSection">
                             <h4 class="text-lg font-semibold text-gray-700 mb-4">All Retail Invoices</h4>
                             <div class="overflow-x-auto">
                                 <table class="w-full border border-gray-300 border-collapse">
                                     <thead>
                                         <tr class="bg-gray-200">
-                                            <th class="border border-gray-300 px-3 py-2 text-left text-xs font-medium text-gray-700">Invoice No.</th>
-                                            <th class="border border-gray-300 px-3 py-2 text-left text-xs font-medium text-gray-700">Date</th>
-                                            <th class="border border-gray-300 px-3 py-2 text-left text-xs font-medium text-gray-700">Receiver</th>
-                                            <th class="border border-gray-300 px-3 py-2 text-left text-xs font-medium text-gray-700">Total</th>
+                                            <th class="border border-gray-300 px-3 py-2 text-left text-xs font-medium text-gray-700">Application Number</th>
+                                            <th class="border border-gray-300 px-3 py-2 text-left text-xs font-medium text-gray-700">Client Name</th>
                                             <th class="border border-gray-300 px-3 py-2 text-left text-xs font-medium text-gray-700">Paid</th>
+                                            <th class="border border-gray-300 px-3 py-2 text-left text-xs font-medium text-gray-700">Booking Date</th>
                                             <th class="border border-gray-300 px-3 py-2 text-left text-xs font-medium text-gray-700">Select</th>
                                         </tr>
                                     </thead>
                                     <tbody id="adjustmentInvoicesTable">
-                                        @forelse($retailInvoices ?? [] as $adjInvoice)
-                                        <tr class="hover:bg-gray-100">
+                                        @php
+                                            // Get pending payment applications from visa bookings
+                                            $pendingApplications = \App\Models\VisaBooking::where('payment_status', 'pending')
+                                                ->with(['clint'])
+                                                ->get();
+                                        @endphp
+                                        
+                                        @forelse($pendingApplications as $application)
+                                        <tr class="hover:bg-gray-100 application-row" data-application-id="{{ $application->id }}">
                                             <td class="border border-gray-300 px-3 py-2 text-xs">
-                                                @if($adjInvoice->invoice && $adjInvoice->invoice->new_invoice_number)
-                                                    {{ $adjInvoice->invoice->new_invoice_number }}
-                                                @else
-                                                    {{ $adjInvoice->invoice_number ?? 'N/A' }}
-                                                @endif
+                                                {{ $application->application_number ?? 'N/A' }}
                                             </td>
                                             <td class="border border-gray-300 px-3 py-2 text-xs">
-                                                {{ $adjInvoice->created_at ? $adjInvoice->created_at->format('Y-m-d') : 'N/A' }}
+                                                {{ $application->clint->client_name ?? 'N/A' }}
                                             </td>
                                             <td class="border border-gray-300 px-3 py-2 text-xs">
-                                                {{ $adjInvoice->visaBooking->clientDetailsFromUserDB->client_name ?? $adjInvoice->visaBooking->clint->client_name ?? 'N/A' }}
+                                                £{{ number_format($application->total_amount ?? 0, 2) }}
                                             </td>
                                             <td class="border border-gray-300 px-3 py-2 text-xs">
-                                                £{{ number_format($adjInvoice->invoice->total_amount ?? $adjInvoice->amount ?? 0, 2) }}
-                                            </td>
-                                            <td class="border border-gray-300 px-3 py-2 text-xs">
-                                                £{{ number_format($adjInvoice->amount ?? 0, 2) }}
+                                                {{ $application->created_at ? $application->created_at->format('Y-m-d') : 'N/A' }}
                                             </td>
                                             <td class="border border-gray-300 px-3 py-2 text-center">
-                                                <input type="checkbox" name="selected_invoices[]" value="{{ $adjInvoice->id }}" 
-                                                       class="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500">
+                                                <input type="radio" name="selected_application" value="{{ $application->id }}" 
+                                                       class="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 focus:ring-orange-500 application-radio">
                                             </td>
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="6" class="border border-gray-300 px-3 py-2 text-center text-xs text-gray-500">No retail invoices available</td>
+                                            <td colspan="5" class="border border-gray-300 px-3 py-2 text-center text-xs text-gray-500">No pending payment applications available</td>
                                         </tr>
                                         @endforelse
                                     </tbody>
@@ -540,36 +543,86 @@
                             </div>
                         </div>
 
+                        <!-- Adjusted Application Section (Hidden by default) -->
+                        <div class="bg-green-50 p-4 rounded-lg hidden" id="adjustedApplicationSection">
+                            <h4 class="text-lg font-semibold text-green-700 mb-4">Adjusted Application</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full border border-green-300 border-collapse">
+                                    <thead>
+                                        <tr class="bg-green-200">
+                                            <th class="border border-green-300 px-3 py-2 text-left text-xs font-medium text-green-700">Application Number</th>
+                                            <th class="border border-green-300 px-3 py-2 text-left text-xs font-medium text-green-700">Client Name</th>
+                                            <th class="border border-green-300 px-3 py-2 text-left text-xs font-medium text-green-700">Paid</th>
+                                            <th class="border border-green-300 px-3 py-2 text-left text-xs font-medium text-green-700">Booking Date</th>
+                                            <th class="border border-green-300 px-3 py-2 text-left text-xs font-medium text-green-700">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="adjustedApplicationTable">
+                                        <!-- This will be populated after adjustment -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                         <!-- Additional Information Section -->
-                        <div class="bg-yellow-50 p-4 rounded-lg">
+                        <div class="bg-yellow-50 p-4 rounded-lg" id="additionalInfoSection">
                             <h4 class="text-lg font-semibold text-gray-700 mb-4">Additional Information</h4>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="additionalInfoForm">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Processed By</label>
-                                    <input type="text" name="processed_by" 
+                                    <input type="text" name="processed_by" id="processedByInput"
                                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500" 
                                            placeholder="Staff member name">
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-medium text-gray-700 mb-1">Internal Notes</label>
-                                    <textarea name="internal_notes" rows="2" 
+                                    <textarea name="internal_notes" rows="2" id="internalNotesInput"
                                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                                               placeholder="Internal notes for record keeping..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- Display section after adjustment (Hidden by default) -->
+                            <div class="hidden" id="additionalInfoDisplay">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Processed By</label>
+                                        <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700" id="processedByDisplay">
+                                            <!-- Will be populated after adjustment -->
+                                        </div>
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Internal Notes</label>
+                                        <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700 min-h-[60px]" id="internalNotesDisplay">
+                                            <!-- Will be populated after adjustment -->
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Modal Footer -->
-                    <div class="flex justify-end space-x-3 mt-6 pt-4 border-t">
-                        <button type="button" onclick="closeAdjustmentModal()" 
-                                class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200">
-                            Cancel
-                        </button>
-                        <button type="submit" 
-                                class="px-6 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition duration-200">
-                            Process Adjustment
-                        </button>
+                    <div class="flex justify-end space-x-3 mt-6 pt-4 border-t" id="adjustmentModalFooter">
+                        <!-- Before Adjustment Buttons -->
+                        <div id="beforeAdjustmentButtons">
+                            <button type="button" onclick="closeAdjustmentModal()" 
+                                    class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200">
+                                Cancel
+                            </button>
+                            <button type="button" onclick="processAdjustment()" 
+                                    class="px-6 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition duration-200">
+                                Process Adjustment
+                            </button>
+                        </div>
+                        
+                        <!-- After Adjustment Buttons (Hidden by default) -->
+                        <div id="afterAdjustmentButtons" class="hidden">
+                            <button type="button" onclick="closeAdjustmentModal()" 
+                                    class="px-6 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-200">
+                                Close
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -757,15 +810,305 @@
                 document.getElementById('adjustmentCurrentInvoiceNumber').value = invoiceNumber;
                 document.getElementById('adjustmentCurrentAmount').value = '£' + currentAmount.toFixed(2);
                 
+                // Reset modal to initial state
+                resetAdjustmentModal();
+                
+                // Check if this invoice already has adjustment data
+                checkExistingAdjustmentData(invoiceId);
+                
                 console.log('Opening adjustment modal for invoice:', invoiceId, invoiceNumber, 'Amount:', currentAmount);
+            }
+
+            // Check for existing adjustment data
+            function checkExistingAdjustmentData(invoiceId) {
+                fetch(`{{ route('invoice.adjustment.data', '') }}/${invoiceId}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.adjustment) {
+                        // Display existing adjustment data
+                        displayExistingAdjustmentData(data.adjustment);
+                    }
+                })
+                .catch(error => {
+                    // No existing adjustment data or error - continue with normal flow
+                    console.log('No existing adjustment data found or error:', error);
+                });
+            }
+
+            // Display existing adjustment data
+            function displayExistingAdjustmentData(adjustment) {
+                // Hide the retail invoices section
+                document.getElementById('retailInvoicesSection').classList.add('hidden');
+                
+                // Show the adjusted application section
+                document.getElementById('adjustedApplicationSection').classList.remove('hidden');
+                
+                // Update the current invoice section to show it's already adjusted
+                document.querySelector('input[value="Pending Adjustment"]').value = 'Already Adjusted';
+                document.querySelector('input[value="Pending Adjustment"]').classList.remove('bg-orange-100', 'text-orange-600');
+                document.querySelector('input[value="Pending Adjustment"]').classList.add('bg-green-100', 'text-green-600');
+                
+                // Populate the adjusted application table with saved data
+                const adjustedTableBody = document.getElementById('adjustedApplicationTable');
+                adjustedTableBody.innerHTML = `
+                    <tr class="bg-green-50">
+                        <td class="border border-green-300 px-3 py-2 text-xs">${adjustment.selected_application_number || 'N/A'}</td>
+                        <td class="border border-green-300 px-3 py-2 text-xs">${adjustment.selected_client_name || 'N/A'}</td>
+                        <td class="border border-green-300 px-3 py-2 text-xs">${adjustment.selected_application_amount || 'N/A'}</td>
+                        <td class="border border-green-300 px-3 py-2 text-xs">${adjustment.adjustment_date}</td>
+                        <td class="border border-green-300 px-3 py-2 text-xs">
+                            <span class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs font-medium">Completed</span>
+                        </td>
+                    </tr>
+                `;
+
+                // Hide the form inputs and show display values
+                document.getElementById('additionalInfoForm').classList.add('hidden');
+                document.getElementById('additionalInfoDisplay').classList.remove('hidden');
+                
+                // Populate display values with saved data
+                document.getElementById('processedByDisplay').textContent = adjustment.processed_by || 'N/A';
+                document.getElementById('internalNotesDisplay').textContent = adjustment.internal_notes || 'No additional notes';
+
+                // Switch button states
+                document.getElementById('beforeAdjustmentButtons').classList.add('hidden');
+                document.getElementById('afterAdjustmentButtons').classList.remove('hidden');
+
+                // Add adjustment details section
+                addAdjustmentDetailsSection(adjustment);
+            }
+
+            // Add adjustment details section to show saved data
+            function addAdjustmentDetailsSection(adjustment) {
+                // Check if details section already exists
+                let detailsSection = document.getElementById('adjustmentDetailsSection');
+                if (!detailsSection) {
+                    // Create new details section
+                    detailsSection = document.createElement('div');
+                    detailsSection.id = 'adjustmentDetailsSection';
+                    detailsSection.className = 'bg-blue-50 p-4 rounded-lg mt-4';
+                    
+                    detailsSection.innerHTML = `
+                        <h4 class="text-lg font-semibold text-blue-700 mb-4">Adjustment Details</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Adjustment Number</label>
+                                <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700" id="adjustmentNumberDisplay">
+                                    ${adjustment.adjustment_number}
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Adjustment Type</label>
+                                <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700" id="adjustmentTypeDisplay">
+                                    ${adjustment.adjustment_type.replace('_', ' ').toUpperCase()}
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Original Amount</label>
+                                <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700" id="originalAmountDisplay">
+                                    ${adjustment.original_amount}
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Adjusted Amount</label>
+                                <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700" id="adjustedAmountDisplay">
+                                    ${adjustment.adjusted_amount}
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-green-100 text-green-700" id="adjustmentStatusDisplay">
+                                    ${adjustment.status.toUpperCase()}
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Processed By User</label>
+                                <div class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-700" id="processedByUserDisplay">
+                                    ${adjustment.processed_by_user || 'N/A'}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Insert before the modal footer
+                    const modalFooter = document.getElementById('adjustmentModalFooter');
+                    modalFooter.parentNode.insertBefore(detailsSection, modalFooter);
+                }
             }
 
             function closeAdjustmentModal() {
                 document.getElementById('adjustmentModal').classList.add('hidden');
                 document.body.style.overflow = 'auto';
-                // Reset form
+                // Reset form and modal state
                 document.getElementById('adjustmentForm').reset();
+                resetAdjustmentModal();
             }
+
+            function resetAdjustmentModal() {
+                // Show initial sections
+                document.getElementById('retailInvoicesSection').classList.remove('hidden');
+                document.getElementById('additionalInfoForm').classList.remove('hidden');
+                document.getElementById('beforeAdjustmentButtons').classList.remove('hidden');
+                
+                // Hide adjusted sections
+                document.getElementById('adjustedApplicationSection').classList.add('hidden');
+                document.getElementById('additionalInfoDisplay').classList.add('hidden');
+                document.getElementById('afterAdjustmentButtons').classList.add('hidden');
+                
+                // Remove adjustment details section if it exists
+                const detailsSection = document.getElementById('adjustmentDetailsSection');
+                if (detailsSection) {
+                    detailsSection.remove();
+                }
+                
+                // Reset status input to original state
+                const statusInput = document.querySelector('input[value="Already Adjusted"]');
+                if (statusInput) {
+                    statusInput.value = 'Pending Adjustment';
+                    statusInput.classList.remove('bg-green-100', 'text-green-600');
+                    statusInput.classList.add('bg-orange-100', 'text-orange-600');
+                }
+                
+                // Clear any selected applications
+                const radios = document.querySelectorAll('.application-radio');
+                radios.forEach(radio => radio.checked = false);
+                
+                // Clear form inputs
+                document.getElementById('processedByInput').value = '';
+                document.getElementById('internalNotesInput').value = '';
+            }
+
+            function processAdjustment() {
+                // Check if an application is selected
+                const selectedRadio = document.querySelector('input[name="selected_application"]:checked');
+                if (!selectedRadio) {
+                    alert('Please select an application to adjust.');
+                    return;
+                }
+
+                // Check if required fields are filled
+                const processedBy = document.getElementById('processedByInput').value.trim();
+                const internalNotes = document.getElementById('internalNotesInput').value.trim();
+                
+                if (!processedBy) {
+                    alert('Please enter who processed this adjustment.');
+                    return;
+                }
+
+                // Get selected application data
+                const selectedRow = selectedRadio.closest('tr');
+                const applicationId = selectedRadio.value;
+                const applicationNumber = selectedRow.cells[0].textContent.trim();
+                const clientName = selectedRow.cells[1].textContent.trim();
+                const paidAmount = selectedRow.cells[2].textContent.trim();
+                const bookingDate = selectedRow.cells[3].textContent.trim();
+
+                // Get invoice ID from the form
+                const invoiceId = document.getElementById('adjustmentInvoiceId').value;
+
+                // Show loading state
+                const processButton = document.querySelector('button[onclick="processAdjustment()"]');
+                const originalText = processButton.textContent;
+                processButton.textContent = 'Processing...';
+                processButton.disabled = true;
+
+                // Create form data for AJAX submission
+                const formData = new FormData();
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                formData.append('invoice_id', invoiceId);
+                formData.append('selected_application_id', applicationId);
+                formData.append('processed_by', processedBy);
+                formData.append('internal_notes', internalNotes);
+
+                // Submit via AJAX
+                fetch('{{ route("invoice.adjustment") }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Hide the retail invoices section
+                        document.getElementById('retailInvoicesSection').classList.add('hidden');
+                        
+                        // Show the adjusted application section
+                        document.getElementById('adjustedApplicationSection').classList.remove('hidden');
+                        
+                        // Populate the adjusted application table
+                        const adjustedTableBody = document.getElementById('adjustedApplicationTable');
+                        adjustedTableBody.innerHTML = `
+                            <tr class="bg-green-50">
+                                <td class="border border-green-300 px-3 py-2 text-xs">${applicationNumber}</td>
+                                <td class="border border-green-300 px-3 py-2 text-xs">${clientName}</td>
+                                <td class="border border-green-300 px-3 py-2 text-xs">${paidAmount}</td>
+                                <td class="border border-green-300 px-3 py-2 text-xs">${bookingDate}</td>
+                                <td class="border border-green-300 px-3 py-2 text-xs">
+                                    <span class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs font-medium">Adjusted</span>
+                                </td>
+                            </tr>
+                        `;
+
+                        // Hide the form inputs and show display values
+                        document.getElementById('additionalInfoForm').classList.add('hidden');
+                        document.getElementById('additionalInfoDisplay').classList.remove('hidden');
+                        
+                        // Populate display values
+                        document.getElementById('processedByDisplay').textContent = processedBy;
+                        document.getElementById('internalNotesDisplay').textContent = internalNotes || 'No additional notes';
+
+                        // Switch button states
+                        document.getElementById('beforeAdjustmentButtons').classList.add('hidden');
+                        document.getElementById('afterAdjustmentButtons').classList.remove('hidden');
+
+                        // Show success message
+                        alert(`Adjustment processed successfully!\nReference: ${data.adjustment_number}\nAmount: £${data.amount}`);
+                        
+                        // Auto-reload page after 2 seconds to show updated data
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
+                    } else {
+                        alert('Error: ' + (data.message || 'Failed to process adjustment'));
+                        // Reset button state
+                        processButton.textContent = originalText;
+                        processButton.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred while processing the adjustment.');
+                    // Reset button state
+                    processButton.textContent = originalText;
+                    processButton.disabled = false;
+                });
+            }
+
+            // Radio button functionality to ensure only one selection
+            document.addEventListener('DOMContentLoaded', function() {
+                const applicationRadios = document.querySelectorAll('.application-radio');
+                applicationRadios.forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        if (this.checked) {
+                            // Uncheck all other radios
+                            applicationRadios.forEach(otherRadio => {
+                                if (otherRadio !== this) {
+                                    otherRadio.checked = false;
+                                }
+                            });
+                        }
+                    });
+                });
+            });
 
             // Close adjustment modal when clicking outside
             document.getElementById('adjustmentModal').addEventListener('click', function(e) {

@@ -294,9 +294,10 @@ public function getSuperadminshotedapplication($request)
             $database = $viewbooking->agency->database_name ?? null;
 
             if ($database) {
+                // Use the SAME logic as bookingDataById() method
                 $this->agencyService->setConnectionByDatabase($database);
 
-                // ✅ Get client from tenant DB
+                // Load the clint relation from the user-specific database
                 $clientFromUserDB = ClientDetails::on('user_database')
                     ->with('clientinfo')
                     ->where('id', $viewbooking->client_id)
@@ -672,6 +673,15 @@ public function saveBooking(array $data)
     $client_id = $data['clientId']; 
     $client_details = $this->agencyService->getClientDetails($client_id, $agency);
     $user = $this->agencyService->getCurrentLoginUser();
+    
+    // Use the agency's user_id from the main database instead of Auth::id()
+    // This ensures we use a valid user ID that exists in the main database
+    $mainDbUserId = $agency->user_id;
+    
+    // Ensure agency has a valid user_id
+    if (!$mainDbUserId) {
+        throw new \Exception('Agency does not have a valid user assigned. Please contact administrator.');
+    }
 
     // Passenger count-based total amount
     if (isset($data['passengerfirstname'])) {
@@ -688,13 +698,13 @@ public function saveBooking(array $data)
     $booking->visa_id = $data['typeof'];
     $booking->subtype_id = $data['category'];
     $booking->agency_id = $agency->id;
-    $booking->user_id = $user->id;
+    $booking->user_id = $mainDbUserId; // Use agency's owner user ID from main database
     $booking->client_id = $data['clientId'];
     $booking->total_amount = $totalAmount;
     $booking->dateofentry = $data['dateofentry'];
     $booking->application_number = ''; // ✅ Temporary to pass NOT NULL
     $booking->save(); // Now ID is available
-
+    
     // Generate application number
     $agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
     $application = "CLDA" . $agencyInitial . "I00" . $booking->id;
