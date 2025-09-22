@@ -116,42 +116,26 @@
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                               {{$client->clientinfo->passport_ic_number}}
                             </td>
-                            <!-- <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-                                <span class="bg-{{$client['status']==='Inactive'?'danger':'success'}}/10 text-{{$client['status']==='Inactive'?'danger':'success'}} px-2 py-1 rounded-[3px] font-bold">{{$client['status']}}</span>
-                            </td> -->
-                            <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
+                     
+                          <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
                                 <div class="flex gap-2 items-center">
 
-                             
-
-                                    <a href="{{route('agencyview.client',['id' => $client->id])}}" title="Edit">
-                                        <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-eye"></i>
+                                    <a href="{{ route('agencyview.client',['id' => $client->id]) }}" title="View">
+                                        <div class="bg-success/10 text-success px-3 h-8 flex justify-center items-center rounded-md hover:bg-primary hover:text-white transition ease-in duration-200">
+                                            <i class="fa fa-eye"></i> <span class="ml-1">View</span>
                                         </div>
                                     </a>
 
-                                    <a href="{{route('agencyupdate.client',['id' => $client->id])}}" title="Edit">
-                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-pen"></i>
+                                    <a href="{{ route('agencyupdate.client',['id' => $client->id]) }}" title="Edit">
+                                        <div class="bg-primary/10 text-primary px-3 h-8 flex justify-center items-center rounded-md hover:bg-primary hover:text-white transition ease-in duration-200">
+                                            <i class="fa fa-pen"></i> <span class="ml-1">Edit</span>
                                         </div>
                                     </a>
 
-                                   {{-- <a href="{{route('agencychat.client',['id' => $client->id])}}" title="Edit">
-                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fas fa-comment-dots"></i>
-                                        </div>
-                                    </a>--}}
-                                    <!-- <a href="{{route('agency.clientdelete',['id' => $client->id])}}" title="Delete">
-                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-tace"></i>
-                                        </div>
-                                    </a> -->
-
-                        
-
-
+                          
                                 </div>
                             </td>
+
                         </tr>
 
 

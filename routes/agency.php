@@ -204,13 +204,24 @@ Route::group([
         Route::get('/updatecreate/{id}','hs_agencyUpdateClient')->name('agencyupdate.client');
         Route::get('/message/{id}','hs_agencyChatClient')->name('agencychat.client');
         Route::post('/store','hs_agencyChatStore')->name('agency.send_message');
-
-
         Route::get('/viewclient/{id}','hs_viewAgencyClient')->name('agencyview.client');
         Route::post('/storeclint','hs_storeUpdateAgencyClient')->name('updateclient.store');
         Route::get('/clientgeneratepdf','generatePDF')->name('generateclint.pdf');
         Route::get('/clintgenerateexcel','exportAgency')->name('exportclint');
         Route::get('/deleteclient/{id}','hs_deleteAgencyClient')->name('agency.clientdelete');
+
+
+        /*****History**** */
+          Route::get('/callhistory/{id}', 'hscallHistoryClient')->name('agency.client.history');
+          Route::post('/store/communication','hsstoreCommunication')->name('agency.communication');
+          Route::get('/client/{client}/history/{history}/delete','hsdeleteHistory')->name('agency.history.delete');
+
+          /*****Family Members**** */
+          Route::get('/client/{id}/family-members', 'hsGetFamilyMembers')->name('agency.client.family-members');
+          Route::get('/family-member/{id}/view', 'hsViewFamilyMember')->name('agency.family-member.view');
+          Route::get('/family-member/{id}/edit', 'hsEditFamilyMember')->name('agency.family-member.edit');
+          Route::post('/family-member/{id}/update', 'hsUpdateFamilyMember')->name('agency.family-member.update');
+
     });
 
        /****Document Controller **** */

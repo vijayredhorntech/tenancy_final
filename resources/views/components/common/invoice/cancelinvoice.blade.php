@@ -48,45 +48,13 @@
               @endif
                  <div class="w-full grid xl:grid-cols-4 gap-2 px-4 py-6">
 
-                     {{--               === text type input field ===--}}
+   
                      <input type="hidden" name="id" value="{{ old('id', $booking->id ?? '')  }}" id="id" placeholder="Agency name....." class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                      
 
 
-     {{--          <div class="w-full relative group flex flex-col gap-1">
-                         <label for="name" class="font-semibold text-ternary/90 text-sm">Refund Amount</label>
-                         <div class="w-full relative">
-                         <input 
-                                type="number" 
-                                name="refundamount" 
-                                value="{{ old('refundamount') }}" 
-                                step="0.01" 
-                                id="phone" 
-                                placeholder="Enter refund amount ....." 
-                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000"
-                            >
 
-                             <i class="fas fa-money-bill absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                         </div>
-                         @error('add_ammount')
-                         <div class="text-danger">{{ $message }}</div> @enderror
-                     </div>  --}}
- 
-
-               {{--      <div class="w-full relative group flex flex-col gap-1">
-                         <label for="datePicker" class="font-semibold text-ternary/90 text-sm">Invoice Status </label>
-                         <div class="w-full relative">
-                             <select  name="invoicestatus" id="invoicestatus"
-                                      class="w-full px-2 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
-
-                                 <option value="1">Canceled</option>
-                                
-                             </select>
-                             <i class="fa fa-angle-down absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80 cursor-pointer"></i>
-                         </div>
-                     </div> --}}
-
-                     <div class="w-full relative group flex flex-col gap-1">
+                <div class="w-full relative group flex flex-col gap-1">
                          <label for="name" class="font-semibold text-ternary/90 text-sm">Invoice Number </label>
                          <div class="w-full relative">
                          <input 
