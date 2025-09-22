@@ -46,7 +46,7 @@ use App\Http\Controllers\InvoiceController;
 
 use App\Events\MessageSent;
 
-Route::post('agencies/agencies_store', [AgencyController::class, 'him_agencies_store'])->name('agency_login');
+Route::post('/agencies/agencies_store', [AgencyController::class, 'him_agencies_store'])->name('agency_login');
 
 // Flight request route for homepage users (no authentication required)
 Route::post('/agencies/flight-request', [ServiceController::class, 'hs_flightRequest'])->name('flight.request');
