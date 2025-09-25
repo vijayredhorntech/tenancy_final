@@ -18,7 +18,7 @@ use App\Traits\ClientTrait;
 use App\Traits\ChatTrait;
 use App\Models\Deduction;
 use App\Services\ClientHistoryService;
-
+use App\Models\FamilyMember; 
 
 class ClientController extends Controller
 {
@@ -441,26 +441,31 @@ public function hsdeleteHistory($clientId, $historyId)
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        // Get family members from the new client_family_members table in user_database
-        $familyMembers = \App\Models\ClientFamilyMember::on('user_database')
-            ->where('client_id', $clientId)
-            ->active()
-            ->orderBy('sort_order')
-            ->get()
-            ->map(function ($member) {
+        // Get family members from the family_members table
+        $familyMembers = FamilyMember::where('client_id', $clientId)
+            ->orderBy('created_at')
+            ->get();
+
+        \Log::info('Family members query result:', ['client_id' => $clientId, 'count' => $familyMembers->count(), 'members' => $familyMembers->toArray()]);
+
+        $mappedMembers = $familyMembers->map(function ($member) {
                 return [
                     'id' => 'family_' . $member->id,
-                    'name' => $member->full_name,
-                    'relationship' => ucfirst($member->relationship),
-                    'date_of_birth' => $member->date_of_birth ? $member->date_of_birth->format('Y-m-d') : null,
+                    'name' => trim(($member->first_name ?? '') . ' ' . ($member->last_name ?? '')),
+                    'first_name' => $member->first_name,
+                    'last_name' => $member->last_name,
+                    'relationship' => $member->relationship,
+                    'date_of_birth' => $member->date_of_birth,
                     'phone_number' => $member->phone_number,
                     'passport_number' => $member->passport_number,
-                    'email' => $member->email,
+                    'email_address' => $member->email_address,
                     'nationality' => $member->nationality,
+                    'passport_issue_date' => $member->passport_issue_date,
+                    'passport_expiry_date' => $member->passport_expiry_date,
                 ];
             });
 
-        return response()->json($familyMembers);
+        return response()->json($mappedMembers);
     }
 
 /**
@@ -477,7 +482,7 @@ public function hsViewFamilyMember($familyMemberId)
         return redirect()->route('client.index')->with('error', 'Invalid family member ID format');
     }
 
-    $familyMember = \App\Models\ClientFamilyMember::on('user_database')->find($memberId);
+    $familyMember = FamilyMember::on('user_database')->find($memberId);
 
     if (!$familyMember) {
         return redirect()->route('client.index')->with('error', 'Family member not found');
@@ -506,7 +511,7 @@ public function hsEditFamilyMember($familyMemberId)
         return redirect()->route('client.index')->with('error', 'Invalid family member ID format');
     }
 
-    $familyMember = \App\Models\ClientFamilyMember::on('user_database')->find($memberId);
+    $familyMember = FamilyMember::on('user_database')->find($memberId);
 
     if (!$familyMember) {
         return redirect()->route('client.index')->with('error', 'Family member not found');
@@ -535,7 +540,7 @@ public function hsUpdateFamilyMember(Request $request, $familyMemberId)
         return redirect()->route('client.index')->with('error', 'Invalid family member ID format');
     }
 
-    $familyMember = \App\Models\ClientFamilyMember::on('user_database')->find($memberId);
+    $familyMember = FamilyMember::on('user_database')->find($memberId);
 
     if (!$familyMember) {
         return redirect()->route('client.index')->with('error', 'Family member not found');
@@ -550,34 +555,14 @@ public function hsUpdateFamilyMember(Request $request, $familyMemberId)
     $request->validate([
         'first_name' => 'required|string|max:255',
         'last_name' => 'nullable|string|max:255',
-        'relationship' => 'required|in:father,mother,spouse,child,parent,sibling,other',
+        'relationship' => 'required|in:spouse,child,parent,sibling,other',
         'date_of_birth' => 'nullable|date',
         'nationality' => 'nullable|string|max:255',
-        'birth_place' => 'nullable|string|max:255',
-        'country_of_birth' => 'nullable|string|max:255',
-        'email' => 'nullable|email|max:255',
+        'email_address' => 'nullable|email|max:255',
         'phone_number' => 'nullable|string|max:20',
         'passport_number' => 'nullable|string|max:50',
-        'passport_country' => 'nullable|string|max:255',
-        'passport_issue_place' => 'nullable|string|max:255',
-        'passport_ic_number' => 'nullable|string|max:50',
         'passport_issue_date' => 'nullable|date',
         'passport_expiry_date' => 'nullable|date',
-        'employment' => 'nullable|string|max:255',
-        'employer_name' => 'nullable|string|max:255',
-        'employer_address' => 'nullable|string|max:500',
-        'employer_phone' => 'nullable|string|max:20',
-        'address' => 'nullable|string|max:500',
-        'city' => 'nullable|string|max:255',
-        'country' => 'nullable|string|max:255',
-        'educational_qualification' => 'nullable|string|max:255',
-        'identification_marks' => 'nullable|string|max:500',
-        'religion' => 'nullable|string|max:255',
-        'military_status' => 'nullable|boolean',
-        'military_organization' => 'nullable|string|max:255',
-        'military_designation' => 'nullable|string|max:255',
-        'military_rank' => 'nullable|string|max:255',
-        'military_posting_place' => 'nullable|string|max:255',
     ]);
 
     $familyMember->update([
@@ -586,31 +571,14 @@ public function hsUpdateFamilyMember(Request $request, $familyMemberId)
         'relationship' => $request->relationship,
         'date_of_birth' => $request->date_of_birth,
         'nationality' => $request->nationality,
-        'birth_place' => $request->birth_place,
-        'country_of_birth' => $request->country_of_birth,
-        'email' => $request->email,
+        'email_address' => $request->email_address,
         'phone_number' => $request->phone_number,
         'passport_number' => $request->passport_number,
-        'passport_country' => $request->passport_country,
-        'passport_issue_place' => $request->passport_issue_place,
+        'passport_issue_date' => $request->passport_issue_date,
+        'passport_expiry_date' => $request->passport_expiry_date,
         'passport_ic_number' => $request->passport_ic_number,
         'passport_issue_date' => $request->passport_issue_date,
         'passport_expiry_date' => $request->passport_expiry_date,
-        'employment' => $request->employment,
-        'employer_name' => $request->employer_name,
-        'employer_address' => $request->employer_address,
-        'employer_phone' => $request->employer_phone,
-        'address' => $request->address,
-        'city' => $request->city,
-        'country' => $request->country,
-        'educational_qualification' => $request->educational_qualification,
-        'identification_marks' => $request->identification_marks,
-        'religion' => $request->religion,
-        'military_status' => $request->military_status ?? false,
-        'military_organization' => $request->military_organization,
-        'military_designation' => $request->military_designation,
-        'military_rank' => $request->military_rank,
-        'military_posting_place' => $request->military_posting_place,
     ]);
 
     return redirect()->route('agencyview.client', $client->id)->with('success', 'Family member updated successfully');

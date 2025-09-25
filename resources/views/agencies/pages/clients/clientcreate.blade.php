@@ -210,10 +210,10 @@
                                 </div>
 
                                 <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="passport_no" class="font-semibold text-ternary/90 text-sm">Passport Number</label>
+                                    <label for="passport_ic_number" class="font-semibold text-ternary/90 text-sm">Passport Number</label>
                                     <div class="w-full relative">
-                                        <input type="text" name="passport_no" id="passport_no"
-                                            value="{{ old('passport_no', $bookingData->clint->passport_no ?? '') }}"
+                                        <input type="text" name="passport_ic_number" id="passport_ic_number"
+                                            value="{{ old('passport_ic_number', $bookingData->clint->passport_ic_number ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                         <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>
@@ -230,31 +230,31 @@
                                 </div>
 
                                 <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="date_of_issue" class="font-semibold text-ternary/90 text-sm">Date of Issue</label>
+                                    <label for="passport_issue_date" class="font-semibold text-ternary/90 text-sm">Date of Issue</label>
                                     <div class="w-full relative">
-                                        <input type="date" name="date_of_issue" id="date_of_issue"
-                                            value="{{ old('date_of_issue', $bookingData->clint->date_of_issue ?? '') }}"
+                                        <input type="date" name="passport_issue_date" id="passport_issue_date"
+                                            value="{{ old('passport_issue_date', $bookingData->clint->passport_issue_date ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                         <i class="fa fa-calendar-check absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>
                                 </div>
 
                                 <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="date_of_expire" class="font-semibold text-ternary/90 text-sm">Date of Expiry</label>
+                                    <label for="passport_expiry_date" class="font-semibold text-ternary/90 text-sm">Date of Expiry</label>
                                     <div class="w-full relative">
-                                        <input type="date" name="date_of_expire" id="date_of_expire"
-                                            value="{{ old('date_of_expire', $bookingData->clint->date_of_expire ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <input type="date" name="passport_expiry_date" id="passport_expiry_date"
+                                            value="{{ old('passport_expiry_date', $bookingData->clint->passport_expiry_date ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus-border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                         <i class="fa fa-calendar-times absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>
                                 </div>
 
                                 <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="place_of_issue" class="font-semibold text-ternary/90 text-sm">Place of Issue</label>
+                                    <label for="passport_issue_place" class="font-semibold text-ternary/90 text-sm">Place of Issue</label>
                                     <div class="w-full relative">
-                                        <input type="text" name="place_of_issue" id="place_of_issue"
-                                            value="{{ old('place_of_issue', $bookingData->clint->place_of_issue ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                        <input type="text" name="passport_issue_place" id="passport_issue_place"
+                                            value="{{ old('passport_issue_place', $bookingData->clint->passport_issue_place ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus-border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
                                         <i class="fa fa-map-marker absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>
                                 </div>

@@ -261,6 +261,24 @@
             </div>
             {{-- === form section code ends here===--}}
         </div>
+        @php
+            $familyMembersData = isset($client)
+                ? $client->familyMembers()->orderBy('created_at')->get()->map(function ($member) {
+                    return [
+                        'id' => $member->id,
+                        'first_name' => $member->first_name,
+                        'last_name' => $member->last_name,
+                        'relationship' => $member->relationship,
+                        'date_of_birth' => $member->date_of_birth ? \Carbon\Carbon::parse($member->date_of_birth)->format('Y-m-d') : null,
+                        'nationality' => $member->nationality,
+                        'passport_number' => $member->passport_number,
+                        'email_address' => $member->email_address,
+                        'phone_number' => $member->phone_number,
+                    ];
+                })->values()
+                : collect();
+        @endphp
+
         <script>
            $(document).ready(function () {
                     $("#searchAddress").on("click", function (e) {
@@ -460,294 +478,195 @@
                     }
                 });
 
-                // Family Members Add More Functionality
-                let familyMemberCounter = 0;
+                (function () {
+                    const existingFamilyMembers = @json($familyMembersData);
+                    const container = document.getElementById('familyMembersContainer');
+                    const addFamilyMemberBtn = document.getElementById('addFamilyMemberBtn');
 
-                document.getElementById('addFamilyMemberBtn').addEventListener('click', function () {
-                    // Get current number of family members and increment counter
-                    const currentMembers = document.querySelectorAll('.family-member-section').length;
-                    const memberNumber = currentMembers + 1;
-
-                    let container = document.getElementById('familyMembersContainer');
-
-                    // Create the main wrapper div
-                    let familyMemberWrapper = document.createElement('div');
-                    familyMemberWrapper.classList.add('family-member-section', 'border-[1px]', 'border-secondary/30', 'rounded-md', 'p-4', 'mb-4', 'bg-gray-50');
-                    familyMemberWrapper.setAttribute('data-member-id', memberNumber);
-
-                    // Create header with member number and remove button
-                    let headerDiv = document.createElement('div');
-                    headerDiv.classList.add('flex', 'justify-between', 'items-center', 'mb-4', 'pb-2', 'border-b', 'border-secondary/20');
-
-                    let headerTitle = document.createElement('h4');
-                    headerTitle.classList.add('text-md', 'font-semibold', 'text-ternary');
-                    headerTitle.textContent = `Family Member ${memberNumber}`;
-
-                    let removeBtn = document.createElement('button');
-                    removeBtn.setAttribute('type', 'button');
-                    removeBtn.classList.add('px-3', 'py-1', 'text-xs', 'font-semibold', 'rounded-sm', 'border-[1px]', 'border-red-500', 'text-red-500', 'bg-red-500/10', 'hover:bg-red-500', 'hover:text-white', 'transition', 'ease-in', 'duration-200');
-                    removeBtn.innerHTML = '<i class="fa fa-trash mr-1"></i>Remove';
-                    removeBtn.addEventListener('click', function () {
-                        container.removeChild(familyMemberWrapper);
-                        updateFamilyMemberNumbers();
-                    });
-
-                    headerDiv.appendChild(headerTitle);
-                    headerDiv.appendChild(removeBtn);
-
-                    // Create the grid container for form fields
-                    let gridContainer = document.createElement('div');
-                    gridContainer.classList.add('w-full', 'grid', 'xl:grid-cols-3', 'lg:grid-cols-3', 'md:grid-cols-2', 'sm:grid-cols-2', 'grid-cols-1', 'gap-4');
-
-                    // First Name Field
-                    let firstNameDiv = createFormField('text', `family_first_name[${memberNumber}]`, 'First Name', 'fa-user', true);
-
-                    // Last Name Field
-                    let lastNameDiv = createFormField('text', `family_last_name[${memberNumber}]`, 'Last Name', 'fa-user', true);
-
-                    // Relationship Field
-                    let relationshipDiv = createSelectField(`family_relationship[${memberNumber}]`, 'Relationship', [
-                        { value: '', text: 'Select Relationship' },
-                        { value: 'spouse', text: 'Spouse' },
-                        { value: 'child', text: 'Child' },
-                        { value: 'parent', text: 'Parent' },
-                        { value: 'sibling', text: 'Sibling' },
-                        { value: 'other', text: 'Other' }
-                    ], 'fa-users', true);
-
-                    // Date of Birth Field
-                    let dobDiv = createFormField('date', `family_date_of_birth[${memberNumber}]`, 'Date of Birth', 'fa-calendar', true);
-
-                    // Nationality Field
-                    let nationalityDiv = createFormField('text', `family_nationality[${memberNumber}]`, 'Nationality', 'fa-flag', true);
-
-                    // Passport Number Field
-                    let passportDiv = createFormField('text', `family_passport_number[${memberNumber}]`, 'Passport Number', 'fa-passport', false);
-
-                    // Email Field
-                    let emailDiv = createFormField('email', `family_email[${memberNumber}]`, 'Email Address', 'fa-envelope', false);
-
-                    // Phone Field
-                    let phoneDiv = createFormField('text', `family_phone[${memberNumber}]`, 'Phone Number', 'fa-phone', false);
-
-                    // Append all fields to grid
-                    gridContainer.appendChild(firstNameDiv);
-                    gridContainer.appendChild(lastNameDiv);
-                    gridContainer.appendChild(relationshipDiv);
-                    gridContainer.appendChild(dobDiv);
-                    gridContainer.appendChild(nationalityDiv);
-                    gridContainer.appendChild(passportDiv);
-                    gridContainer.appendChild(emailDiv);
-                    gridContainer.appendChild(phoneDiv);
-
-                    // Append header and grid to wrapper
-                    familyMemberWrapper.appendChild(headerDiv);
-                    familyMemberWrapper.appendChild(gridContainer);
-
-                    // Append wrapper to container
-                    container.appendChild(familyMemberWrapper);
-                });
-
-                // Helper function to create form fields
-                function createFormField(type, name, label, icon, required = false) {
-                    let fieldDiv = document.createElement('div');
-                    fieldDiv.classList.add('w-full', 'relative', 'group', 'flex', 'flex-col', 'gap-1');
-
-                    let labelElement = document.createElement('label');
-                    labelElement.setAttribute('for', name);
-                    labelElement.classList.add('font-semibold', 'text-ternary/90', 'text-sm');
-                    labelElement.textContent = label + (required ? ' *' : '');
-
-                    let inputWrapper = document.createElement('div');
-                    inputWrapper.classList.add('w-full', 'relative');
-
-                    let inputElement = document.createElement('input');
-                    inputElement.setAttribute('type', type);
-                    inputElement.setAttribute('name', name);
-                    inputElement.setAttribute('id', name);
-                    if (required) {
-                        inputElement.setAttribute('required', 'required');
+                    if (!container) {
+                        return;
                     }
-                    inputElement.classList.add('w-full', 'pl-2', 'pr-8', 'py-1', 'rounded-[3px]', 'rounded-tr-[8px]', 'border-[1px]', 'border-b-[2px]', 'border-r-[2px]', 'border-secondary/40', 'focus:outline-none', 'focus:ring-0', 'focus:border-secondary/70', 'placeholder-ternary/70', 'transition', 'ease-in', 'duration-200');
 
-                    let iconElement = document.createElement('i');
-                    iconElement.classList.add('fa', icon, 'absolute', 'right-3', 'top-[50%]', 'translate-y-[-50%]', 'text-sm', 'text-secondary/80');
-
-                    inputWrapper.appendChild(inputElement);
-                    inputWrapper.appendChild(iconElement);
-
-                    fieldDiv.appendChild(labelElement);
-                    fieldDiv.appendChild(inputWrapper);
-
-                    return fieldDiv;
-                }
-
-                // Helper function to create select fields
-                function createSelectField(name, label, options, icon, required = false) {
-                    let fieldDiv = document.createElement('div');
-                    fieldDiv.classList.add('w-full', 'relative', 'group', 'flex', 'flex-col', 'gap-1');
-
-                    let labelElement = document.createElement('label');
-                    labelElement.setAttribute('for', name);
-                    labelElement.classList.add('font-semibold', 'text-ternary/90', 'text-sm');
-                    labelElement.textContent = label + (required ? ' *' : '');
-
-                    let inputWrapper = document.createElement('div');
-                    inputWrapper.classList.add('w-full', 'relative');
-
-                    let selectElement = document.createElement('select');
-                    selectElement.setAttribute('name', name);
-                    selectElement.setAttribute('id', name);
-                    if (required) {
-                        selectElement.setAttribute('required', 'required');
+                    if (addFamilyMemberBtn) {
+                        addFamilyMemberBtn.addEventListener('click', function () {
+                            const nextIndex = container.querySelectorAll('.family-member-section').length + 1;
+                            const wrapper = buildFamilyMemberSection(nextIndex);
+                            container.appendChild(wrapper);
+                            updateFamilyMemberNumbers();
+                        });
                     }
-                    selectElement.classList.add('w-full', 'pl-2', 'pr-8', 'py-1', 'rounded-[3px]', 'rounded-tr-[8px]', 'border-[1px]', 'border-b-[2px]', 'border-r-[2px]', 'border-secondary/40', 'focus:outline-none', 'focus:ring-0', 'focus:border-secondary/70', 'placeholder-ternary/70', 'transition', 'ease-in', 'duration-200');
 
-                    // Add options
-                    options.forEach(option => {
-                        let optionElement = document.createElement('option');
-                        optionElement.setAttribute('value', option.value);
-                        optionElement.textContent = option.text;
-                        selectElement.appendChild(optionElement);
+                    function buildFamilyMemberSection(memberNumber, memberData = {}, existingId = null) {
+                        const wrapper = document.createElement('div');
+                        wrapper.classList.add('family-member-section', 'border-[1px]', 'border-secondary/30', 'rounded-md', 'p-4', 'mb-4', 'bg-gray-50');
+                        wrapper.dataset.memberIndex = memberNumber;
+
+                        const headerDiv = document.createElement('div');
+                        headerDiv.classList.add('flex', 'justify-between', 'items-center', 'mb-4', 'pb-2', 'border-b', 'border-secondary/20');
+
+                        const headerTitle = document.createElement('h4');
+                        headerTitle.classList.add('text-md', 'font-semibold', 'text-ternary');
+                        headerTitle.textContent = `Family Member ${memberNumber}`;
+
+                        const removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.classList.add('px-3', 'py-1', 'text-xs', 'font-semibold', 'rounded-sm', 'border-[1px]', 'border-red-500', 'text-red-500', 'bg-red-500/10', 'hover:bg-red-500', 'hover:text-white', 'transition', 'ease-in', 'duration-200');
+                        removeBtn.innerHTML = '<i class="fa fa-trash mr-1"></i>Remove';
+                        removeBtn.addEventListener('click', function () {
+                            wrapper.remove();
+                            updateFamilyMemberNumbers();
+                        });
+
+                        headerDiv.appendChild(headerTitle);
+                        headerDiv.appendChild(removeBtn);
+
+                        const hiddenIdInput = document.createElement('input');
+                        hiddenIdInput.type = 'hidden';
+                        hiddenIdInput.dataset.baseName = 'family_member_ids';
+                        hiddenIdInput.name = `family_member_ids[${memberNumber}]`;
+                        hiddenIdInput.value = existingId ? existingId : '';
+
+                        const gridContainer = document.createElement('div');
+                        gridContainer.classList.add('w-full', 'grid', 'xl:grid-cols-3', 'lg:grid-cols-3', 'md:grid-cols-2', 'sm:grid-cols-2', 'grid-cols-1', 'gap-4');
+
+                        const firstNameDiv = createFormField('text', 'family_first_name', memberNumber, 'First Name', 'fa-user', true, memberData.first_name || '');
+                        const lastNameDiv = createFormField('text', 'family_last_name', memberNumber, 'Last Name', 'fa-user', true, memberData.last_name || '');
+                        const relationshipDiv = createSelectField('family_relationship', memberNumber, 'Relationship', [
+                            { value: '', text: 'Select Relationship' },
+                            { value: 'spouse', text: 'Spouse' },
+                            { value: 'child', text: 'Child' },
+                            { value: 'parent', text: 'Parent' },
+                            { value: 'sibling', text: 'Sibling' },
+                            { value: 'other', text: 'Other' }
+                        ], 'fa-users', true, memberData.relationship || '');
+                        const dobDiv = createFormField('date', 'family_date_of_birth', memberNumber, 'Date of Birth', 'fa-calendar', true, memberData.date_of_birth || '');
+                        const nationalityDiv = createFormField('text', 'family_nationality', memberNumber, 'Nationality', 'fa-flag', true, memberData.nationality || '');
+                        const passportDiv = createFormField('text', 'family_passport_number', memberNumber, 'Passport Number', 'fa-passport', false, memberData.passport_number || '');
+                        const emailDiv = createFormField('email', 'family_email', memberNumber, 'Email Address', 'fa-envelope', false, memberData.email_address || '');
+                        const phoneDiv = createFormField('text', 'family_phone', memberNumber, 'Phone Number', 'fa-phone', false, memberData.phone_number || '');
+
+                        gridContainer.appendChild(firstNameDiv);
+                        gridContainer.appendChild(lastNameDiv);
+                        gridContainer.appendChild(relationshipDiv);
+                        gridContainer.appendChild(dobDiv);
+                        gridContainer.appendChild(nationalityDiv);
+                        gridContainer.appendChild(passportDiv);
+                        gridContainer.appendChild(emailDiv);
+                        gridContainer.appendChild(phoneDiv);
+
+                        wrapper.appendChild(headerDiv);
+                        wrapper.appendChild(hiddenIdInput);
+                        wrapper.appendChild(gridContainer);
+
+                        return wrapper;
+                    }
+
+                    function createFormField(type, baseName, memberNumber, label, icon, required = false, value = '') {
+                        const fieldDiv = document.createElement('div');
+                        fieldDiv.classList.add('w-full', 'relative', 'group', 'flex', 'flex-col', 'gap-1');
+
+                        const labelElement = document.createElement('label');
+                        labelElement.classList.add('font-semibold', 'text-ternary/90', 'text-sm');
+                        labelElement.textContent = label + (required ? ' *' : '');
+
+                        const inputWrapper = document.createElement('div');
+                        inputWrapper.classList.add('w-full', 'relative');
+
+                        const inputElement = document.createElement('input');
+                        inputElement.type = type;
+                        inputElement.value = value || '';
+                        inputElement.classList.add('w-full', 'pl-2', 'pr-8', 'py-1', 'rounded-[3px]', 'rounded-tr-[8px]', 'border-[1px]', 'border-b-[2px]', 'border-r-[2px]', 'border-secondary/40', 'focus:outline-none', 'focus:ring-0', 'focus:border-secondary/70', 'placeholder-ternary/70', 'transition', 'ease-in', 'duration-200');
+                        setFieldMetadata(inputElement, baseName, memberNumber, required);
+
+                        const iconElement = document.createElement('i');
+                        iconElement.classList.add('fa', icon, 'absolute', 'right-3', 'top-[50%]', 'translate-y-[-50%]', 'text-sm', 'text-secondary/80');
+
+                        inputWrapper.appendChild(inputElement);
+                        inputWrapper.appendChild(iconElement);
+
+                        fieldDiv.appendChild(labelElement);
+                        fieldDiv.appendChild(inputWrapper);
+
+                        return fieldDiv;
+                    }
+
+                    function createSelectField(baseName, memberNumber, label, options, icon, required = false, value = '') {
+                        const fieldDiv = document.createElement('div');
+                        fieldDiv.classList.add('w-full', 'relative', 'group', 'flex', 'flex-col', 'gap-1');
+
+                        const labelElement = document.createElement('label');
+                        labelElement.classList.add('font-semibold', 'text-ternary/90', 'text-sm');
+                        labelElement.textContent = label + (required ? ' *' : '');
+
+                        const inputWrapper = document.createElement('div');
+                        inputWrapper.classList.add('w-full', 'relative');
+
+                        const selectElement = document.createElement('select');
+                        selectElement.classList.add('w-full', 'pl-2', 'pr-8', 'py-1', 'rounded-[3px]', 'rounded-tr-[8px]', 'border-[1px]', 'border-b-[2px]', 'border-r-[2px]', 'border-secondary/40', 'focus:outline-none', 'focus:ring-0', 'focus:border-secondary/70', 'placeholder-ternary/70', 'transition', 'ease-in', 'duration-200');
+                        options.forEach(option => {
+                            const optionElement = document.createElement('option');
+                            optionElement.value = option.value;
+                            optionElement.textContent = option.text;
+                            selectElement.appendChild(optionElement);
+                        });
+                        selectElement.value = value || '';
+                        setFieldMetadata(selectElement, baseName, memberNumber, required);
+
+                        const iconElement = document.createElement('i');
+                        iconElement.classList.add('fa', icon, 'absolute', 'right-3', 'top-[50%]', 'translate-y-[-50%]', 'text-sm', 'text-secondary/80');
+
+                        inputWrapper.appendChild(selectElement);
+                        inputWrapper.appendChild(iconElement);
+
+                        fieldDiv.appendChild(labelElement);
+                        fieldDiv.appendChild(inputWrapper);
+
+                        return fieldDiv;
+                    }
+
+                    function setFieldMetadata(element, baseName, memberNumber, required) {
+                        const fieldName = `${baseName}[${memberNumber}]`;
+                        element.name = fieldName;
+                        element.id = `${baseName}_${memberNumber}`;
+                        element.dataset.baseName = baseName;
+                        if (required) {
+                            element.setAttribute('required', 'required');
+                        }
+                    }
+
+                    function updateFamilyMemberNumbers() {
+                        const familyMembers = container.querySelectorAll('.family-member-section');
+                        familyMembers.forEach((member, index) => {
+                            const headerTitle = member.querySelector('h4');
+                            const memberNumber = index + 1;
+                            member.dataset.memberIndex = memberNumber;
+                            if (headerTitle) {
+                                headerTitle.textContent = `Family Member ${memberNumber}`;
+                            }
+
+                            const fields = member.querySelectorAll('input, select');
+                            fields.forEach(field => {
+                                const baseName = field.dataset.baseName;
+                                if (!baseName) {
+                                    return;
+                                }
+                                const isRequired = field.hasAttribute('required');
+                                field.name = `${baseName}[${memberNumber}]`;
+                                field.id = `${baseName}_${memberNumber}`;
+                                if (isRequired) {
+                                    field.setAttribute('required', 'required');
+                                }
+                            });
+                        });
+                    }
+
+                    existingFamilyMembers.forEach((member, index) => {
+                        const wrapper = buildFamilyMemberSection(index + 1, member, member.id);
+                        container.appendChild(wrapper);
                     });
 
-                    let iconElement = document.createElement('i');
-                    iconElement.classList.add('fa', icon, 'absolute', 'right-3', 'top-[50%]', 'translate-y-[-50%]', 'text-sm', 'text-secondary/80');
-
-                    inputWrapper.appendChild(selectElement);
-                    inputWrapper.appendChild(iconElement);
-
-                    fieldDiv.appendChild(labelElement);
-                    fieldDiv.appendChild(inputWrapper);
-
-                    return fieldDiv;
-                }
-
-                // Function to update family member numbers after removal
-                function updateFamilyMemberNumbers() {
-                    const familyMembers = document.querySelectorAll('.family-member-section');
-                    familyMembers.forEach((member, index) => {
-                        const headerTitle = member.querySelector('h4');
-                        headerTitle.textContent = `Family Member ${index + 1}`;
-                    });
-                }
-
-                // Populate existing family members on page load
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Get existing family member data from PHP
-                    @if(isset($client))
-                        @php
-                            $familyMembers = \App\Models\ClientFamilyMember::where('client_id', $client->id)->active()->orderBy('sort_order')->get();
-                        @endphp
-
-                        @foreach($familyMembers as $index => $member)
-                            populateFamilyMember({
-                                first_name: '{{ $member->first_name }}',
-                                last_name: '{{ $member->last_name }}',
-                                relationship: '{{ $member->relationship }}',
-                                date_of_birth: '{{ $member->date_of_birth ? $member->date_of_birth->format('Y-m-d') : '' }}',
-                                nationality: '{{ $member->nationality }}',
-                                passport_number: '{{ $member->passport_number }}',
-                                email: '{{ $member->email }}',
-                                phone_number: '{{ $member->phone_number }}'
-                            }, {{ $index + 1 }});
-                        @endforeach
-                    @endif
-                });
-
-                // Function to populate existing family member
-                function populateFamilyMember(memberData, memberNumber) {
-                    let container = document.getElementById('familyMembersContainer');
-
-                    // Create the main wrapper div
-                    let familyMemberWrapper = document.createElement('div');
-                    familyMemberWrapper.classList.add('family-member-section', 'border-[1px]', 'border-secondary/30', 'rounded-md', 'p-4', 'mb-4', 'bg-gray-50');
-                    familyMemberWrapper.setAttribute('data-member-id', memberNumber);
-
-                    // Create header with member number and remove button
-                    let headerDiv = document.createElement('div');
-                    headerDiv.classList.add('flex', 'justify-between', 'items-center', 'mb-4', 'pb-2', 'border-b', 'border-secondary/20');
-
-                    let headerTitle = document.createElement('h4');
-                    headerTitle.classList.add('text-md', 'font-semibold', 'text-ternary');
-                    headerTitle.textContent = `Family Member ${memberNumber}`;
-
-                    let removeBtn = document.createElement('button');
-                    removeBtn.setAttribute('type', 'button');
-                    removeBtn.classList.add('px-3', 'py-1', 'text-xs', 'font-semibold', 'rounded-sm', 'border-[1px]', 'border-red-500', 'text-red-500', 'bg-red-500/10', 'hover:bg-red-500', 'hover:text-white', 'transition', 'ease-in', 'duration-200');
-                    removeBtn.innerHTML = '<i class="fa fa-trash mr-1"></i>Remove';
-                    removeBtn.addEventListener('click', function () {
-                        container.removeChild(familyMemberWrapper);
-                        updateFamilyMemberNumbers();
-                    });
-
-                    headerDiv.appendChild(headerTitle);
-                    headerDiv.appendChild(removeBtn);
-
-                    // Create the grid container for form fields
-                    let gridContainer = document.createElement('div');
-                    gridContainer.classList.add('w-full', 'grid', 'xl:grid-cols-3', 'lg:grid-cols-3', 'md:grid-cols-2', 'sm:grid-cols-2', 'grid-cols-1', 'gap-4');
-
-                    // Split name into first and last name if needed
-                    let firstName = memberData.first_name || '';
-                    let lastName = memberData.last_name || '';
-
-                    // First Name Field
-                    let firstNameDiv = createFormField('text', `family_first_name[${memberNumber}]`, 'First Name', 'fa-user', true);
-                    firstNameDiv.querySelector('input').value = firstName;
-
-                    // Last Name Field
-                    let lastNameDiv = createFormField('text', `family_last_name[${memberNumber}]`, 'Last Name', 'fa-user', true);
-                    lastNameDiv.querySelector('input').value = lastName;
-
-                    // Relationship Field
-                    let relationshipDiv = createSelectField(`family_relationship[${memberNumber}]`, 'Relationship', [
-                        { value: '', text: 'Select Relationship' },
-                        { value: 'spouse', text: 'Spouse' },
-                        { value: 'child', text: 'Child' },
-                        { value: 'parent', text: 'Parent' },
-                        { value: 'sibling', text: 'Sibling' },
-                        { value: 'other', text: 'Other' }
-                    ], 'fa-users', true);
-                    relationshipDiv.querySelector('select').value = memberData.relationship || '';
-
-                    // Date of Birth Field
-                    let dobDiv = createFormField('date', `family_date_of_birth[${memberNumber}]`, 'Date of Birth', 'fa-calendar', true);
-                    dobDiv.querySelector('input').value = memberData.date_of_birth || '';
-
-                    // Nationality Field
-                    let nationalityDiv = createFormField('text', `family_nationality[${memberNumber}]`, 'Nationality', 'fa-flag', true);
-                    nationalityDiv.querySelector('input').value = memberData.nationality || '';
-
-                    // Passport Number Field
-                    let passportDiv = createFormField('text', `family_passport_number[${memberNumber}]`, 'Passport Number', 'fa-passport', false);
-                    passportDiv.querySelector('input').value = memberData.passport_number || '';
-
-                    // Email Field
-                    let emailDiv = createFormField('email', `family_email[${memberNumber}]`, 'Email Address', 'fa-envelope', false);
-                    emailDiv.querySelector('input').value = memberData.email || '';
-
-                    // Phone Field
-                    let phoneDiv = createFormField('text', `family_phone[${memberNumber}]`, 'Phone Number', 'fa-phone', false);
-                    phoneDiv.querySelector('input').value = memberData.phone_number || '';
-
-                    // Append all fields to grid
-                    gridContainer.appendChild(firstNameDiv);
-                    gridContainer.appendChild(lastNameDiv);
-                    gridContainer.appendChild(relationshipDiv);
-                    gridContainer.appendChild(dobDiv);
-                    gridContainer.appendChild(nationalityDiv);
-                    gridContainer.appendChild(passportDiv);
-                    gridContainer.appendChild(emailDiv);
-                    gridContainer.appendChild(phoneDiv);
-
-                    // Append header and grid to wrapper
-                    familyMemberWrapper.appendChild(headerDiv);
-                    familyMemberWrapper.appendChild(gridContainer);
-
-                    // Append wrapper to container
-                    container.appendChild(familyMemberWrapper);
-                }
+                    updateFamilyMemberNumbers();
+                })();
 
     </script>
     <style>

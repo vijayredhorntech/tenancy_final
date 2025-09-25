@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\FamilyMember;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 class ClientDetails extends Authenticatable
@@ -16,6 +17,10 @@ class ClientDetails extends Authenticatable
         return $this->hasOne(ClientMoreInfo::class, 'clientid', 'id');
     }
 
+    public function familyMembers()
+    {
+        return $this->hasMany(FamilyMember::class, 'client_id', 'id');
+    }
     
     public function clientChats()
     {

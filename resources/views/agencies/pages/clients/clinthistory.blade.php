@@ -633,17 +633,6 @@
 
     </div>
 
-
-
-
-
-
-
-
-
-
-
-
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
@@ -672,9 +661,7 @@
                         Profile
                     </div>
 
-                    <div data-tid ="familyDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer">
-                        Family Details
-                    </div>
+               
 
                     <div data-tid ="invoiceDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer hidden">
                        Invoice
@@ -682,6 +669,9 @@
 
                     <div data-tid ="docSignDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
                        DocSign
+                    </div>
+                    <div data-tid ="familyDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px] border-ternary/60   text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer   ">
+                        Family
                     </div>
                     {{-- <div data-tid ="bookingDiv" class="agency_tab w-max font-semibold text-ternary border-b-[2px]  border-ternary/60 text-lg px-8 py-0.5 hover:bg-secondary/40 hover:border-secondary/60 transition ease-in duration-2000 cursor-pointer ">
                         Booking
@@ -720,37 +710,9 @@
                     </div>
 
                     <div id="familyDiv" class="tab hidden">
-                        <div class="w-full p-4">
-                            <div class="border-b-[2px] border-b-secondary/50 w-max pr-20 mb-4">
-                                <span class="text-lg font-bold text-ternary">Family Members / Dependents</span>
-                            </div>
-
-                            <div class="w-full overflow-x-auto">
-                                <table class="w-full border-collapse border border-gray-300">
-                                    <thead class="bg-gray-100">
-                                        <tr>
-                                            <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-ternary">Sr. No</th>
-                                            <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-ternary">Name</th>
-                                            <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-ternary">Date of Birth</th>
-                                            <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-ternary">Phone Number</th>
-                                            <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-ternary">Passport Number</th>
-                                            <th class="border border-gray-300 px-4 py-2 text-left font-semibold text-ternary">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="familyMembersTableBody">
-                                        <!-- Family members will be populated here dynamically -->
-                                        <tr>
-                                            <td colspan="6" class="border border-gray-300 px-4 py-8 text-center text-gray-500">
-                                                <i class="fa fa-users text-4xl mb-2"></i>
-                                                <br>
-                                                No family members found for this client.
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <x-common.client.family-members :family-members="$client->familyMembers" view-route-name="agency.family-member.view" />
                     </div>
+
 
                 </div>
 
@@ -774,78 +736,7 @@
                                 jQuery(".tab").hide();
                                 jQuery("#" + id).show();
 
-                                // Load family members if family tab is selected
-                                if (id === 'familyDiv') {
-                                    loadFamilyMembers();
-                                }
-                            });
-
-            // Function to load family members
-            function loadFamilyMembers() {
-                var clientId = '{{ $client->id }}';
-                jQuery.ajax({
-                    url: '/agencies/client/' + clientId + '/family-members',
-                    type: 'GET',
-                    success: function(response) {
-                        populateFamilyTable(response);
-                    },
-                    error: function() {
-                        console.log('Error loading family members');
-                    }
-                });
-            }
-
-            // Function to populate family members table
-            function populateFamilyTable(familyMembers) {
-                var tbody = jQuery('#familyMembersTableBody');
-                tbody.empty();
-
-                if (familyMembers.length === 0) {
-                    tbody.append(`
-                        <tr>
-                            <td colspan="6" class="border border-gray-300 px-4 py-8 text-center text-gray-500">
-                                <i class="fa fa-users text-4xl mb-2"></i>
-                                <br>
-                                No family members found for this client.
-                            </td>
-                        </tr>
-                    `);
-                    return;
-                }
-
-                familyMembers.forEach(function(member, index) {
-                    var row = `
-                        <tr class="hover:bg-gray-50">
-                            <td class="border border-gray-300 px-4 py-2 text-center">${index + 1}</td>
-                            <td class="border border-gray-300 px-4 py-2">${member.name || 'N/A'}</td>
-                            <td class="border border-gray-300 px-4 py-2">${member.date_of_birth ? new Date(member.date_of_birth).toLocaleDateString() : 'N/A'}</td>
-                            <td class="border border-gray-300 px-4 py-2">${member.phone_number || 'N/A'}</td>
-                            <td class="border border-gray-300 px-4 py-2">${member.passport_number || 'N/A'}</td>
-                            <td class="border border-gray-300 px-4 py-2 text-center">
-                                <div class="flex justify-center space-x-2">
-                                    <button onclick="viewFamilyMember('${member.id}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
-                                        <i class="fa fa-eye"></i> View
-                                    </button>
-                                    <button onclick="editFamilyMember('${member.id}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
-                                        <i class="fa fa-edit"></i> Edit
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                    tbody.append(row);
-                });
-            }
-
-            // Function to view family member
-            window.viewFamilyMember = function(memberId) {
-                window.location.href = '/agencies/family-member/' + memberId + '/view';
-            };
-
-            // Function to edit family member
-            window.editFamilyMember = function(memberId) {
-                window.location.href = '/agencies/family-member/' + memberId + '/edit';
-            };
+                            }); 
         });
 
         // Function to show invoice tab when clicking "More info"

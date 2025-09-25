@@ -23,6 +23,7 @@ use Illuminate\Support\Str;
 use App\Helpers\DatabaseHelper;
 use Illuminate\Support\Facades\Config;
 use App\Models\ClientMoreInfo;
+use App\Models\FamilyMember;
 use App\Services\AgencyService;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ClientWelcomeEmail; 
@@ -131,6 +132,7 @@ public function getStoreclint(array $data)
 
         $moreInfo = new ClientMoreInfo();
         $this->saveMoreClientInfo($client->id, $moreInfo, $data, 'user_database');
+        $this->processFamilyMembersData($data, $client->id, 'user_database');
 
         // Save in default database
         $clientDefault = new ClientDetails();
@@ -138,6 +140,7 @@ public function getStoreclint(array $data)
 
         $moreInfoDefault = new ClientMoreInfo();
         $this->saveMoreClientInfo($clientDefault->id, $moreInfoDefault, $data, 'mysql');
+        $this->processFamilyMembersData($data, $clientDefault->id, 'mysql');
 
         // Commit both transactions
         $userDb->commit();
@@ -184,10 +187,10 @@ private function saveClientData(array $data, ClientDetails $client, string $clie
     $client->country = $data['country'] ?? null;
     $client->permanent_address = $data['permanent_address'] ?? null;
 
-    $client->passport_no = $data['passport_no'] ?? null;
-    $client->date_of_issue = $data['date_of_issue'] ?? null;
-    $client->date_of_expire = $data['date_of_expire'] ?? null;
-    $client->place_of_issue = $data['place_of_issue'] ?? null;
+    $client->passport_ic_number = $data['passport_ic_number'] ?? ($data['passport_no'] ?? null);
+    $client->passport_issue_date = $data['passport_issue_date'] ?? ($data['date_of_issue'] ?? null);
+    $client->passport_expiry_date = $data['passport_expiry_date'] ?? ($data['date_of_expire'] ?? null);
+    $client->passport_issue_place = $data['passport_issue_place'] ?? ($data['place_of_issue'] ?? null);
 
     $client->save();
 
@@ -337,10 +340,18 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         $clientdetails->passport_expiry_date = $data['passport_expiry_date'] ?? '';
 
         // Update passport fields in client_details table
-        $client->passport_no = $data['passport_no'] ?? $client->passport_no;
-        $client->date_of_issue = $data['date_of_issue'] ?? $client->date_of_issue;
-        $client->date_of_expire = $data['date_of_expire'] ?? $client->date_of_expire;
-        $client->place_of_issue = $data['place_of_issue'] ?? $client->place_of_issue;
+        $client->passport_ic_number = $data['passport_ic_number']
+            ?? $data['passport_no']
+            ?? $client->passport_ic_number;
+        $client->passport_issue_date = $data['passport_issue_date']
+            ?? $data['date_of_issue']
+            ?? $client->passport_issue_date;
+        $client->passport_expiry_date = $data['passport_expiry_date']
+            ?? $data['date_of_expire']
+            ?? $client->passport_expiry_date;
+        $client->passport_issue_place = $data['passport_issue_place']
+            ?? $data['place_of_issue']
+            ?? $client->passport_issue_place;
         $client->save();
         $clientdetails->passport_expiry_date = $data['passport_expiry_date'] ?? '';
 
@@ -367,8 +378,16 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         $clientdetails->reference_name = $data['reference_name'] ?? '';
         $clientdetails->reference_address = $data['reference_address'] ?? '';
 
-        // Process family members data from the dynamic form
-        $this->processFamilyMembersData($data, $clientdetails);
+        // Sync family members across databases
+        $this->processFamilyMembersData($data, $client->id, 'user_database');
+
+        $defaultClient = ClientDetails::on('mysql')
+            ->where('clientuid', $client->clientuid)
+            ->first();
+
+        if ($defaultClient) {
+            $this->processFamilyMembersData($data, $defaultClient->id, 'mysql');
+        }
 
         $clientdetails->save();
         return $client;
@@ -377,10 +396,15 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
     /**
      * Process family members data from the dynamic form and save to database
      */
-    private function processFamilyMembersData($data, $clientdetails)
+    private function processFamilyMembersData(array $data, int $clientId, string $connection)
     {
-        // Get family member data from the form arrays
         $familyFirstNames = $data['family_first_name'] ?? [];
+
+        if (!is_array($familyFirstNames)) {
+            $familyFirstNames = [];
+        }
+
+        $familyIds = $data['family_member_ids'] ?? [];
         $familyLastNames = $data['family_last_name'] ?? [];
         $familyRelationships = $data['family_relationship'] ?? [];
         $familyDateOfBirths = $data['family_date_of_birth'] ?? [];
@@ -389,34 +413,91 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         $familyEmails = $data['family_email'] ?? [];
         $familyPhones = $data['family_phone'] ?? [];
 
-        // Delete existing family members for this client
-        \App\Models\ClientFamilyMember::on('user_database')->where('client_id', $clientdetails->clientid)->delete();
+        $parsedMembers = [];
 
-        // Process each family member
         foreach ($familyFirstNames as $index => $firstName) {
-            if (empty(trim($firstName))) continue;
+            $firstName = trim((string)($firstName ?? ''));
+            if ($firstName === '') {
+                continue;
+            }
 
-            $lastName = $familyLastNames[$index] ?? '';
-            $relationship = $familyRelationships[$index] ?? '';
-            $dob = $familyDateOfBirths[$index] ?? '';
-            $nationality = $familyNationalities[$index] ?? '';
-            $passportNumber = $familyPassportNumbers[$index] ?? '';
-            $email = $familyEmails[$index] ?? '';
-            $phone = $familyPhones[$index] ?? '';
+            $memberIdRaw = $familyIds[$index] ?? null;
+            $memberId = is_numeric($memberIdRaw) ? (int) $memberIdRaw : null;
 
-            \App\Models\ClientFamilyMember::on('user_database')->create([
-                'client_id' => $clientdetails->clientid,
-                'relationship' => $relationship,
+            $parsedMembers[] = [
+                'id' => $memberId,
+                'client_id' => $clientId,
                 'first_name' => $firstName,
-                'last_name' => $lastName,
-                'date_of_birth' => $dob ?: null,
-                'nationality' => $nationality,
-                'passport_number' => $passportNumber,
-                'email' => $email,
-                'phone_number' => $phone,
-                'sort_order' => $index,
-            ]);
+                'last_name' => trim((string) ($familyLastNames[$index] ?? '')),
+                'relationship' => trim((string) ($familyRelationships[$index] ?? '')),
+                'date_of_birth' => $familyDateOfBirths[$index] ?? null,
+                'nationality' => trim((string) ($familyNationalities[$index] ?? '')),
+                'passport_number' => trim((string) ($familyPassportNumbers[$index] ?? '')),
+                'email_address' => trim((string) ($familyEmails[$index] ?? '')),
+                'phone_number' => trim((string) ($familyPhones[$index] ?? '')),
+            ];
         }
+
+        if ($connection === 'user_database') {
+            $existingMembers = FamilyMember::on($connection)
+                ->where('client_id', $clientId)
+                ->get()
+                ->keyBy('id');
+
+            $retainedIds = [];
+
+            foreach ($parsedMembers as $memberInput) {
+                $payload = $this->buildFamilyMemberPayload($memberInput);
+                $memberId = $memberInput['id'] ?? null;
+
+                if ($memberId && $existingMembers->has($memberId)) {
+                    $member = $existingMembers->get($memberId);
+                    $member->fill($payload);
+                    $member->save();
+                    $retainedIds[] = $memberId;
+                } else {
+                    FamilyMember::on($connection)->create($payload);
+                }
+            }
+
+            $idsToDelete = $existingMembers->keys()->diff($retainedIds);
+
+            if ($idsToDelete->isNotEmpty()) {
+                FamilyMember::on($connection)
+                    ->whereIn('id', $idsToDelete->values()->all())
+                    ->delete();
+            }
+        } else {
+            FamilyMember::on($connection)->where('client_id', $clientId)->delete();
+
+            foreach ($parsedMembers as $memberInput) {
+                $payload = $this->buildFamilyMemberPayload($memberInput);
+                FamilyMember::on($connection)->create($payload);
+            }
+        }
+    }
+
+    private function buildFamilyMemberPayload(array $memberInput): array
+    {
+        $normalize = function ($value) {
+            if (is_string($value)) {
+                $value = trim($value);
+            }
+
+            return $value === '' ? null : $value;
+        };
+
+        return [
+            'client_id' => $memberInput['client_id'],
+            'first_name' => $memberInput['first_name'],
+            'last_name' => $normalize($memberInput['last_name'] ?? null),
+            'relationship' => $normalize($memberInput['relationship'] ?? null),
+            'date_of_birth' => $normalize($memberInput['date_of_birth'] ?? null),
+            'nationality' => $normalize($memberInput['nationality'] ?? null),
+            'passport_number' => $normalize($memberInput['passport_number'] ?? null),
+            'email_address' => $normalize($memberInput['email_address'] ?? null),
+            'phone_number' => $normalize($memberInput['phone_number'] ?? null),
+        ];
     }
 
 

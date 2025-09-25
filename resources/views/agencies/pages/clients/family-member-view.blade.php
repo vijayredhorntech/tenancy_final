@@ -1,5 +1,13 @@
 <x-agency.layout>
-    @section('title')Family Member Details@endsection
+    @section('title')Family Member Details @endsection
+
+    @php
+        $fullName = trim(($familyMember->first_name ?? '') . ' ' . ($familyMember->last_name ?? ''));
+
+        if ($fullName === '' && !empty($familyMember->full_name)) {
+            $fullName = $familyMember->full_name;
+        }
+    @endphp
 
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
         {{-- Header --}}
@@ -14,7 +22,7 @@
         <div class="w-full p-4 grid gap-x-4 gap-y-8">
             <div class="w-full flex flex-col overflow-x-auto">
                 <div class="pb-2 pr-12 border-b-[2px] border-b-success">
-                    <span class="text-lg font-bold text-ternary">{{ $familyMember->full_name }} ({{ ucfirst($familyMember->relationship) }})</span>
+                    <span class="text-lg font-bold text-ternary">{{ $fullName }} ({{ ucfirst($familyMember->relationship) }})</span>
                 </div>
 
                 <div class="flex flex-col mt-4 overflow-x-auto gap-6">
@@ -22,7 +30,7 @@
                         <tbody>
                             <tr class="border-b border-gray-100">
                                 <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Full Name:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->full_name }}</td>
+                                <td class="text-ternary text-lg px-20 py-3">{{ $fullName }}</td>
                             </tr>
                             <tr class="border-b border-gray-100">
                                 <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Relationship:</th>
