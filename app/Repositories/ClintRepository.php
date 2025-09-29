@@ -551,10 +551,18 @@ private function updateClientData(array $data, ClientDetails $client, string $co
     $client->country = $data['country'] ?? $client->country;
     $client->permanent_address = $data['permanent_address'] ?? $client->permanent_address;
 
-    $client->passport_no = $data['passport_no'] ?? $client->passport_no;
-    $client->date_of_issue = $data['date_of_issue'] ?? $client->date_of_issue;
-    $client->date_of_expire = $data['date_of_expire'] ?? $client->date_of_expire;
-    $client->place_of_issue = $data['place_of_issue'] ?? $client->place_of_issue;
+    $client->passport_ic_number = $data['passport_ic_number']
+        ?? $data['passport_no']
+        ?? $client->passport_ic_number;
+    $client->passport_issue_date = $data['passport_issue_date']
+        ?? $data['date_of_issue']
+        ?? $client->passport_issue_date;
+    $client->passport_expiry_date = $data['passport_expiry_date']
+        ?? $data['date_of_expire']
+        ?? $client->passport_expiry_date;
+    $client->passport_issue_place = $data['passport_issue_place']
+        ?? $data['place_of_issue']
+        ?? $client->passport_issue_place;
 
     $client->save();
 

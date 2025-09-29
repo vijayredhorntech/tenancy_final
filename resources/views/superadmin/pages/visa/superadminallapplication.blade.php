@@ -179,12 +179,16 @@
                       
                     <tr class="{{$loop->iteration%2===0?'bg-gray-100/40':''}} hover:bg-secondary/10 cursor-pointer transition ease-in duration-2000" >
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
-                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm whitespace-nowrap">{{ $booking->deduction->superadmin_invoice_number}}
+                        <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-bold text-sm whitespace-nowrap">{{ optional($booking->deduction)->superadmin_invoice_number ?? 'N/A' }}
                             <br><span class="font-medium text-xs"> <i class="fa fa-user mr-1"></i> Order Id:{{$booking->application_number}} </span>
                             
                         </td>
-                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm {{ request('agencyid') == $booking->agency->id ? 'bg-yellow-100' : '' }}">
-                            {{ $booking->agency->name }}
+                        @php
+                            $agency = $booking->agency;
+                            $highlightAgency = $agency && request('agencyid') == $agency->id;
+                        @endphp
+                        <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm {{ $highlightAgency ? 'bg-yellow-100' : '' }}">
+                            {{ optional($agency)->name ?? 'N/A' }}
                             
                         </td>
 
@@ -285,7 +289,6 @@
                             <div class="flex gap-2 items-center">
                                 <a href="{{ route('superadminvisa.applicationview', ['id' => $booking->id]) }}" title="Assign to Visa Request">
                                     <div class="bg-green-100 text-green-600 px-3 py-1 flex gap-2 justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                        <i class="fa fa-eye"></i>
                                         <span>View Application</span>
                                     </div>
                                 </a>
@@ -309,7 +312,6 @@
 
         </div>
 
- 
         <script>
     $(document).ready(function() {
         $('.select2').select2({

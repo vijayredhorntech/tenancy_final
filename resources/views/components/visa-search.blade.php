@@ -1,4 +1,10 @@
 
+@props([
+    'countries',
+    'amendmentBooking' => null,
+    'amendmentClient' => null,
+])
+
                                 <div class="w-full  p-4 flex flex-col gap-2 mx-auto">
                                     <span class=" text-secondary font-semibold lg:text-2xl md:text-2xl sm:text-xl text-lg">Travel Visa Requirements</span>
                                     <p class="lg:text-sm">Sometimes a journey of a thousand miles begins with a visa. Check your destination and apply online for any visa in the world.</p>
@@ -6,6 +12,12 @@
                                 <div class="w-full border-b-[1px] border-b-secondary"></div>
                                     <form action="{{ route('searchvisa') }}" method="POST" enctype="multipart/form-data">
                                                 @csrf
+                                                @if($amendmentBooking)
+                                                    <input type="hidden" name="amendment_booking" value="{{ $amendmentBooking }}">
+                                                @endif
+                                                @if($amendmentClient)
+                                                    <input type="hidden" name="amendment_client" value="{{ $amendmentClient }}">
+                                                @endif
                                                 {{--add this div if there are 4 inputs--}}
                                                 <div class=" grid grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 p-4">
 

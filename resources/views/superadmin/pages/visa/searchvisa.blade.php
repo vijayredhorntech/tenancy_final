@@ -33,7 +33,11 @@
                 <div class="absolute flex justify-center  w-full h-max bottom-0 lg:translate-y-[50%] md:translate-y-[50%] sm:translate-y-[70%] translate-y-[100%] left-0 z-10">
                 {{-- search form componnet --}}
                 <div class="lg:w-[70%] bg-white shadow-lg shadow-black/10 rounded-xs">
-                      <x-visa-search :countries="$countries" />
+                      <x-visa-search
+                          :countries="$countries"
+                          :amendment-booking="$amendmentBooking"
+                          :amendment-client="$amendmentClient"
+                      />
                 </div>
              
             </div>

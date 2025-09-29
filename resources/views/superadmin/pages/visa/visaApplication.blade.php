@@ -42,7 +42,105 @@
 
 <!-- Include jQuery (required by Select2) and Select2 JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+<style>
+    .action-dropdown {
+        position: relative;
+        display: inline-flex;
+        align-items: stretch;
+        border-radius: 0.375rem;
+        overflow: visible;
+        border: 1px solid rgba(22, 163, 74, 0.25);
+        background-color: #dcfce7;
+        z-index: 10;
+    }
+
+    .action-dropdown .primary-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.85rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #15803d;
+        text-decoration: none;
+        transition: background-color 0.2s ease, color 0.2s ease;
+        white-space: nowrap;
+        background-color: transparent;
+    }
+
+    .action-dropdown .primary-action:hover {
+        background-color: #16a34a;
+        color: #ffffff;
+    }
+
+    .action-dropdown .dropdown-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.4rem 0.55rem;
+        border: none;
+        background-color: transparent;
+        color: #15803d;
+        cursor: pointer;
+        border-left: 1px solid rgba(22, 163, 74, 0.25);
+        transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .action-dropdown .dropdown-toggle:hover,
+    .action-dropdown.open .dropdown-toggle {
+        background-color: #16a34a;
+        color: #ffffff;
+    }
+
+    .action-dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.3rem);
+        padding: 0;
+        background-color: transparent;
+        border: none;
+        min-width: 11rem;
+        box-shadow: none;
+        z-index: 40;
+        flex-direction: column;
+    }
+
+    .action-dropdown.open .action-dropdown-menu {
+        display: flex;
+    }
+
+    .action-dropdown-menu .dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.45rem 0.85rem;
+        font-weight: 600;
+        transition: background-color 0.2s ease, color 0.2s ease;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        width: 100%;
+    }
+
+    .action-dropdown-menu .dropdown-item i {
+        width: 1rem;
+        text-align: center;
+    }
+
+    .action-dropdown-menu .dropdown-item.amendment-item {
+        background-color: #6b21a8;
+        color: #ffffff;
+        border-radius: 0.375rem;
+        justify-content: center;
+        border: 1px solid #581c87;
+    }
+
+    .action-dropdown-menu .dropdown-item.amendment-item:hover {
+        background-color: #581c87;
+    }
+</style>
 
 
 
@@ -348,26 +446,30 @@
                                         </div>
                                     </a> --}}
 
-                                    <a href="{{ route('visa.applicationview', ['id' => $booking->id]) }}" title="Assign to Visa Request">
-                                        <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                            <i class="fa fa-eye"></i> <!-- FontAwesome icon -->
+                                    <div class="action-dropdown">
+                                        <a href="{{ route('visa.applicationview', ['id' => $booking->id]) }}" class="primary-action" title="View Application">
+                                            <i class="fa fa-eye text-sm"></i>
+         	                                <span>View Application</span>
+                                        </a>
+                                        <button type="button" class="dropdown-toggle" aria-label="More application actions" data-dropdown-id="dropdown-{{ $booking->id }}">
+                                            <i class="fa fa-chevron-down text-xs"></i>
+                                        </button>
+                                        <div class="action-dropdown-menu" id="dropdown-{{ $booking->id }}">
+                                            <a href="{{ route('Visa', ['booking' => $booking->id, 'client' => $booking->client_id ?? $booking->clint->id ?? null]) }}" class="dropdown-item amendment-item" title="Amendment">
+                                                <i class="fa fa-edit text-sm"></i>
+                                                <span>Amendment</span>
+                                            </a>
                                         </div>
-                                    </a>
+                                    </div>
 
                                     @if($booking->sendtoadmin == 0 || $booking->sendtoadmin == 2)  
-                                        <a href="{{ route('visa.sendtoadmin', ['id' => $booking->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
+                                        <!-- <a href="{{ route('visa.sendtoadmin', ['id' => $booking->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
                                             <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
-                                                <i class="fa fa-paper-plane"></i> <!-- "Send" icon -->
+                                                <i class="fa fa-paper-plane"></i> 
                                             </div>
-                                        </a>
+                                        </a> -->
                                     @endif
                                     @endif
-                                    <!-- <a href="" title="View Dashboard">
-                                        <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-computer"></i>
-                                        </div>
-                                    </a> -->
-
 
                                 </div>
                             </td>
@@ -386,6 +488,48 @@
 
 
             </div>
+
+            <script>
+                (function initActionDropdowns() {
+                    const dropdowns = document.querySelectorAll('.action-dropdown');
+
+                    if (!dropdowns.length) {
+                        return;
+                    }
+
+                    function closeAllDropdowns(except = null) {
+                        dropdowns.forEach((dropdown) => {
+                            if (dropdown !== except) {
+                                dropdown.classList.remove('open');
+                            }
+                        });
+                    }
+
+                    dropdowns.forEach((dropdown) => {
+                        const toggleButton = dropdown.querySelector('.dropdown-toggle');
+
+                        if (!toggleButton) {
+                            return;
+                        }
+
+                        toggleButton.addEventListener('click', function (event) {
+                            event.preventDefault();
+                            event.stopPropagation();
+
+                            const isOpen = dropdown.classList.contains('open');
+                            closeAllDropdowns();
+
+                            if (!isOpen) {
+                                dropdown.classList.add('open');
+                            }
+                        });
+                    });
+
+                    document.addEventListener('click', function () {
+                        closeAllDropdowns();
+                    });
+                })();
+            </script>
 
                     <script>
             $(document).ready(function() {
