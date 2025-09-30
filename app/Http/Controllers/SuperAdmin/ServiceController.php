@@ -731,10 +731,13 @@ public function airport($input){
  return view('agencies.pages.hotel.hotel');
  }
 
- public function him_visa(){
+ public function him_visa(Request $request){
   
     $countries=Country::get();
-    return view('superadmin.pages.visa.searchvisa',compact('countries'));
+    $amendmentBooking = $request->query('booking');
+    $amendmentClient = $request->query('client');
+
+    return view('superadmin.pages.visa.searchvisa',compact('countries','amendmentBooking','amendmentClient'));
  }
 
 
