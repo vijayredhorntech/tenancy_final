@@ -692,18 +692,12 @@ public function hsVisaBook(Request $request)
 
         $request->validate([
             'bookingid'    => 'required',
-            'selfapply'    => 'required_without:othermember',
-            'othermember'  => 'required_without:selfapply|array',
         ]);
    
         $agency = $this->agencyService->getAgencyData();
-        // dd($agency);
-         if(isset($request->selfapply)){
-            
-            $this->visaRepository->updateClientBooking($id,$request->all());
-         }else{
-              $this->visaRepository->createClientBooking($id,$request->all());
-        }
+        
+        // All members are now automatically included, no need for checkbox logic
+        $this->visaRepository->updateClientBooking($id,$request->all());
 
         $clientData = $this->visaRepository->bookingDataById($id);
         if (isset($clientData) && $clientData->agency_id == $agency->id) {

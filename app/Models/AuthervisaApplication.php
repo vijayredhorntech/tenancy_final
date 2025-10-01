@@ -14,13 +14,19 @@ class AuthervisaApplication extends Model
 
     protected $fillable = [
         'booking_id',
+        'clint_id',
         'member_id',
         'name',
         'lastname',
         'email',
         'phone',
         'citizenship',
-        'date_of_entry'
+        'date_of_entry',
+        'passport_number',
+        'passport_issue_date',
+        'passport_expire_date',
+        'place_of_issue',
+        'passportphoto',
     ];
 
     // Relationship with Booking Model
