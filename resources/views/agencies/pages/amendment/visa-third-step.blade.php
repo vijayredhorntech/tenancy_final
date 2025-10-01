@@ -21,6 +21,7 @@
                       <span class="text-lg text-secondary font-semibold">Visa Details</span>
                     
                   <form action="{{ route('visa.amendment.book', ['type' => 'agencies']) }}" method="POST" enctype="multipart/form-data" class="mt-4" id="amendmentForm" onsubmit="return confirmAmendment(event)">
+                  <form action="{{ route('visa.amendment.book', ['type' => 'agencies']) }}" method="POST" enctype="multipart/form-data" class="mt-4">
                             @csrf
 
                           <div class="flex flex-col">
@@ -92,23 +93,7 @@
 
 
                           </div>
-
-                          <!-- Self/Family Selection Checkboxes -->
-                          <div class="flex gap-4 mt-5 w-full" id="applicantTypeSection">
-                              <label class="flex items-center gap-2 cursor-pointer">
-                                  <input type="checkbox" id="selfCheckbox" name="applicant_type[]" value="self" class="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary" checked>
-                                  <span class="font-semibold text-gray-800 text-sm">Self</span>
-                              </label>
-                              <label class="flex items-center gap-2 cursor-pointer">
-                                  <input type="checkbox" id="familyCheckbox" name="applicant_type[]" value="family" class="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary">
-                                  <span class="font-semibold text-gray-800 text-sm">Family Members</span>
-                              </label>
-                          </div>
-
-                          <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4" id="selfDetailsSection">
-                              <div class="flex justify-between items-center mb-3">
-                                  <span class="font-semibold text-gray-800">Self Details</span>
-                              </div>
+                          <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4" >
                               <div class="w-full grid lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-4 grid-cols-1 gap-1">
                                   <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Last Name</label>
@@ -138,15 +123,10 @@
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Date of Entry</label>
                                       <input type="date" name="dateofentry" max="9999-12-31" value="{{$entryDate}}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                   </div>
+                                  <div class=" w-full flex flex-col items-end lg:cols-span-6 md:col-span-6 sm:col-span-4 col-span-1 " >
+                                      <button type="button" id="addMoreBtn" max="9999-12-31" class="px-2 py-0.5 text-xs font-semibold rounded-sm  border-[1px] border-success text-success bg-success/10 hover:bg-success hover:text-white transition ease-in duration-2000">Add More</button>
+                                  </div>
                               </div>
-                          </div>
-
-                          <!-- Family Members Container -->
-                          <div id="familyMembersContainer" style="display: none;"></div>
-
-                          <!-- Add More Button for Additional Passengers -->
-                          <div class="flex justify-end mt-3" id="addMoreBtnContainer">
-                              <button type="button" id="addMoreBtn" class="px-3 py-1.5 text-sm font-semibold rounded-sm border-[1px] border-success text-success bg-success/10 hover:bg-success hover:text-white transition ease-in duration-200">Add More Passenger</button>
                           </div>
 
 
