@@ -15,6 +15,9 @@ class Invoice extends Model
     protected $fillable = [
         'receiver_name',
         'invoice_date',
+        'invoice_number',   // ✅ Newly added
+        'agency_id',        // ✅ Newly added
+        'client_id', 
         'due_date',
         'different_name',     // ← NEW date column
         'address',

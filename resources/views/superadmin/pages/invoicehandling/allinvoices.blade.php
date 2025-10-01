@@ -207,6 +207,17 @@
                                                         Cancel
                                                     </a>
                                                     
+                                                    
+                                                     <a href="{{ route('amendment.visa.application', [
+                                                        'type' => 'agencies', // or whatever type you need
+                                                        'booking' => $invoice->visabooking->application_number
+                                                    ]) }}" 
+                                                    onclick="return confirm('Are you sure you want to Amendment this invoice?')"
+                                                    class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-purple-500 hover:bg-purple-600">
+                                                  
+                                                    <span>Amendment</span>
+                                                </a>
+
                                                     <!-- Pay Option -->
                                                     <button onclick="openPayModal('{{ $invoice->id }}', '{{ $invoice->invoice_number ?? 'N/A' }}', '{{ $invoice->amount ?? 0 }}', '{{ $receiverName }}', '{{ $invoice->visaBooking->clint->permanent_address ?? 'N/A' }}')"
                                                             class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-blue-500 hover:bg-blue-600">

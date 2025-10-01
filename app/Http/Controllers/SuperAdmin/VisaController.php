@@ -344,6 +344,7 @@ class VisaController extends Controller
     public function hsviewSearchvisa(Request $request){
 
         // dd("Heelo");
+
         $data = $request->validate([
             'origincountry'     => 'required',
             'destinationcountry'       => 'required',
@@ -697,6 +698,7 @@ public function hsVisaBook(Request $request)
         $agency = $this->agencyService->getAgencyData();
         // dd($agency);
          if(isset($request->selfapply)){
+            
             $this->visaRepository->updateClientBooking($id,$request->all());
          }else{
               $this->visaRepository->createClientBooking($id,$request->all());

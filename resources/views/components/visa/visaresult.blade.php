@@ -44,6 +44,12 @@
     $randomImage = $titleImages->isNotEmpty()
         ? asset('images/visa/titleimages/' . $titleImages->random())
         : asset('assets/images/india-visa-application-requirements.jpg');
+    $getStartedUrl = isset($applicationdata)
+        ? route('amendment.visa.selectvisa', ['type' => 'agencies', 'id' => $visa->id, 'applicationid' => $applicationdata->application_number])
+        : route('visa.payment', ['id' => $visa->id]);
+
+
+
 @endphp
 
         <div class=" w-full ">
@@ -57,9 +63,21 @@
                             <p class="lg:text-sm">Sometimes a journey of a thousand miles begins with a visa. Check your destination and apply online for any visa in the world.</p>
                         </div>
                         <div class="w-full border-b-[1px] border-b-secondary"></div>
-                        <form action="{{ route('searchvisa') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
+
+                                @if(isset($applicationdata))
+                               
+                               <form action="{{ route('amendment.visa.selectvisa', ['type' => 'agencies']) }}" 
+                                    method="POST" 
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="application_number" value="{{$applicationdata->application_number}}">
+                               @else
+                                 
+                                <form action="{{ route('searchvisa') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                            @endif
                             {{--add this div if there are 4 inputs--}}
+                    
                             <div class=" grid grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-2 p-4">
 
                                 {{--add this div if there are 2 inputs--}}
@@ -193,8 +211,12 @@
 
                                     <div class=" px-5 py-4 flex flex-col bg-gray-200 rounded-md mt-4 ">
                                         <span class="m-auto text-gray-700 2xl:text-xl xl:text-xl lg:text-xl md:text-xl sm:text-lg text-md">Fill out India tourist e-visa application form online </span>
-                                        <a href="{{route('visa.payment',['id'=>$visa->id])}}" class="m-auto text-white bg-red-600 py-1.5 px-10 mt-4 text-lg font-semibold rounded-md">GET STARTED</a>
-                                        <!-- <a href="{{route('visa.payment',['id'=>$visa->id])}}" class="m-auto text-white bg-red-600 py-3 px-10 mt-4 text-xl font-semibold rounded-md"><span class="m-auto text-white bg-red-600 py-3 px-10 mt-4 text-xl font-semibold rounded-md">GET STARTED</span> </a>-->
+                                        {{-- <a href="{{route('visa.payment',['id'=>$visa->id])}}" class="m-auto text-white bg-red-600 py-1.5 px-10 mt-4 text-lg font-semibold rounded-md">GET STARTED</a> --}}
+                                       <a href="{{ $getStartedUrl }}">
+                                            <span class="text-lg bg-red-700 text-white px-10 py-3 rounded-sm font-bold m-auto">
+                                                GET STARTED
+                                            </span>
+                                        </a>
                                         <span class="m-auto text-gray-700 2xl:text-xl xl:text-xl lg:text-xl md:text-xl sm:text-lg text-md mt-4">and provide digital copies of the following documents:</span>
                                     </div>
 
@@ -251,7 +273,11 @@
                                     </div>
 
                                     <div class="mt-5 flex mb-16">
-                                        <a href="{{route('visa.payment',['id'=>$visa->id])}}"> <span class="text-lg bg-red-700 text-white px-10 py-3 rounded-sm font-bold m-auto">GET STARTED</span></a>
+                                           <a href="{{ $getStartedUrl }}">
+                                        <span class="text-lg bg-red-700 text-white px-10 py-3 rounded-sm font-bold m-auto">
+                                            GET STARTED
+                                        </span>
+                                    </a>
                                     </div>
                                 </div>
                             @empty
