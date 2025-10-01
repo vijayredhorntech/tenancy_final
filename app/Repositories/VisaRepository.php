@@ -684,9 +684,10 @@ public function saveBooking(array $data)
                 $authapplication->clint_id = $data['clientId'];
                 $authapplication->name = $firstname;
                 $authapplication->lastname = $data['family_passengerlastname'][$index];
-                $authapplication->passport_number = $data['family_passengerpassportn'][$index] ?? null;
-                $authapplication->citizenship = $data['family_passengerplace'][$index] ?? null; // Nationality stored in citizenship
-                $authapplication->phone = $data['family_passengerphonenumber'][$index] ?? null;
+                $authapplication->passport_number = $data['family_passengerpassportn'][$index];
+                $authapplication->passport_issue_date = $data['family_passportissuedate'][$index];
+                $authapplication->passport_expire_date = $data['family_passportexpiredate'][$index];
+                $authapplication->place_of_issue = $data['family_passengerplace'][$index];
                 $authapplication->save();
             }
         }
@@ -815,9 +816,10 @@ public function updateBooking(array $data)
                 $authapplication->clint_id = $data['clientId'];
                 $authapplication->name = $firstname;
                 $authapplication->lastname = $data['family_passengerlastname'][$index];
-                $authapplication->passport_number = $data['family_passengerpassportn'][$index] ?? null;
-                $authapplication->citizenship = $data['family_passengerplace'][$index] ?? null; // Nationality stored in citizenship
-                $authapplication->phone = $data['family_passengerphonenumber'][$index] ?? null;
+                $authapplication->passport_number = $data['family_passengerpassportn'][$index];
+                $authapplication->passport_issue_date = $data['family_passportissuedate'][$index];
+                $authapplication->passport_expire_date = $data['family_passportexpiredate'][$index];
+                $authapplication->place_of_issue = $data['family_passengerplace'][$index];
                 $authapplication->save();
             }
         }
@@ -1406,7 +1408,7 @@ public function getBookingByid($id, $type, $request)
         $visabooking=VisaBooking::with('visasubtype','deduction','agency')->where('id',$id)->first(); 
       
         $price=$visabooking->visasubtype->price+$visabooking->visasubtype->commission;
-        dd($price);
+      
         $visabooking->total_amount=$price;
         $visabooking->payment_status="Paid";
         $visabooking->confirm_application=1;
