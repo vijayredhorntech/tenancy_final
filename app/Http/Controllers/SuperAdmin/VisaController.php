@@ -676,10 +676,14 @@ public function hsVisaBook(Request $request)
 
         if (isset($checkuser) && $checkuser->agency_id == $agency->id) {
             $clientData = $this->visaRepository->bookingDataById($id);
-           
+         
+
             // $checkBalance = $this->visaRepository->checkBalance($agency->id,$clientData->id);
             $checkBalance=$this->visaRepository->checkBalance($agency->id,$clientData->total_amount);
-            // dd($checkBalance);
+     
+            if($clientData->isamendment==1){
+              return view('agencies.pages.amendment.visa-fifth-step',compact('clientData','checkBalance'));
+            }
             return view('superadmin.pages.visa.verifyapplication',compact('clientData','checkBalance'));
         }
         return redirect()->route('agency.application', ['type' => 'all']);

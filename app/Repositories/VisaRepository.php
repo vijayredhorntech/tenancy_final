@@ -1412,32 +1412,36 @@ public function getBookingByid($id, $type, $request)
         $visabooking->total_amount=$price;
         $visabooking->payment_status="Paid";
         $visabooking->confirm_application=1;
-        $visabooking->isamendment=0;
+        // $visabooking->isamendment=0;
         $visabooking->save(); 
 
         $this->payment($visabooking);
         $this->saveInvoice($visabooking);
-        if (isset($data['othermember']) && is_array($data['othermember'])) {
+
+        $clientInfo = $this->agencyService->getClientinfoVisaBookingById($visabooking);
+    
+
+        if (isset($clientInfo->otherclients)) {
                 $agency = $this->agencyService->getAgencyData();
 
-            foreach ($data['othermember'] as $memberId) {
+                foreach ($clientInfo->otherclients as $i => $memberId) {
+            
+                    $index = $i + 1;
                     $newBooking = $visabooking->replicate(); // clone the existing booking
                     $newBooking->client_id = $visabooking->client_id;
-                    $newBooking->otherclientid = $memberId; // link to original client
+                    $newBooking->otherclientid = $memberId->id; // link to original client
                     $newBooking->application_number = '';
                     
-                    // $newBooking->save(); // Save first to generate an ID
-                        
-                    // Now generate the application number correctly
-                    $agencyInitial = strtoupper(substr($agency->name, 0, 1)); // First letter of agency name
-                    $application = "CLDA" . $agencyInitial . "I00" . ($visabooking->id + $memberId);
+                    // Using loop index instead of memberId
+                    $agencyInitial = strtoupper(substr($agency->name, 0, 1)); 
+                    $application = "CLDA" . $agencyInitial . "I00" . ($visabooking->id + $index);
 
                     $newBooking->application_number = $application;
-                    $newBooking->save(); // Save again after setting the application number
+                    $newBooking->save();
 
                     $this->payment($newBooking);
                 }
-        }
+    }
         return true;
     }
 
