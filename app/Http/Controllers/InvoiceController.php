@@ -1532,11 +1532,12 @@ public function hsAllinvoice(Request $request)
     public function hsviewInvoice(Request $request,$id){
         // Treat $id as VisaBooking ID and fetch booking used by the component
         $booking = app(\App\Repositories\DocumentSignRepository::class)->checkSignDocument($id);
+   
         $termconditon = app(\App\Repositories\TermConditionRepository::class)->allTeamTypes();
 
         // Load additional relationships for invoice display
-        $booking->load('deduction.invoice', 'origin', 'destination', 'visasubtype', 'visa', 'clint.clientinfo');
-       
+        $booking->load('deduction.invoice', 'origin', 'destination', 'visasubtype', 'visa');
+
         return view('superadmin.pages.invoicehandling.invoiceview', [
             'booking' => $booking,
             'termconditon' => $termconditon,

@@ -194,6 +194,10 @@
                         </div>
                         <div class="p-6">
                             <div class="space-y-3">
+
+
+                
+                       
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Visa Fee</span>
                                     <span class="font-medium">£{{ number_format($clientData->visasubtype->price ?? 0, 2) }}</span>
@@ -212,25 +216,42 @@
                                     </div>
                                 @endif
 
+                          
+
                                 <div class="border-t border-gray-200 pt-3 mt-3">
                                     <div class="flex justify-between text-lg font-bold">
                                         <span class="text-gray-800">Total Amount</span>
-                                        <span class="text-primary">£{{ number_format($clientData->total_amount ?? 0, 2) }}</span>
+                                        <span class="text-primary">£{{ number_format($clientData->total_amount ?? 0, 2) }} </span>
                                     </div>
+                                    
+                            
+                                </div>
+
+                                  <div class="border-t border-gray-200 pt-3 mt-3">
+                                    <div class="flex justify-between text-lg font-bold">
+                                        <span class="text-success">Old Visa Amount</span>
+                                        <span class="text-success">£{{ number_format($amendmentHistory->total_price ?? 0, 2) }} </span>
+                                    </div>
+                                    
+                            
+                                </div>
+
+                                @php
+                                    $grandTotal = ($clientData->total_amount ?? 0) - ($amendmentHistory->total_price ?? 0);
+                                @endphp
+
+                                
+                                  <div class="border-t border-gray-200 pt-3 mt-3">
+                                    <div class="flex justify-between text-lg font-bold">
+                                        <span class="text-gray-800">Grand Total</span>
+                                        <span class="text-primary">£{{ number_format($grandTotal, 2) }} </span>
+                                    </div>
+                                    
+                            
                                 </div>
                             </div>
 
-                            <div class="mt-6 bg-blue-50 border border-blue-100 rounded-lg p-4">
-                                <div class="flex">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <div>
-                                        <h4 class="font-semibold text-blue-800">Payment Required</h4>
-                                        <p class="text-sm text-blue-600 mt-1">Complete your payment to proceed with the visa processing.</p>
-                                    </div>
-                                </div>
-                            </div>
+                        
 
                             <div class="mt-6 space-y-3">
                                 @if($checkBalance)

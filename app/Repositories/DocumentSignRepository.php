@@ -227,7 +227,10 @@ protected function saveDocumentForSign($document, $request)
     // ✅ FIX: You had an undefined $id — retrieve ID from the document or related field
     if (isset($document->related_id)) {
 
-        return $this->visaRepository->getBookingBySingleId($document->related_id);
+        // return $this->visaRepository->getBookingBySingleId($document->related_id);
+        return $this->visaRepository->getBookingBySingleId($document->servicerelatedtableid);
+
+        
     }
 
     return null;

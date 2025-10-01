@@ -253,9 +253,12 @@
     use Carbon\Carbon;
     use Illuminate\Support\Str;
 
+  
     $invoice = $booking->deduction; // Get the deduction from visa booking
+ 
     $invoiceData = $invoice->invoice ?? null; // Get updated invoice data
 
+    $otherClientInfo = $booking->otherclients ?? [];
     // Use updated invoice data if available, otherwise fall back to original data
     $clientName = $invoiceData?->receiver_name ?? ($booking->clint->client_name ?? '');
     $clientPhone = $invoiceData?->visa_applicant ?? ($booking->clint->phone_number ?? 'N/A');
@@ -270,6 +273,7 @@
     $visaType = $booking->visasubtype->name ?? 'N/A';
     
     $visaFee = is_numeric($invoiceData?->visa_fee ?? $booking->visa->price ?? 'N/A') ? (float)($invoiceData?->visa_fee ?? $booking->visa->price ?? 0) : 0.00;
+  
     $paymentMode = $invoiceData?->payment_type ?? 'CASH';
     $currency = '£'; // Default currency
 
@@ -292,8 +296,11 @@
          $price = 0;
 
     if (optional($invoiceData)->status === 'edited') {
+        
         $price = (float) $invoiceData->new_price;
     } else {
+        
+   
         $price = is_numeric(optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
             ? (float) (optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
             : 0;
@@ -377,6 +384,20 @@
                     <td class="p-1">{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td>
                     <td class="p-1">{{ $currency }}{{ $price }}</td>
                 </tr>
+                @forelse($otherClientInfo as $client)
+      
+                <tr class="text-black text-sm border-b-[1px] border-blue-100">
+                    <td class="p-1">{{ $loop->iteration + 1 }}.</td>
+                    <td class="p-1">{{ strtoupper($client->name) }}</td>
+                    <td class="p-1">{{ strtoupper($client->passport_number) }}</td>
+                       <td class="p-1">{{ strtoupper($visaCountry) }}</td>
+                    <td class="p-1">{{ strtoupper($visaType) }}</td>
+                      <td class="p-1">{{ $currency }}{{ number_format($visaFee, 2) }}</td>
+                    <td class="p-1">{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td>
+                    <td class="p-1">{{ $currency }}{{ $price }}</td>
+                @empty
+
+                @endforelse
             </table>
         </div>
         

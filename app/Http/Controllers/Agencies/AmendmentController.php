@@ -9,6 +9,8 @@ use App\Repositories\Interfaces\ClintRepositoryInterface;
 use App\Services\AgencyService;
 use App\Models\Country;
 use App\Models\AuthervisaApplication;
+use App\Models\AmendmentHistory;
+
 
 
 
@@ -179,11 +181,17 @@ public function hsamendmentVisaApplication(Request $request)
            
             // $checkBalance = $this->visaRepository->checkBalance($agency->id,$clientData->id);
             $checkBalance=$this->visaRepository->checkBalance($agency->id,$clientData->total_amount);
+            // dd($clientData);
             // dd($checkBalance);
                $clientData = $this->visaRepository->bookingDataById($applicationData->id);
+             $amendmentHistory = AmendmentHistory::where('application_id', $applicationData->id)
+                ->where('agency_id', $agency->id)
+                ->where('application_id', $clientData->id)
+                ->latest()  // Orders by created_at (or updated_at if you specify)
+                ->first();
 
 
-        return view('agencies.pages.amendment.visa-fourth-step',compact('applicationData','clientInformation','clientData','checkBalance'));
+        return view('agencies.pages.amendment.visa-fourth-step',compact('applicationData','clientInformation','clientData','checkBalance','amendmentHistory'));
         }
      
 

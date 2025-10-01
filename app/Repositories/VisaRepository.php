@@ -697,11 +697,7 @@ public function saveBooking(array $data)
 
 public function updateBooking(array $data)
 {
-   
-    // Get country codes
 
-
-    // dd($data);
     $getCode = $this->getCountryCode($data['origin'], $data['destination']);
     $originCode = $getCode['origin_code'];
     $destinationCode = $getCode['destination_code'];
@@ -715,9 +711,7 @@ public function updateBooking(array $data)
     $client_id = $data['clientId']; 
     $client_details = $this->agencyService->getClientDetails($client_id, $agency);
     $user = $this->agencyService->getCurrentLoginUser();
-    
-    // Use the agency's user_id from the main database instead of Auth::id()
-    // This ensures we use a valid user ID that exists in the main database
+
     $mainDbUserId = $agency->user_id;
     
     // Ensure agency has a valid user_id
@@ -736,36 +730,44 @@ public function updateBooking(array $data)
         // Save booking first (with temporary application number)
         
     $booking =VisaBooking::where('application_number', $data['applicationnumber'])->firstOrFail();
-    /***Hisotry create  */
-        AmendmentHistory::create([
-        'origin_id'          => $booking->origin_id,
-        'destination_id'     => $booking->destination_id,
-        'visa_id'            => $booking->visa_id,
-        'subtype_id'         => $booking->subtype_id,
-        'agency_id'          => $booking->agency_id,
-        'user_id'            => $booking->user_id,
-        'application_id'         => $booking->id, // ✅ new field
-        'booking_id'         => $booking->id, // ✅ new field
-        'visa_type'          => $data['typeof'] ?? null, // if you store visa_type
-        'application_number' => $booking->application_number,
-        'total_price'        => $booking->total_amount,
-        'dateofentry'        => $booking->dateofentry,
-    ]);
-    // dd($booking);
+    if($booking->payment_status=='Paid'){
+            /***Hisotry create  */
+                AmendmentHistory::create([
+                'origin_id'          => $booking->origin_id,
+                'destination_id'     => $booking->destination_id,
+                'visa_id'            => $booking->visa_id,
+                'subtype_id'         => $booking->subtype_id,
+                'agency_id'          => $booking->agency_id,
+                'user_id'            => $booking->user_id,
+                
+                'application_id'         => $booking->id, // ✅ new field
+                'booking_id'         => $booking->id, // ✅ new field
+                'visa_type'          => $data['typeof'] ?? null, // if you store visa_type
+                'application_number' => $booking->application_number,
+                'total_price'        => $booking->total_amount,
+                'dateofentry'        => $booking->dateofentry,
+            ]);
+             // dd($booking);
        if ($booking->visaDocSign) {
             $booking->visaDocSign->forceDelete();  // deletes permanently
         }
+        }
+   
 
 
     $booking->origin_id = $data['origin'];
     $booking->destination_id = $data['destination'];
     $booking->visa_id = $data['typeof'];
     $booking->subtype_id = $data['category'];
+    $booking->total_amount = $totalAmount;
+
+
     
     $booking->agency_id = $agency->id;
     $booking->application_status = 'Pending';
     $booking->applicationworkin_status = 'Pending';
     $booking->document_status = 'Pending';
+    $booking->payment_status = 'Pending';
     $booking->confirm_application = 0;
 
     
@@ -775,6 +777,9 @@ public function updateBooking(array $data)
     $booking->total_amount = $totalAmount;
     $booking->dateofentry = $data['dateofentry'];
     $booking->application_number = ''; // ✅ Temporary to pass NOT NULL
+    $booking->isamendment = 1; // ✅ Temporary to pass NOT NULL
+
+    
     $booking->save(); // Now ID is available
     
     // Generate application number
@@ -822,43 +827,96 @@ public function updateBooking(array $data)
     return $booking;
 }
 
-  public function payment($data){
+//   public function payment($data){
 
-       
-    $balance = Balance::where('agency_id', $data['agency_id'])->first();
-    $totalAmount=$data['total_amount'];
+   
+//     $balance = Balance::where('agency_id', $data['agency_id'])->first();
+//     $totalAmount=$data['total_amount'];
   
-    // If balance record does not exist, return an error
-    if (!$balance) {
+//     // If balance record does not exist, return an error
+//     if (!$balance) {
     
-        throw new \Exception('Balance record not found.'); // Exception is better than dd()
+//         throw new \Exception('Balance record not found.'); // Exception is better than dd()
+//     }
+
+//     $fundRemaining = $balance->balance;
+
+//     // Check if agency has enough balance
+//     if ($totalAmount > $fundRemaining) {
+//       dd('Insufficient balance.');
+//         throw new \Exception('Insufficient balance.'); // Exception is better than dd()
+//     }
+
+//     // Deduct amount from balance first
+//     $balance->balance -= $totalAmount;
+//     $balance->save();
+
+//     $deduction = new Deduction();
+//     $deduction->agency_id = $data['agency_id'];
+//     $deduction->service = '3';
+//     $deduction->invoice_number =  $data['application_number'];
+//     $deduction->flight_booking_id = $data['id'];
+//     $deduction->amount = $data['total_amount'];
+//     $deduction->create_userid = $data['client_id'];
+//     $deduction->client_id = $data['client_id'];
+//     $deduction->displaynotification = 3;
+//     $deduction->date = now();
+//     $deduction->save();
+//     return $deduction;
+
+//   }
+
+public function payment($data)
+{
+    // Validate incoming data
+    if (!is_array($data) && !($data instanceof \ArrayAccess)) {
+        throw new \Exception('Invalid data format.');
+    }
+
+    $balance = Balance::where('agency_id', $data['agency_id'])->first();
+    $totalAmount = $data['total_amount'];
+
+    if (!$balance) {
+        throw new \Exception('Balance record not found.');
     }
 
     $fundRemaining = $balance->balance;
 
-    // Check if agency has enough balance
     if ($totalAmount > $fundRemaining) {
-      dd('Insufficient balance.');
-        throw new \Exception('Insufficient balance.'); // Exception is better than dd()
+        throw new \Exception('Insufficient balance.');
     }
 
-    // Deduct amount from balance first
+    // Deduct from agency balance
     $balance->balance -= $totalAmount;
     $balance->save();
-    $deduction = new Deduction();
-    $deduction->agency_id = $data['agency_id'];
-    $deduction->service = '3';
-    $deduction->invoice_number =  $data['application_number'];
-    $deduction->flight_booking_id = $data['id'];
-    $deduction->amount = $data['total_amount'];
-    $deduction->create_userid = $data['client_id'];
-    $deduction->client_id = $data['client_id'];
-    $deduction->displaynotification = 3;
-    $deduction->date = now();
+
+    // ✅ Check if Deduction with same invoice_number (application_number) exists
+    $deduction = Deduction::where('invoice_number', $data['application_number'])->first();
+
+    if ($deduction) {
+       
+       
+        // ✅ Update existing deduction
+        $deduction->amount += $totalAmount;
+        $deduction->updated_at = now();
+    } else {
+      
+        // ✅ Create a new deduction
+        $deduction = new Deduction();
+        $deduction->agency_id = $data['agency_id'];
+        $deduction->service = '3';
+        $deduction->invoice_number = $data['application_number'];
+        $deduction->flight_booking_id = $data['id'];
+        $deduction->amount = $totalAmount;
+        $deduction->create_userid = $data['client_id'];
+        $deduction->client_id = $data['client_id'];
+        $deduction->displaynotification = 3;
+        $deduction->date = now();
+    }
+
     $deduction->save();
     return $deduction;
-
-  }
+}
 
 
 
@@ -1346,12 +1404,15 @@ public function getBookingByid($id, $type, $request)
 
     public function updateClientBooking($id,$data){
     
+
         $visabooking=VisaBooking::with('visasubtype','deduction','agency')->where('id',$id)->first(); 
       
         $price=$visabooking->visasubtype->price+$visabooking->visasubtype->commission;
+        dd($price);
         $visabooking->total_amount=$price;
         $visabooking->payment_status="Paid";
         $visabooking->confirm_application=1;
+        $visabooking->isamendment=0;
         $visabooking->save(); 
 
         $this->payment($visabooking);
