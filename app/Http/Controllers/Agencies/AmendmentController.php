@@ -166,7 +166,7 @@ public function hsamendmentVisaApplication(Request $request)
 
  public function hsShowVerifyApplication($type,$id){
 
-    dd($id);
+    
         $agency = $this->agencyService->getAgencyData();
         $applicationData=$this->checkValidation($id);
         $clientInformation=$this->agencyService->getClientinfoById($applicationData->deduction) ;

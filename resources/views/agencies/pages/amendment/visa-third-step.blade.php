@@ -163,7 +163,7 @@
                                       <input type="text" name="placeofissue" value="{{$item->place_of_issue ?? ''}}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                   </div>
                                   <div class=" w-full flex flex-col items-end lg:cols-span-6 md:col-span-6 sm:col-span-4 col-span-1 " >
-                                    <a href="{{ route('removeotherapplication', ['type' => 'agencies', 'id' => $item->id,'applicationid'=>$applicationData->application_number]) }}">
+                                    <a href="{{ route('removeotherapplication', ['type' => 'agencies', 'id' => $item->id, 'applicationid'=>$applicationData->application_number]) }}">
                                                 <button type="button" id="removebutton" 
                                                     class="px-2 py-0.5 text-xs font-semibold rounded-sm border-[1px] border-danger text-danger bg-danger/10 hover:bg-danger hover:text-white transition ease-in duration-2000">
                                                     remove
