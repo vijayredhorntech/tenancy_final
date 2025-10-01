@@ -88,7 +88,7 @@
                           <!-- Self/Family Selection Checkboxes -->
                           <div class="flex gap-4 mt-5 w-full" id="applicantTypeSection" style="display: none;">
                               <label class="flex items-center gap-2 cursor-pointer">
-                                  <input type="checkbox" id="selfCheckbox" name="applicant_type[]" value="self" class="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary">
+                                  <input type="checkbox" id="selfCheckbox" name="applicant_type[]" value="self" class="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary" checked>
                                   <span class="font-semibold text-gray-800 text-sm">Self</span>
                               </label>
                               <label class="flex items-center gap-2 cursor-pointer">
@@ -510,8 +510,10 @@ $("#existingUserBtn").on("click", function () {
         var country = selectedUser.data("nationality");
 
         if (clientId) {
-            // Show applicant type selection
+            // Show applicant type selection and self details by default
             $("#applicantTypeSection").show();
+            $("#selfDetailsSection").show();
+            $("#addMoreBtnContainer").show();
             
             // Store client data for later use
             window.selectedClientData = {
@@ -579,6 +581,22 @@ $("#existingUserBtn").on("click", function () {
         }
     });
 
+    // Handle individual family member checkbox changes
+    $(document).on("change", ".family-member-checkbox", function() {
+        let $card = $(this).closest(".addresspart");
+        let $fields = $card.find(".family-member-fields input");
+        
+        if ($(this).is(":checked")) {
+            // Enable fields when checked
+            $fields.prop("disabled", false);
+            $card.css("opacity", "1");
+        } else {
+            // Disable fields when unchecked
+            $fields.prop("disabled", true);
+            $card.css("opacity", "0.5");
+        }
+    });
+
     // Load family members via AJAX
     function loadFamilyMembers(clientId) {
         $.ajax({
@@ -608,11 +626,15 @@ $("#existingUserBtn").on("click", function () {
     // Create family member card
     function createFamilyMemberCard(member, index) {
         let cardHtml = `
-            <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4">
+            <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4" data-member-id="${member.id}">
                 <div class="flex justify-between items-center mb-3">
-                    <span class="font-semibold text-gray-800">Family Member ${index + 1}: ${member.first_name} ${member.last_name} (${member.relationship})</span>
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" class="family-member-checkbox w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary" 
+                            data-member-index="${index}" checked>
+                        <span class="font-semibold text-gray-800">Family Member ${index + 1}: ${member.first_name} ${member.last_name} (${member.relationship})</span>
+                    </div>
                 </div>
-                <div class="w-full grid lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-4 grid-cols-1 gap-1">
+                <div class="w-full grid lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-4 grid-cols-1 gap-1 family-member-fields">
                     <div class="w-full flex flex-col">
                         <label class="font-semibold text-gray-800 text-sm">First Name</label>
                         <input type="text" name="family_passengerfirstname[]" value="${member.first_name || ''}" 
@@ -629,18 +651,13 @@ $("#existingUserBtn").on("click", function () {
                             class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
                     </div>
                     <div class="w-full flex flex-col">
-                        <label class="font-semibold text-gray-800 text-sm">Issue Date</label>
-                        <input type="date" name="family_passportissuedate[]" value="${member.passport_issue_date || ''}" 
-                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
-                    </div>
-                    <div class="w-full flex flex-col">
-                        <label class="font-semibold text-gray-800 text-sm">Expiry Date</label>
-                        <input type="date" name="family_passportexpiredate[]" value="${member.passport_expiry_date || ''}" 
-                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
-                    </div>
-                    <div class="w-full flex flex-col">
-                        <label class="font-semibold text-gray-800 text-sm">Place of Issue</label>
+                        <label class="font-semibold text-gray-800 text-sm">Nationality</label>
                         <input type="text" name="family_passengerplace[]" value="${member.nationality || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">Phone Number</label>
+                        <input type="text" name="family_passengerphonenumber[]" value="${member.phone_number || ''}" 
                             class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
                     </div>
                 </div>

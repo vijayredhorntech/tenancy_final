@@ -138,42 +138,47 @@
 
                       
                      <div class="p-6">
-                        {{-- Self Apply for All Checkbox --}}
-                                    <div class="mb-4 flex items-center space-x-2">
-                                        <input type="checkbox" id="selfApplyAll" value="yes" checked name="selfapply" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                                        <label for="selfApplyAll" class="text-sm font-medium text-gray-700">Apply for self</label>
-                                    </div>
-
-                                 
                             @if(count($clientData->otherclients) > 0)
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Passport</th>
-                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issue Date</th>
-                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiry Date</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach($clientData->otherclients as $index =>  $otherclient)
-                                            <tr>
-                                                <td class="px-4 py-3">
-                                                    <input type="checkbox" value="{{$otherclient->id}}" checked name="othermember[{{ $index }}]" class="self-apply-checkbox h-4 w-4 text-blue-600 border-gray-300 rounded">
-                                                </td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{{ $otherclient->name  ?? 'N/A' }} {{ $otherclient->lastname  ?? 'N/A' }}</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $otherclient->passport_number ?? 'N/A' }}</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $otherclient->passport_issue_date ?? 'N/A' }}</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $otherclient->passport_expire_date ?? 'N/A' }}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
+                                <div class="space-y-4">
+                                    @foreach($clientData->otherclients as $index => $otherclient)
+                                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-primary transition-colors duration-200">
+                                            <div class="flex items-start justify-between">
+                                                <div class="flex-1">
+                                                    <div class="flex items-center mb-3">
+                                                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                                                            <span class="text-primary font-bold">{{ $index + 1 }}</span>
+                                                        </div>
+                                                        <div>
+                                                            <h4 class="text-base font-semibold text-gray-800">{{ $otherclient->name ?? 'N/A' }} {{ $otherclient->lastname ?? '' }}</h4>
+                                                            <p class="text-sm text-gray-500">Travel Group Member</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 ml-13">
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-500 mb-1">Passport Number</label>
+                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->passport_number ?? 'N/A' }}</p>
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-500 mb-1">Nationality</label>
+                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->citizenship ?? 'N/A' }}</p>
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-500 mb-1">Phone Number</label>
+                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->phone ?? 'N/A' }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             @else
-                                <div class="text-center py-4 text-gray-500">
-                                    No additional members in this application
+                                <div class="text-center py-8">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                    <p class="text-gray-500 font-medium">No additional members in this application</p>
+                                    <p class="text-sm text-gray-400 mt-1">Only the main applicant is included</p>
                                 </div>
                             @endif
                         </div>

@@ -20,6 +20,7 @@
               <div class="2xl:w-3/4 xl:w-3/4 lg:w-3/4 md:w-full sm:w-full w-full bg-white shadow-lg shadow-black/10 rounded-md p-4">
                       <span class="text-lg text-secondary font-semibold">Visa Details</span>
                     
+                  <form action="{{ route('visa.amendment.book', ['type' => 'agencies']) }}" method="POST" enctype="multipart/form-data" class="mt-4" id="amendmentForm" onsubmit="return confirmAmendment(event)">
                   <form action="{{ route('visa.amendment.book', ['type' => 'agencies']) }}" method="POST" enctype="multipart/form-data" class="mt-4">
                             @csrf
 
@@ -163,7 +164,7 @@
                                       <input type="text" name="placeofissue" value="{{$item->place_of_issue ?? ''}}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                   </div>
                                   <div class=" w-full flex flex-col items-end lg:cols-span-6 md:col-span-6 sm:col-span-4 col-span-1 " >
-                                    <a href="{{ route('removeotherapplication', ['type' => 'agencies', 'id' => $item->id, 'applicationid'=>$applicationData->application_number]) }}">
+                                    <a href="{{ route('removeotherapplication', ['type' => 'agencies', 'id' => $item->id,'applicationid'=>$applicationData->application_number]) }}">
                                                 <button type="button" id="removebutton" 
                                                     class="px-2 py-0.5 text-xs font-semibold rounded-sm border-[1px] border-danger text-danger bg-danger/10 hover:bg-danger hover:text-white transition ease-in duration-2000">
                                                     remove
@@ -558,6 +559,142 @@ $("#existingUserBtn").on("click", function () {
     // Reset address fields for new user
     function resetFields() {
         $("#address, #city, #state, #country, #zip_code").val("");
+    }
+
+    // Store client ID for family member loading
+    var clientId = "{{ $clientInformation?->visaBooking?->clientDetailsFromUserDB?->id ?? '' }}";
+
+    // Handle Self checkbox
+    $("#selfCheckbox").on("change", function() {
+        if ($(this).is(":checked")) {
+            $("#selfDetailsSection").show();
+        } else {
+            $("#selfDetailsSection").hide();
+        }
+    });
+
+    // Handle Family checkbox
+    $("#familyCheckbox").on("change", function() {
+        if ($(this).is(":checked")) {
+            if (clientId) {
+                loadFamilyMembers(clientId);
+            } else {
+                alert("Client ID not found.");
+                $(this).prop("checked", false);
+            }
+        } else {
+            $("#familyMembersContainer").hide().empty();
+        }
+    });
+
+    // Handle individual family member checkbox changes
+    $(document).on("change", ".family-member-checkbox", function() {
+        let $card = $(this).closest(".addresspart");
+        let $fields = $card.find(".family-member-fields input");
+        
+        if ($(this).is(":checked")) {
+            // Enable fields when checked
+            $fields.prop("disabled", false);
+            $card.css("opacity", "1");
+        } else {
+            // Disable fields when unchecked
+            $fields.prop("disabled", true);
+            $card.css("opacity", "0.5");
+        }
+    });
+
+    // Load family members via AJAX
+    function loadFamilyMembers(clientId) {
+        $.ajax({
+            url: "{{ url('/agencies/get-family-members') }}/" + clientId,
+            type: "GET",
+            success: function(response) {
+                if (response.success && response.family_members.length > 0) {
+                    $("#familyMembersContainer").empty().show();
+                    
+                    response.family_members.forEach(function(member, index) {
+                        createFamilyMemberCard(member, index);
+                    });
+                } else {
+                    $("#familyMembersContainer").hide();
+                    alert("No family members found for this client.");
+                    $("#familyCheckbox").prop("checked", false);
+                }
+            },
+            error: function(xhr) {
+                console.error("Error loading family members:", xhr);
+                alert("Failed to load family members. Please try again.");
+                $("#familyCheckbox").prop("checked", false);
+            }
+        });
+    }
+
+    // Create family member card
+    function createFamilyMemberCard(member, index) {
+        let cardHtml = `
+            <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4" data-member-id="${member.id}">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" class="family-member-checkbox w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary" 
+                            data-member-index="${index}" checked>
+                        <span class="font-semibold text-gray-800">Family Member ${index + 1}: ${member.first_name} ${member.last_name} (${member.relationship})</span>
+                    </div>
+                </div>
+                <div class="w-full grid lg:grid-cols-5 md:grid-cols-5 sm:grid-cols-3 grid-cols-1 gap-1 family-member-fields">
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">First Name</label>
+                        <input type="text" name="family_passengerfirstname[]" value="${member.first_name || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">Last Name</label>
+                        <input type="text" name="family_passengerlastname[]" value="${member.last_name || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">Passport Number</label>
+                        <input type="text" name="family_passengerpassportn[]" value="${member.passport_number || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">Nationality</label>
+                        <input type="text" name="family_passengerplace[]" value="${member.nationality || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">Phone Number</label>
+                        <input type="text" name="family_passengerphonenumber[]" value="${member.phone_number || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        $("#familyMembersContainer").append(cardHtml);
+    }
+
+    // Amendment Confirmation Function
+    function confirmAmendment(event) {
+        event.preventDefault(); // Prevent form submission
+        
+        // Show confirmation dialog with custom styling
+        const confirmed = confirm(
+            '⚠️ AMENDMENT APPLICATION CONFIRMATION\n\n' +
+            'Are you sure you want to proceed with this amendment application?\n\n' +
+            '• This will finalize all changes made to the application\n' +
+            '• You will be redirected to the payment page\n' +
+            '• Previous application data will be updated\n\n' +
+            'Click "OK" to continue or "Cancel" to review your changes.'
+        );
+        
+        if (confirmed) {
+            // User clicked OK - submit the form
+            document.getElementById('amendmentForm').submit();
+            return true;
+        } else {
+            // User clicked Cancel - stay on the page
+            return false;
+        }
     }
     </script>
     @endsection
