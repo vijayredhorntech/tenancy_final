@@ -92,7 +92,23 @@
 
 
                           </div>
-                          <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4" >
+
+                          <!-- Self/Family Selection Checkboxes -->
+                          <div class="flex gap-4 mt-5 w-full" id="applicantTypeSection">
+                              <label class="flex items-center gap-2 cursor-pointer">
+                                  <input type="checkbox" id="selfCheckbox" name="applicant_type[]" value="self" class="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary" checked>
+                                  <span class="font-semibold text-gray-800 text-sm">Self</span>
+                              </label>
+                              <label class="flex items-center gap-2 cursor-pointer">
+                                  <input type="checkbox" id="familyCheckbox" name="applicant_type[]" value="family" class="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary">
+                                  <span class="font-semibold text-gray-800 text-sm">Family Members</span>
+                              </label>
+                          </div>
+
+                          <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4" id="selfDetailsSection">
+                              <div class="flex justify-between items-center mb-3">
+                                  <span class="font-semibold text-gray-800">Self Details</span>
+                              </div>
                               <div class="w-full grid lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-4 grid-cols-1 gap-1">
                                   <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Last Name</label>
@@ -122,10 +138,15 @@
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Date of Entry</label>
                                       <input type="date" name="dateofentry" max="9999-12-31" value="{{$entryDate}}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                   </div>
-                                  <div class=" w-full flex flex-col items-end lg:cols-span-6 md:col-span-6 sm:col-span-4 col-span-1 " >
-                                      <button type="button" id="addMoreBtn" max="9999-12-31" class="px-2 py-0.5 text-xs font-semibold rounded-sm  border-[1px] border-success text-success bg-success/10 hover:bg-success hover:text-white transition ease-in duration-2000">Add More</button>
-                                  </div>
                               </div>
+                          </div>
+
+                          <!-- Family Members Container -->
+                          <div id="familyMembersContainer" style="display: none;"></div>
+
+                          <!-- Add More Button for Additional Passengers -->
+                          <div class="flex justify-end mt-3" id="addMoreBtnContainer">
+                              <button type="button" id="addMoreBtn" class="px-3 py-1.5 text-sm font-semibold rounded-sm border-[1px] border-success text-success bg-success/10 hover:bg-success hover:text-white transition ease-in duration-200">Add More Passenger</button>
                           </div>
 
 
@@ -558,6 +579,103 @@ $("#existingUserBtn").on("click", function () {
     // Reset address fields for new user
     function resetFields() {
         $("#address, #city, #state, #country, #zip_code").val("");
+    }
+
+    // Store client ID for family member loading
+    var clientId = "{{ $clientInformation?->visaBooking?->clientDetailsFromUserDB?->id ?? '' }}";
+
+    // Handle Self checkbox
+    $("#selfCheckbox").on("change", function() {
+        if ($(this).is(":checked")) {
+            $("#selfDetailsSection").show();
+        } else {
+            $("#selfDetailsSection").hide();
+        }
+    });
+
+    // Handle Family checkbox
+    $("#familyCheckbox").on("change", function() {
+        if ($(this).is(":checked")) {
+            if (clientId) {
+                loadFamilyMembers(clientId);
+            } else {
+                alert("Client ID not found.");
+                $(this).prop("checked", false);
+            }
+        } else {
+            $("#familyMembersContainer").hide().empty();
+        }
+    });
+
+    // Load family members via AJAX
+    function loadFamilyMembers(clientId) {
+        $.ajax({
+            url: "{{ url('/agencies/get-family-members') }}/" + clientId,
+            type: "GET",
+            success: function(response) {
+                if (response.success && response.family_members.length > 0) {
+                    $("#familyMembersContainer").empty().show();
+                    
+                    response.family_members.forEach(function(member, index) {
+                        createFamilyMemberCard(member, index);
+                    });
+                } else {
+                    $("#familyMembersContainer").hide();
+                    alert("No family members found for this client.");
+                    $("#familyCheckbox").prop("checked", false);
+                }
+            },
+            error: function(xhr) {
+                console.error("Error loading family members:", xhr);
+                alert("Failed to load family members. Please try again.");
+                $("#familyCheckbox").prop("checked", false);
+            }
+        });
+    }
+
+    // Create family member card
+    function createFamilyMemberCard(member, index) {
+        let cardHtml = `
+            <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="font-semibold text-gray-800">Family Member ${index + 1}: ${member.first_name} ${member.last_name} (${member.relationship})</span>
+                </div>
+                <div class="w-full grid lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-4 grid-cols-1 gap-1">
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">First Name</label>
+                        <input type="text" name="family_passengerfirstname[]" value="${member.first_name || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">Last Name</label>
+                        <input type="text" name="family_passengerlastname[]" value="${member.last_name || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">Passport Number</label>
+                        <input type="text" name="family_passengerpassportn[]" value="${member.passport_number || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">Issue Date</label>
+                        <input type="date" name="family_passportissuedate[]" value="${member.passport_issue_date || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">Expiry Date</label>
+                        <input type="date" name="family_passportexpiredate[]" value="${member.passport_expiry_date || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                    <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">Place of Issue</label>
+                        <input type="text" name="family_passengerplace[]" value="${member.nationality || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        $("#familyMembersContainer").append(cardHtml);
     }
     </script>
     @endsection

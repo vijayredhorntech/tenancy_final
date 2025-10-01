@@ -37,6 +37,7 @@ use App\Models\TermsCondition;
 
 use App\Models\ClientInfoForCountry;
 use App\Models\RequestApplication;
+use App\Models\FamilyMember;
 
 
 
@@ -1320,6 +1321,60 @@ public function hsClientSubmitApplication(Request $request)
     } catch (\Exception $e) {
         return response()->json([
             'error' => 'Failed to submit application: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Get family members for a specific client
+ */
+public function hsGetClientFamilyMembers($clientId)
+{
+    try {
+        $agency = $this->agencyService->getAgencyData();
+        
+        if (!$agency) {
+            return response()->json(['error' => 'Agency not found'], 404);
+        }
+
+        // Get client details to verify ownership
+        $client = ClientDetails::on('user_database')
+            ->where('id', $clientId)
+            ->where('agency_id', $agency->id)
+            ->first();
+
+        if (!$client) {
+            return response()->json(['error' => 'Client not found'], 404);
+        }
+
+        // Get family members
+        $familyMembers = FamilyMember::on('user_database')
+            ->where('client_id', $clientId)
+            ->get()
+            ->map(function ($member) {
+                return [
+                    'id' => $member->id,
+                    'first_name' => $member->first_name,
+                    'last_name' => $member->last_name,
+                    'relationship' => $member->relationship,
+                    'date_of_birth' => $member->date_of_birth ? $member->date_of_birth->format('Y-m-d') : null,
+                    'nationality' => $member->nationality,
+                    'passport_number' => $member->passport_number,
+                    'passport_issue_date' => $member->passport_issue_date ? $member->passport_issue_date->format('Y-m-d') : null,
+                    'passport_expiry_date' => $member->passport_expiry_date ? $member->passport_expiry_date->format('Y-m-d') : null,
+                    'email_address' => $member->email_address,
+                    'phone_number' => $member->phone_number,
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'family_members' => $familyMembers
+        ]);
+
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Failed to fetch family members: ' . $e->getMessage()
         ], 500);
     }
 }

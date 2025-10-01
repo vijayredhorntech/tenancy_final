@@ -200,6 +200,7 @@ Route::group([
         Route::post('/sendemail','hsSendEmail')->name('sendclintemail');
         Route::get('/sendadmin/{id}', 'hsSendAdmin')->name('visa.sendtoadmin');
         Route::get('/deleteapplication/{id}', 'hsDeleteApllication')->name('delete.application');
+        Route::get('/get-family-members/{clientId}', 'hsGetClientFamilyMembers')->name('get.family.members');
         
       });
 

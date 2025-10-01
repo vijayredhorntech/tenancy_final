@@ -656,7 +656,7 @@ public function saveBooking(array $data)
     $booking->application_number = $application;
     $booking->save();
 
-        // Save passenger details
+        // Save passenger details (additional passengers)
         if (isset($data['passengerfirstname'])) {
             foreach ($data['passengerfirstname'] as $index => $firstname) {
                 $authapplication = new AuthervisaApplication();
@@ -671,7 +671,24 @@ public function saveBooking(array $data)
                 $authapplication->place_of_issue = $data['passengerplace'][$index];
                 $authapplication->save();
             }
-    }
+        }
+
+        // Save family member details
+        if (isset($data['family_passengerfirstname'])) {
+            foreach ($data['family_passengerfirstname'] as $index => $firstname) {
+                $authapplication = new AuthervisaApplication();
+                $authapplication->setConnection('user_database');
+                $authapplication->booking_id = $booking->id;
+                $authapplication->clint_id = $data['clientId'];
+                $authapplication->name = $firstname;
+                $authapplication->lastname = $data['family_passengerlastname'][$index];
+                $authapplication->passport_number = $data['family_passengerpassportn'][$index];
+                $authapplication->passport_issue_date = $data['family_passportissuedate'][$index];
+                $authapplication->passport_expire_date = $data['family_passportexpiredate'][$index];
+                $authapplication->place_of_issue = $data['family_passengerplace'][$index];
+                $authapplication->save();
+            }
+        }
 
     return $booking;
 }
@@ -737,7 +754,7 @@ public function updateBooking(array $data)
     $booking->application_number = $application;
     $booking->save();
 
-        // Save passenger details
+        // Save passenger details (additional passengers)
         if (isset($data['passengerfirstname'])) {
             foreach ($data['passengerfirstname'] as $index => $firstname) {
                 $authapplication = new AuthervisaApplication();
@@ -752,7 +769,24 @@ public function updateBooking(array $data)
                 $authapplication->place_of_issue = $data['passengerplace'][$index];
                 $authapplication->save();
             }
-    }
+        }
+
+        // Save family member details
+        if (isset($data['family_passengerfirstname'])) {
+            foreach ($data['family_passengerfirstname'] as $index => $firstname) {
+                $authapplication = new AuthervisaApplication();
+                $authapplication->setConnection('user_database');
+                $authapplication->booking_id = $booking->id;
+                $authapplication->clint_id = $data['clientId'];
+                $authapplication->name = $firstname;
+                $authapplication->lastname = $data['family_passengerlastname'][$index];
+                $authapplication->passport_number = $data['family_passengerpassportn'][$index];
+                $authapplication->passport_issue_date = $data['family_passportissuedate'][$index];
+                $authapplication->passport_expire_date = $data['family_passportexpiredate'][$index];
+                $authapplication->place_of_issue = $data['family_passengerplace'][$index];
+                $authapplication->save();
+            }
+        }
 
     return $booking;
 }
