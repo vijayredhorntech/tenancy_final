@@ -20,7 +20,7 @@
               <div class="2xl:w-3/4 xl:w-3/4 lg:w-3/4 md:w-full sm:w-full w-full bg-white shadow-lg shadow-black/10 rounded-md p-4">
                       <span class="text-lg text-secondary font-semibold">Visa Details</span>
                     
-                  <form action="{{ route('visa.amendment.book', ['type' => 'agencies']) }}" method="POST" enctype="multipart/form-data" class="mt-4">
+                  <form action="" method="POST" enctype="multipart/form-data" class="mt-4">
                             @csrf
 
                           <div class="flex flex-col">

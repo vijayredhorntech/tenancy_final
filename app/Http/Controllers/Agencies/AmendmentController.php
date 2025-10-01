@@ -132,12 +132,13 @@ public function hsamendmentVisaApplication(Request $request)
     // Proceed to book visa
     $booking = $this->visaRepository->updateBooking($request->all());
 
+
     if (!$booking) {
         return redirect()->back()->with('error', 'Visa booking failed. Please try again.');
     }
 
     return redirect()
-    ->route('visa.amendment.verifyapplication', ['type' => 'agencies', 'id' => $booking->id])
+    ->route('visa.amendment.verifyapplication', ['type' => 'agencies', 'id' => $booking->id ,'applicationid'=>$booking->application_number])
     ->with('success', 'Booking successful. Please verify your application.');
     // return redirect()
     //     ->route('verify.application', ['id' => $booking->id])
@@ -164,17 +165,27 @@ public function hsamendmentVisaApplication(Request $request)
    
  }
 
- public function hsShowVerifyApplication($type,$id){
+ public function hsShowVerifyApplication($type,$id,$applicationid){
 
     
         $agency = $this->agencyService->getAgencyData();
-        $applicationData=$this->checkValidation($id);
+        $applicationData=$this->checkValidation($applicationid);
+
         $clientInformation=$this->agencyService->getClientinfoById($applicationData->deduction) ;
-        $otherMembers = AuthervisaApplication::on('user_database')
-        ->where('clint_id', $clientInformation->id)
-        ->where('booking_id', $applicationData->id)
-        ->get();
-        return view('agencies.pages.amendment.visa-verify-application',compact('applicationData','clientInformation','otherMembers'));
+          $checkuser = $this->visaRepository->bookingDataById($id);
+
+        if (isset($checkuser) && $checkuser->agency_id == $agency->id) {
+            $clientData = $this->visaRepository->bookingDataById($id);
+           
+            // $checkBalance = $this->visaRepository->checkBalance($agency->id,$clientData->id);
+            $checkBalance=$this->visaRepository->checkBalance($agency->id,$clientData->total_amount);
+            // dd($checkBalance);
+               $clientData = $this->visaRepository->bookingDataById($applicationData->id);
+
+
+        return view('agencies.pages.amendment.visa-fourth-step',compact('applicationData','clientInformation','clientData','checkBalance'));
+        }
+     
 
 }
 }
