@@ -211,15 +211,17 @@ public function getClientinfo($invoices){
 
     
     public function getClientinfoById($invoice){
+      
         // dd("heelo");
      if ($invoice->agency && $invoice->visaBooking) {
             $this->setConnectionByDatabase($invoice->agency->database_name);
             $clientId = $invoice->visaBooking->client_id;
             $bookingId = $invoice->visaBooking->id;
             // Fetch related data from the user's database
-            $clientFromUserDB = ClientDetails::on('user_database')
-                ->with('clientinfo')
-                ->find($clientId);
+           $clientFromUserDB = ClientDetails::on('user_database')
+                ->with('clientinfo','familyMembers')
+                ->find($clientId); 
+            
             $otherMembers = AuthervisaApplication::on('user_database')
                 ->where('clint_id', $clientId)
                 ->where('booking_id', $bookingId)

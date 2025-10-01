@@ -1116,7 +1116,7 @@ public function hsCanceledInvoice(Request $request, $type)
             $countries = Country::all();
             $services = Service::whereIn('id', [1, 2, 3])->get();  
     
-
+    
         // Step 5: Render view if type matches
         if ($type === 'agencies') {
             return view('agencies.pages.invoicehandling.invoiceindex', [

@@ -417,57 +417,17 @@
                                 </a>
                                 @else
                                 <div class="flex gap-2 items-center">
-                                    @if($booking->applicationworkin_status == "Complete")              
-                                     
-                                    @else
-                                      {{--  <a href="{{ route('visaedit.application', ['id' => $booking->id]) }}" title="Remind for funds">
-                                            <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
-                                                <i class="fa fa-pencil"></i>
-                                            </div>
-                                        </a>
-
-                                        <a href="{{ route('visasendemail.application', ['id' => $booking->id]) }}" title="Remind for funds">
-                                            <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
-                                                <i class="fa fa-envelope"></i>
-                                            </div>
-                                        </a>
-
-                                        <a href="{{route('agencychat.client',['id' => $booking->client_id])}}" title="Edit">
-                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fas fa-comment-dots"></i>
-                                        </div>
-                                      </a>--}}
-                                    @endif
-
-                                    {{-- <a href="{{ route('visa.assign', ['id' => $booking->id]) }}" title="Assign to Visa Request">
-                                        <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
-                                            <i class="fa fa-clipboard-check"></i> 
-                                        </div>
-                                    </a> --}}
+                               
+                             
 
                                     <div class="action-dropdown">
                                         <a href="{{ route('visa.applicationview', ['id' => $booking->id]) }}" class="primary-action" title="View Application">
                                             <i class="fa fa-eye text-sm"></i>
          	                                <span>View Application</span>
                                         </a>
-                                        <button type="button" class="dropdown-toggle" aria-label="More application actions" data-dropdown-id="dropdown-{{ $booking->id }}">
-                                            <i class="fa fa-chevron-down text-xs"></i>
-                                        </button>
-                                        <div class="action-dropdown-menu" id="dropdown-{{ $booking->id }}">
-                                            <a href="{{ route('Visa', ['booking' => $booking->id, 'client' => $booking->client_id ?? $booking->clint->id ?? null]) }}" class="dropdown-item amendment-item" title="Amendment">
-                                                <i class="fa fa-edit text-sm"></i>
-                                                <span>Amendment</span>
-                                            </a>
-                                        </div>
+                                           </div>
                                     </div>
 
-                                    @if($booking->sendtoadmin == 0 || $booking->sendtoadmin == 2)  
-                                        <!-- <a href="{{ route('visa.sendtoadmin', ['id' => $booking->id]) }}" title="Send to Admin" onclick="return confirm('Are you sure you want to send this application to admin?');">
-                                            <div class="bg-blue-100 text-blue-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200">
-                                                <i class="fa fa-paper-plane"></i> 
-                                            </div>
-                                        </a> -->
-                                    @endif
                                     @endif
 
                                 </div>

@@ -44,6 +44,9 @@ interface VisaRepositoryInterface
     public function updateVisaAssignment(array $data, int $id);
     public function visadocumentstore($data);
     public function createApplicationLog($booking,$newData);
+    public function getBookingByApplicationNumber($applicationNumber);
+
+    
 
  
    

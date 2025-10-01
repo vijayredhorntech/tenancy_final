@@ -734,10 +734,10 @@ public function airport($input){
  public function him_visa(Request $request){
   
     $countries=Country::get();
-    $amendmentBooking = $request->query('booking');
-    $amendmentClient = $request->query('client');
+    $applicationData = $request->query('booking');
+     $formAction  = route('searchvisa');
 
-    return view('superadmin.pages.visa.searchvisa',compact('countries','amendmentBooking','amendmentClient'));
+    return view('superadmin.pages.visa.searchvisa',compact('countries','applicationData','formAction'));
  }
 
 

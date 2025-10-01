@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Middleware\LogUserActivity;
 use App\Http\Controllers\SuperAdmin\HotelSettingsController;
 use App\Http\Controllers\SuperAdmin\SupplierController;
+use App\Http\Controllers\Agencies\AmendmentController;
 
 
 /******Controler for agencies ***** */
@@ -123,6 +124,8 @@ Route::group([
             Route::get('/requestfundapply','hsrequestFundApply')->name('agency.requestfund');
             Route::post('/fundappystore','hsFundApplyStore')->name('agencies.fund.request');
       });
+
+
     // Staff Management
       Route::controller(AgencyadminController::class)->group(function () {
          Route::get('/staffindex', 'hs_staffindex')->name('agency.staff');
@@ -144,6 +147,7 @@ Route::group([
 
       });
 
+
       /****Leave Manangment *** */
       Route::controller(LeaveManagementController::class)->group(function () {
         Route::get('{type?}/addleave','hs_addleave')->name('add.agency.leave');
@@ -164,6 +168,10 @@ Route::group([
 
         
       });
+
+ 
+
+
 
 
     // Visa
@@ -355,7 +363,29 @@ Route::controller(ClientLoginController::class)->group(function () {
                           
           });
 
- 
+
+      Route::controller(AmendmentController::class)->group(function () {
+
+        Route::get('{type}/amendment','hsamendmentVisaApplication')->name('amendment.visa.application');
+        Route::post('{type}/visa/result/','hsviewSearchvisa')->name('amendment.visa.searchresult');
+        Route::get('{type}/amendment/result/{id?}/{applicationid?}','hsviewAmendmentSearchvisa')->name('amendment.visa.selectvisa'); 
+        Route::post('{type}/amendment/visaamendment','hsVisaAmendmentBook')->name('visa.amendment.book'); 
+
+       Route::get('{type}/amendment/verify-application/{id}', 'hsShowVerifyApplication')
+           ->name('visa.amendment.verifyapplication');
+
+
+
+
+         Route::get('{type}/amendment/subamendment/other/{id}/{applicationid?}', 'hsRemoveOtherApplication')->name('removeotherapplication');
+
+
+
+
+
+
+
+      }); 
           
 
 

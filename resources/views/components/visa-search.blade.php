@@ -2,46 +2,53 @@
 @props([
     'countries',
     'amendmentBooking' => null,
-    'amendmentClient' => null,
+    'urlmethod'=>null
 ])
+
+@php
+$origin = $amendmentBooking?->origin?->id ?? null;
+$destinationcountry = $amendmentBooking?->destination?->id ?? null;
+$formAction = $urlmethod ?? route('searchvisa');
+@endphp
 
                                 <div class="w-full  p-4 flex flex-col gap-2 mx-auto">
                                     <span class=" text-secondary font-semibold lg:text-2xl md:text-2xl sm:text-xl text-lg">Travel Visa Requirements</span>
                                     <p class="lg:text-sm">Sometimes a journey of a thousand miles begins with a visa. Check your destination and apply online for any visa in the world.</p>
                                 </div>
                                 <div class="w-full border-b-[1px] border-b-secondary"></div>
-                                    <form action="{{ route('searchvisa') }}" method="POST" enctype="multipart/form-data">
+                                    {{-- <form action="{{ route('searchvisa') }}" method="POST" enctype="multipart/form-data"> --}}
+                                    <form action="{{ $formAction }}" method="POST" enctype="multipart/form-data">
                                                 @csrf
-                                                @if($amendmentBooking)
-                                                    <input type="hidden" name="amendment_booking" value="{{ $amendmentBooking }}">
+                                  
+                                                @if(isset($amendmentBooking))
+                                                  <input type="hidden" name="invoiceNumber" value="{{$amendmentBooking->application_number }}">
                                                 @endif
-                                                @if($amendmentClient)
-                                                    <input type="hidden" name="amendment_client" value="{{ $amendmentClient }}">
-                                                @endif
-                                                {{--add this div if there are 4 inputs--}}
                                                 <div class=" grid grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 p-4">
 
-                                                {{--add this div if there are 2 inputs--}}
-                                                {{-- <div class=" grid grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-2 grid-cols-1 gap-2 p-4">--}}
                                                 <div class="w-full flex flex-col gap-1">
                                                     <label for="leavingFrom" class="text-ternary font-bold text-sm">Visa From</label>
                                                     <div class="w-full relative">
-                                                    <select name="origincountry" id="origincountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                                        {{-- <select name="origincountry" id="origincountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                                             <option value="">---Select Country---</option>
                                                             @forelse($countries as $country)
                                                                 <option value="{{ $country->id }}">{{ $country->countryName }}</option>
                                                             @empty
                                                                 <option value="">No record found</option>
                                                             @endforelse
-                                                        </select>
-                                                        <!-- <select name="origincountry" id="origincountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
-                                                            <option value="">---Select Country---</option>
-                                                            @forelse($countries as $country)
-                                                                <option value="{{$country->id}}">{{$country->countryName}}</option>
-                                                            @empty
-                                                                <option value="">No record found</option>
-                                                            @endforelse
-                                                        </select> -->
+                                                        </select> --}}
+                                                        <select name="origincountry" id="origincountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                                                <option value="">---Select Country---</option>
+                                                                @forelse($countries as $country)
+                                                                    <option value="{{ $country->id }}" 
+                                                                        {{ $origin == $country->id ? 'selected' : '' }}>
+                                                                        {{ $country->countryName }}
+                                                                    </option>
+                                                                @empty
+                                                                    <option value="">No record found</option>
+                                                                @endforelse
+                                                            </select>
+
+                                                     
                                                         <i class="fa fa-location-dot text-secondary absolute left-3 text-xl top-[60%] translate-y-[-60%]"></i>
                                                         <i class="fa-solid fa-chevron-down text-black absolute right-3 text-xl top-[60%] translate-y-[-60%]"></i>
                                                     </div>
@@ -50,22 +57,19 @@
                                                     <div class="w-full flex flex-col gap-1">
                                                         <label for="arriveTo" class="text-ternary font-bold text-sm">Visa To</label>
                                                         <div class="w-full relative">
-                                                            <!-- <select name="destinationcountry" id="destinationcountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                               
+                                                         <select name="destinationcountry" id="destinationcountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                                                 <option value="">---Select Country---</option>
                                                                 @forelse($countries as $country)
-                                                                    <option value="{{$country->id}}">{{$country->countryName}}</option>
+                                                                    <option value="{{ $country->id }}" 
+                                                                        {{ $destinationcountry == $country->id ? 'selected' : '' }}>
+                                                                        {{ $country->countryName }}
+                                                                    </option>
                                                                 @empty
                                                                     <option value="">No record found</option>
                                                                 @endforelse
-                                                            </select> -->
-                                                            <select name="destinationcountry" id="destinationcountry" class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
-                                                            <option value="">---Select Country---</option>
-                                                            @forelse($countries as $country)
-                                                                <option value="{{ $country->id }}">{{ $country->countryName }}</option>
-                                                            @empty
-                                                                <option value="">No record found</option>
-                                                            @endforelse
-                                                        </select>
+                                                            </select>
+
                                                     
 
                                                             <i class="fa fa-location-dot text-secondary absolute left-3 text-xl top-[60%] translate-y-[-60%]"></i>
