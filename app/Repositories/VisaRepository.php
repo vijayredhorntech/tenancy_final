@@ -13,6 +13,8 @@ use App\Models\Balance;
 use App\Models\Agency;
 use App\Models\User;
 use App\Models\Invoice;
+use App\Models\AmendmentHistory;
+
 
 use App\Models\AuthervisaApplication;
 use Illuminate\Support\Facades\DB;
@@ -697,6 +699,8 @@ public function updateBooking(array $data)
 {
    
     // Get country codes
+
+
     // dd($data);
     $getCode = $this->getCountryCode($data['origin'], $data['destination']);
     $originCode = $getCode['origin_code'];
@@ -732,13 +736,40 @@ public function updateBooking(array $data)
         // Save booking first (with temporary application number)
         
     $booking =VisaBooking::where('application_number', $data['applicationnumber'])->firstOrFail();
+    /***Hisotry create  */
+        AmendmentHistory::create([
+        'origin_id'          => $booking->origin_id,
+        'destination_id'     => $booking->destination_id,
+        'visa_id'            => $booking->visa_id,
+        'subtype_id'         => $booking->subtype_id,
+        'agency_id'          => $booking->agency_id,
+        'user_id'            => $booking->user_id,
+        'application_id'         => $booking->id, // ✅ new field
+        'booking_id'         => $booking->id, // ✅ new field
+        'visa_type'          => $data['typeof'] ?? null, // if you store visa_type
+        'application_number' => $booking->application_number,
+        'total_price'        => $booking->total_amount,
+        'dateofentry'        => $booking->dateofentry,
+    ]);
     // dd($booking);
+       if ($booking->visaDocSign) {
+            $booking->visaDocSign->forceDelete();  // deletes permanently
+        }
+
 
     $booking->origin_id = $data['origin'];
     $booking->destination_id = $data['destination'];
     $booking->visa_id = $data['typeof'];
     $booking->subtype_id = $data['category'];
+    
     $booking->agency_id = $agency->id;
+    $booking->application_status = 'Pending';
+    $booking->applicationworkin_status = 'Pending';
+    $booking->document_status = 'Pending';
+    $booking->confirm_application = 0;
+
+    
+    
     $booking->user_id = $mainDbUserId; // Use agency's owner user ID from main database
     $booking->client_id = $data['clientId'];
     $booking->total_amount = $totalAmount;

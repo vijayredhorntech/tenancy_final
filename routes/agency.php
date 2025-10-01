@@ -372,7 +372,7 @@ Route::controller(ClientLoginController::class)->group(function () {
         Route::get('{type}/amendment/result/{id?}/{applicationid?}','hsviewAmendmentSearchvisa')->name('amendment.visa.selectvisa'); 
         Route::post('{type}/amendment/visaamendment','hsVisaAmendmentBook')->name('visa.amendment.book'); 
 
-       Route::get('{type}/amendment/verify-application/{id}', 'hsShowVerifyApplication')
+       Route::get('{type}/amendment/verify-application/{id}/{applicationid?}', 'hsShowVerifyApplication')
            ->name('visa.amendment.verifyapplication');
 
 
