@@ -212,6 +212,7 @@ Route::group([
 
         Route::get('/client/{familyMember}/family-member/view','hsViewFamilyMember')->name('agency.family-member.view');
         Route::get('/client/{familyMember}/family-member/edit','hsEditFamilyMember')->name('agency.family-member.edit');
+        Route::delete('/family-member/{id}/delete','hs_deleteFamilyMember')->name('agency.family-member.delete');
 
 
         /*****History**** */

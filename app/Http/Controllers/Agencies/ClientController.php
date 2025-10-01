@@ -220,30 +220,35 @@ public function hs_agencyUpdateClient(Request $request, $id)
                 'agency_id' => 'required|integer',
                 'first_name' => 'required|string|max:255',
                 'last_name' => 'required|string|max:255',
+                'nationality' => 'required|string|max:255',
+                'phone_number' => 'required|string|max:20',
+                'permanent_address' => 'required|string|max:500',
+                'city' => 'required|string|max:100',
+                'country' => 'required|string|max:100',
+                // Optional fields
                 'previous_name' => 'nullable|string|max:255',
-                'gender' => 'required|in:MALE,FEMALE,OTHER',
-                'marital_status' => 'required|in:single,married,divorced,widowed',
+                'gender' => 'nullable|in:MALE,FEMALE,OTHER',
+                'marital_status' => 'nullable|in:single,married,divorced,widowed',
                 'religion' => 'nullable|string|max:255',
-                'date_of_birth' => 'required|date|before:today',
+                'date_of_birth' => 'nullable|date|before:today',
                 'place_of_birth' => 'nullable|string|max:255',
                 'country_of_birth' => 'nullable|string|max:255',
-                'nationality' => 'required|string|max:255',
                 'past_nationality' => 'nullable|string|max:255',
                 'educational_qualification' => 'nullable|string|max:255',
                 'identification_marks' => 'nullable|string|max:255',
-                'email' => 'required|email|max:255',
-                'phone_number' => 'required|string|max:20',
+                'email' => 'nullable|email|max:255',
                 'citizenship_id' => 'nullable|string|max:255',
                 'zip_code' => 'nullable|string|max:20',
-                'permanent_address' => 'required|string|max:255',
                 'street' => 'nullable|string|max:255',
-                'city' => 'nullable|string|max:255',
-                'country' => 'required|string|max:255',
+                'passport_no' => 'nullable|string|max:255',
                 'passport_country' => 'nullable|string|max:255',
                 'passport_issue_place' => 'nullable|string|max:255',
-                'passport_ic_number' => 'required|numeric',
-                'passport_issue_date' => 'required|date|before_or_equal:today',
-                'passport_expiry_date' => 'required|date|after:passport_issue_date',
+                'passport_ic_number' => 'nullable|numeric',
+                'passport_issue_date' => 'nullable|date|before_or_equal:today',
+                'passport_expiry_date' => 'nullable|date',
+                'date_of_issue' => 'nullable|date',
+                'date_of_expire' => 'nullable|date',
+                'place_of_issue' => 'nullable|string|max:255',
                 'cities_visited' => 'nullable|string|max:500',
                 'previous_visa_number' => 'nullable|string|max:50',
                 'previous_visa_place' => 'nullable|string|max:255',
@@ -262,10 +267,20 @@ public function hs_agencyUpdateClient(Request $request, $id)
                 'military_designation' => 'nullable|string|max:255',
                 'military_rank' => 'nullable|string|max:255',
                 'military_posting_place' => 'nullable|string|max:255',
+                // Family member validation
+                'family_member_ids.*' => 'nullable|integer',
+                'family_first_name.*' => 'nullable|string|max:255',
+                'family_last_name.*' => 'nullable|string|max:255',
+                'family_relationship.*' => 'nullable|in:spouse,child,parent,sibling,other',
+                'family_date_of_birth.*' => 'nullable|date',
+                'family_nationality.*' => 'nullable|string|max:255',
+                'family_passport_number.*' => 'nullable|string|max:255',
+                'family_email.*' => 'nullable|email|max:255',
+                'family_phone.*' => 'nullable|string|max:20',
             ]);
                 
                 $clients = $this->clintRepository->updateStoreclint($request->clint_id,$request->all());
-                return redirect()->route('client.index')->with('success', 'Client added successfully.');
+                return redirect()->route('client.index')->with('success', 'Client updated successfully.');
                 
             }
             return redirect()->route("client.index");
@@ -286,6 +301,60 @@ public function hs_agencyUpdateClient(Request $request, $id)
     
         $client->delete();
         return redirect()->route('client.index')->with('success', 'Client deleted successfully.');
+    }
+
+    /****Delete Family Member***** */
+    public function hs_deleteFamilyMember($id)
+    {
+        try {
+            $agency = $this->agencyService->getAgencyData();
+            
+            // Find family member in user_database
+            $familyMember = FamilyMember::on('user_database')->find($id);
+            
+            if (!$familyMember) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Family member not found'
+                ], 404);
+            }
+            
+            // Get the client to verify agency ownership
+            $client = ClientDetails::on('user_database')->find($familyMember->client_id);
+            
+            if (!$client || $client->agency_id !== $agency->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized access'
+                ], 403);
+            }
+            
+            // Delete from user_database
+            $familyMember->delete();
+            
+            // Also delete from default database if exists
+            $defaultFamilyMember = FamilyMember::on('mysql')
+                ->where('client_id', $client->id)
+                ->where('first_name', $familyMember->first_name)
+                ->where('last_name', $familyMember->last_name)
+                ->first();
+            
+            if ($defaultFamilyMember) {
+                $defaultFamilyMember->delete();
+            }
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Family member deleted successfully'
+            ]);
+            
+        } catch (\Exception $e) {
+            \Log::error('Error deleting family member: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while deleting the family member'
+            ], 500);
+        }
     }
 
 

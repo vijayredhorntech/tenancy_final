@@ -78,7 +78,6 @@
     .action-dropdown .dropdown-toggle {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
         padding: 0.4rem 0.55rem;
         border: none;
         background-color: transparent;
@@ -97,14 +96,15 @@
     .action-dropdown-menu {
         display: none;
         position: absolute;
-        right: 0;
+        left: 0;
         top: calc(100% + 0.3rem);
         padding: 0;
         background-color: transparent;
         border: none;
         min-width: 11rem;
+        width: 100%;
         box-shadow: none;
-        z-index: 40;
+        z-index: 999;
         flex-direction: column;
     }
 
@@ -133,7 +133,6 @@
         background-color: #6b21a8;
         color: #ffffff;
         border-radius: 0.375rem;
-        justify-content: center;
         border: 1px solid #581c87;
     }
 

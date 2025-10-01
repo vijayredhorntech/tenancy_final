@@ -13,6 +13,26 @@
             </div>
             {{-- === heading section code ends here===--}}
 
+            {{-- Display Validation Errors --}}
+            @if ($errors->any())
+                <div class="mx-4 mt-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Validation Error!</strong>
+                    <ul class="mt-2 list-disc list-inside">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            {{-- Display Success Message --}}
+            @if (session('success'))
+                <div class="mx-4 mt-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                    <strong class="font-bold">Success!</strong>
+                    <span class="block sm:inline">{{ session('success') }}</span>
+                </div>
+            @endif
+
             {{-- === Form Section === --}}
             <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 p-4">
 
@@ -244,10 +264,14 @@
                             </div>
 
                         <div class="w-full flex justify-between px-4 pb-4 gap-2 mt-8">
-                         <a href="{{ route('client.index', $client->id) }}" 
-   class="text-sm bg-success/30 px-4 py-1 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-200">
-   <i class="fa fa-check ml-1"></i> Edit Client Details
-</a>
+                            <a href="{{ route('client.index') }}" 
+                                class="text-sm bg-gray-300 px-4 py-2 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-gray-400 text-ternary hover:text-white hover:bg-gray-500 hover:border-gray-600 transition ease-in duration-200">
+                                <i class="fa fa-times mr-1"></i> Cancel
+                            </a>
+                            <button type="submit" 
+                                class="text-sm bg-success/30 px-4 py-2 rounded-[3px] rounded-tr-[8px] font-semibold border-[2px] border-success/90 text-ternary hover:text-white hover:bg-success hover:border-ternary/30 transition ease-in duration-200">
+                                <i class="fa fa-check mr-1"></i> Update Client Details
+                            </button>
                         </div>
 </div>
                     </div>

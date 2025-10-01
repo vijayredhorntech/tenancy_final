@@ -38,15 +38,24 @@
                         {{ $nationality ?: 'N/A' }}
                     </td>
                     <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
-                        @if ($viewRouteName && $viewId)
-                            <a href="{{ route($viewRouteName, $viewId) }}"
-                               class="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-semibold text-sm">
-                                <i class="fa fa-eye"></i>
-                                View
-                            </a>
-                        @else
-                            <span class="text-ternary/50">—</span>
-                        @endif
+                        <div class="relative inline-block text-left">
+                            <button type="button" onclick="toggleDropdown({{ $member->id }})" class="inline-flex items-center gap-2 px-3 py-1 bg-primary text-white rounded hover:bg-primary/80 font-semibold text-sm">
+                                <i class="fa fa-ellipsis-v"></i>
+                                Actions
+                            </button>
+                            <div id="dropdown-{{ $member->id }}" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                                <div class="py-1" role="menu">
+                                    @if ($viewRouteName && $viewId)
+                                        <a href="{{ route($viewRouteName, $viewId) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
+                                            <i class="fa fa-eye mr-2"></i>View
+                                        </a>
+                                    @endif
+                                    <button onclick="deleteFamilyMember({{ $member->id }}, '{{ $fullName }}')" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50" role="menuitem">
+                                        <i class="fa fa-trash mr-2"></i>Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             @empty
@@ -59,3 +68,54 @@
         </tbody>
     </table>
 </div>
+
+<script>
+    // Toggle dropdown menu
+    function toggleDropdown(memberId) {
+        const dropdown = document.getElementById(`dropdown-${memberId}`);
+        // Close all other dropdowns
+        document.querySelectorAll('[id^="dropdown-"]').forEach(el => {
+            if (el.id !== `dropdown-${memberId}`) {
+                el.classList.add('hidden');
+            }
+        });
+        // Toggle current dropdown
+        dropdown.classList.toggle('hidden');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('[onclick^="toggleDropdown"]')) {
+            document.querySelectorAll('[id^="dropdown-"]').forEach(el => {
+                el.classList.add('hidden');
+            });
+        }
+    });
+
+    // Delete family member
+    function deleteFamilyMember(memberId, memberName) {
+        if (confirm(`Are you sure you want to delete ${memberName}? This action cannot be undone.`)) {
+            // Send AJAX request to delete
+            fetch(`/agencies/family-member/${memberId}/delete`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Family member deleted successfully!');
+                    location.reload(); // Reload to update the list
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to delete family member'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the family member');
+            });
+        }
+    }
+</script>
