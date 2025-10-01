@@ -286,6 +286,16 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
                 ->get();
                 $data->setRelation('invoice',$invoices);
             }   
+            
+            // Load family members from user_database
+            if ($data) {
+                $familyMembers = FamilyMember::on('user_database')
+                    ->where('client_id', $id)
+                    ->orderBy('created_at')
+                    ->get();
+                $data->setRelation('familyMembers', $familyMembers);
+            }
+            
                 // $data=ClientDetails::on('user_database')->with('clientinfo','clientchats')->where('id',$id)->first();
                 return $data;
                 // dd($data); 
@@ -295,88 +305,58 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
       
         $user = $this->agencyService->getCurrentLoginUser();  
     
-        $client = ClientDetails::where('id',$id)->first();
-        $client->setConnection('user_database');
-
-        $client->client_name = ($data['first_name'] ?? '') . ' ' . ($data['last_name'] ?? '');
-        $client->agency_id = $data['agency_id'] ?? '' ;
-        $client->first_name = $data['first_name'] ?? '';
-        $client->last_name = $data['last_name'] ?? '';
-        $client->gender = $data['gender'] ?? '';
-        $client->marital_status = $data['marital_status'] ?? '';
-        $client->date_of_birth = $data['date_of_birth'] ?? '';
-        $client->phone_number  = $data['phone_number'] ?? '';
-        $client->email = $data['email'] ?? '';
-        $client->zip_code = $data['zip_code'] ?? '';
-        $client->address = $data['address'] ?? '';
-        $client->street = $data['street'] ?? '';
-        $client->city = $data['city'] ?? '';
-        $client->country = $data['country'] ?? '';
-        $client->permanent_address = $data['permanent_address'] ?? '';
-        $client->save();
-
-
-        $clientdetails = ClientMoreInfo::where('clientid',$id)->first();
-        $clientdetails->setConnection('user_database');
-
-        $clientdetails->previous_name = $data['previous_name'] ?? '';
-        $clientdetails->passport_issue_date = $data['passport_issue_date']?? '';
-        $clientdetails->religion = $data['religion'] ?? '';
-        $clientdetails->place_of_birth = $data['place_of_birth'] ?? '';
-        $clientdetails->country_of_birth = $data['country_of_birth'] ?? '';
-        $clientdetails->citizenship_id = $data['citizenship_id'] ?? '';
-        $clientdetails->identification_marks = $data['identification_marks'] ?? '';
-        $clientdetails->arms_details = $data['arms_details'] ?? '';
-        $clientdetails->reference_address = $data['reference_address'] ?? '';
-
-        $clientdetails->educational_qualification = $data['educational_qualification'] ?? '';
-        $clientdetails->nationality = $data['nationality'] ?? '';
-        $clientdetails->past_nationality = $data['past_nationality'] ?? '';
-
-        $clientdetails->passport_country = $data['passport_country'] ?? '';
-        $clientdetails->passport_issue_place = $data['passport_issue_place'] ?? '';
-        $clientdetails->passport_ic_number = $data['passport_ic_number'] ?? '';
-        $clientdetails->passport_issue_date = $data['passport_issue_date'] ?? '';
-        $clientdetails->passport_expiry_date = $data['passport_expiry_date'] ?? '';
-
-        // Update passport fields in client_details table
-        $client->passport_ic_number = $data['passport_ic_number']
-            ?? $data['passport_no']
-            ?? $client->passport_ic_number;
-        $client->passport_issue_date = $data['passport_issue_date']
-            ?? $data['date_of_issue']
-            ?? $client->passport_issue_date;
-        $client->passport_expiry_date = $data['passport_expiry_date']
-            ?? $data['date_of_expire']
-            ?? $client->passport_expiry_date;
-        $client->passport_issue_place = $data['passport_issue_place']
-            ?? $data['place_of_issue']
-            ?? $client->passport_issue_place;
-        $client->save();
-        $clientdetails->passport_expiry_date = $data['passport_expiry_date'] ?? '';
-
-        $clientdetails->father_details = $data['father_name'] ?? '';
-        $clientdetails->mother_details = $data['mother_name'] ?? '';
-        $clientdetails->spouse_details = $data['spouse_name'] ?? '';
-        $clientdetails->children = $data['children']?? '';
-
-        $clientdetails->previous_visa_number = $data['previous_visa_number'] ?? '';
-        $clientdetails->previous_visa_place = $data['previous_visa_place'] ?? '';
-        $clientdetails->previous_visa_issue_date = $data['previous_visa_issue_date'] ?? '';
-        $clientdetails->cities_visited = $data['cities_visited'] ?? '';
-
+        $client = ClientDetails::on('user_database')->where('id',$id)->first();
         
-        $clientdetails->countries_visited_last_10_years = $data['countries_visited_last_10_years'] ?? '';
-        $clientdetails->countries_visited_last_12_months = $data['countries_visited_last_12_months'] ?? '';
-        $clientdetails->present_occupation = $data['present_occupation'] ?? '';
-        $clientdetails->present_occupation = $data['present_occupation'] ?? '';
-        $clientdetails->designation = $data['designation'] ?? '';
-        $clientdetails->employer_name = $data['employer_name'] ?? '';
-        $clientdetails->employer_address = $data['employer_address'] ?? '';
-        $clientdetails->employer_phone = $data['employer_phone'] ?? '';
-        $clientdetails->past_occupation = $data['past_occupation'] ?? '';
-        $clientdetails->reference_name = $data['reference_name'] ?? '';
-        $clientdetails->reference_address = $data['reference_address'] ?? '';
+        if (!$client) {
+            throw new \Exception("Client not found with ID: {$id}");
+        }
+
+        // Update only fields that are provided in the form
+        $client->client_name = ($data['first_name'] ?? $client->first_name) . ' ' . ($data['last_name'] ?? $client->last_name);
+        
+        if (isset($data['agency_id'])) $client->agency_id = $data['agency_id'];
+        if (isset($data['first_name'])) $client->first_name = $data['first_name'];
+        if (isset($data['last_name'])) $client->last_name = $data['last_name'];
+        if (isset($data['gender'])) $client->gender = $data['gender'];
+        if (isset($data['marital_status'])) $client->marital_status = $data['marital_status'];
+        if (isset($data['date_of_birth'])) $client->date_of_birth = $data['date_of_birth'];
+        if (isset($data['phone_number'])) $client->phone_number = $data['phone_number'];
+        if (isset($data['email'])) $client->email = $data['email'];
+        if (isset($data['zip_code'])) $client->zip_code = $data['zip_code'];
+        if (isset($data['address'])) $client->address = $data['address'];
+        if (isset($data['street'])) $client->street = $data['street'];
+        if (isset($data['city'])) $client->city = $data['city'];
+        if (isset($data['country'])) $client->country = $data['country'];
+        if (isset($data['permanent_address'])) $client->permanent_address = $data['permanent_address'];
+        
+        // Update passport fields if provided
+        if (isset($data['passport_ic_number']) || isset($data['passport_no'])) {
+            $client->passport_ic_number = $data['passport_ic_number'] ?? $data['passport_no'] ?? $client->passport_ic_number;
+        }
+        if (isset($data['passport_issue_date']) || isset($data['date_of_issue'])) {
+            $client->passport_issue_date = $data['passport_issue_date'] ?? $data['date_of_issue'] ?? $client->passport_issue_date;
+        }
+        if (isset($data['passport_expiry_date']) || isset($data['date_of_expire'])) {
+            $client->passport_expiry_date = $data['passport_expiry_date'] ?? $data['date_of_expire'] ?? $client->passport_expiry_date;
+        }
+        if (isset($data['passport_issue_place']) || isset($data['place_of_issue'])) {
+            $client->passport_issue_place = $data['passport_issue_place'] ?? $data['place_of_issue'] ?? $client->passport_issue_place;
+        }
+        
+        $client->save();
+
+
+        $clientdetails = ClientMoreInfo::on('user_database')->where('clientid',$id)->first();
+        
+        if (!$clientdetails) {
+            // Create new ClientMoreInfo if it doesn't exist
+            $clientdetails = new ClientMoreInfo();
+            $clientdetails->setConnection('user_database');
+            $clientdetails->clientid = $id;
+        }
+
+        // Only update fields that exist in client_more_infos table
+        $clientdetails->nationality = $data['nationality'] ?? $clientdetails->nationality ?? '';
 
         // Sync family members across databases
         $this->processFamilyMembersData($data, $client->id, 'user_database');
