@@ -38,6 +38,7 @@ use App\Models\TermsCondition;
 use App\Models\ClientInfoForCountry;
 use App\Models\RequestApplication;
 use App\Models\FamilyMember;
+use App\Models\AmendmentHistory;
 
 
 
@@ -682,7 +683,11 @@ public function hsVisaBook(Request $request)
             $checkBalance=$this->visaRepository->checkBalance($agency->id,$clientData->total_amount);
      
             if($clientData->isamendment==1){
-              return view('agencies.pages.amendment.visa-fifth-step',compact('clientData','checkBalance'));
+                       $amendmentHistory = AmendmentHistory::where('application_id', $clientData->id)
+                ->where('agency_id', $agency->id)
+                ->latest()  // Orders by created_at (or updated_at if you specify)
+                ->first();
+              return view('agencies.pages.amendment.visa-fifth-step',compact('clientData','checkBalance','amendmentHistory'));
             }
             return view('superadmin.pages.visa.verifyapplication',compact('clientData','checkBalance'));
         }

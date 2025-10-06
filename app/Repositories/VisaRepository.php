@@ -896,6 +896,7 @@ public function payment($data)
        
         // ✅ Update existing deduction
         $deduction->amount += $totalAmount;
+        $deduction->invoicestatus = 'amendment';
         $deduction->updated_at = now();
     } else {
       
@@ -1402,21 +1403,38 @@ public function getBookingByid($id, $type, $request)
 
     public function updateClientBooking($id,$data){
     
+      $visabooking = VisaBooking::with('visasubtype', 'deduction', 'agency')
+                ->where('id', $id)
+                ->first();
 
-        $visabooking=VisaBooking::with('visasubtype','deduction','agency')->where('id',$id)->first(); 
-      
-        $price=$visabooking->visasubtype->price+$visabooking->visasubtype->commission;
-      
-        $visabooking->total_amount=$price;
+    if (!$visabooking) {
+        throw new \Exception("Visa booking not found.");
+    }
+
+    $clientInfo = $this->agencyService->getClientinfoVisaBookingById($visabooking);
+
+    $basePrice = $visabooking->visasubtype->price + $visabooking->visasubtype->commission;
+
+    if (isset($clientInfo->otherclients) && count($clientInfo->otherclients) > 0) {
+        $price = $basePrice * (count($clientInfo->otherclients) + 1); 
+        // +1 for the main client
+    } else {
+        $price = $basePrice;
+
+    }
+
+       $visabooking->total_amount = $price;
+       $visabooking->amount = $basePrice;
+
+       
         $visabooking->payment_status="Paid";
         $visabooking->confirm_application=1;
-        // $visabooking->isamendment=0;
         $visabooking->save(); 
 
-        $this->payment($visabooking);
-        $this->saveInvoice($visabooking);
+        $paymentInfo=$this->payment($visabooking);
+        $this->saveInvoice($visabooking,$paymentInfo);
 
-        $clientInfo = $this->agencyService->getClientinfoVisaBookingById($visabooking);
+
     
 
         if (isset($clientInfo->otherclients)) {
@@ -1487,9 +1505,11 @@ public function getBookingByid($id, $type, $request)
     }
     
 
-    public function saveInvoice($data){
+    public function saveInvoice($data ,$paymentInfo){
         
+               
                 $getClientData = $this->agencyService->getClientinfoVisaBookingById($data);
+               
                 $agency = $this->agencyService->getAgencyData();
                 
                $latestInvoice = Invoice::where('agency_id', $agency->id)
@@ -1499,6 +1519,23 @@ public function getBookingByid($id, $type, $request)
                     $nextId = $latestInvoice ? $latestInvoice->id + 1 : 1;
                     $application = "CLDA" . $agencyInitial . "I00" . $nextId;
          
+                      $existingInvoice = Invoice::where('agency_id', $agency->id)
+                       ->where('applicant_id', $getClientData->id)
+                       ->where('type','agency')
+                       ->first();
+
+                        if($existingInvoice){
+                            $existingInvoice->update([
+                                'amount'     => $getClientData->total_amount,
+                                'discount'     => '0.0',
+                                'visa_fee'     => '0.0',
+                                'service_charge'=>'0.0',
+                                'new_price'=>'0.0',
+                                'status'=>'amendment',
+                            ]);
+                            return $existingInvoice;
+                        }
+
 
          
          
@@ -1508,10 +1545,11 @@ public function getBookingByid($id, $type, $request)
                 'invoice_number'     => $application,
                 'agency_id'          => $agency->id,
                 'client_id'          => $getClientData->client->id,
-                'bookingid'          => $getClientData->id, 
+                'bookingid'          => $paymentInfo->id, 
                 'service_id'         => 3,
                 'applicant_id'       => $getClientData->id,
                 'amount'             => $getClientData->total_amount,
+                'type'               => 'agency',
                ];
                 $invoice=Invoice::create($invoiceData);
                 return $invoice; 

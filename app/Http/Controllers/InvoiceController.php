@@ -19,7 +19,7 @@ use App\Models\CancelInvoice;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
-use   App\Models\Invoice;
+use  App\Models\Invoice;
 use App\Repositories\Interfaces\VisaRepositoryInterface;
 
 
@@ -175,6 +175,8 @@ public function hs_EditedInvoices(Request $request)
 
     return view('superadmin.pages.invoicehandling.editindex', compact('invoices'));
 }
+
+
 
 
 
@@ -1369,44 +1371,6 @@ public function hs_allInvoices(Request $request)
 
 }
 
-//     public function hsAllinvoice(Request $request)
-// {
-//     $perPage = $request->filled('per_page') && is_numeric($request->per_page)
-//         ? (int) $request->per_page
-//         : null;
-
-//     $agency = $this->agencyService->getAgencyData(); // returns null for superadmin, and agency model for agency users
-
-//     $invoicesQuery = Deduction::with([
-//         'service_name',
-//         'agency',
-//         'visaBooking.visa',
-//         'visaBooking.origin',
-//         'visaBooking.destination',
-//         'visaBooking.visasubtype',
-//         'visaBooking.clint',
-//         'visaApplicant',
-//         'flightBooking',
-//         'hotelBooking',
-//         'hotelDetails',
-//         'cancelinvoice',
-//         'invoice',
-//         'docsign'
-//     ])
-//     ->where(function ($q) {
-//         $q->whereNull('status')
-//           ->orWhereNotIn('status', ['canceled']);
-//     });
-
-//     // ✅ Filter by agency if agency is logged in
-//     if ($agency) {
-//         $invoicesQuery->where('agency_id', $agency->id);
-//     }
-
-//     $invoices = $perPage ? $invoicesQuery->paginate($perPage) : $invoicesQuery->get();
-
-//     return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices'));
-// }
 public function hsAllinvoice(Request $request)
 {
     $perPage = $request->filled('per_page') && is_numeric($request->per_page)
@@ -1414,6 +1378,9 @@ public function hsAllinvoice(Request $request)
         : null;
 
     $agency = $this->agencyService->getAgencyData(); // null for superadmin, agency model for agency users
+
+ 
+
 
  $invoicesQuery = Deduction::with([
         'service_name',
@@ -1435,6 +1402,8 @@ public function hsAllinvoice(Request $request)
         $q->whereNull('invoicestatus')   // Deduction table column
           ->orWhereNotIn('invoicestatus', ['canceled', 'Refunded']); // Deduction table column
     });
+
+
    
 
     // ✅ Filter by agency if agency is logged in
@@ -1442,6 +1411,12 @@ public function hsAllinvoice(Request $request)
         $invoicesQuery->where('agency_id', $agency->id);
     }
 
+    
+    // ✅ Filter visaBooking where otherclientid is empty or null
+        $invoicesQuery->whereHas('visaBooking', function ($q) {
+            $q->whereNull('otherclientid')
+            ->orWhere('otherclientid', '');
+        });
     // ✅ Apply filters
     // 🔎 Filter by invoice relation
 
@@ -1480,10 +1455,13 @@ public function hsAllinvoice(Request $request)
         }
     });
 }
+
     $invoices = $perPage
         ? $invoicesQuery->paginate($perPage)->appends($request->query())
         : $invoicesQuery->get();
-     
+
+  
+
 
     return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices'));
 }

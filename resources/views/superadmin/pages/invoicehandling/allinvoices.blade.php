@@ -115,6 +115,7 @@
 
                         @forelse($invoices as $invoice)
 
+                              
 
 
                                     <tr>
@@ -126,6 +127,9 @@
                                                 {{ $invoice->invoice->new_invoice_number ?? $invoice->invoice_number ?? 'N/A' }} <span class="bg-purple-100 text-purple-600 px-2 py-1 rounded text-xs font-medium">Adjusted</span>
                                             @elseif($invoice->invoicestatus === 'Retrieved')
                                                 {{ $invoice->invoice_number ?? 'N/A' }} <span class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs font-medium">Retrieved</span>
+                                            @elseif($invoice->invoicestatus === 'amendment')
+                                                {{ $invoice->invoice_number ?? 'N/A' }} <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-medium">Amendment</span>
+                                           
                                             @else
                                                 {{ $invoice->invoice_number ?? 'N/A' }}
                                             @endif
