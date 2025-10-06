@@ -30,6 +30,8 @@ use App\Mail\ClientWelcomeEmail;
 use App\Models\ClientApplicationDocument;
 use App\Traits\ClientTrait;
 use App\Models\DocSignDocument;
+use App\Models\OtherClientInfo;
+use App\Models\AuthervisaApplication;
 
 
 
@@ -497,6 +499,9 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         $this->updateClientData($data, $client, $userDbConnection);
         $moreInfo = ClientMoreInfo::on($userDbConnection)->where('clientid', $visabooking->client_id)->first();
         $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
+        
+        // Update other client infos for additional members
+        $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
     } else {
         // For agency submissions, get agency data
         $agency = $this->agencyService->getAgencyData();
@@ -506,6 +511,9 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         $this->updateClientData($data, $client, $userDbConnection);
         $moreInfo = ClientMoreInfo::on($userDbConnection)->where('clientid', $visabooking->client_id)->first();
         $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
+        
+        // Update other client infos for additional members
+        $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
     }
 }
 
@@ -763,6 +771,161 @@ if(($data['step']?? null)=="previewname_permission"){
     $info->save();
 
     return $info;
+}
+
+/**
+ * Update other client infos for additional members (passengers/family members)
+ */
+private function updateOtherClientInfos(array $data, int $bookingId, string $connection = null)
+{
+    // Check if there's data for other members
+    if (!isset($data['othermember']) || !is_array($data['othermember'])) {
+        \Log::info('No othermember data found in request', ['data_keys' => array_keys($data)]);
+        return;
+    }
+
+    \Log::info('Processing other member data', ['count' => count($data['othermember']), 'booking_id' => $bookingId]);
+
+    foreach ($data['othermember'] as $index => $memberData) {
+        // Skip if no ID provided
+        if (!isset($memberData['id'])) {
+            \Log::warning('Skipping member - no ID provided', ['index' => $index]);
+            continue;
+        }
+        
+        \Log::info('Processing member', ['member_id' => $memberData['id'], 'fields' => array_keys($memberData)]);
+
+        // Get the authervisa_application record
+        $authervisaApp = AuthervisaApplication::on($connection)
+            ->where('id', $memberData['id'])
+            ->where('booking_id', $bookingId)
+            ->first();
+
+        if (!$authervisaApp) {
+            \Log::warning('AuthervisaApplication not found', ['member_id' => $memberData['id'], 'booking_id' => $bookingId]);
+            continue;
+        }
+        
+        \Log::info('Found AuthervisaApplication', ['id' => $authervisaApp->id]);
+
+        // Get or create OtherClientInfo record
+        $otherClientInfo = OtherClientInfo::on($connection)
+            ->where('authervisa_application_id', $authervisaApp->id)
+            ->first();
+
+        if (!$otherClientInfo) {
+            $otherClientInfo = new OtherClientInfo();
+            if ($connection) {
+                $otherClientInfo->setConnection($connection);
+            }
+            $otherClientInfo->authervisa_application_id = $authervisaApp->id;
+        } else {
+            if ($connection) {
+                $otherClientInfo->setConnection($connection);
+            }
+        }
+
+        // Personal Details
+        $otherClientInfo->title = $memberData['title'] ?? $otherClientInfo->title;
+        $otherClientInfo->full_name = $memberData['full_name'] ?? $otherClientInfo->full_name;
+        $otherClientInfo->gender = $memberData['gender'] ?? $otherClientInfo->gender;
+        $otherClientInfo->date_of_birth = $memberData['date_of_birth'] ?? $otherClientInfo->date_of_birth;
+        $otherClientInfo->place_of_birth = $memberData['place_of_birth'] ?? $otherClientInfo->place_of_birth;
+        $otherClientInfo->preview_name = $memberData['preview_name'] ?? $otherClientInfo->preview_name;
+        $otherClientInfo->country_of_citizenship = $memberData['country_of_citizenship'] ?? $otherClientInfo->country_of_citizenship;
+        $otherClientInfo->nationality_at_birth = $memberData['nationality_at_birth'] ?? $otherClientInfo->nationality_at_birth;
+        $otherClientInfo->marital_status = $memberData['marital_status'] ?? $otherClientInfo->marital_status;
+        $otherClientInfo->past_nationality = $memberData['past_nationality'] ?? $otherClientInfo->past_nationality;
+        $otherClientInfo->religion = $memberData['religion'] ?? $otherClientInfo->religion;
+        $otherClientInfo->visible_identification_marks = $memberData['visible_identification_marks'] ?? $otherClientInfo->visible_identification_marks;
+        $otherClientInfo->languages_spoken = $memberData['languages_spoken'] ?? $otherClientInfo->languages_spoken;
+        $otherClientInfo->citizenship = $memberData['citizenship'] ?? $otherClientInfo->citizenship;
+
+        // Contact Details
+        $otherClientInfo->current_residential_address = $memberData['current_residential_address'] ?? $otherClientInfo->current_residential_address;
+        $otherClientInfo->city = $memberData['city'] ?? $otherClientInfo->city;
+        $otherClientInfo->state = $memberData['state'] ?? $otherClientInfo->state;
+        $otherClientInfo->postal_code = $memberData['postal_code'] ?? $otherClientInfo->postal_code;
+        $otherClientInfo->permanent_residential_address = $memberData['permanent_residential_address'] ?? $otherClientInfo->permanent_residential_address;
+        $otherClientInfo->country_of_residence = $memberData['country_of_residence'] ?? $otherClientInfo->country_of_residence;
+        $otherClientInfo->phone_mobile = $memberData['phone_mobile'] ?? $otherClientInfo->phone_mobile;
+        $otherClientInfo->phone_landline = $memberData['phone_landline'] ?? $otherClientInfo->phone_landline;
+        $otherClientInfo->email_address = $memberData['email_address'] ?? $otherClientInfo->email_address;
+
+        // Passport Information
+        $otherClientInfo->passport_type = $memberData['passport_type'] ?? $otherClientInfo->passport_type;
+        $otherClientInfo->passport_number = $memberData['passport_number'] ?? $otherClientInfo->passport_number;
+        $otherClientInfo->place_of_issue = $memberData['place_of_issue'] ?? $otherClientInfo->place_of_issue;
+        $otherClientInfo->date_of_issue = $memberData['date_of_issue'] ?? $otherClientInfo->date_of_issue;
+        $otherClientInfo->date_of_expiry = $memberData['date_of_expiry'] ?? $otherClientInfo->date_of_expiry;
+        $otherClientInfo->issuing_authority = $memberData['issuing_authority'] ?? $otherClientInfo->issuing_authority;
+        $otherClientInfo->previous_passport_number = $memberData['previous_passport_number'] ?? $otherClientInfo->previous_passport_number;
+
+        // Father Section
+        $otherClientInfo->father_full_name = $memberData['father_full_name'] ?? $otherClientInfo->father_full_name;
+        $otherClientInfo->father_place_of_birth = $memberData['father_place_of_birth'] ?? $otherClientInfo->father_place_of_birth;
+        $otherClientInfo->father_nationality = $memberData['father_nationality'] ?? $otherClientInfo->father_nationality;
+        $otherClientInfo->father_previous_nationality = $memberData['father_previous_nationality'] ?? $otherClientInfo->father_previous_nationality;
+        $otherClientInfo->father_country_of_birth = $memberData['father_country_of_birth'] ?? $otherClientInfo->father_country_of_birth;
+        $otherClientInfo->father_dob = $memberData['father_dob'] ?? $otherClientInfo->father_dob;
+        $otherClientInfo->father_employment = $memberData['father_employment'] ?? $otherClientInfo->father_employment;
+        $otherClientInfo->father_status_in_china = $memberData['father_status_in_china'] ?? $otherClientInfo->father_status_in_china;
+
+        // Mother Section
+        $otherClientInfo->mother_full_name = $memberData['mother_full_name'] ?? $otherClientInfo->mother_full_name;
+        $otherClientInfo->mother_place_of_birth = $memberData['mother_place_of_birth'] ?? $otherClientInfo->mother_place_of_birth;
+        $otherClientInfo->mother_nationality = $memberData['mother_nationality'] ?? $otherClientInfo->mother_nationality;
+        $otherClientInfo->mother_previous_nationality = $memberData['mother_previous_nationality'] ?? $otherClientInfo->mother_previous_nationality;
+        $otherClientInfo->mother_country_of_birth = $memberData['mother_country_of_birth'] ?? $otherClientInfo->mother_country_of_birth;
+        $otherClientInfo->mother_dob = $memberData['mother_dob'] ?? $otherClientInfo->mother_dob;
+        $otherClientInfo->mother_employment = $memberData['mother_employment'] ?? $otherClientInfo->mother_employment;
+        $otherClientInfo->mother_status_in_china = $memberData['mother_status_in_china'] ?? $otherClientInfo->mother_status_in_china;
+
+        // Spouse Section
+        $otherClientInfo->spouse_full_name = $memberData['spouse_full_name'] ?? $otherClientInfo->spouse_full_name;
+        $otherClientInfo->spouse_nationality = $memberData['spouse_nationality'] ?? $otherClientInfo->spouse_nationality;
+        $otherClientInfo->spouse_place_of_birth = $memberData['spouse_place_of_birth'] ?? $otherClientInfo->spouse_place_of_birth;
+        $otherClientInfo->spouse_previous_nationality = $memberData['spouse_previous_nationality'] ?? $otherClientInfo->spouse_previous_nationality;
+        $otherClientInfo->spouse_country_of_birth = $memberData['spouse_country_of_birth'] ?? $otherClientInfo->spouse_country_of_birth;
+        $otherClientInfo->spouse_dob = $memberData['spouse_dob'] ?? $otherClientInfo->spouse_dob;
+        $otherClientInfo->spouse_employment_status = $memberData['spouse_employment_status'] ?? $otherClientInfo->spouse_employment_status;
+        $otherClientInfo->spouse_address = $memberData['spouse_address'] ?? $otherClientInfo->spouse_address;
+
+        // Employment & Education
+        $otherClientInfo->occupation = $memberData['occupation'] ?? $otherClientInfo->occupation;
+        $otherClientInfo->past_occupation = $memberData['past_occupation'] ?? $otherClientInfo->past_occupation;
+        $otherClientInfo->designation = $memberData['designation'] ?? $otherClientInfo->designation;
+        $otherClientInfo->employer_name = $memberData['employer_name'] ?? $otherClientInfo->employer_name;
+        $otherClientInfo->business_name = $memberData['business_name'] ?? $otherClientInfo->business_name;
+        $otherClientInfo->school_name = $memberData['school_name'] ?? $otherClientInfo->school_name;
+        $otherClientInfo->employer_address = $memberData['employer_address'] ?? $otherClientInfo->employer_address;
+        $otherClientInfo->employer_phone_number = $memberData['employer_phone_number'] ?? $otherClientInfo->employer_phone_number;
+        $otherClientInfo->employment_duration = $memberData['employment_duration'] ?? $otherClientInfo->employment_duration;
+        $otherClientInfo->duty = $memberData['duty'] ?? $otherClientInfo->duty;
+        $otherClientInfo->study_duration = $memberData['study_duration'] ?? $otherClientInfo->study_duration;
+        $otherClientInfo->employment_monthly_income = $memberData['employment_monthly_income'] ?? $otherClientInfo->employment_monthly_income;
+        $otherClientInfo->educational_qualifications = $memberData['educational_qualifications'] ?? $otherClientInfo->educational_qualifications;
+
+        // Military / Service History
+        $otherClientInfo->military_status = $memberData['military_status'] ?? $otherClientInfo->military_status;
+        $otherClientInfo->service_date_from = $memberData['service_date_from'] ?? $otherClientInfo->service_date_from;
+        $otherClientInfo->service_date_to = $memberData['service_date_to'] ?? $otherClientInfo->service_date_to;
+
+        // Social Media / Online Presence
+        $otherClientInfo->facebook = $memberData['facebook'] ?? $otherClientInfo->facebook;
+        $otherClientInfo->instagram = $memberData['instagram'] ?? $otherClientInfo->instagram;
+        $otherClientInfo->twitter = $memberData['twitter'] ?? $otherClientInfo->twitter;
+        $otherClientInfo->linkedin = $memberData['linkedin'] ?? $otherClientInfo->linkedin;
+        $otherClientInfo->other_social_media = $memberData['other_social_media'] ?? $otherClientInfo->other_social_media;
+        $otherClientInfo->personal_website = $memberData['personal_website'] ?? $otherClientInfo->personal_website;
+        $otherClientInfo->blog_urls = $memberData['blog_urls'] ?? $otherClientInfo->blog_urls;
+
+        $otherClientInfo->save();
+        
+        \Log::info('OtherClientInfo saved successfully', ['authervisa_application_id' => $authervisaApp->id, 'other_client_info_id' => $otherClientInfo->id]);
+    }
+    
+    \Log::info('Finished processing all other members');
 }
 
 /**

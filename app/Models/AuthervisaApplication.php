@@ -40,4 +40,10 @@ class AuthervisaApplication extends Model
     {
         return $this->belongsTo(Member::class, 'member_id');
     }
+
+    // Relationship with OtherClientInfo Model
+    public function otherClientInfo()
+    {
+        return $this->hasOne(OtherClientInfo::class, 'authervisa_application_id');
+    }
 }
