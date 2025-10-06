@@ -219,11 +219,38 @@
                                     </div>
                                 @endif
 
+                          
+
                                 <div class="border-t border-gray-200 pt-3 mt-3">
                                     <div class="flex justify-between text-lg font-bold">
                                         <span class="text-gray-800">Total Amount</span>
-                                        <span class="text-primary">£{{ number_format($clientData->total_amount ?? 0, 2) }}</span>
+                                        <span class="text-primary">£{{ number_format($clientData->total_amount ?? 0, 2) }} </span>
                                     </div>
+                                    
+                            
+                                </div>
+
+                                  <div class="border-t border-gray-200 pt-3 mt-3">
+                                    <div class="flex justify-between text-lg font-bold">
+                                        <span class="text-success">Old Visa Amount</span>
+                                        <span class="text-success">£{{ number_format($amendmentHistory->total_price ?? 0, 2) }} </span>
+                                    </div>
+                                    
+                            
+                                </div>
+
+                                @php
+                                    $grandTotal = ($clientData->total_amount ?? 0) - ($amendmentHistory->total_price ?? 0);
+                                @endphp
+
+                                
+                                  <div class="border-t border-gray-200 pt-3 mt-3">
+                                    <div class="flex justify-between text-lg font-bold">
+                                        <span class="text-gray-800">Grand Total</span>
+                                        <span class="text-primary">£{{ number_format($grandTotal, 2) }} </span>
+                                    </div>
+                                    
+                            
                                 </div>
                             </div>
 
