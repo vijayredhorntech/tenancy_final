@@ -36,6 +36,7 @@ use App\Http\Middleware\CheckUserSession;
 use App\Http\Controllers\FlightController;
 use App\Http\Controllers\Agencies\ClientController;
 use App\Http\Controllers\Agencies\DocumentController;
+use App\Http\Controllers\Agencies\ClientDocumentController;
 use App\Http\Controllers\DocumentSignController;
 /*******Controler for Hotel */
 
@@ -230,6 +231,23 @@ Route::group([
           Route::get('/client/{client}/history/{history}/delete','hsdeleteHistory')->name('agency.history.delete');
 
 
+    });
+
+    // Client Documents (Agency)
+    Route::controller(ClientDocumentController::class)->group(function () {
+        Route::get('/client/documents', 'index')->name('client.documents.index');
+        Route::post('/client/documents', 'store')->name('client.documents.store');
+        Route::post('/client/documents/{documentId}/return', 'returnDocument')->name('client.documents.return');
+        Route::delete('/client/documents/{documentId}', 'destroy')->name('client.documents.destroy');
+        Route::get('/client/document-movement', 'movement')->name('client.documents.movement');
+        Route::post('/client/document-movement/add/{bookingId}', 'movementAdd')->name('client.documents.movement.add');
+        Route::post('/client/document-movement/remove/{bookingId}', 'movementRemove')->name('client.documents.movement.remove');
+        Route::post('/client/document-movement/send-emergency', 'sendEmergencyMessage')->name('client.documents.movement.send-emergency');
+        Route::get('/client/document-movement/send-message', 'sendMessage')->name('client.documents.send.message');
+        Route::get('/client/document-movement/add', 'movementAddForm')->name('client.documents.movement.add.form');
+        Route::match(['get','post'], '/client/document-movement/add/store', 'movementAddStore')->name('client.documents.movement.add.store');
+        Route::post('/client/documents/send-notification', 'sendNotification')->name('client.documents.send.notification');
+        Route::get('/client/documents/export', 'export')->name('client.documents.export');
     });
 
        /****Document Controller **** */

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Service;
 use App\Models\User;
+use Debugbar;
 use Carbon\Carbon;
 use App\Models\Country;
 use App\Models\Deduction;
@@ -1507,20 +1508,26 @@ public function hsAllinvoice(Request $request)
 
 
 
-    public function hsviewInvoice(Request $request,$id){
-        // Treat $id as VisaBooking ID and fetch booking used by the component
-        $booking = app(\App\Repositories\DocumentSignRepository::class)->checkSignDocument($id);
-   
-        $termconditon = app(\App\Repositories\TermConditionRepository::class)->allTeamTypes();
-
-        // Load additional relationships for invoice display
-        $booking->load('deduction.invoice', 'origin', 'destination', 'visasubtype', 'visa');
-
-        return view('superadmin.pages.invoicehandling.invoiceview', [
-            'booking' => $booking,
-            'termconditon' => $termconditon,
-        ]);
+public function hsviewInvoice(Request $request, $id)
+{
+    // Disable Laravel Debugbar for this request (so it won't appear on print)
+    if (class_exists(\Debugbar::class)) {
+        \Debugbar::disable();
     }
+
+    // Treat $id as VisaBooking ID and fetch booking used by the component
+    $booking = app(\App\Repositories\DocumentSignRepository::class)->checkSignDocument($id);
+
+    $termconditon = app(\App\Repositories\TermConditionRepository::class)->allTeamTypes();
+
+    // Load additional relationships for invoice display
+    $booking->load('deduction.invoice', 'origin', 'destination', 'visasubtype', 'visa');
+
+    return view('superadmin.pages.invoicehandling.invoiceview', [
+        'booking' => $booking,
+        'termconditon' => $termconditon,
+    ]);
+}
 
     public function hsRetailInvoices(Request $request)
     {

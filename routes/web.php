@@ -48,6 +48,7 @@ use App\Http\Controllers\HotelController;
 use App\Http\Controllers\ClientLoginController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ReportController;
 
 use App\Http\Controllers\DocumentSignController;
 use App\Http\Controllers\SuperAdmin\HomeController;
@@ -72,6 +73,9 @@ Route::get('/test',function (){
        }
 });
 
+Route::get('/invoicetest', function(){
+    return view('textinvoice');
+});
 
 /*****Home Controller */
       Route::controller(HomeController::class)->group(function () {

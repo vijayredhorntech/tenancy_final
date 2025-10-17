@@ -74,109 +74,113 @@
                               </div>
                           </div>
                           <div class="flex flex-wrap gap-4 mt-5 w-full">
-              
-                            @php 
+                              @php 
+                                  $booking      = $clientInformation?->visaBooking;
+                                  $client       = $booking?->clientDetailsFromUserDB;
+                                  $moreInfo     = $client?->clientinfo;
 
-                                $booking      = $clientInformation?->visaBooking;
-                                $client       = $booking?->clientDetailsFromUserDB;
-                                $moreInfo     = $client?->clientinfo;
-
-                                $firstName    = $client?->first_name ?? '';
-                                $lastName     = $client?->last_name ?? '';
-                                $email        = $client?->email ?? '';
-                                $phoneNumber  = $client?->phone_number ?? '';
-                                $citizenship  = $client?->country ?? '';
-                                
-                                $entryDate    = $booking?->dateofentry ?? ''; // change if field name differs
-                  
-                            @endphp
-
-
+                                  $firstName    = $client?->first_name ?? '';
+                                  $lastName     = $client?->last_name ?? '';
+                                  $email        = $client?->email ?? '';
+                                  $phoneNumber  = $client?->phone_number ?? '';
+                                  $citizenship  = $client?->country ?? '';
+                                  $entryDate    = $booking?->dateofentry ?? '';
+                              @endphp
                           </div>
-                          <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4" >
+
+                          <div class="flex gap-4 mt-5 w-full" id="applicantTypeSection" style="display: none;">
+                              <label class="flex items-center gap-2 cursor-pointer">
+                                  <input type="checkbox" id="selfCheckbox" name="applicant_type[]" value="self" class="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary" checked>
+                                  <span class="font-semibold text-gray-800 text-sm">Self</span>
+                              </label>
+                              <label class="flex items-center gap-2 cursor-pointer">
+                                  <input type="checkbox" id="familyCheckbox" name="applicant_type[]" value="family" class="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary">
+                                  <span class="font-semibold text-gray-800 text-sm">Family Members</span>
+                              </label>
+                          </div>
+
+                          <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4" style="display: none" id="selfDetailsSection">
+                              <div class="flex justify-between items-center mb-3">
+                                  <span class="font-semibold text-gray-800">Self Details</span>
+                              </div>
                               <div class="w-full grid lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-4 grid-cols-1 gap-1">
                                   <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Last Name</label>
-                                      <input type="text" name="lastname" id="lastName" value='{{ $clientInformation?->visaBooking?->clientDetailsFromUserDB?->last_name ?? '' }}' disable='' class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="As shown in passport" readonly="">
+                                      <label for="lastName"  class=" font-semibold text-gray-800 text-sm">Last Name</label>
+                                      <input type="text" name="lastname" id="lastName" value="{{ $lastName }}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="As shown in passport" readonly>
                                   </div>
                                   <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">First Name</label>
-                                      <input type="text" name="firstname"  value="{{$firstName}}" disable='' id="firstName"  class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="As shown in passport" readonly="">
-
+                                      <label for="firstName"  class=" font-semibold text-gray-800 text-sm">First Name</label>
+                                      <input type="text" name="firstname" value="{{ $firstName }}" id="firstName" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="As shown in passport" readonly>
                                   </div>
                                   <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Citizenship</label>
-                                      <input type="text" name="citizenship" value="{{$citizenship}}" disable='' class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"  id="citizenship" readonly="">
-
+                                      <label for="citizenship"  class=" font-semibold text-gray-800 text-sm">Citizenship</label>
+                                      <input type="text" name="citizenship" value="{{ $citizenship }}" id="citizenship" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" readonly>
                                   </div>
                                   <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Email</label>
-                                      <input type="email" name="email"  id="email"  value="{{$email}}" disable='' class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="Enter your email" readonly="">
-
+                                      <input type="email" name="email" id="email" value="{{ $email }}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="Enter your email" readonly>
                                   </div>
                                   <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Phone Number</label>
-                                      <input type="text"  name="phonenumber"  value="{{$phoneNumber}}"  disable='' id="phonenumber" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="Enter your phone number" readonly="">
-
+                                      <label for="phonenumber"  class=" font-semibold text-gray-800 text-sm">Phone Number</label>
+                                      <input type="text" name="phonenumber" value="{{ $phoneNumber }}" id="phonenumber" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="Enter your phone number" readonly>
                                   </div>
                                   <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Date of Entry</label>
-                                      <input type="date" name="dateofentry" max="9999-12-31" value="{{$entryDate}}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
-                                  </div>
-                                  <div class=" w-full flex flex-col items-end lg:cols-span-6 md:col-span-6 sm:col-span-4 col-span-1 " >
-                                      <button type="button" id="addMoreBtn" max="9999-12-31" class="px-2 py-0.5 text-xs font-semibold rounded-sm  border-[1px] border-success text-success bg-success/10 hover:bg-success hover:text-white transition ease-in duration-2000">Add More</button>
+                                      <label for="dateofentry"  class=" font-semibold text-gray-800 text-sm">Date of Entry</label>
+                                      <input type="date" name="dateofentry" id="dateofentry" max="9999-12-31" value="{{ $entryDate }}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
                                   </div>
                               </div>
                           </div>
 
+                          <div id="familyMembersContainer" style="display: none;"></div>
 
-                          @forelse($booking->otherMembersFromUserDB as $item)
-                      
-                   
-                          <div class="othermemberlist flex flex-col mt-5 border-[1px] border-secondary/30 p-4" >
-                              <div class="w-full grid lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-4 grid-cols-1 gap-1">
-                                  <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Last Name</label>
-                                      <input type="text" name="lastname" id="lastName" value='{{ $item->lastname ?? '' }}' disable='' class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="As shown in passport" readonly="">
-                                  </div>
-                                  <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">First Name</label>
-                                      <input type="text" name="firstname"  value="{{$item->name ?? ''}}" disable='' id="firstName"  class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="As shown in passport" readonly="">
+                          @php
+                              $existingPassengers = $booking?->otherMembersFromUserDB ?? collect();
+                          @endphp
 
+                          @if($existingPassengers->count() > 0)
+                              <div id="existingPassengersSection" class="flex flex-col mt-5 border-[1px] border-secondary/30 p-4">
+                                  <div class="flex justify-between items-center mb-3">
+                                      <span class="font-semibold text-gray-800">Previously Added Passengers</span>
                                   </div>
-                                  <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Password Number</label>
-                                      <input type="text" name="passwordnumber" value="{{$item->passport_number ?? ''}}" disable='' class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"  id="passwordnumber" readonly="">
-
-                                  </div>
-                                  <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Issue Date</label>
-                                      <input type="date" name="issuedate" max="9999-12-31" value="{{$item->passport_expire_date ?? ''}}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
-
-                                  </div>
-                                  <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Expiry Date</label>
-                                      <input type="date" name="expirydate" max="9999-12-31" value="{{$item->passport_expire_date ?? ''}}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
-
-                                  </div>
-                                  <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Place Of Issue</label>
-                                      <input type="text" name="placeofissue" value="{{$item->place_of_issue ?? ''}}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
-                                  </div>
-                                  <div class=" w-full flex flex-col items-end lg:cols-span-6 md:col-span-6 sm:col-span-4 col-span-1 " >
-                                    <a href="{{ route('removeotherapplication', ['type' => 'agencies', 'id' => $item->id,'applicationid'=>$applicationData->application_number]) }}">
-                                                <button type="button" id="removebutton" 
-                                                    class="px-2 py-0.5 text-xs font-semibold rounded-sm border-[1px] border-danger text-danger bg-danger/10 hover:bg-danger hover:text-white transition ease-in duration-2000">
-                                                    remove
-                                                </button>
-                                            </a>
-                                   </div>
+                                  @foreach($existingPassengers as $index => $item)
+                                      <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4">
+                                          <div class="w-full grid lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-4 grid-cols-1 gap-1">
+                                              <div class=" w-full flex flex-col" >
+                                                  <label class=" font-semibold text-gray-800 text-sm">Last Name</label>
+                                                  <input type="text" value="{{ $item->lastname ?? '' }}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" readonly>
+                                              </div>
+                                              <div class=" w-full flex flex-col" >
+                                                  <label class=" font-semibold text-gray-800 text-sm">First Name</label>
+                                                  <input type="text" value="{{ $item->name ?? '' }}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" readonly>
+                                              </div>
+                                              <div class=" w-full flex flex-col" >
+                                                  <label class=" font-semibold text-gray-800 text-sm">Passport Number</label>
+                                                  <input type="text" value="{{ $item->passport_number ?? '' }}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" readonly>
+                                              </div>
+                                              <div class=" w-full flex flex-col" >
+                                                  <label class=" font-semibold text-gray-800 text-sm">Issue Date</label>
+                                                  <input type="date" value="{{ $item->passport_issue_date ?? '' }}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" readonly>
+                                              </div>
+                                              <div class=" w-full flex flex-col" >
+                                                  <label class=" font-semibold text-gray-800 text-sm">Expiry Date</label>
+                                                  <input type="date" value="{{ $item->passport_expire_date ?? '' }}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" readonly>
+                                              </div>
+                                              <div class=" w-full flex flex-col" >
+                                                  <label class=" font-semibold text-gray-800 text-sm">Place Of Issue</label>
+                                                  <input type="text" value="{{ $item->place_of_issue ?? '' }}" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" readonly>
+                                              </div>
+                                          </div>
+                                          <div class="flex justify-end mt-2">
+                                              <a href="{{ route('removeotherapplication', ['type' => 'agencies', 'id' => $item->id,'applicationid'=>$applicationData->application_number]) }}" class="px-2 py-0.5 text-xs font-semibold rounded-sm border-[1px] border-danger text-danger bg-danger/10 hover:bg-danger hover:text-white transition ease-in duration-2000">Remove</a>
+                                          </div>
+                                      </div>
+                                  @endforeach
                               </div>
+                          @endif
+
+                          <div class="flex justify-end mt-3" id="addMoreBtnContainer" style="display: none;">
+                              <button type="button" id="addMoreBtn" class="px-3 py-1.5 text-sm font-semibold rounded-sm border-[1px] border-success text-success bg-success/10 hover:bg-success hover:text-white transition ease-in duration-200">Add More Passenger</button>
                           </div>
-                         @empty
-
-                         @endforelse
-
 
                           <div id="dynamicFieldsContainer"></div>
 
@@ -561,29 +565,55 @@ $("#existingUserBtn").on("click", function () {
         $("#address, #city, #state, #country, #zip_code").val("");
     }
 
-    // Store client ID for family member loading
     var clientId = "{{ $clientInformation?->visaBooking?->clientDetailsFromUserDB?->id ?? '' }}";
+    window.selectedClientData = {
+        clientId: clientId,
+        firstName: @json($firstName ?? ''),
+        lastName: @json($lastName ?? ''),
+        email: @json($email ?? ''),
+        phone_number: @json($phoneNumber ?? ''),
+        country: @json($citizenship ?? '')
+    };
 
-    // Handle Self checkbox
+    var existingPassengersCount = {{ $existingPassengers->count() }};
+
+    initializeApplicantSections();
+
     $("#selfCheckbox").on("change", function() {
         if ($(this).is(":checked")) {
             $("#selfDetailsSection").show();
+            $("#addMoreBtnContainer").show();
+            populateSelfDetails();
         } else {
             $("#selfDetailsSection").hide();
+            if (!$("#familyCheckbox").is(":checked") && existingPassengersCount === 0 && $("#dynamicFieldsContainer").children().length === 0) {
+                $("#addMoreBtnContainer").hide();
+            }
         }
     });
 
-    // Handle Family checkbox
-    $("#familyCheckbox").on("change", function() {
+    $("#familyCheckbox").on("change", function(event, payload) {
+        const fromInit = payload?.fromInit ?? false;
+
         if ($(this).is(":checked")) {
+            if (existingPassengersCount > 0) {
+                $("#existingPassengersSection").show();
+            }
             if (clientId) {
-                loadFamilyMembers(clientId);
+                loadFamilyMembers(clientId, !fromInit);
             } else {
                 alert("Client ID not found.");
                 $(this).prop("checked", false);
             }
+            $("#addMoreBtnContainer").show();
         } else {
             $("#familyMembersContainer").hide().empty();
+            if (existingPassengersCount > 0) {
+                $("#existingPassengersSection").show();
+            }
+            if (!$("#selfCheckbox").is(":checked") && $("#dynamicFieldsContainer").children().length === 0) {
+                $("#addMoreBtnContainer").hide();
+            }
         }
     });
 
@@ -591,20 +621,23 @@ $("#existingUserBtn").on("click", function () {
     $(document).on("change", ".family-member-checkbox", function() {
         let $card = $(this).closest(".addresspart");
         let $fields = $card.find(".family-member-fields input");
+        let $hiddenFields = $card.find(".family-member-hidden-fields input");
         
         if ($(this).is(":checked")) {
             // Enable fields when checked
             $fields.prop("disabled", false);
+            $hiddenFields.prop("disabled", false);
             $card.css("opacity", "1");
         } else {
             // Disable fields when unchecked
             $fields.prop("disabled", true);
+            $hiddenFields.prop("disabled", true);
             $card.css("opacity", "0.5");
         }
     });
 
     // Load family members via AJAX
-    function loadFamilyMembers(clientId) {
+    function loadFamilyMembers(clientId, showAlert = true) {
         $.ajax({
             url: "{{ url('/agencies/get-family-members') }}/" + clientId,
             type: "GET",
@@ -615,18 +648,58 @@ $("#existingUserBtn").on("click", function () {
                     response.family_members.forEach(function(member, index) {
                         createFamilyMemberCard(member, index);
                     });
+                    $("#addMoreBtnContainer").show();
                 } else {
-                    $("#familyMembersContainer").hide();
-                    alert("No family members found for this client.");
-                    $("#familyCheckbox").prop("checked", false);
+                    $("#familyMembersContainer").hide().empty();
+                    if (showAlert) {
+                        alert("No family members found for this client.");
+                        $("#familyCheckbox").prop("checked", false);
+                    }
                 }
             },
             error: function(xhr) {
                 console.error("Error loading family members:", xhr);
-                alert("Failed to load family members. Please try again.");
-                $("#familyCheckbox").prop("checked", false);
+                if (showAlert) {
+                    alert("Failed to load family members. Please try again.");
+                    $("#familyCheckbox").prop("checked", false);
+                }
+                $("#familyMembersContainer").hide().empty();
             }
         });
+    }
+
+    function initializeApplicantSections() {
+        if (!window.selectedClientData.clientId) {
+            $("#applicantTypeSection").hide();
+            return;
+        }
+
+        $("#applicantTypeSection").show();
+        $("#selfCheckbox").prop("checked", true);
+        populateSelfDetails();
+        $("#selfDetailsSection").show();
+        $("#addMoreBtnContainer").show();
+
+        if (existingPassengersCount > 0) {
+            $("#existingPassengersSection").show();
+        } else {
+            $("#existingPassengersSection").hide();
+        }
+
+        $("#familyCheckbox").prop("checked", false);
+        $("#familyMembersContainer").hide().empty();
+    }
+
+    function populateSelfDetails() {
+        if (!window.selectedClientData) {
+            return;
+        }
+
+        $("#lastName").val(window.selectedClientData.lastName || "");
+        $("#firstName").val(window.selectedClientData.firstName || "");
+        $("#citizenship").val(window.selectedClientData.country || "");
+        $("#email").val(window.selectedClientData.email || "");
+        $("#phonenumber").val(window.selectedClientData.phone_number || "");
     }
 
     // Create family member card
@@ -670,7 +743,35 @@ $("#existingUserBtn").on("click", function () {
             </div>
         `;
         
-        $("#familyMembersContainer").append(cardHtml);
+        let $card = $(cardHtml);
+        let $hiddenContainer = $('<div class="family-member-hidden-fields"></div>');
+
+        const appendHiddenField = (key, value) => {
+            $hiddenContainer.append(
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: `othermember[${index}][${key}]`,
+                    value: value ?? ''
+                })
+            );
+        };
+
+        const fullName = `${(member.first_name || '').trim()} ${(member.last_name || '').trim()}`.trim();
+
+        appendHiddenField('id', member.id ?? '');
+        appendHiddenField('full_name', fullName);
+        appendHiddenField('date_of_birth', member.date_of_birth ?? '');
+        appendHiddenField('country_of_citizenship', member.nationality ?? '');
+        appendHiddenField('nationality_at_birth', member.nationality ?? '');
+        appendHiddenField('relationship', member.relationship ?? '');
+        appendHiddenField('passport_number', member.passport_number ?? '');
+        appendHiddenField('date_of_issue', member.passport_issue_date ?? '');
+        appendHiddenField('date_of_expiry', member.passport_expiry_date ?? '');
+        appendHiddenField('email_address', member.email_address ?? '');
+        appendHiddenField('phone_mobile', member.phone_number ?? '');
+
+        $card.append($hiddenContainer);
+        $("#familyMembersContainer").append($card);
     }
 
     // Amendment Confirmation Function

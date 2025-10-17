@@ -107,36 +107,48 @@
                                 <input type="checkbox" name="payment_methods[]" value="credit_card" id="pay_credit_card"
                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                                 <label for="pay_credit_card" class="ml-2 text-sm font-medium text-gray-700">Credit card:</label>
-                                <input type="number" name="credit_card_amount" step="0.01" min="0"
-                                       class="ml-4 w-32 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                       placeholder="0.00" disabled>
+                                <div class="ml-4 relative flex items-center">
+                                    <span class="absolute left-3 text-gray-500">£</span>
+                                    <input type="number" name="credit_card_amount" step="0.01" min="0"
+                                           class="w-32 px-3 py-2 pl-7 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 amount-input"
+                                           placeholder="0.00" disabled data-type="credit_card">
+                                </div>
                             </div>
                             
                             <div class="flex items-center">
                                 <input type="checkbox" name="payment_methods[]" value="debit_card" id="pay_debit_card"
                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                                 <label for="pay_debit_card" class="ml-2 text-sm font-medium text-gray-700">Debit card:</label>
-                                <input type="number" name="debit_card_amount" step="0.01" min="0"
-                                       class="ml-4 w-32 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                       placeholder="0.00" disabled>
+                                <div class="ml-4 relative flex items-center">
+                                    <span class="absolute left-3 text-gray-500">£</span>
+                                    <input type="number" name="debit_card_amount" step="0.01" min="0"
+                                           class="w-32 px-3 py-2 pl-7 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 amount-input"
+                                           placeholder="0.00" disabled data-type="debit_card">
+                                </div>
                             </div>
                             
                             <div class="flex items-center">
                                 <input type="checkbox" name="payment_methods[]" value="cash" id="pay_cash"
                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                                 <label for="pay_cash" class="ml-2 text-sm font-medium text-gray-700">Cash:</label>
-                                <input type="number" name="cash_amount" step="0.01" min="0"
-                                       class="ml-4 w-32 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                       placeholder="0.00" disabled>
+                                <div class="ml-4 relative flex items-center">
+                                    <span class="absolute left-3 text-gray-500">£</span>
+                                    <input type="number" name="cash_amount" step="0.01" min="0"
+                                           class="w-32 px-3 py-2 pl-7 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 amount-input"
+                                           placeholder="0.00" disabled data-type="cash">
+                                </div>
                             </div>
                             
                             <div class="flex items-center">
                                 <input type="checkbox" name="payment_methods[]" value="bank_transfer" id="pay_bank_transfer"
                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
                                 <label for="pay_bank_transfer" class="ml-2 text-sm font-medium text-gray-700">Bank Transfer:</label>
-                                <input type="number" name="bank_transfer_amount" step="0.01" min="0"
-                                       class="ml-4 w-32 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                       placeholder="0.00" disabled>
+                                <div class="ml-4 relative flex items-center">
+                                    <span class="absolute left-3 text-gray-500">£</span>
+                                    <input type="number" name="bank_transfer_amount" step="0.01" min="0"
+                                           class="w-32 px-3 py-2 pl-7 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 amount-input"
+                                           placeholder="0.00" disabled data-type="bank_transfer">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -204,7 +216,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const checkboxes = document.querySelectorAll('input[name="payment_methods[]"]');
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', function() {
-            const amountInput = this.parentElement.querySelector('input[type="number"]');
+            const amountInput = this.parentElement.querySelector('.amount-input');
             if (this.checked) {
                 amountInput.disabled = false;
                 amountInput.required = true;

@@ -39,19 +39,18 @@
                     </td>
                     <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
                         <div class="relative inline-block text-left">
-                            <button type="button" onclick="toggleDropdown({{ $member->id }})" class="inline-flex items-center gap-2 px-3 py-1 bg-primary text-white rounded hover:bg-primary/80 font-semibold text-sm">
-                                <i class="fa fa-ellipsis-v"></i>
+                            <button type="button" onclick="toggleDropdown(event, {{ $member->id }})" class="inline-flex items-center gap-2 px-3 py-1 bg-primary text-white rounded hover:bg-primary/80 font-semibold text-sm">
                                 Actions
                             </button>
-                            <div id="dropdown-{{ $member->id }}" class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                            <div id="dropdown-{{ $member->id }}" class="hidden fixed w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-[9999]">
                                 <div class="py-1" role="menu">
                                     @if ($viewRouteName && $viewId)
-                                        <a href="{{ route($viewRouteName, $viewId) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                                            <i class="fa fa-eye mr-2"></i>View
+                                        <a href="{{ route($viewRouteName, $viewId) }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 transition-colors duration-150" role="menuitem">
+                                            View
                                         </a>
                                     @endif
-                                    <button onclick="deleteFamilyMember({{ $member->id }}, '{{ $fullName }}')" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50" role="menuitem">
-                                        <i class="fa fa-trash mr-2"></i>Delete
+                                    <button onclick="deleteFamilyMember({{ $member->id }}, '{{ $fullName }}')" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150" role="menuitem">
+                                        Delete
                                     </button>
                                 </div>
                             </div>
@@ -70,17 +69,63 @@
 </div>
 
 <script>
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdowns = document.querySelectorAll('[id^="dropdown-"]');
+        dropdowns.forEach(dropdown => {
+            if (!dropdown.classList.contains('hidden')) {
+                dropdown.classList.add('hidden');
+                // Remove active state from all buttons
+                document.querySelectorAll('.bg-primary/90').forEach(btn => {
+                    if (btn.tagName === 'BUTTON') {
+                        btn.classList.remove('bg-primary/90');
+                    }
+                });
+            }
+        });
+    });
+    
     // Toggle dropdown menu
-    function toggleDropdown(memberId) {
+    function toggleDropdown(event, memberId) {
+        event.stopPropagation();
         const dropdown = document.getElementById(`dropdown-${memberId}`);
+        const button = event.currentTarget;
+        
         // Close all other dropdowns
         document.querySelectorAll('[id^="dropdown-"]').forEach(el => {
             if (el.id !== `dropdown-${memberId}`) {
                 el.classList.add('hidden');
             }
         });
+        
         // Toggle current dropdown
-        dropdown.classList.toggle('hidden');
+        if (dropdown.classList.contains('hidden')) {
+            dropdown.classList.remove('hidden');
+            
+            // Position the dropdown at the button's location
+            const buttonRect = button.getBoundingClientRect();
+            
+            // Calculate if dropdown would go off bottom of screen
+            const dropdownHeight = 80; // Approximate height
+            const spaceBelow = window.innerHeight - buttonRect.bottom;
+            
+            if (spaceBelow < dropdownHeight) {
+                // Position above button
+                dropdown.style.top = `${buttonRect.top + window.scrollY - dropdownHeight}px`;
+            } else {
+                // Position below button
+                dropdown.style.top = `${buttonRect.bottom + window.scrollY}px`;
+            }
+            
+            // Horizontal positioning
+            dropdown.style.left = `${buttonRect.left + window.scrollX}px`;
+            
+            // Add highlight effect to button to show it's active
+            button.classList.add('bg-primary/90');
+        } else {
+            dropdown.classList.add('hidden');
+            button.classList.remove('bg-primary/90');
+        }
     }
 
     // Close dropdown when clicking outside

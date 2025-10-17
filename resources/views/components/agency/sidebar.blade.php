@@ -132,16 +132,47 @@
         @endif
 
         @if($user_data->getAllPermissions()->pluck('name')->intersect(['client', 'manage everything'])->isNotEmpty())
-        <a href="{{route('client.index')}}">
-            <div class="{{Route::currentRouteName()==='client.index'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+        <div class="">
+            <div onclick="document.getElementById('clientDiv').classList.toggle('hidden');document.getElementById('clientArrow').classList.toggle('-rotate-90')" class="{{Route::currentRouteName()==='client'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
                     <i class="fa fa-users mr-2 text-sm"></i>
-                    <span class="text-lg font-medium">Client / (B2C)</span>
+                    <span class="text-lg font-medium">Client</span>
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                <i class="fa fa-angle-down text-xl text-white/90 -rotate-90 transition ease-in duration-2000 " id="clientArrow"> </i>
             </div>
-        </a>
+            <ul id="clientDiv" class="pl-10 mt-2 flex flex-col hidden">
+            <a href="{{route('client.index')}}">
+                    <li class="{{Route::currentRouteName()==='client.index'?'border-gray-100/60 bg-primary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fa fa-users mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Client / (B2C)</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
 
+                <a href="{{ route('client.documents.index') }}">
+                    <li class="{{ in_array(Route::currentRouteName(), ['client.documents.index']) ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fa fa-folder-open mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Client Documents</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+
+                <a href="{{ route('client.documents.movement') }}">
+                    <li class="{{ in_array(Route::currentRouteName(), ['client.documents.movement', 'client.documents.movement.add.form']) ? 'border-gray-100/60 bg-primary/90' : 'border-ternary' }}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fa fa-arrows-left-right mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Client Document Movement</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+            </ul>
+        </div>
         @endif
 
         <!-- invoice data -->
