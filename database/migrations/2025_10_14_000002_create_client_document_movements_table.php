@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::connection('user_database')->create('client_document_movements', function (Blueprint $table) {
+        // Removed Schema::connection('user_database')
+        Schema::create('client_document_movements', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('client_document_id');
             $table->string('action'); // received | returned
@@ -26,6 +27,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::connection('user_database')->dropIfExists('client_document_movements');
+        Schema::dropIfExists('client_document_movements');
     }
 };
