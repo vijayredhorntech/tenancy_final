@@ -55,7 +55,13 @@
 
 {{--        === this is code for form section ===--}}
          <div id="formDiv" class="w-full border-b-[2px] border-b-ternary/10 shadow-lg shadow-ternary/20 p-6 hidden">
-            <form action="{{ route('agency.communication') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @if(isset($history))
+                <form action="{{ route('agency.history.update', ['client' => $clientDetails->id, 'history' => $history->id]) }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @else
+                <form action="{{ route('agency.communication') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @endif
+                @csrf
+            <!-- <form action="{{ route('agency.communication') }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-4"> -->
                 @csrf  
                 
                 <input type="hidden" name="client_id" value="{{ $clientDetails->id }}">
@@ -86,13 +92,18 @@
                 <div class="md:col-span-2">
                     <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                     <textarea id="description" name="description" rows="3" placeholder="Enter description" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary/20 sm:text-sm"></textarea>
+
+                    <!-- <textarea id="description" name="description" rows="3" placeholder="Enter description" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring focus:ring-primary/20 sm:text-sm"></textarea> -->
                 </div>
 
                 <!-- Submit Button -->
                 <div class="md:col-span-2 flex justify-end">
-                    <button type="submit" class="px-6 py-2 rounded-xl bg-primary text-white font-semibold shadow hover:bg-primary/90">
-                        + Add New Communication
+                    <button class="px-6 py-2 rounded-xl bg-primary text-white font-semibold shadow hover:bg-primary/90">
+                        {{ isset($history) ? 'Update Communication' : '+ Add New Communication' }}
                     </button>
+                    <!-- <button type="submit" class="px-6 py-2 rounded-xl bg-primary text-white font-semibold shadow hover:bg-primary/90">
+                        + Add New Communication
+                    </button> -->
                 </div>
             </form>
 
@@ -123,29 +134,35 @@
                                     <div class="flex items-center gap-1"><i class="fa fa-user text-gray-400"></i> {{ $history->user->name ?? '-' }}</div>
                                     <div class="flex items-center gap-1"><i class="fa fa-envelope text-gray-400"></i> {{ $history->user->email ?? '-' }}</div>
                                 </td>
-                                <!-- Description cell: bigger text and padding -->
-                                <td class="border-[2px] border-secondary/40 px-4 py-2 text-ternary/90 font-medium text-base">
-                                    {{ $history->description ?? '-' }}
-                                </td>
+                           
+                               <!-- Description cell: bigger width -->
+                                    <td class="border-[2px] border-secondary/40 px-4 py-2 text-ternary/90 font-medium text-base w-[65%] ">
+                                        {{ $history->description ?? '-' }}
+                                    </td>
 
-                                <!-- Action cell: smaller Delete button -->
-                                <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
-                          
-                                        @if($user->getAllPermissions()->pluck('name')->intersect(['delete client history', 'manage everything'])->isNotEmpty())
-                                            <a href="{{ route('agency.history.delete', [
-                                                    'client' => $clientDetails->id,
-                                                    'history' => $history->id
-                                                ]) }}" 
+                                    <!-- Action cell: smaller width -->
+                                    <td class="border-[2px] border-secondary/40 px-2 py-1 text-ternary/80 font-medium text-sm w-[10%] align-middle">
+                                        <div class="flex items-center gap-1">
+                                            <a href="{{ route('agency.history.edit', ['client' => $clientDetails->id, 'history' => $history->id]) }}"
+                                                class="bg-blue-100 text-blue-700 h-6 px-2 flex items-center gap-1 rounded-[3px] hover:bg-blue-600 hover:text-white transition ease-in duration-200 text-xs">
+                                                    <i class="fa fa-pencil"></i> Edit
+                                                </a>
+                                         
+
+                                            @if($user->getAllPermissions()->pluck('name')->intersect(['delete client history', 'manage everything'])->isNotEmpty())
+                                                <a href="{{ route('agency.history.delete', ['client' => $clientDetails->id, 'history' => $history->id]) }}"
                                                 onclick="return confirm('Are you sure you want to delete this history?')"
                                                 class="bg-red-100 text-red-700 h-6 px-2 flex items-center gap-1 rounded-[3px] hover:bg-red-600 hover:text-white transition ease-in duration-200 text-xs">
                                                 <i class="fa fa-trash"></i> Delete
-                                            </a>
-                                        @else
-                                            -
-                                        @endif
-
-
+                                                </a>
+                                            @else
+                                                <span>-</span>
+                                            @endif
+                                        </div>
                                     </td>
+
+
+
 
 
                             </tr>
@@ -194,3 +211,5 @@
         </script>
      
     </x-agency.layout>
+
+    

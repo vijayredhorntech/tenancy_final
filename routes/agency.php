@@ -229,6 +229,9 @@ Route::group([
           Route::get('/callhistory/{id}', 'hscallHistoryClient')->name('agency.client.history');
           Route::post('/store/communication','hsstoreCommunication')->name('agency.communication');
           Route::get('/client/{client}/history/{history}/delete','hsdeleteHistory')->name('agency.history.delete');
+          Route::get('/client/{client}/history/{history}/edit','hseditHistory')->name('agency.history.edit');
+          Route::post('/client/{client}/history/{history}/update','hsupdateHistory')->name('agency.history.update');
+          
 
 
     });

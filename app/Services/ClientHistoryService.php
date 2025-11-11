@@ -149,6 +149,42 @@ class ClientHistoryService
         return true;
     }
 
+
+    public function updateHisotry($data){
+
+        if ($data['type'] === 'agency') {
+            return $this->updateAgencyClientHistory($data['data']);
+        }
+        $history = HistoryAgencyClient::on('user_database')->where('id', $data['history_id'])->first();
+        if ($history) {
+            $history->update([
+                'user_id'     => $data['user_id'],
+                'client_id'   => $data['client_id'] ?? null,
+                'agency_id'   => $data['agency_id'] ?? null,
+                'date_time'   => $data['date_time'] ?? now(),
+                'type'        => $data['type'] ?? 'general',
+                'description' => $data['description'] ?? null,
+                'status'      => $data['status'] ?? 'active',
+            ]);
+        }
+
+        return true;
+    }
+
+    
+    public function updateAgencyClientHistory($data){
+        $agency = $this->agencyService->getAgencyData();
+
+
+       return HistoryAgencyClient::on('user_database')
+            ->where('id', $data['history_id'])
+            ->update([
+                'description' => $data['description'] ?? null,
+            ]);
+
+   
+    }
+
     public function deleteAgencyClientHistory(array $data)
     {
         // Assuming $this->agencyService->getAgencyData() is needed elsewhere
@@ -161,4 +197,77 @@ class ClientHistoryService
 
         return true;
     }
+
+
+
+
+     /*** Get History By Id ***/
+    public function getHistoryById(array $data)
+    {
+
+         if ($data['type'] === 'agency') {
+            return $this->getAgencyClientHistory($data);
+        }else{
+            $history = HistoryAgencyClient::where('id', $data['historyid'])->first();
+        }
+         if ($history) {
+
+              return $history;
+            }
+    
+  
+    } 
+
+    public function getAgencyClientHistory(array $data)
+    {
+
+      $agency = $this->agencyService->getAgencyData();
+ 
+        $history = HistoryAgencyClient::on('user_database')->where('id', $data['historyid'])->where('agency_id', $agency->id)->first();
+
+        if ($history) {
+            return $history;
+        }
+
+    }
+
+
+
+    public function hseditHistory($clientId, $historyId)
+{
+    $clientDetails = Client::findOrFail($clientId);
+
+    // fetch only the selected history item
+    $history = CommunicationHistory::where('client_id', $clientId)
+        ->where('id', $historyId)
+        ->firstOrFail();
+
+    // list all items again for table
+    $histories = CommunicationHistory::where('client_id', $clientId)
+        ->orderBy('id','DESC')
+        ->get();
+
+    $user = auth()->user();
+
+    // pass edit item
+    return view('agency.callhistory', compact('clientDetails','history','histories','user'));
+}
+
+public function hsupdateHistory(Request $request, $clientId, $historyId)
+{
+    $request->validate([
+        'description' => 'required|string|max:500',
+    ]);
+
+    $history = CommunicationHistory::where('client_id', $clientId)
+        ->where('id', $historyId)
+        ->firstOrFail();
+
+    $history->description = $request->description;
+    $history->save();
+
+    return redirect()->route('agency.client.history', $clientId)
+        ->with('success', 'History updated successfully!');
+}
+
 }

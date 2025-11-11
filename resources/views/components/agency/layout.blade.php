@@ -114,6 +114,14 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiffy-slider@1.6.0/dist/js/swiffy-slider.min.js" crossorigin="anonymous" defer></script>
+    <!-- toastr CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+
+<!-- jQuery (needed by toastr) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <style>
 
         * {
@@ -223,6 +231,17 @@
     }
 });
 
+</script>
+<script>
+    // Livewire events
+    window.addEventListener('toast', event => {
+        toastr[event.detail.type](event.detail.message);
+    });
+
+    // Session flash (Controller)
+    @if(session('toast'))
+        toastr["{{ session('toast')['type'] }}"]("{{ session('toast')['message'] }}");
+    @endif
 </script>
 <script>
         let counter = 1; // Initial counter for unique field names

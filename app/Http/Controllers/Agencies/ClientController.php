@@ -19,10 +19,13 @@ use App\Traits\ChatTrait;
 use App\Models\Deduction;
 use App\Services\ClientHistoryService;
 use App\Models\FamilyMember; 
+use App\Traits\Toastable;
+
+
 
 class ClientController extends Controller
 {
-    use ClientTrait, ChatTrait;
+    use ClientTrait, ChatTrait, Toastable;
  
 
     protected $clintRepository,$agencyService,$historyService;
@@ -78,6 +81,7 @@ class ClientController extends Controller
     public function hs_index(Request $request)
     {
         
+
         $clients = $this->clintRepository->getAllClint($request);
         $agency = $this->agencyService->getAgencyData();
         
@@ -128,6 +132,7 @@ class ClientController extends Controller
 public function hs_viewAgencyClient($id)
 {
     
+
     $agency = $this->agencyService->getAgencyData();
     $client = $this->clintRepository->getClientById($id);
 
@@ -434,14 +439,19 @@ public function hs_agencyUpdateClient(Request $request, $id)
 public function hscallHistoryClient($id){
 
 
+
     $agency = $this->agencyService->getAgencyData();
+
     $user = $this->agencyService->getCurrentLoginUser();
     $permissions = $user->getAllPermissions()->pluck('name');
 
-  
- 
-    $clientDetails = $this->agencyService->getClientDetails($id,$agency);
 
+    $clientDetails = $this->agencyService->getClientDetails($id,$agency);
+    
+        if (!$clientDetails) {
+            abort(403, 'Unauthorized action.');
+        }
+ 
 
       $histories = $this->historyService->getHistory([
             'client_id'=> $id, 
@@ -450,7 +460,7 @@ public function hscallHistoryClient($id){
      
 
 
-   return view('agencies.pages.clients.call-history', compact('histories','user','clientDetails','permissions'));
+   return view('agencies.pages.clients.clienthistory.call-history', compact('histories','user','clientDetails','permissions'));
 
 }
 
@@ -475,12 +485,50 @@ public function hsstoreCommunication(Request $request)
         'date_time'   => now(),
     ]);
 
-    return back()->with('success', 'Communication saved successfully.');
+      $this->error('Communication saved successfully.');
+    return back();
 }
 
 
 
+public function hseditHistory($clientId, $historyId){
 
+    
+    $history = $this->historyService->getHistoryById([
+        'client_id' => $clientId,
+        'historyid' => $historyId,
+        'type'      => 'agency', // optional filter
+    ]);
+
+    $user = $this->agencyService->getCurrentLoginUser();
+
+    if($history->user_id !== $user->id){
+        $this->error('You can only edit your own communications.');
+       return back();
+    }
+ 
+
+    return view('agencies.pages.clients.clienthistory.edit-history', compact('history','user'));
+
+}
+
+
+public function hsupdateHistory(Request $request){
+    $request->validate([
+        'description' => 'required|string',
+    ]);
+        $user = $this->agencyService->getCurrentLoginUser();
+    $history = $this->historyService->updateHisotry([
+        'data' => $request->all(),
+        'type'      => 'agency', // optional filter
+    ]);
+
+    $this->success('Communication updated successfully.');
+    return redirect()->route('agency.client.history', [
+        'id' => $request->client_id
+    ]);
+
+}
 
 /*** Controller method to call deletion ***/
 public function hsdeleteHistory($clientId, $historyId)
@@ -491,7 +539,8 @@ public function hsdeleteHistory($clientId, $historyId)
         'type'      => 'agency', // optional filter
     ]);
 
-    return back()->with('success', 'History deleted successfully.');
+    $this->success('History deleted successfully.');
+    return back();
 }
 
 
