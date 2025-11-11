@@ -117,10 +117,25 @@
                                         <div class="w-full relative group flex flex-col gap-1">
                                             <label for="country" class="font-semibold text-ternary/90 text-sm">Country *</label>
                                             <div class="w-full relative">
-                                                <input type="text" name="country" id="country" requiresdd
+                                                  @php
+                                                    $selectedCountry = old('country', $bookingData->clint->country ?? '');
+                                                @endphp
+                                                <select name="country" id="country" 
+                                                    class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                                    <option value="">--- Select Country ---</option>
+
+                                                    @forelse($countries as $country)
+                                                        <option value="{{ $country->countryName }}" {{ $selectedCountry == $country->countryName ? 'selected' : '' }}>
+                                                            {{ $country->countryName }}
+                                                        </option>
+                                                    @empty
+                                                        <option value="">No record found</option>
+                                                    @endforelse
+                                                </select>
+                                                <!-- <input type="text" name="country" id="country" requiresdd
                                                     value="{{ old('country', $bookingData->clint->country ?? '') }}"
                                                     class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                    @error('country') border-red-500 @enderror">
+                                                    @error('country') border-red-500 @enderror"> -->
                                                 <i class="fa fa-globe-americas absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                             </div>
                                             @error('country')

@@ -76,11 +76,34 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                      <!-- Last Name -->
-                         
-                    
-                        <!-- First Name -->
-                        <div class="w-full relative group flex flex-col gap-1">
-                                <label for="first_name" class="font-semibold text-ternary/90 text-sm">First Name </label>
+                            @if(in_array('Title', $permission))
+                                    <div class="w-full relative group flex flex-col gap-1">
+                                        <label for="title" class="font-semibold text-ternary/90 text-sm">Title</label>
+                                        <div class="w-full relative">
+                                        @php
+                                                $selectedTitle = old('title', $bookingData->clint->clientinfo->title ?? '');
+                                            @endphp
+
+                                            <select name="title" id="title"
+                                                class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                
+                                                <option value="">Select Title</option>
+                                                <option value="Mr"   {{ $selectedTitle == 'Mr' ? 'selected' : '' }}>Mr</option>
+                                                <option value="Ms"   {{ $selectedTitle == 'Ms' ? 'selected' : '' }}>Ms</option>
+                                                <option value="Mrs"  {{ $selectedTitle == 'Mrs' ? 'selected' : '' }}>Mrs</option>
+                                                <option value="Dr"   {{ $selectedTitle == 'Dr' ? 'selected' : '' }}>Dr</option>
+                                                <option value="Prof" {{ $selectedTitle == 'Prof' ? 'selected' : '' }}>Prof</option>
+                                            </select>
+                                        </div>
+                                        @error('title')
+                                            <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                @endif
+
+
+                            <div class="w-full relative group flex flex-col gap-1">
+                                <label for="first_name" class="font-semibold text-ternary/90 text-sm">First Name  </label>
                                 <div class="w-full relative">
                                     <input type="text" name="first_name" id="first_name"
                                         value="{{ $bookingData->clint->first_name ?? '' }}"
@@ -88,6 +111,22 @@
                                      <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                  </div>
                         </div>
+                    
+
+                            <div class="w-full relative group flex flex-col gap-1">
+                                <label for="last_name" class="font-semibold text-ternary/90 text-sm">Last Name *</label>
+                                <div class="w-full relative">
+                                    <input type="text" name="last_name" id="last_name"
+                                        value="{{ $bookingData->clint->last_name ?? '' }}"
+                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                        @error('last_name') border-red-500 @enderror">
+                                    <i class="fa fa-user absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                </div>
+                                @error('last_name')
+                                <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        
 
                     @if(in_array('Preview Name', $permission))
                         @if($bookingData->clint->clientinfo->previous_name_status == 1)

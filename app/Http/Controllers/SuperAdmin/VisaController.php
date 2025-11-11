@@ -1097,8 +1097,10 @@ public function hsFromindex(Request $request)
 
    public function hsfillApplication(Request $request, $type,$id, $token)
    {
+
         $agency = $this->agencyService->getAgencyData();
        $bookingData = $this->visaRepository->bookingDataById($id);
+       $countries = Country::all();
        
    
        if($bookingData->viewed_once==1){
@@ -1119,11 +1121,11 @@ public function hsFromindex(Request $request)
        $sections = VisaSection::all();
 
        if($type == 'agencies'){
-            return view('agencies.pages.clients.clientapplication', compact('agency', 'bookingData','sections'));
+            return view('agencies.pages.clients.clientapplication', compact('agency', 'bookingData','sections','countries'));
        }
        else {
           
-           return view('clients.pages.clients.clientapplication', compact('agency', 'bookingData','sections'));
+           return view('clients.pages.clients.clientapplication', compact('agency', 'bookingData','sections','countries'));
        }
    
    

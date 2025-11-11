@@ -210,8 +210,46 @@
       
     </div>
 
+    <!-- In your Blade template head section -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<!-- Before closing body tag -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
 
+$(document).ready(function () {
+
+    // List all country select IDs
+    const countrySelectors = [
+        '#country_of_birth',
+        '#country',
+        '#passport_country',
+        '#other_passport_country',
+        '#father_country_of_birth',
+        '#mother_country_of_birth',
+        '#spouse_country_of_birth'
+
+    ];
+
+    countrySelectors.forEach(function(selector) {
+        $(selector).select2({
+            placeholder: "---Select Country---",
+            allowClear: true,
+            width: '100%' // required so width works
+        });
+    });
+
+    // Add custom tailwind-style classes
+    $(document).on('select2:open', function() {
+        $('.select2-selection').addClass(
+            'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6]'
+        );
+    });
+
+});
+
+
+
+    
     
 
         const alreadySelect = @json($alreadySelect);
@@ -524,6 +562,7 @@ $(document).ready(function () {
                     });
                            
 });
+
 
 
 

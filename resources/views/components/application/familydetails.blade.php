@@ -42,10 +42,26 @@
                                         @endif
 
                                         @if(in_array('Father Country of birth', $permission))
+
                                         <div>
                                         <label for="father_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
-                                        <input type="text" name="father_country_of_birth" id="father_country_of_birth" value="{{ old('father_country_of_birth', $fatherdetails->country_of_birth ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                          @php
+                                                $selectedFatherCountry = old('father_country_of_birth', $fatherdetails->country_of_birth ?? '');
+                                            @endphp
+                                            <select name="father_country_of_birth" id="father_country_of_birth" 
+                                                class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                                <option value="">--- Select Country ---</option>
+
+                                                @forelse($countries as $country)
+                                                    <option value="{{ $country->countryName }}" {{ $selectedFatherCountry == $country->countryName ? 'selected' : '' }}>
+                                                        {{ $country->countryName }}
+                                                    </option>
+                                                @empty
+                                                    <option value="">No record found</option>
+                                                @endforelse
+                                            </select>
+                                        <!-- <input type="text" name="father_country_of_birth" id="father_country_of_birth" value="{{ old('father_country_of_birth', $fatherdetails->country_of_birth ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition"> -->
                                         </div>
                                         @endif
 
@@ -123,8 +139,23 @@
                                         @if(in_array('Mother Country of birth', $permission))
                                         <div>
                                         <label for="mother_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
-                                        <input type="text" name="mother_country_of_birth" id="mother_country_of_birth" value="{{ old('mother_country_of_birth', $motherdetails->country_of_birth ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                          @php
+                                                $selectedMotherCountry = old('mother_country_of_birth', $motherdetails->country_of_birth ?? '');
+                                            @endphp
+                                            <select name="mother_country_of_birth" id="mother_country_of_birth" 
+                                                class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                                <option value="">--- Select Country ---</option>
+
+                                                @forelse($countries as $country)
+                                                    <option value="{{ $country->countryName }}" {{ $selectedMotherCountry == $country->countryName ? 'selected' : '' }}>
+                                                        {{ $country->countryName }}
+                                                    </option>
+                                                @empty
+                                                    <option value="">No record found</option>
+                                                @endforelse
+                                            </select>
+                                        <!-- <input type="text" name="mother_country_of_birth" id="mother_country_of_birth" value="{{ old('mother_country_of_birth', $motherdetails->country_of_birth ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition"> -->
                                         </div>
                                         @endif
 
@@ -207,8 +238,23 @@
                                                     @if(in_array('Spouse’s Country of birth', $permission))
                                                     <div>
                                                     <label for="spouse_country_of_birth" class="font-semibold text-sm text-ternary/90">Country of Birth</label>
-                                                    <input type="text" name="spouse_country_of_birth" id="spouse_country_of_birth" value="{{ old('spouse_country_of_birth', $spouse->country_of_birth ?? '') }}"
-                                                        class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    @php
+                                                $selectedSpouseCountry = old('spouse_country_of_birth', $spouse->country_of_birth ?? '');
+                                            @endphp
+                                            <select name="spouse_country_of_birth" id="spouse_country_of_birth" 
+                                                class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                                <option value="">--- Select Country ---</option>
+
+                                                @forelse($countries as $country)
+                                                    <option value="{{ $country->countryName }}" {{ $selectedSpouseCountry == $country->countryName ? 'selected' : '' }}>
+                                                        {{ $country->countryName }}
+                                                    </option>
+                                                @empty
+                                                    <option value="">No record found</option>
+                                                @endforelse
+                                            </select>
+                                                    <!-- <input type="text" name="spouse_country_of_birth" id="spouse_country_of_birth" value="{{ old('spouse_country_of_birth', $spouse->country_of_birth ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition"> -->
                                                     </div>
                                                     @endif
                                                     

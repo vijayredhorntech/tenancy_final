@@ -4,13 +4,19 @@
         <div class="w-full relative group flex flex-col gap-1">
             <label for="title" class="font-semibold text-ternary/90 text-sm">Title</label>
             <div class="w-full relative">
-                <select name="title" id="title" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+               @php
+                    $selectedTitle = old('title', $bookingData->clint->clientinfo->title ?? '');
+                @endphp
+
+                <select name="title" id="title"
+                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                    
                     <option value="">Select Title</option>
-                    <option value="Mr" {{ old('title') == 'Mr' ? 'selected' : '' }}>Mr</option>
-                    <option value="Ms" {{ old('title') == 'Ms' ? 'selected' : '' }}>Ms</option>
-                    <option value="Mrs" {{ old('title') == 'Mrs' ? 'selected' : '' }}>Mrs</option>
-                    <option value="Dr" {{ old('title') == 'Dr' ? 'selected' : '' }}>Dr</option>
-                    <option value="Prof" {{ old('title') == 'Prof' ? 'selected' : '' }}>Prof</option>
+                    <option value="Mr"   {{ $selectedTitle == 'Mr' ? 'selected' : '' }}>Mr</option>
+                    <option value="Ms"   {{ $selectedTitle == 'Ms' ? 'selected' : '' }}>Ms</option>
+                    <option value="Mrs"  {{ $selectedTitle == 'Mrs' ? 'selected' : '' }}>Mrs</option>
+                    <option value="Dr"   {{ $selectedTitle == 'Dr' ? 'selected' : '' }}>Dr</option>
+                    <option value="Prof" {{ $selectedTitle == 'Prof' ? 'selected' : '' }}>Prof</option>
                 </select>
             </div>
             @error('title')
@@ -172,15 +178,29 @@
     @endif
     @if(in_array('Country of Citizenship', $permission))
     <!-- Country of Birth -->
-    <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="country_of_birth" class="font-semibold text-ternary/90 text-sm">Country of Birth</label>
-                                    <div class="w-full relative">
-                                        <input type="text" name="country_of_birth" id="country_of_birth"
-                                              value="{{ old('country_of_birth', $bookingData->clint->clientinfo->country_of_birth ?? '') }}"
-                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                        <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
-                                    </div>
+ <div class="w-full relative group flex flex-col gap-1">
+    <label for="country_of_birth" class="font-semibold text-ternary/90 text-sm">Country of Birth</label>
+    <div class="w-full relative">
+        @php
+            $selectedCountry = old('country_of_birth', $bookingData->clint->clientinfo->country_of_birth ?? '');
+        @endphp
+        <select name="country_of_birth" id="country_of_birth" 
+            class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+            <option value="">--- Select Country ---</option>
+
+            @forelse($countries as $country)
+                <option value="{{ $country->countryName }}" {{ $selectedCountry == $country->countryName ? 'selected' : '' }}>
+                    {{ $country->countryName }}
+                </option>
+            @empty
+                <option value="">No record found</option>
+            @endforelse
+        </select>
+
+        <i class="fa fa-globe absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
     </div>
+</div>
+
     @endif
     @if(in_array('Nationality at Birth', $permission))
     <!-- Nationality -->
@@ -260,6 +280,7 @@
     </div>
 
 </form>          
+
 <script>
     function togglePreviousName(show) {
         const section = document.getElementById('previousNameSection');
@@ -272,6 +293,8 @@
             input.value = ''; // Clear value so nothing is saved
         }
     }
+
+
 </script>
 
                   

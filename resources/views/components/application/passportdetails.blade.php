@@ -31,6 +31,9 @@
                                             <option value="Emergency" {{ old('passport_type', $bookingData->clint->clientinfo->passport_type ?? '') == 'Emergency' ? 'selected' : '' }}>
                                                 Emergency
                                             </option>
+                                            <option value="Other" {{ old('passport_type', $bookingData->clint->clientinfo->passport_type ?? '') == 'Other' ? 'selected' : '' }}>
+                                                Other
+                                            </option>
                                         </select>
 
                                         <i class="fa fa-passport absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-secondary/80 pointer-events-none"></i>
@@ -47,10 +50,25 @@
                                 <div class="w-full relative group flex flex-col gap-1">
                                         <label for="passport_country" class="font-semibold text-ternary/90 text-sm">Passport Country *</label>
                                         <div class="w-full relative">
-                                            <input type="text" name="passport_country" id="passport_country" requiresdd
+                                             @php
+                                                $selectedCountry = old('passport_country', $bookingData->clint->clientinfo->passport_country ?? '');
+                                            @endphp
+                                            <select name="passport_country" id="passport_country" 
+                                                class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                                <option value="">--- Select Country ---</option>
+
+                                                @forelse($countries as $country)
+                                                    <option value="{{ $country->countryName }}" {{ $selectedCountry == $country->countryName ? 'selected' : '' }}>
+                                                        {{ $country->countryName }}
+                                                    </option>
+                                                @empty
+                                                    <option value="">No record found</option>
+                                                @endforelse
+                                            </select>
+                                            <!-- <input type="text" name="passport_country" id="passport_country" requiresdd
                                                 value="{{ old('passport_country', $bookingData->clint->clientinfo->passport_country ?? '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
-                                                @error('passport_country') border-red-500 @enderror">
+                                                @error('passport_country') border-red-500 @enderror"> -->
                                             <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                         </div>
                                         @error('passport_country')
@@ -156,9 +174,25 @@
                                             <div class="w-full relative group flex flex-col gap-1">
                                                 <label for="other_passport_country" class="font-semibold text-ternary/90 text-sm">Country Of issue *</label>
                                                 <div class="w-full relative">
-                                                    <input type="text" name="other_passport_country" id="other_passport_country" requireed
+
+                                                        @php
+                                                $selectedOtherCountry = old('other_passport_country', $other_passport_details->country ?? '');
+                                            @endphp
+                                            <select name="other_passport_country" id="other_passport_country" 
+                                                class="visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                                <option value="">--- Select Country ---</option>
+
+                                                @forelse($countries as $country)
+                                                    <option value="{{ $country->countryName }}" {{ $selectedOtherCountry == $country->countryName ? 'selected' : '' }}>
+                                                        {{ $country->countryName }}
+                                                    </option>
+                                                @empty
+                                                    <option value="">No record found</option>
+                                                @endforelse
+                                            </select>
+                                                    <!-- <input type="text" name="other_passport_country" id="other_passport_country" requireed
                                                         value="{{ old('other_passport_country', $other_passport_details->country ?? '') }}"
-                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_country') border-red-500 @enderror">
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200 @error('other_passport_country') border-red-500 @enderror"> -->
                                                     <i class="fa fa-passport absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                                 </div>
                                                 @error('other_passport_country')

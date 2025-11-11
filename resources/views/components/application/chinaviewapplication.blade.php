@@ -73,7 +73,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- First Name -->
                         <div class="w-full relative group flex flex-col gap-1">
-                                <label for="first_name" class="font-semibold text-ternary/90 text-sm">Family Name <span class="text-danger">*</span></label>
+                                <label for="first_name" class="font-semibold text-ternary/90 text-sm">Family Name  <span class="text-danger">*</span></label>
                                 <div class="w-full relative">
                                     <input type="text" name="first_name" id="first_name"
                                         value="{{ $bookingData->clint->first_name ?? '' }}"
