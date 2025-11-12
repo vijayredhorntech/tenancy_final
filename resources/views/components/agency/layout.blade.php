@@ -68,12 +68,12 @@
         }
 
 
-        input[type="date"]::-webkit-datetime-edit {
-            color: #172432b3; /* Change placeholder text color */
+        /* input[type="date"]::-webkit-datetime-edit {
+            color: #172432b3; 
         }
         input[type="date"]::-webkit-calendar-picker-indicator {
             opacity: 0;
-        }
+        } */
 
 
         select {
@@ -147,11 +147,11 @@
             transition: all 0.6s !important;
         }
 
-         input[type="date"]::-webkit-inner-spin-button,
+         /* input[type="date"]::-webkit-inner-spin-button,
          input[type="date"]::-webkit-calendar-picker-indicator {
              display: none !important;
              -webkit-appearance: none !important;
-         }
+         } */
         select {
             -webkit-appearance: none !important; /* Hides the arrow in WebKit-based browsers (Chrome, Safari, Edge) */
             -moz-appearance: none !important;    /* Hides the arrow in Firefox */

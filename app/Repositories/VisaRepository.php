@@ -603,6 +603,7 @@ public function allVisacoutnry($request)
 
 public function saveBooking(array $data)
 {
+ 
     // Get country codes
     // dd($data);
     $getCode = $this->getCountryCode($data['origin'], $data['destination']);
@@ -611,7 +612,17 @@ public function saveBooking(array $data)
 
     // Subtype and amount calculation
     $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
-    $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
+    //   dd($subtype);
+    // $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
+    $price = (float) ($subtype->price ?? 0);
+    $commission = (float) ($subtype->commission ?? 0);
+    $gstPercent = (float) ($subtype->gstin ?? 0);
+
+    $subtotal = $price + $commission;
+    $gstAmount = ($subtotal * $gstPercent) / 100;
+    $totalAmount = $subtotal + $gstAmount; // ✅ total including GST
+
+    
 
     // Get agency, client details, user
     $agency = $this->agencyService->getAgencyData();
@@ -629,11 +640,38 @@ public function saveBooking(array $data)
     }
 
     // Passenger count-based total amount
-    if (isset($data['passengerfirstname'])) {
-        $passengerCount = count($data['passengerfirstname']) + 1;
-        $totalAmount *= $passengerCount;
-    }
+    // if (isset($data['passengerfirstname'])) {
+    //     $passengerCount = count($data['passengerfirstname']) + 1;
+    //     $totalAmount *= $passengerCount;
+    // }
+    $totalPassengers = 0;
 
+        // Self
+        if (!empty($data['applicant_type']) && in_array('self', $data['applicant_type'])) {
+            $totalPassengers++;
+        }
+
+        // Family
+        if (!empty($data['applicant_type']) && in_array('family', $data['applicant_type'])) {
+            if (isset($data['family_passengerfirstname']) && is_array($data['family_passengerfirstname'])) {
+                $totalPassengers += count($data['family_passengerfirstname']);
+            }
+        }
+
+        // Additional Passengers (Add More)
+        if (isset($data['passengerfirstname']) && is_array($data['passengerfirstname'])) {
+            $totalPassengers += count($data['passengerfirstname']);
+        }
+
+        // Fallback to at least one passenger
+        if ($totalPassengers === 0) {
+            $totalPassengers = 1;
+        }
+
+        // Final total amount
+        $totalAmount *= $totalPassengers;
+
+        // dd($totalAmount);
     
      // Save booking first (without application number)
         // Save booking first (with temporary application number)
@@ -703,6 +741,7 @@ public function updateBooking(array $data)
 
     // Subtype and amount calculation
     $subtype = VisaSubtype::where('id', $data['category'])->firstOrFail();
+  
     $totalAmount = ($subtype->price ?? 0) + ($subtype->commission ?? 0);
 
     // Get agency, client details, user

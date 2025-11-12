@@ -5,21 +5,13 @@
 
 
           <span class="text-secondary lg:text-3xl md:text-2xl text-xl font-semibold">Visa to {{$visas['0']->destinationcountry->countryName}}</span>
-          @if ($errors->any())
-              <div class="alert alert-danger">
-                  <ul>
-                      @foreach ($errors->all() as $error)
-                          <li>{{ $error }}</li>
-                      @endforeach
-                  </ul>     
-              </div>
-          @endif
+     
 
           <section class="flex 2xl:flex-row xl:flex-row lg:flex-row md:flex-col sm:flex-col flex-col justify-center w-full mt-6">
               {{--    section left div starts here--}}
               <div class="2xl:w-3/4 xl:w-3/4 lg:w-3/4 md:w-full sm:w-full w-full bg-white shadow-lg shadow-black/10 rounded-md p-4">
                       <span class="text-lg text-secondary font-semibold">Visa Details</span>
-                  <form action="{{  route('visa.book') }}" method="POST" enctype="multipart/form-data" class="mt-4">
+                  <form id="visaForm" action="{{  route('visa.book') }}" method="POST" enctype="multipart/form-data" class="mt-4">
                       @csrf
 
                           <div class="flex flex-col">
@@ -65,15 +57,37 @@
                                           </option>
                                       </select>
                                   </div>
+
+                                 
+
+
                               </div>
                           </div>
                           <div class="flex flex-wrap gap-4 mt-5 w-full">
                              <div class="flex flex-col">
+                                    <div class=" w-full flex flex-col" >
+                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Date of Entry</label>
+                                      <input type="date"    min="{{ date('Y-m-d') }}"   name="dateofentry" max="9999-12-31"
+                                      value="{{ old('dateofentry') }}"
+                                       class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
+                                        @error('dateofentry')
+                                                <span class="text-danger text-sm">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
                                  <label class="block mt-2 font-semibold">Select User Type</label>
                                  <div class="flex gap-2 mt-2">
                                      <button type="button" id="existingUserBtn" class="bg-secondary text-white px-3 py-0.5 text-xs rounded">Existing User</button>
+                                     <div id="userLoader" class="hidden text-secondary font-semibold text-sm">
+                                            <i class="fa fa-spinner fa-spin"></i> Loading users...
+                                        </div>
                                      <a href="{{route('client.index')}}">  <button type="button" id="newUserBtn" class="bg-gray-500 text-white px-3 py-1 text-xs rounded">New User</button> </a>
-                                 </div>
+                                 
+                                   
+                                </div>
+                                 @error('clientId')
+                                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                                    @enderror
                              </div>
 
                               <div id="existingUserSection" class="hidden flex flex-col ">
@@ -82,6 +96,7 @@
                                       <option value="">Select User</option>
                                       <!-- Users will be added dynamically using AJAX -->
                                   </select>
+                                 
                               </div>
                           </div>
 
@@ -95,13 +110,14 @@
                                   <input type="checkbox" id="familyCheckbox" name="applicant_type[]" value="family" class="w-4 h-4 text-secondary border-gray-300 rounded focus:ring-secondary">
                                   <span class="font-semibold text-gray-800 text-sm">Family Members</span>
                               </label>
+                                
                           </div>
 
                           <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4"  style="display: none" id="selfDetailsSection">
                               <div class="flex justify-between items-center mb-3">
                                   <span class="font-semibold text-gray-800">Self Details</span>
                               </div>
-                              <div class="w-full grid lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-4 grid-cols-1 gap-1">
+                              <div class="w-full grid lg:grid-cols-5 md:grid-cols-5 sm:grid-cols-4 grid-cols-1 gap-1">
                                   <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Last Name</label>
                                       <input type="text" name="lastname" id="lastName"  class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="As shown in passport" readonly="">
@@ -126,10 +142,7 @@
                                       <input type="text"  name="phonenumber"   id="phonenumber" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="Enter your phone number" readonly="">
 
                                   </div>
-                                  <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Date of Entry</label>
-                                      <input type="date" name="dateofentry" max="9999-12-31" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60">
-                                  </div>
+                               
                               </div>
                           </div>
 
@@ -191,6 +204,9 @@
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
+
+
+
 
 $(document).ready(function () {
     $('#typeof').on('change', function () {
@@ -344,9 +360,11 @@ document.getElementById('addMoreBtn').addEventListener('click', function () {
     let removeBtn = document.createElement('button');
     removeBtn.setAttribute('type', 'button');
     removeBtn.textContent = 'Remove';
-    removeBtn.classList.add('px-2', 'py-0.5', 'text-xs', 'font-semibold', 'rounded-sm', 'border-[1px]', 'border-red-500', 'text-red-500', 'bg-red-500/10', 'hover:bg-red-500', 'hover:text-white', 'transition', 'ease-in', 'duration-200');
+    removeBtn.classList.add('px-2', 'py-0.5', 'text-xs', 'font-semibold', 'rounded-sm', 'border-[1px]', 'border-red-500', 'text-red-500', 'bg-red-500/10', 'hover:bg-red-500', 'hover:text-white', 'transition', 'ease-in', 'duration-200' ,'removePassenger');
     removeBtn.addEventListener('click', function () {
+
         container.removeChild(fieldWrapper);
+
     });
 
     removeBtnDiv.appendChild(removeBtn);
@@ -410,10 +428,12 @@ $(document).ready(function () {
                     //     html += '<option value="' + category.id + '"data-processing=+  category.processing data-price="' + category.price +'" data-balance="' + data.balance.balance + ' " data-commission="' + category.commission + '">' + category.name + "</option>";
                     // });
                     $.each(data.visa_subtypes, function (index, category) {
+
                             html += '<option value="' + category.id + '" ' +
                                     'data-processing="' + category.processing + '" ' +
                                     'data-price="' + category.price + '" ' +
-                                    'data-balance="' + data.balance.balance + '" ' +
+                                    'data-balance="' + data.balance + '" ' +
+                                    'data-gst="' + category.gstin + '" ' +
                                     'data-commission="' + category.commission + '">' +
                                     category.name + '</option>';
                         });
@@ -448,14 +468,16 @@ $(document).ready(function () {
         var selectedOption = $(this).find(":selected");
         var visaPrice = parseFloat(selectedOption.data("price")) || 0;  // Convert to number, default 0
         var commission = parseFloat(selectedOption.data("commission")) || 0;  // Convert to number, default 0
+        var gst = parseFloat(selectedOption.data("gst")) || 0;  // Convert to number, default 0
+      
         var balance = parseFloat(selectedOption.data("balance")) || 0;
         var processing = selectedOption.data("processing") || "";
+        var gstAmount = ((visaPrice + commission) * gst) / 100;
 
 
 
 
-
-        var total = visaPrice + commission; // Correct addition
+        var total = visaPrice + commission + gstAmount; // Correct addition
        
 
         $(".visa-price").text("£" + visaPrice.toFixed(2)); // Update displayed price
@@ -470,6 +492,9 @@ $(document).ready(function () {
 /****Check user ******/
 $("#existingUserBtn").on("click", function () {
         $("#existingUserSection").removeClass("hidden"); // Show dropdown
+        // ✅ Show loader
+    $("#userLoader").removeClass("hidden");
+      $("#existingUserBtn").prop("disabled", true);
         fetchExistingUsers(); // Fetch users from DB
     });
 
@@ -490,6 +515,11 @@ $("#existingUserBtn").on("click", function () {
                     html += `<option value="${user.id}"  data-nationality="${user.clientinfo?.nationality ?? 'N/A'}" data-name="${user.first_name}" data-lastname="${user.last_name}"  data-phone_number="${user.phone_number} " data-email="${user.email}" data-passport="${user.passport_number}">${user.client_name}</option>`;
                 });
                 $("#existingUserDropdown").html(html);
+            },
+            complete: function () {
+                // ✅ Hide loader after completion
+                $("#userLoader").addClass("hidden");
+                $("#existingUserBtn").prop("disabled", false);
             }
         });
 
@@ -634,7 +664,7 @@ $("#existingUserBtn").on("click", function () {
                         <span class="font-semibold text-gray-800">Family Member ${index + 1}: ${member.first_name} ${member.last_name} (${member.relationship})</span>
                     </div>
                 </div>
-                <div class="w-full grid lg:grid-cols-6 md:grid-cols-6 sm:grid-cols-4 grid-cols-1 gap-1 family-member-fields">
+                <div class="w-full grid lg:grid-cols-5 md:grid-cols-5 sm:grid-cols-4 grid-cols-1 gap-1 family-member-fields">
                     <div class="w-full flex flex-col">
                         <label class="font-semibold text-gray-800 text-sm">First Name</label>
                         <input type="text" name="family_passengerfirstname[]" value="${member.first_name || ''}" 
@@ -666,6 +696,53 @@ $("#existingUserBtn").on("click", function () {
         
         $("#familyMembersContainer").append(cardHtml);
     }
+
+      function updateVisaPrice() {
+            const selected = $("#category").find(":selected");
+            const visaPrice = parseFloat(selected.data("price")) || 0;
+            const commission = parseFloat(selected.data("commission")) || 0;
+            const gst = parseFloat(selected.data("gst")) || 0;
+            const gstAmount = ((visaPrice + commission) * gst) / 100;
+     
+
+            let totalPassengers = 0;
+
+            // Self count
+            if ($("#selfCheckbox").is(":checked")) totalPassengers++;
+
+            // Family selected count
+            totalPassengers += $(".family-member-checkbox:checked").length;
+
+            // Added passengers count
+            totalPassengers += $("#dynamicFieldsContainer .addresspart").length;
+
+            const perPersonTotal = visaPrice + commission + gstAmount;
+            const grandTotal = perPersonTotal * totalPassengers;
+
+            $(".visa-price").text("€" + visaPrice.toFixed(2) + " × " + totalPassengers);
+            $(".visa-commision").text("€" + commission.toFixed(2));
+            $(".visa-total").text("€" + grandTotal.toFixed(2));
+
+        }
+
+        // 🔁 Auto-update whenever something changes
+        $(document).on("change", "#category, #selfCheckbox, .family-member-checkbox", updateVisaPrice);
+        $(document).on("DOMNodeInserted DOMNodeRemoved", "#dynamicFieldsContainer", updateVisaPrice);
+        $(document).on("click", "#addMoreBtn", function(){ setTimeout(updateVisaPrice, 300); });
+        $(document).on("click", ".removePassenger", function(){ setTimeout(updateVisaPrice, 300); });
+
+        // Also trigger when family data loads
+        $(document).ajaxSuccess(function(event, xhr, settings) {
+            if (settings.url.includes('get-family-members')) {
+                setTimeout(updateVisaPrice, 500);
+            }
+        });
+
+        // Run once on page load
+        $(document).ready(function(){
+            setTimeout(updateVisaPrice, 1000);
+        });
+ 
     </script>
     @endsection
 </x-agency.layout>

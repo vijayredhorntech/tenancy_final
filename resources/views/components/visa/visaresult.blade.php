@@ -31,26 +31,36 @@
 {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
 
 @php
-    // Collect all non-null title images into an array
-    $titleImages = collect();
+    // Check if visas exists and not empty
+    if(!empty($visas) && $visas->count() > 0){
 
-    foreach($visas as $visa) {
-        if (!empty($visa->title_image)) {
-            $titleImages->push($visa->title_image);
-        }
+        // Collect all non-null title images into an array
+        $titleImages = collect($visas)->pluck('title_image')->filter();
+
+        // Pick one random image or fallback
+        $randomImage = $titleImages->isNotEmpty()
+            ? asset('images/visa/titleimages/' . $titleImages->random())
+            : asset('assets/images/india-visa-application-requirements.jpg');
+
+        // Pick any visa's ID safely (first item)
+        $visaId = $visas->first()->id ?? null;
+
+        // Generate URL
+        $getStartedUrl = isset($applicationdata)
+            ? route('amendment.visa.selectvisa', [
+                'type' => 'agencies',
+                'id' => $visaId,
+                'applicationid' => $applicationdata->application_number
+              ])
+            : route('visa.payment', ['id' => $visaId]);
+
+    } else {
+        // No visas → fallback
+        $randomImage = asset('assets/images/india-visa-application-requirements.jpg');
+        $getStartedUrl = '#'; // no link when no visa exists
     }
-
-    // Pick one random image or fallback to default image
-    $randomImage = $titleImages->isNotEmpty()
-        ? asset('images/visa/titleimages/' . $titleImages->random())
-        : asset('assets/images/india-visa-application-requirements.jpg');
-    $getStartedUrl = isset($applicationdata)
-        ? route('amendment.visa.selectvisa', ['type' => 'agencies', 'id' => $visa->id, 'applicationid' => $applicationdata->application_number])
-        : route('visa.payment', ['id' => $visa->id]);
-
-
-
 @endphp
+
 
         <div class=" w-full ">
             <!-- <div class="w-full lg:h-[400px] md:h-[400px] sm:h-[300px] h-[200px] bg-black rounded-md bg-center bg-cover bg-no-repeat relative z-20" style="background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url({{asset('assets/images/india-visa-application-requirements.jpg')}});"> -->

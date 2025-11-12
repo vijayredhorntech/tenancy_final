@@ -39,12 +39,14 @@ use App\Models\ClientInfoForCountry;
 use App\Models\RequestApplication;
 use App\Models\FamilyMember;
 use App\Models\AmendmentHistory;
+use App\Traits\Toastable;
+
 
 
 
 class VisaController extends Controller
 {
-    use ChatTrait;
+    use ChatTrait,Toastable;
 
     protected $visaRepository,$clintRepository;
     protected $agencyService;
@@ -221,7 +223,8 @@ class VisaController extends Controller
                 'destination_id' => $visadetails->destination,
             ]);
         }
-       return redirect()->route('visa.country')->with('success', 'Visa created successfully');
+        $this->success('Visa created successfully');
+       return redirect()->route('visa.country');
     
    }
       /***Store Visa Data *****/
@@ -240,7 +243,8 @@ class VisaController extends Controller
 
     public function hsViewdelete($id){
         $visa = $this->visaRepository->deleteVisa($id);
-        return redirect()->route('visa.view')->with('success', 'Visa Deleted successfully');
+        $this->success('Visa Deleted successfully');
+        return redirect()->route('visa.view');
     }
 
 
@@ -625,19 +629,23 @@ public function hsViewEditSection($id){
 
 public function hsVisaBook(Request $request)
 {
+
+     $messages = [
+        'applicant_type.required' => 'Please select at least one applicant type.',
+        'applicant_type.min' => 'At least one applicant type must be selected (Self or Family).',
+         'clientId.required'       => 'Kindly select the user.',
+    ];
     $data = $request->validate([
         'origin'        => 'required|integer|exists:countries,id',
         'destination'   => 'required|integer|exists:countries,id',
         'typeof'        => 'required|integer|exists:visa_types,id',
         'category'      => 'required|integer|exists:visa_subtypes,id',
-
-        'lastname'      => 'required|string|max:255',
-        'firstname'     => 'required|string|max:255',
-        'citizenship'   => 'nullable|string|max:255',
-        'email'         => 'required|email|max:255',
-        'phonenumber'   => 'required|numeric',
         'dateofentry'   => 'required|date|after_or_equal:today',
-    ]);
+        'clientId'      => 'required|integer',
+        'applicant_type'   => 'required|array|min:1',   // ✅ Must be array & min one selected
+        'applicant_type.*' => 'in:self,family',         // ✅ Each checkbox value allowed
+    ],$messages);
+
 
     // Get the current user (assumes client is authenticated)
         $agency = $this->agencyService->getAgencyData();
@@ -651,7 +659,8 @@ public function hsVisaBook(Request $request)
         // dd($existing);
 
     if ($existing) {
-        return redirect()->back()->with('error', 'You have already applied for a visa. Kindly check your pending application or wait for approval.');
+        $this->error('You have already applied for a visa. Kindly check your pending application or wait for approval.');
+        return redirect()->back();
     }
 
     // Proceed to book visa
@@ -677,7 +686,7 @@ public function hsVisaBook(Request $request)
 
         if (isset($checkuser) && $checkuser->agency_id == $agency->id) {
             $clientData = $this->visaRepository->bookingDataById($id);
-         
+          
 
             // $checkBalance = $this->visaRepository->checkBalance($agency->id,$clientData->id);
             $checkBalance=$this->visaRepository->checkBalance($agency->id,$clientData->total_amount);

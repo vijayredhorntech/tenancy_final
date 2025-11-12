@@ -200,32 +200,67 @@
                             </h3>
                         </div>
                         <div class="p-6">
-                            <div class="space-y-3">
+                           <div class="space-y-3">
+                                @php
+                                    $price = (float) ($clientData->visasubtype->price ?? 0);
+                                    $commission = (float) ($clientData->visasubtype->commission ?? 0);
+                                    $gstPercent = (float) ($clientData->visasubtype->gstin ?? 0);
+
+                                    // Calculate GST amount
+                                    $gstAmount = (($price + $commission) * $gstPercent) / 100;
+
+                                    // Subtotal for one passenger
+                                    $subtotal = $price + $commission + $gstAmount;
+
+                                    // Additional family or group members
+                                    $additionalMembers = isset($clientData->otherclients) ? count($clientData->otherclients) : 0;
+
+                                    // Total for all passengers
+                                    $totalPassengers = 1 + $additionalMembers;
+                                    $grandTotal = $subtotal * $totalPassengers;
+                                @endphp
+
+                                {{-- Visa Fee --}}
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">Visa Fee</span>
-                                    <span class="font-medium">£{{ number_format($clientData->visasubtype->price ?? 0, 2) }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600">Service Fee</span>
-                                    <span class="font-medium">£{{ number_format($clientData->visasubtype->commission ?? 0, 2) }}</span>
+                                    <span class="font-medium">£{{ number_format($price, 2) }}</span>
                                 </div>
 
-                                @if(isset($clientData->otherclients) && count($clientData->otherclients) > 0)
+                                {{-- Service Fee --}}
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Service Fee</span>
+                                    <span class="font-medium">£{{ number_format($commission, 2) }}</span>
+                                </div>
+
+                                {{-- GST Amount --}}
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">GST ({{ number_format($gstPercent, 2) }}%)</span>
+                                    <span class="font-medium">£{{ number_format($gstAmount, 2) }}</span>
+                                </div>
+
+                                {{-- Additional Members --}}
+                                @if($additionalMembers > 0)
                                     <div class="border-t border-gray-200 pt-3 mt-3">
                                         <div class="flex justify-between">
-                                            <span class="text-gray-600">Additional Members ({{ count($clientData->otherclients) }})</span>
-                                            <span class="font-medium">£{{ number_format(($clientData->visasubtype->price + $clientData->visasubtype->commission) * count($clientData->otherclients), 2) }}</span>
+                                            <span class="text-gray-600">
+                                                Additional Members ({{ $additionalMembers }})
+                                            </span>
+                                            <span class="font-medium">
+                                                £{{ number_format($subtotal * $additionalMembers, 2) }}
+                                            </span>
                                         </div>
                                     </div>
                                 @endif
 
+                                {{-- Grand Total --}}
                                 <div class="border-t border-gray-200 pt-3 mt-3">
                                     <div class="flex justify-between text-lg font-bold">
                                         <span class="text-gray-800">Total Amount</span>
-                                        <span class="text-primary">£{{ number_format($clientData->total_amount ?? 0, 2) }}</span>
+                                        <span class="text-primary">£{{ number_format($grandTotal, 2) }}</span>
                                     </div>
                                 </div>
                             </div>
+
 
                    
 
