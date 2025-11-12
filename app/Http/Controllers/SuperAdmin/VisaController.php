@@ -1109,6 +1109,8 @@ public function hsFromindex(Request $request)
 
         $agency = $this->agencyService->getAgencyData();
        $bookingData = $this->visaRepository->bookingDataById($id);
+    //    dd($bookingData);
+   
        $countries = Country::all();
        
    

@@ -1240,20 +1240,24 @@ public function getBookingByid($id, $type, $request)
     $database = $viewbooking->agency->database_name;
     $this->agencyService->setConnectionByDatabase($database); // Optional if used elsewhere
 
-    // Load the clint relation from the user-specific database, including clientinfo
-    $clientFromUserDB = ClientDetails::on('user_database')
-        ->with('clientinfo') // You can add other nested relations if needed
-        ->where('id', $viewbooking->client_id)
-        ->first();
-    //   dd( $viewbooking->id);
-    $otherMember = AuthervisaApplication::on('user_database')
-        ->where('clint_id', $viewbooking->client_id)
-        ->where('booking_id', $viewbooking->id)
-        ->get();
-   //   dd($otherMember);
-    // Override the default `clint` relation with the correct one from user DB
-    $viewbooking->setRelation('clint', $clientFromUserDB);
-    $viewbooking->setRelation('otherclients', $otherMember);
+     if($viewbooking->otherclientid==null){
+    
+            // Load the clint relation from the user-specific database, including clientinfo
+            $clientFromUserDB = ClientDetails::on('user_database')
+                ->with('clientinfo') // You can add other nested relations if needed
+                ->where('id', $viewbooking->client_id)
+                ->first();
+            //   dd( $viewbooking->id);
+            $otherMember = AuthervisaApplication::on('user_database')
+                ->where('clint_id', $viewbooking->client_id)
+                ->where('booking_id', $viewbooking->id)
+                ->get();
+        //   dd($otherMember);
+            // Override the default `clint` relation with the correct one from user DB
+            $viewbooking->setRelation('clint', $clientFromUserDB);
+            $viewbooking->setRelation('otherclients', $otherMember);
+
+     }
 
     
 
