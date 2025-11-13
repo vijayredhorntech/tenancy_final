@@ -166,7 +166,7 @@ class AgencyService
 
             // Fetch other visa applicants from user DB
             $otherMembers = AuthervisaApplication::on('user_database')
-                ->where('clint_id', $clientId)
+                ->where('client_id', $clientId)
                 ->where('booking_id', $bookingId)
                 ->get();
 
@@ -196,7 +196,7 @@ public function getClientinfo($invoices){
                 ->find($clientId);
 
             $otherMembers = AuthervisaApplication::on('user_database')
-                ->where('clint_id', $clientId)
+                ->where('client_id', $clientId)
                 ->where('booking_id', $bookingId)
                 ->get();
 
@@ -223,7 +223,7 @@ public function getClientinfo($invoices){
                 ->find($clientId); 
             
             $otherMembers = AuthervisaApplication::on('user_database')
-                ->where('clint_id', $clientId)
+                ->where('client_id', $clientId)
                 ->where('booking_id', $bookingId)
                 ->get();
 
@@ -250,7 +250,7 @@ public function getClientinfo($invoices){
                ->with('clientinfo')
                ->find($clientId);
            $otherMembers = AuthervisaApplication::on('user_database')
-               ->where('clint_id', $clientId)
+               ->where('client_id', $clientId)
                ->where('booking_id', $bookingId)
                ->get();
 

@@ -12,22 +12,37 @@ class AuthervisaApplication extends Model
 
     protected $table = 'authervisa_applications'; // Table name
 
-    protected $fillable = [
+   protected $fillable = [
         'booking_id',
-        'clint_id',
-        'member_id',
-        'name',
-        'lastname',
+        'client_id',
+        'agency_id',
+        'client_name',
+        'first_name',
+        'last_name',
+        'gender',
+        'marital_status',
+        'date_of_birth',
+        'phone_number',
         'email',
-        'phone',
-        'citizenship',
-        'date_of_entry',
-        'passport_number',
+        'zip_code',
+        'address',
+        'street',
+        'city',
+        'country',
+        'permanent_address',
+        'passport_ic_number',
         'passport_issue_date',
-        'passport_expire_date',
-        'place_of_issue',
-        'passportphoto',
+        'passport_expiry_date',
+        'passport_issue_place',
     ];
+
+    protected $casts = [
+        'date_of_birth' => 'date',
+        'passport_issue_date' => 'date',
+        'passport_expiry_date' => 'date',
+    ];
+
+
 
     // Relationship with Booking Model
     public function booking()
@@ -42,8 +57,13 @@ class AuthervisaApplication extends Model
     }
 
     // Relationship with OtherClientInfo Model
-    public function otherClientInfo()
+    public function clientinfo()
     {
         return $this->hasOne(OtherClientInfo::class, 'authervisa_application_id');
+    }
+
+    public function client()
+    {
+        return $this->hasOne(ClientDetails::class, 'id', 'client_id');
     }
 }

@@ -14,6 +14,11 @@ use App\Models\Agency;
 use App\Models\User;
 use App\Models\Invoice;
 use App\Models\AmendmentHistory;
+use App\Models\OtherClientInfo;
+use App\Models\FamilyMember;
+
+
+
 
 
 use App\Models\AuthervisaApplication;
@@ -138,7 +143,7 @@ public function getSuperadminAllApplication($request){
 
                 // ✅ Get other members
                 $otherMember = AuthervisaApplication::on('user_database')
-                    ->where('clint_id', $viewbooking->client_id)
+                    ->where('client_id', $viewbooking->client_id)
                     ->where('booking_id', $viewbooking->id)
                     ->get();
 
@@ -250,7 +255,7 @@ public function getSuperadminshotedapplication($request)
 
                 // ✅ Get other members
                 $otherMember = AuthervisaApplication::on('user_database')
-                    ->where('clint_id', $viewbooking->client_id)
+                    ->where('client_id', $viewbooking->client_id)
                     ->where('booking_id', $viewbooking->id)
                     ->get();
 
@@ -341,7 +346,7 @@ public function getagencyVisaApplication($request,$id)
 
                 // Fetch other members
                 $otherMember = AuthervisaApplication::on('user_database')
-                    ->where('clint_id', $viewbooking->client_id)
+                    ->where('client_id', $viewbooking->client_id)
                     ->where('booking_id', $viewbooking->id)
                     ->get();
 
@@ -604,6 +609,7 @@ public function allVisacoutnry($request)
 public function saveBooking(array $data)
 {
  
+    // dd($data);
     // Get country codes
     // dd($data);
     $getCode = $this->getCountryCode($data['origin'], $data['destination']);
@@ -649,6 +655,7 @@ public function saveBooking(array $data)
         // Self
         if (!empty($data['applicant_type']) && in_array('self', $data['applicant_type'])) {
             $totalPassengers++;
+        
         }
 
         // Family
@@ -702,14 +709,25 @@ public function saveBooking(array $data)
                 $authapplication = new AuthervisaApplication();
                 $authapplication->setConnection('user_database');
                 $authapplication->booking_id = $booking->id;
-                $authapplication->clint_id = $data['clientId'];
-                $authapplication->name = $firstname;
-                $authapplication->lastname = $data['passengerlastname'][$index];
-                $authapplication->passport_number = $data['passengerpassportn'][$index];
+                $authapplication->client_id = $data['clientId'];
+                $authapplication->client_name = $firstname . ' ' . $data['passengerlastname'][$index];
+                $authapplication->first_name = $firstname;
+                $authapplication->last_name = $data['passengerlastname'][$index];
+                $authapplication->passport_ic_number = $data['passengerpassportn'][$index];
                 $authapplication->passport_issue_date = $data['passportissuedate'][$index];
-                $authapplication->passport_expire_date = $data['passportexpiredate'][$index];
-                $authapplication->place_of_issue = $data['passengerplace'][$index];
+                $authapplication->passport_expiry_date = $data['passportexpiredate'][$index];
+                $authapplication->passport_issue_place = $data['passengerplace'][$index];
                 $authapplication->save();
+
+
+                $otherInfo = new OtherClientInfo();
+                $otherInfo->setConnection('user_database');
+                $otherInfo->authervisa_application_id = $authapplication->id;
+                $otherInfo->application_type = 'other'; // or 'other' dynamically if needed
+                $otherInfo->client_id = $data['clientId'];
+                $otherInfo->save();
+
+
             }
         }
 
@@ -719,13 +737,26 @@ public function saveBooking(array $data)
                 $authapplication = new AuthervisaApplication();
                 $authapplication->setConnection('user_database');
                 $authapplication->booking_id = $booking->id;
-                $authapplication->clint_id = $data['clientId'];
-                $authapplication->name = $firstname;
-                $authapplication->lastname = $data['family_passengerlastname'][$index];
-                $authapplication->passport_number = $data['family_passengerpassportn'][$index] ?? null;
-                $authapplication->citizenship = $data['family_passengerplace'][$index] ?? null; // Nationality
-                $authapplication->phone = $data['family_passengerphonenumber'][$index] ?? null;
+                $authapplication->client_id = $data['clientId'];
+                $authapplication->client_name = $firstname . ' ' . $data['family_passengerlastname'][$index];
+                $authapplication->first_name = $firstname;
+                $authapplication->last_name = $data['family_passengerlastname'][$index];
+                $authapplication->passport_ic_number = $data['family_passengerpassportn'][$index] ?? null;
+                // $authapplication->citizenship = $data['family_passengerplace'][$index] ?? null; // Nationality
+                $authapplication->phone_number = $data['family_passengerphonenumber'][$index] ?? null;
                 $authapplication->save();
+
+                $familyMember = FamilyMember::where('client_id', $data['clientId'])->where('first_name', $firstname)->first();
+
+                $otherInfo = new OtherClientInfo();
+                $otherInfo->setConnection('user_database');
+
+                
+                $otherInfo->authervisa_application_id = $authapplication->id;
+                $otherInfo->application_type = 'family'; // or 'other' dynamically if needed
+                $otherInfo->client_id = $data['clientId'];
+                $otherInfo->family_id = $familyMember->id;
+                $otherInfo->save();
             }
         }
 
@@ -829,19 +860,28 @@ public function updateBooking(array $data)
     $booking->save();
 
         // Save passenger details (additional passengers)
-        if (isset($data['passengerfirstname'])) {
+       if (isset($data['passengerfirstname'])) {
             foreach ($data['passengerfirstname'] as $index => $firstname) {
                 $authapplication = new AuthervisaApplication();
                 $authapplication->setConnection('user_database');
                 $authapplication->booking_id = $booking->id;
-                $authapplication->clint_id = $data['clientId'];
-                $authapplication->name = $firstname;
-                $authapplication->lastname = $data['passengerlastname'][$index];
-                $authapplication->passport_number = $data['passengerpassportn'][$index];
+                $authapplication->client_id = $data['clientId'];
+                $authapplication->client_name = $firstname . ' ' . $data['passengerlastname'][$index];
+                $authapplication->first_name = $firstname;
+                $authapplication->last_name = $data['passengerlastname'][$index];
+                $authapplication->passport_ic_number = $data['passengerpassportn'][$index];
                 $authapplication->passport_issue_date = $data['passportissuedate'][$index];
-                $authapplication->passport_expire_date = $data['passportexpiredate'][$index];
-                $authapplication->place_of_issue = $data['passengerplace'][$index];
+                $authapplication->passport_expiry_date = $data['passportexpiredate'][$index];
+                $authapplication->passport_issue_place = $data['passengerplace'][$index];
                 $authapplication->save();
+
+                $otherInfo = new OtherClientInfo();
+                $otherInfo->setConnection('user_database');
+                $otherInfo->authervisa_application_id = $authapplication->id;
+                $otherInfo->application_type = 'other'; // or 'other' dynamically if needed
+                $otherInfo->client_id = $data['clientId'];
+                $otherInfo->save();
+
             }
         }
 
@@ -851,13 +891,26 @@ public function updateBooking(array $data)
                 $authapplication = new AuthervisaApplication();
                 $authapplication->setConnection('user_database');
                 $authapplication->booking_id = $booking->id;
-                $authapplication->clint_id = $data['clientId'];
-                $authapplication->name = $firstname;
-                $authapplication->lastname = $data['family_passengerlastname'][$index];
-                $authapplication->passport_number = $data['family_passengerpassportn'][$index] ?? null;
-                $authapplication->citizenship = $data['family_passengerplace'][$index] ?? null; // Nationality
-                $authapplication->phone = $data['family_passengerphonenumber'][$index] ?? null;
+                $authapplication->client_id = $data['clientId'];
+                $authapplication->client_name = $firstname . ' ' . $data['family_passengerlastname'][$index];
+                $authapplication->first_name = $firstname;
+                $authapplication->last_name = $data['family_passengerlastname'][$index];
+                $authapplication->passport_ic_number = $data['family_passengerpassportn'][$index] ?? null;
+                // $authapplication->citizenship = $data['family_passengerplace'][$index] ?? null; // Nationality
+                $authapplication->phone_number = $data['family_passengerphonenumber'][$index] ?? null;
                 $authapplication->save();
+
+                $familyMember = FamilyMember::where('client_id', $data['clientId'])->where('first_name', $firstname)->first();
+
+
+                
+                $otherInfo = new OtherClientInfo();
+                $otherInfo->setConnection('user_database');
+                $otherInfo->authervisa_application_id = $authapplication->id;
+                $otherInfo->application_type = 'family'; // or 'other' dynamically if needed
+                $otherInfo->client_id = $data['clientId'];
+                $otherInfo->family_id = $familyMember->id;
+                $otherInfo->save();
             }
         }
 
@@ -1052,7 +1105,7 @@ public function getBookingByid($id, $type, $request)
 
                 // ✅ Get other members
                 $otherMember = AuthervisaApplication::on('user_database')
-                    ->where('clint_id', $viewbooking->client_id)
+                    ->where('client_id', $viewbooking->client_id)
                     ->where('booking_id', $viewbooking->id)
                     ->get();
 
@@ -1239,17 +1292,18 @@ public function getBookingByid($id, $type, $request)
     // Get the user-specific database name from the agency
     $database = $viewbooking->agency->database_name;
     $this->agencyService->setConnectionByDatabase($database); // Optional if used elsewhere
+    // dd($viewbooking);
 
      if($viewbooking->otherclientid==null){
     
+        // dd("heelo");
             // Load the clint relation from the user-specific database, including clientinfo
             $clientFromUserDB = ClientDetails::on('user_database')
                 ->with('clientinfo') // You can add other nested relations if needed
                 ->where('id', $viewbooking->client_id)
                 ->first();
-            //   dd( $viewbooking->id);
             $otherMember = AuthervisaApplication::on('user_database')
-                ->where('clint_id', $viewbooking->client_id)
+                ->where('client_id', $viewbooking->client_id)
                 ->where('booking_id', $viewbooking->id)
                 ->get();
         //   dd($otherMember);
@@ -1257,6 +1311,29 @@ public function getBookingByid($id, $type, $request)
             $viewbooking->setRelation('clint', $clientFromUserDB);
             $viewbooking->setRelation('otherclients', $otherMember);
 
+            // dd($clientFromUserDB);
+
+     }else{
+
+
+          $clientFromUserDB = AuthervisaApplication::on('user_database')
+                ->with('clientinfo') // You can add other nested relations if needed
+                ->with('client.clientinfo') // You can add other nested relations if needed
+                ->where('id', $viewbooking->otherclientid)
+                ->first();
+            // dd($clientFromUserDB);
+
+
+            //   dd( $viewbooking->id);
+            $otherMember = AuthervisaApplication::on('user_database')
+                ->where('client_id', $viewbooking->client_id)
+                ->where('booking_id', $viewbooking->id)
+                ->get();
+        //   dd($otherMember);
+            // Override the default `clint` relation with the correct one from user DB
+            $viewbooking->setRelation('clint', $clientFromUserDB);
+            $viewbooking->setRelation('otherclients', $otherMember);
+            // dd($viewbooking);   
      }
 
     
@@ -1439,7 +1516,7 @@ public function getBookingByid($id, $type, $request)
         ->where('id', $id)
         ->first();
  
-        
+
      $clientInfo = $this->agencyService->getClientinfoVisaBookingById($bookingData);
      return $clientInfo;
     }
@@ -1455,6 +1532,8 @@ public function getBookingByid($id, $type, $request)
     }
 
     $clientInfo = $this->agencyService->getClientinfoVisaBookingById($visabooking);
+
+    // dd($clientInfo);
 
     $basePrice = $visabooking->visasubtype->price + $visabooking->visasubtype->commission;
 
@@ -1497,6 +1576,12 @@ public function getBookingByid($id, $type, $request)
 
                     $newBooking->application_number = $application;
                     $newBooking->save();
+
+                          // Update related AuthervisaApplication record
+                        AuthervisaApplication::on('user_database')
+                            ->where('id', $memberId->id)
+                            ->update(['self_booking_id' => $newBooking->id]);
+
 
                     $this->payment($newBooking);
                 }
@@ -1636,10 +1721,14 @@ public function getBookingByid($id, $type, $request)
             }
 
             $oldValue = trim((string) $oldValue);
+        
             $newValue = is_null($newValue) ? null : trim((string) $newValue);
 
+            
             // Only log if changed
             if ($oldValue !== $newValue) {
+
+                // dd($key);
                 \App\Models\VisaApplicationLog::create([
                     'booking_id' => $booking->id,
                     'application_number' => $booking->application_number,

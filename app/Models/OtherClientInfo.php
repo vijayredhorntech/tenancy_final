@@ -12,108 +12,95 @@ class OtherClientInfo extends Model
 
     protected $table = 'other_client_infos';
 
-    protected $fillable = [
+   protected $fillable = [
         'authervisa_application_id',
-
-        // Personal Details
-        'title',
-        'full_name',
-        'gender',
-        'date_of_birth',
-        'place_of_birth',
-        'preview_name',
-        'country_of_citizenship',
-        'nationality_at_birth',
-        'marital_status',
-        'past_nationality',
+        'application_type',
+        'client_id',
+        'family_id',
+        'previous_name',
+        'previous_name_status',
         'religion',
-        'visible_identification_marks',
-        'languages_spoken',
-        'citizenship',
-
-        // Contact Details
-        'current_residential_address',
-        'city',
-        'state',
-        'postal_code',
-        'permanent_residential_address',
-        'country_of_residence',
-        'phone_mobile',
-        'phone_landline',
-        'email_address',
-
-        // Passport Information
-        'passport_type',
-        'passport_number',
-        'place_of_issue',
-        'date_of_issue',
-        'date_of_expiry',
-        'issuing_authority',
-        'previous_passport_number',
-
-        // Father Section
-        'father_full_name',
-        'father_place_of_birth',
-        'father_nationality',
-        'father_previous_nationality',
-        'father_country_of_birth',
-        'father_dob',
-        'father_employment',
-        'father_status_in_china',
-
-        // Mother Section
-        'mother_full_name',
-        'mother_place_of_birth',
-        'mother_nationality',
-        'mother_previous_nationality',
-        'mother_country_of_birth',
-        'mother_dob',
-        'mother_employment',
-        'mother_status_in_china',
-
-        // Spouse Section
-        'spouse_full_name',
-        'spouse_nationality',
-        'spouse_place_of_birth',
-        'spouse_previous_nationality',
-        'spouse_country_of_birth',
-        'spouse_dob',
-        'spouse_employment_status',
-        'spouse_address',
-
-        // Employment / Education Details
-        'occupation',
-        'past_occupation',
+        'place_of_birth',
+        'country_of_birth',
+        'citizenship_id',
+        'educational_qualification',
+        'identification_marks',
+        'nationality',
+        'past_nationality',
+        'passport_country',
+        'passport_issue_place',
+        'passport_ic_number',
+        'passport_issue_date',
+        'passport_expiry_date',
+        'haspassportidenty',
+        'other_passport_details',
+        'father_details',
+        'mother_details',
+        'spouse_details',
+        'children',
+        'present_occupation',
         'designation',
         'employer_name',
-        'business_name',
-        'school_name',
         'employer_address',
-        'employer_phone_number',
-        'employment_duration',
+        'employer_phone',
+        'past_occupation',
+        'reference_name',
+        'reference_address',
+        'personal_details_permission',
+        'other_details_permission',
+        'address_permission',
+        'passport_details_permission',
+        'additional_passport_info_permission',
+        'family_details_permission',
+        'wife_details_permission',
+        'children_permission',
+        'occupation_details_permission',
+        'armed_force_details_permission',
+        'armed_permission',
+        'arms_details',
+        'title',
+        'language_spoken',
+        'citizenship_national_id_no',
+        'employment',
+        'education',
+        'social_media',
+        'has_military',
+        'military_info',
+        'relative_information',
+        'passport_type',
         'duty',
-        'study_duration',
-        'employment_monthly_income',
-        'educational_qualifications',
-
-        // Military / Service History
-        'military_status',
-        'service_date_from',
-        'service_date_to',
-
-        // Social Media / Online Presence
-        'facebook',
-        'instagram',
-        'twitter',
-        'linkedin',
-        'other_social_media',
-        'personal_website',
-        'blog_urls',
+        'date_from',
+        'date_to',
     ];
 
+    protected $casts = [
+        'previous_name_status' => 'boolean',
+        'personal_details_permission' => 'boolean',
+        'other_details_permission' => 'boolean',
+        'address_permission' => 'boolean',
+        'passport_details_permission' => 'boolean',
+        'additional_passport_info_permission' => 'boolean',
+        'family_details_permission' => 'boolean',
+        'wife_details_permission' => 'boolean',
+        'children_permission' => 'boolean',
+        'occupation_details_permission' => 'boolean',
+        'armed_force_details_permission' => 'boolean',
+        'armed_permission' => 'boolean',
+        'passport_issue_date' => 'date',
+        'passport_expiry_date' => 'date',
+        'date_from' => 'date',
+        'date_to' => 'date',
+    ];
+
+    // 🔗 Relationships
     public function authervisaApplication()
     {
         return $this->belongsTo(AuthervisaApplication::class, 'authervisa_application_id');
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(ClientDetails::class, 'client_id');
     }
 }
  

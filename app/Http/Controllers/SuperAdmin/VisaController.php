@@ -712,6 +712,7 @@ public function hsVisaBook(Request $request)
             'bookingid'    => 'required',
         ]);
    
+        // dd($request->all());
         $agency = $this->agencyService->getAgencyData();
         
         // All members are now automatically included, no need for checkbox logic
@@ -736,6 +737,7 @@ public function hsVisaBook(Request $request)
         public function hs_visaApplication($type,Request $request){
  
  
+            // dd("here");
         /***Ger Agency Rerod in the Visa Application ****/
         $agency = $this->agencyService->getAgencyData();
         
@@ -1167,6 +1169,7 @@ public function hsconfirmApplication(Request $request)
   
   
     $booking = $this->visaRepository->bookingDataById($request->bookingid);
+
     $newData = $request->all();
 
     $updateBooking = $this->visaRepository->createApplicationLog($booking, $newData);
@@ -1207,7 +1210,7 @@ public function hsconfirmApplication(Request $request)
 
     // Step 5: Update application flag
     // dd($booking);
-    $booking->sendtoadmin = 3;
+    $booking->sendtoadmin = 0;
     $booking->save();
 
     // Step 6: Redirect

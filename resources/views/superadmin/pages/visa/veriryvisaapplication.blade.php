@@ -22,6 +22,7 @@
         
         <div class="w-full ">
 
+ 
               @if($bookingData->destination->countryName == 'China')
                 @include('components.application.chinaviewapplication', ['bookingData' => $bookingData])
 

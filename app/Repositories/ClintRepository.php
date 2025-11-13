@@ -482,43 +482,131 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
         ];
     }
 
-
     public function step1createclient($data)
 {
-    // dd($data);
-    // Assuming this gets visa booking data from default DB
+    // Get booking from default DB
     $visabooking = $this->visaRepository->bookingDataById($data['bookingid']);
-    
-    // Check if this is a client submission or agency submission
+
+    // Check if booking belongs to main client or other client
+    $isMainClient = is_null($visabooking->otherclientid);
     $isClientSubmission = ($data['type'] ?? '') === 'client';
-    
-    if ($isClientSubmission) {
-        // For client submissions, we don't need agency data
-        $userDbConnection = 'user_database'; // Your second DB connection name
-        $client = ClientDetails::on($userDbConnection)->where('id', $visabooking->client_id)->first();
-        $this->updateClientData($data, $client, $userDbConnection);
-        $moreInfo = ClientMoreInfo::on($userDbConnection)->where('clientid', $visabooking->client_id)->first();
-        $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
-        
-        // Update other client infos for additional members
-        $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
+    $userDbConnection = 'user_database'; // Tenant DB connection
+
+    // Handle MAIN CLIENT CASE
+    if ($isMainClient) {
+
+        if ($isClientSubmission) {
+            // Client submitting their own form
+            $client = ClientDetails::on($userDbConnection)
+                ->where('id', $visabooking->client_id)
+                ->first();
+
+            $this->updateClientData($data, $client, $userDbConnection);
+
+            $moreInfo = ClientMoreInfo::on($userDbConnection)
+                ->where('clientid', $visabooking->client_id)
+                ->first();
+
+            $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
+            $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
+
+        } else {
+            // Agency submitting on behalf of client
+            $agency = $this->agencyService->getAgencyData();
+            $user = $this->agencyService->getCurrentLoginUser();
+
+            $client = ClientDetails::on($userDbConnection)
+                ->where('id', $visabooking->client_id)
+                ->first();
+
+            $this->updateClientData($data, $client, $userDbConnection);
+
+            $moreInfo = ClientMoreInfo::on($userDbConnection)
+                ->where('clientid', $visabooking->client_id)
+                ->first();
+
+            $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
+            $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
+        }
+
     } else {
-        // For agency submissions, get agency data
-        $agency = $this->agencyService->getAgencyData();
-        $user = $this->agencyService->getCurrentLoginUser();
-        $userDbConnection = 'user_database'; // Your second DB connection name
-        $client = ClientDetails::on($userDbConnection)->where('id', $visabooking->client_id)->first();
-        $this->updateClientData($data, $client, $userDbConnection);
-        $moreInfo = ClientMoreInfo::on($userDbConnection)->where('clientid', $visabooking->client_id)->first();
-        $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
-        
-        // Update other client infos for additional members
-        $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
+        // Handle OTHER CLIENT CASE (from AuthervisaApplication)
+        if ($isClientSubmission) {
+            // Client submission for other member
+            $client = AuthervisaApplication::on($userDbConnection)
+                ->where('id', $visabooking->otherclientid)
+                ->first();
+
+            $this->updateClientData($data, $client, $userDbConnection);
+
+            $moreInfo = OtherClientInfo::on($userDbConnection)
+                ->where('authervisa_application_id', $visabooking->otherclientid)
+                ->first();
+
+            $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
+            $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
+
+        } else {
+            // Agency submission for other member
+            $agency = $this->agencyService->getAgencyData();
+            $user = $this->agencyService->getCurrentLoginUser();
+
+            $client = AuthervisaApplication::on($userDbConnection)
+                ->where('id', $visabooking->otherclientid)
+                ->first();
+
+            $this->updateClientData($data, $client, $userDbConnection);
+
+            $moreInfo = OtherClientInfo::on($userDbConnection)
+                ->where('authervisa_application_id', $visabooking->otherclientid)
+                ->first();
+
+            $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
+            $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
+        }
     }
+
+    // Debug only if needed
+    // dd($visabooking);
 }
 
 
-private function updateClientData(array $data, ClientDetails $client, string $connection = null)
+//     public function step1createclient($data)
+// {
+//     // dd($data);
+//     // Assuming this gets visa booking data from default DB
+//     $visabooking = $this->visaRepository->bookingDataById($data['bookingid']);
+    
+//     // Check if this is a client submission or agency submission
+//     $isClientSubmission = ($data['type'] ?? '') === 'client';
+    
+//     if ($isClientSubmission) {
+//         // For client submissions, we don't need agency data
+//         $userDbConnection = 'user_database'; // Your second DB connection name
+//         $client = ClientDetails::on($userDbConnection)->where('id', $visabooking->client_id)->first();
+//         $this->updateClientData($data, $client, $userDbConnection);
+//         $moreInfo = ClientMoreInfo::on($userDbConnection)->where('clientid', $visabooking->client_id)->first();
+//         $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
+        
+//         // Update other client infos for additional members
+//         $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
+//     } else {
+//         // For agency submissions, get agency data
+//         $agency = $this->agencyService->getAgencyData();
+//         $user = $this->agencyService->getCurrentLoginUser();
+//         $userDbConnection = 'user_database'; // Your second DB connection name
+//         $client = ClientDetails::on($userDbConnection)->where('id', $visabooking->client_id)->first();
+//         $this->updateClientData($data, $client, $userDbConnection);
+//         $moreInfo = ClientMoreInfo::on($userDbConnection)->where('clientid', $visabooking->client_id)->first();
+//         $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
+        
+//         // Update other client infos for additional members
+//         $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
+//     }
+// }
+
+
+private function updateClientData(array $data, $client, string $connection = null)
 {
     if ($connection) {
         $client->setConnection($connection);
@@ -561,7 +649,7 @@ private function updateClientData(array $data, ClientDetails $client, string $co
 
 
 
-private function updateMoreClientInfo(ClientMoreInfo $info, array $data, string $connection = null)
+private function updateMoreClientInfo($info, array $data, string $connection = null)
 {
     // dd("heelo");
     // dd($data);

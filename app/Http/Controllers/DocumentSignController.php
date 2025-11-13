@@ -208,7 +208,9 @@ public function hsDownloadeSignDocument($id){
 
     public function hs_generateInvoice($id, $type){
     
+     
         $documents = $this->documentSignRepository->createDocumentAgency($id, $type);
+
      
         
         return redirect()

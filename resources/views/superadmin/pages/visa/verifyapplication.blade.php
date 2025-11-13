@@ -151,14 +151,14 @@
                                                             <span class="text-primary font-bold">{{ $index + 1 }}</span>
                                                         </div>
                                                         <div>
-                                                            <h4 class="text-base font-semibold text-gray-800">{{ $otherclient->name ?? 'N/A' }} {{ $otherclient->lastname ?? '' }}</h4>
+                                                            <h4 class="text-base font-semibold text-gray-800">{{ $otherclient->client_name ?? 'N/A' }} </h4>
                                                             <p class="text-sm text-gray-500">Travel Group Member</p>
                                                         </div>
                                                     </div>
                                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 ml-13">
                                                         <div>
                                                             <label class="block text-xs font-medium text-gray-500 mb-1">Passport Number</label>
-                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->passport_number ?? 'N/A' }}</p>
+                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->passport_ic_number ?? 'N/A' }}</p>
                                                         </div>
                                                         <div>
                                                             <label class="block text-xs font-medium text-gray-500 mb-1">Nationality</label>
@@ -166,7 +166,7 @@
                                                         </div>
                                                         <div>
                                                             <label class="block text-xs font-medium text-gray-500 mb-1">Phone Number</label>
-                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->phone ?? 'N/A' }}</p>
+                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->phone_number ?? 'N/A' }}</p>
                                                         </div>
                                                     </div>
                                                 </div>

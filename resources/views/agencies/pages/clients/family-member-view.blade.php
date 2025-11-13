@@ -46,18 +46,7 @@
                                 <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Nationality:</th>
                                 <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->nationality ?? 'N/A' }}</td>
                             </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Birth Place:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->birth_place ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Country of Birth:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->country_of_birth ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Email:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->email ?? 'N/A' }}</td>
-                            </tr>
+                 
                             <tr class="border-b border-gray-100">
                                 <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Phone Number:</th>
                                 <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->phone_number ?? 'N/A' }}</td>
@@ -66,48 +55,8 @@
                                 <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Passport Number:</th>
                                 <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->passport_number ?? 'N/A' }}</td>
                             </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Employment:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->employment ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Employer Name:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->employer_name ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Address:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->address ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">City:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->city ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Country:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->country ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Educational Qualification:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->educational_qualification ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Religion:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->religion ?? 'N/A' }}</td>
-                            </tr>
-                            @if($familyMember->military_status)
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Military Organization:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->military_organization ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Military Designation:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->military_designation ?? 'N/A' }}</td>
-                            </tr>
-                            <tr class="border-b border-gray-100">
-                                <th class="w-[200px] font-bold text-xl text-ternary px- py-3">Military Rank:</th>
-                                <td class="text-ternary text-lg px-20 py-3">{{ $familyMember->military_rank ?? 'N/A' }}</td>
-                            </tr>
-                            @endif
+                       
+                          
                         </tbody>
                     </table>
                 </div>

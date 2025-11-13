@@ -151,9 +151,12 @@ public function sendEmailForSign(Request $request, int $documentId): void
      
     $user = $this->agencyService->getCurrentLoginUser();
   
+
     if($type=="Visa"){
     
        $data=$this->getVisaInformation($id);
+      
+    //    dd($data);
     //    dd($data->agency_id);
     //    dd($data);
 
@@ -187,13 +190,15 @@ public function sendEmailForSign(Request $request, int $documentId): void
     $document = DocSignDocument::create($docData);
     $fakeRequest = request();
     $saveDocument=$this->saveDocumentForSign($document,$fakeRequest);
-    // dd($saveDocument);
+ 
 
     return $document;
 }
 
 protected function getVisaInformation($id){
+
    return  $this->visaRepository->getBookingBySingleId($id);
+   
 
 }
 

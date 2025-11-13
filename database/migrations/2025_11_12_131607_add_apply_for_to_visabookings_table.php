@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('visabookings', function (Blueprint $table) {
-            $table->enum('apply_for', ['self', 'family', 'other'])->default('self')->after('client_id');
+            $table->enum('apply_for', ['notselected','self', 'family', 'other'])->default('notselected')->after('client_id');
         });
     }
 

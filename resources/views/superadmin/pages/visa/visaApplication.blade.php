@@ -317,8 +317,8 @@
                             <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-bold text-sm">
                                     @php
                                         if (isset($booking->otherclientid) && isset($booking->otherapplicationDetails)) {
-                                            $firstName = $booking->otherapplicationDetails?->name ?? '';
-                                            $lastName = $booking->otherapplicationDetails?->lastname ?? '';
+                                            $firstName = $booking->otherapplicationDetails?->first_name ?? '';
+                                            $lastName = $booking->otherapplicationDetails?->last_name ?? '';
                                             $fullName = trim($firstName . ' ' . $lastName);
 
                                             $email = $booking->clint?->email ?? '';

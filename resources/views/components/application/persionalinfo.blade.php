@@ -58,7 +58,7 @@
 
 
    <!-- preview details -->
-                    @if(in_array('Preview Name', $permission))
+              {{-- @if(in_array('Preview Name', $permission))
                     <input type="hidden" name="previous_name" value="">
                             <div class="mb-4">
                                                             <label class="font-semibold text-sm text-ternary/90">Do you have a previous name?</label>
@@ -78,7 +78,7 @@
                             </div>
                     
                         <div id="previousNameSection" class="hidden group flex flex-col gap-2 mb-4" >
-                                                                <!-- Previous First Name -->
+                                                             
                                                                 <div class="w-full relative group flex flex-col gap-1">
                                                                     <label for="previous_name" class="font-semibold text-ternary/90 text-sm">Previous Name (if any)</label>
                                                                     <div class="w-full relative">
@@ -89,7 +89,72 @@
                                                                     </div>
                                                                 </div>
                         </div>
-                    @endif
+             @endif --}}
+
+             
+@if(in_array('Preview Name', $permission))
+    <input type="hidden" name="previous_name" value="">
+
+    <div class="mb-4">
+        <label class="font-semibold text-sm text-ternary/90">Do you have a previous name?</label>
+
+        <div class="flex gap-4 mt-1">
+            <!-- Yes Option -->
+            <label>
+                <input 
+                    type="radio" 
+                    name="has_previous_name" 
+                    value="yes" 
+                    onclick="togglePreviousName(true)"
+                    {{ $bookingData->clint?->clientinfo?->previous_name ? 'checked' : '' }}
+                > Yes
+            </label>
+
+            <!-- No Option -->
+            <label>
+                <input 
+                    type="radio" 
+                    name="has_previous_name" 
+                    value="no" 
+                    onclick="togglePreviousName(false)"
+                    {{ !$bookingData->clint?->clientinfo?->previous_name ? 'checked' : '' }}
+                > No
+            </label>
+        </div>
+    </div>
+
+    <!-- Previous Name Section -->
+    <div 
+        id="previousNameSection" 
+        class="{{ $bookingData->clint?->clientinfo?->previous_name ? 'flex flex-col gap-2 mb-4' : 'hidden flex flex-col gap-2 mb-4' }}"
+    >
+        <!-- Previous First Name -->
+        <div class="w-full relative group flex flex-col gap-1">
+            <label for="previous_name" class="font-semibold text-ternary/90 text-sm">
+                Previous Name (if any)
+            </label>
+            <div class="w-full relative">
+                <input 
+                    type="text" 
+                    name="previous_name" 
+                    id="previous_name"
+                    value="{{ $bookingData->clint?->clientinfo?->previous_name ?? '' }}"
+                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] 
+                           border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 
+                           focus:outline-none focus:ring-0 focus:border-secondary/70 
+                           placeholder-ternary/70 transition ease-in duration-200"
+                    placeholder="Enter your previous name"
+                >
+                <i class="fa fa-user-tag absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS to toggle section -->
+
+@endif
+
+             
 
 
    @if(in_array('Gender', $permission)) 

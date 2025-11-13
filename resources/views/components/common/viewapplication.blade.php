@@ -76,18 +76,18 @@
                         <div class="p-6">
                             <div class="flex flex-col md:flex-row gap-6">
                                 <div class="flex-1">
-                                    <div class="space-y-4">
+                                    <div class="space-y-4"> 
                                         <div>
                                             <label class="block text-sm font-medium text-gray-500 mb-1">Full Name</label>
                                             <p class="text-gray-800 font-medium">{{ $clientData->clint->client_name ?? 'N/A' }}</p>
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-500 mb-1">Email</label>
-                                            <p class="text-gray-800 font-medium">{{ $clientData->clint->email ?? 'N/A' }}</p>
+                                            <p class="text-gray-800 font-medium">{{ $clientData->clint->email ?? $clientData->clint->client->email ?? 'N/A' }}</p>
                                         </div>
                                         <div>
                                             <label class="block text-sm font-medium text-gray-500 mb-1">Phone Number</label>
-                                            <p class="text-gray-800 font-medium">{{ $clientData->clint->phone_number ?? 'N/A' }}</p>
+                                            <p class="text-gray-800 font-medium">{{ $clientData->clint->phone_number ?? $clientData->clint->client->phone_number ?? 'N/A' }}</p>
                                         </div>
                                     </div>
                                 </div>

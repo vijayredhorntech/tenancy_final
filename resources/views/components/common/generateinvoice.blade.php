@@ -107,14 +107,14 @@
                 <div class="w-full relative group flex flex-col gap-1 xl:col-span-1">
                     <label class="font-semibold text-ternary/90 text-sm">Passport Origin</label>
                     <div class="w-full relative">
-                        <input type="text" readonly value="{{$clientData->clint->clientinfo->passport_issue_place}}" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                        <input type="text" readonly value="{{$clientData->clint->clientinfo->passport_issue_place ?? ''}}" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                     </div>
                 </div>
 
                 <div class="w-full relative group flex flex-col gap-1 xl:col-span-1">
                     <label class="font-semibold text-ternary/90 text-sm">Password No.</label>
                     <div class="w-full relative">
-                        <input type="text" readonly value="{{$clientData->clint->clientinfo->passport_ic_number}}" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
+                        <input type="text" readonly value="{{$clientData->clint->clientinfo->passport_ic_number ?? ''}}" class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-2000">
                     </div>
                 </div>
 
