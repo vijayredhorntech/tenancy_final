@@ -1138,6 +1138,7 @@ public function hsCanceledInvoice(Request $request, $type)
     /****Invoice Data ****/
     public function hs_viewInvoice(Request $request,$id){
 
+     
         $invoice = Deduction::with([
             'service_name', 
             'agency',
@@ -1197,6 +1198,7 @@ public function hsCanceledInvoice(Request $request, $type)
 
 public function hs_allInvoices(Request $request)
 {
+  
     $perPage = $request->input('per_page', 10); // Default to 10 items per page
 
 
@@ -1374,6 +1376,8 @@ public function hs_allInvoices(Request $request)
 
 public function hsAllinvoice(Request $request)
 {
+
+  
     $perPage = $request->filled('per_page') && is_numeric($request->per_page)
         ? (int) $request->per_page
         : null;
@@ -1464,6 +1468,7 @@ public function hsAllinvoice(Request $request)
   
 
 
+
     return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices'));
 }
 
@@ -1522,6 +1527,7 @@ public function hsviewInvoice(Request $request, $id)
 
     // Load additional relationships for invoice display
     $booking->load('deduction.invoice', 'origin', 'destination', 'visasubtype', 'visa');
+
 
     return view('superadmin.pages.invoicehandling.invoiceview', [
         'booking' => $booking,

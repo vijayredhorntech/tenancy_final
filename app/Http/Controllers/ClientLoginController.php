@@ -20,6 +20,20 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use App\Models\Deduction;
 use App\Models\Invoice; 
+use App\Models\Country; 
+use App\Models\Service; 
+
+
+
+
+
+
+
+
+use App\Models\AuthervisaApplication; 
+
+
+
 use App\Repositories\Interfaces\DocumentSignRepositoryInterface;
 use App\Repositories\Interfaces\TermConditionRepositoryInterface;
 
@@ -400,48 +414,193 @@ class ClientLoginController extends Controller
 
     /*******Client Invoice Handler /**** */ 
 
-    public function hsclientInvoice(Request $request)
-    {
-        $clientInformation= $this->agencyService->getLoginClient();
-        $clientData=$clientInformation['agencydatabaseclient'];
+  
+    //   public function hsclientInvoice(Request $request)
+    // {
+
+    //     $clientInformation= $this->agencyService->getLoginClient();
+    //     $clientData=$clientInformation['agencydatabaseclient'];
 
 
-        // ✅ Pagination value
-        $perPage = $request->filled('per_page') && is_numeric($request->per_page)
-            ? (int) $request->per_page
-            : null;
+    //     // ✅ Pagination value
+    //     $perPage = $request->filled('per_page') && is_numeric($request->per_page)
+    //         ? (int) $request->per_page
+    //         : null;
 
-        // ✅ Query with relations and filters
-        $invoicesQuery = Deduction::with([
-            'service_name',
-            'agency',
-            'visaBooking.visa',
-            'visaBooking.origin',
-            'visaBooking.destination',
-            'visaBooking.visasubtype',
-            'visaBooking.clint',
-            'visaApplicant',
-            'flightBooking',
-            'hotelBooking',
-            'hotelDetails',
-            'cancelinvoice',
-            'invoice',
-            'docsign'
-        ])
-        ->where(function ($q) {
-            $q->whereNull('invoicestatus')
-            ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
-        })
-        ->where('client_id', $clientData->id)
-        ->where('agency_id', $clientData->agency_id);
+    //     // ✅ Query with relations and filters
+    //     $invoicesQuery = Deduction::with([
+    //         'service_name',
+    //         'agency',
+    //         'visaBooking.visa',
+    //         'visaBooking.origin',
+    //         'visaBooking.destination',
+    //         'visaBooking.visasubtype',
+    //         'visaBooking.clint',
+    //         'visaApplicant',
+    //         'flightBooking',
+    //         'hotelBooking',
+    //         'hotelDetails',
+    //         'cancelinvoice',
+    //         'invoice',
+    //         'docsign'
+    //     ])
+    //     ->where(function ($q) {
+    //         $q->whereNull('invoicestatus')
+    //         ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
+    //     })
+    //     ->where('client_id', $clientData->id)
+    //     ->where('agency_id', $clientData->agency_id);
 
-        // ✅ Get paginated or full results
-        $invoices = $perPage 
-            ? $invoicesQuery->paginate($perPage) 
-            : $invoicesQuery->get();
+    //     // ✅ Get paginated or full results
+    //     $invoices = $perPage 
+    //         ? $invoicesQuery->paginate($perPage) 
+    //         : $invoicesQuery->get();
 
-        return view('clients.pages.invoice.invoicehandling', compact('invoices'));
+
+    //     return view('clients.pages.invoice.invoicehandling', compact('invoices'));
+    // }
+
+ public function hsclientInvoice(Request $request)
+{
+            // Step 1: Logged-in client info
+            $clientInfo = $this->agencyService->getLoginClient();
+            $clientData = $clientInfo['agencydatabaseclient'];
+
+            $agencyId = $clientData->agency_id;
+
+            // Step 2: Pagination
+            $perPage = $request->filled('per_page') && is_numeric($request->per_page)
+                ? (int) $request->per_page
+                : null;
+
+            // Step 3: Base Query (same as hsAllinvoice)
+            $invoicesQuery = Deduction::with([
+                'service_name',
+                'agency',
+                'visaBooking.visa',
+                'visaBooking.origin',
+                'visaBooking.destination',
+                'visaBooking.visasubtype',
+                'visaBooking.clint',
+                'visaApplicant',
+                'flightBooking',
+                'hotelBooking',
+                'hotelDetails',
+                'cancelinvoice',
+                'invoice',
+                'docsign'
+            ])
+                ->where('agency_id', $agencyId)
+                ->where('client_id', $clientData->id)
+                ->where(function ($q) {
+                    $q->whereNull('invoicestatus')
+                    ->orWhereNotIn('invoicestatus', ['canceled', 'edited']);
+                });
+
+            // Step 4: EXTRA — Visa booking filter (same as hsAllinvoice)
+            $invoicesQuery->whereHas('visaBooking', function ($q) {
+                $q->whereNull('otherclientid')
+                ->orWhere('otherclientid', '');
+            });
+
+            // Step 5: Apply all filters (copied from hsAllinvoice)
+    if ($request->filled('status') || $request->filled('date_from') ||
+        $request->filled('date_to') || $request->filled('search')) {
+
+        $invoicesQuery->where(function ($q) use ($request) {
+
+            // STATUS FILTER
+            if ($request->filled('status')) {
+
+                if ($request->status === 'Adjusted') {
+
+                    // Check status in deductions table
+                    $q->where('invoicestatus', 'Adjusted');
+
+                } else {
+
+                    // Check status in invoice table
+                    $q->whereHas('invoice', function ($subQ) use ($request) {
+                        $subQ->where('status', $request->status);
+                    });
+                }
+
+            } else {
+
+                // APPLY DATE + SEARCH FILTERS
+                $q->whereHas('invoice', function ($subQ) use ($request) {
+
+                    // Date From
+                    if ($request->filled('date_from')) {
+                        $subQ->whereDate('created_at', '>=', $request->date_from);
+                    }
+
+                    // Date To
+                    if ($request->filled('date_to')) {
+                        $subQ->whereDate('created_at', '<=', $request->date_to);
+                    }
+
+                    // Search
+                    if ($request->filled('search')) {
+                        $search = $request->search;
+                        $subQ->where(function ($innerQ) use ($search) {
+                            $innerQ->where('invoice_no', 'like', "%{$search}%")
+                                   ->orWhere('client_name', 'like', "%{$search}%");
+                        });
+                    }
+
+                })
+                ->orWhereDoesntHave('invoice'); // include deductions without invoices
+            }
+        });
     }
+
+    // Step 6: Pagination / Get All
+    $invoices = $perPage
+        ? $invoicesQuery->paginate($PerPage)->appends($request->query())
+        : $invoicesQuery->get();
+
+    // Step 7: Load user_database relations
+    foreach ($invoices as $invoice) {
+
+        if ($invoice->agency && $invoice->visaBooking) {
+
+            // Switch DB
+            $this->agencyService->setDatabaseConnection($invoice->agency->database_name);
+
+            $clientId  = $invoice->visaBooking->client_id;
+            $bookingId = $invoice->visaBooking->id;
+
+            // Client details
+            $clientFromUserDB = ClientDetails::on('user_database')
+                ->with('clientinfo')
+                ->find($clientId);
+
+            // Family members
+            $otherMembers = AuthervisaApplication::on('user_database')
+                ->where('client_id', $clientId)
+                ->where('booking_id', $bookingId)
+                ->get();
+
+            // Attach to model
+            $invoice->visaBooking->setRelation('clientDetailsFromUserDB', $clientFromUserDB);
+            $invoice->visaBooking->setRelation('otherMembersFromUserDB', $otherMembers);
+        }
+    }
+
+    // Step 8: Load filters for UI
+    $countries = Country::all();
+    $services  = Service::whereIn('id', [1, 2, 3])->get();
+
+    // Step 9: Return client invoice view
+    return view('clients.pages.invoice.invoicehandling', [
+        'invoices'  => $invoices,
+        'countries' => $countries,
+        'services'  => $services,
+    ]);
+}
+
+
 
 
      public function hsviewInvoice(Request $request,$id){

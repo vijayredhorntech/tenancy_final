@@ -216,7 +216,15 @@
                                     $additionalMembers = isset($clientData->otherclients) ? count($clientData->otherclients) : 0;
 
                                     // Total for all passengers
-                                    $totalPassengers = 1 + $additionalMembers;
+                                    $selfSelected = ($clientData->apply_for === 'self');
+
+                                    $totalPassengers = $selfSelected    
+                                        ? 1 + $additionalMembers
+                                        : $additionalMembers;
+
+                                    // Ensure minimum 1 passenger
+                                    $totalPassengers = max(1, $totalPassengers);
+                          
                                     $grandTotal = $subtotal * $totalPassengers;
                                 @endphp
 

@@ -768,7 +768,18 @@ public function allVisacoutnry($request)
 
 public function saveBooking(array $data)
 {
+
+
     try {
+            
+        if(in_array('self', $data['applicant_type'])){
+                    $data['apply_for'] = 'self';
+                }else{
+                    $data['apply_for'] = 'notselected';
+                }
+
+                
+          
         // -----------------------------
         // MAIN DATABASE TRANSACTION
         // -----------------------------
@@ -839,6 +850,9 @@ public function saveBooking(array $data)
             $booking->client_id         = $clientId;
             $booking->total_amount      = $totalAmount;
             $booking->dateofentry       = $data['dateofentry'];
+            $booking->apply_for         = $data['apply_for'];
+       
+
             $booking->application_number = ''; // temporarily empty
             $booking->save();
 
@@ -1686,73 +1700,203 @@ public function getBookingByid($id, $type, $request)
      return $clientInfo;
     }
 
-    public function updateClientBooking($id,$data){
-    
-      $visabooking = VisaBooking::with('visasubtype', 'deduction', 'agency')
-                ->where('id', $id)
-                ->first();
+    /***
+     * Update CLient Booking Data
+     */
+        public function updateClientBooking($id, $data)
+    {
+        $visabooking = VisaBooking::with('visasubtype')->find($id);
 
-    if (!$visabooking) {
-        throw new \Exception("Visa booking not found.");
-    }
+        if (!$visabooking) {
+            throw new \Exception("Visa booking not found.");
+        }
 
-    $clientInfo = $this->agencyService->getClientinfoVisaBookingById($visabooking);
+        $clientInfo = $this->agencyService->getClientinfoVisaBookingById($visabooking);
+        $applyFor   = $clientInfo->apply_for;
+        $agency     = $this->agencyService->getAgencyData();
 
-    // dd($clientInfo);
+        $basePrice = $visabooking->visasubtype->price + $visabooking->visasubtype->commission;
 
-    $basePrice = $visabooking->visasubtype->price + $visabooking->visasubtype->commission;
+        /* ----------------------------------------------------
+        1️⃣ IF SELF SELECTED → ONLY UPDATE MAIN BOOKING
+        ---------------------------------------------------- */
+        if ($applyFor === 'self') {
 
-    if (isset($clientInfo->otherclients) && count($clientInfo->otherclients) > 0) {
-        $price = $basePrice * (count($clientInfo->otherclients) + 1); 
-        // +1 for the main client
-    } else {
-        $price = $basePrice;
+            $visabooking->otherclientid = null; // RESET
+            $visabooking->total_amount = $basePrice;
+            $visabooking->amount = $basePrice;
+            $visabooking->payment_status = "Paid";
+            $visabooking->confirm_application = 1;
+            $visabooking->save();
 
-    }
+            $payment = $this->payment($visabooking);
+            $this->saveInvoice($visabooking, $payment);
 
-       $visabooking->total_amount = $price;
-       $visabooking->amount = $basePrice;
+            if (isset($clientInfo->otherclients)) {
+                      $agency = $this->agencyService->getAgencyData();
 
-       
-        $visabooking->payment_status="Paid";
-        $visabooking->confirm_application=1;
-        $visabooking->save(); 
+                                foreach ($clientInfo->otherclients as $i => $memberId) {
+                            
+                                    $index = $i + 1;
+                                    $newBooking = $visabooking->replicate(); // clone the existing booking
+                                    $newBooking->client_id = $visabooking->client_id;
+                                    $newBooking->otherclientid = $memberId->id; // link to original client
+                                    $newBooking->application_number = '';
+                                    
+                                    // Using loop index instead of memberId
+                                    $agencyInitial = strtoupper(substr($agency->name, 0, 1)); 
+                                    $application = "CLDA" . $agencyInitial . "I00" . ($visabooking->id + $index);
 
-        $paymentInfo=$this->payment($visabooking);
-        $this->saveInvoice($visabooking,$paymentInfo);
+                                    $newBooking->application_number = $application;
+                                    $newBooking->save();
 
-
-    
-
-        if (isset($clientInfo->otherclients)) {
-                $agency = $this->agencyService->getAgencyData();
-
-                foreach ($clientInfo->otherclients as $i => $memberId) {
-            
-                    $index = $i + 1;
-                    $newBooking = $visabooking->replicate(); // clone the existing booking
-                    $newBooking->client_id = $visabooking->client_id;
-                    $newBooking->otherclientid = $memberId->id; // link to original client
-                    $newBooking->application_number = '';
-                    
-                    // Using loop index instead of memberId
-                    $agencyInitial = strtoupper(substr($agency->name, 0, 1)); 
-                    $application = "CLDA" . $agencyInitial . "I00" . ($visabooking->id + $index);
-
-                    $newBooking->application_number = $application;
-                    $newBooking->save();
-
-                          // Update related AuthervisaApplication record
-                        AuthervisaApplication::on('user_database')
-                            ->where('id', $memberId->id)
-                            ->update(['self_booking_id' => $newBooking->id]);
+                                        // Update related AuthervisaApplication record
+                                        AuthervisaApplication::on('user_database')
+                                            ->where('id', $memberId->id)
+                                            ->update(['self_booking_id' => $newBooking->id]);
 
 
-                    $this->payment($newBooking);
-                }
-    }
+                                    $this->payment($newBooking);
+                                }
+                    }
+                        return true;
+
+           
+            return true;
+        }
+
+
+        /* ----------------------------------------------------
+        2️⃣ SELF NOT SELECTED → MAIN BOOKING SHOULD POINT 
+            TO THE FIRST FAMILY MEMBER
+        ---------------------------------------------------- */
+
+        $members = $clientInfo->otherclients;
+
+        if (count($members) === 0) {
+            throw new \Exception("No family members found.");
+        }
+
+        // Pick first other client
+        $firstMember = $members[0];
+
+        // MOVE main booking to represent FIRST family member
+        $visabooking->otherclientid = $firstMember->id;
+        $visabooking->total_amount = $basePrice;
+        $visabooking->amount = $basePrice;
+        $visabooking->payment_status = "Paid";
+        $visabooking->confirm_application = 1;
+        $visabooking->save();
+
+        // Update authervisa
+        AuthervisaApplication::on('user_database')
+            ->where('id', $firstMember->id)
+            ->update(['self_booking_id' => $visabooking->id]);
+
+
+        $payment = $this->payment($visabooking);
+        $this->saveInvoice($visabooking, $payment);
+
+
+        /* ----------------------------------------------------
+        3️⃣ CREATE NEW BOOKINGS FOR REMAINING FAMILY MEMBERS
+        ---------------------------------------------------- */
+        $memberCount = count($members);
+
+        for ($i = 1; $i < $memberCount; $i++) {
+
+            $member = $members[$i];
+
+            $newBooking = $visabooking->replicate([
+                'id', 'application_number'
+            ]);
+
+            $newBooking->otherclientid = $member->id;
+            $newBooking->application_number = '';
+
+            // Generate application number
+            $initial = strtoupper(substr($agency->name, 0, 1));
+            $newBooking->application_number = "CLDA{$initial}I00" . ($visabooking->id + $i);
+
+            $newBooking->save();
+
+            AuthervisaApplication::on('user_database')
+                ->where('id', $member->id)
+                ->update(['self_booking_id' => $newBooking->id]);
+
+            $this->payment($newBooking);
+        }
+
         return true;
     }
+
+    // public function updateClientBooking($id,$data){
+    
+    //   $visabooking = VisaBooking::with('visasubtype', 'deduction', 'agency')
+    //             ->where('id', $id)
+    //             ->first();
+
+    //                 if (!$visabooking) {
+    //                     throw new \Exception("Visa booking not found.");
+    //                 }
+
+    //                 $clientInfo = $this->agencyService->getClientinfoVisaBookingById($visabooking);
+
+    //                 // dd($clientInfo);
+
+    //                 $basePrice = $visabooking->visasubtype->price + $visabooking->visasubtype->commission;
+
+    //                 if (isset($clientInfo->otherclients) && count($clientInfo->otherclients) > 0) {
+    //                     $price = $basePrice * (count($clientInfo->otherclients) + 1); 
+    //                     // +1 for the main client
+    //                 } else {
+    //                     $price = $basePrice;
+
+    //                 }
+
+    //                 $visabooking->total_amount = $price;
+    //                 $visabooking->amount = $basePrice;
+
+                    
+    //                     $visabooking->payment_status="Paid";
+    //                     $visabooking->confirm_application=1;
+    //                     $visabooking->save(); 
+
+    //                     $paymentInfo=$this->payment($visabooking);
+    //                     $this->saveInvoice($visabooking,$paymentInfo);
+
+
+                    
+
+    //                     if (isset($clientInfo->otherclients)) {
+    //                             $agency = $this->agencyService->getAgencyData();
+
+    //                             foreach ($clientInfo->otherclients as $i => $memberId) {
+                            
+    //                                 $index = $i + 1;
+    //                                 $newBooking = $visabooking->replicate(); // clone the existing booking
+    //                                 $newBooking->client_id = $visabooking->client_id;
+    //                                 $newBooking->otherclientid = $memberId->id; // link to original client
+    //                                 $newBooking->application_number = '';
+                                    
+    //                                 // Using loop index instead of memberId
+    //                                 $agencyInitial = strtoupper(substr($agency->name, 0, 1)); 
+    //                                 $application = "CLDA" . $agencyInitial . "I00" . ($visabooking->id + $index);
+
+    //                                 $newBooking->application_number = $application;
+    //                                 $newBooking->save();
+
+    //                                     // Update related AuthervisaApplication record
+    //                                     AuthervisaApplication::on('user_database')
+    //                                         ->where('id', $memberId->id)
+    //                                         ->update(['self_booking_id' => $newBooking->id]);
+
+
+    //                                 $this->payment($newBooking);
+    //                             }
+    //                 }
+    //                     return true;
+    // }
 
     public function createClientBooking($id, $data)
     {

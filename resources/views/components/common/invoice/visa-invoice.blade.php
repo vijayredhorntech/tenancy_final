@@ -280,6 +280,8 @@
     use Carbon\Carbon;
     use Illuminate\Support\Str;
 
+
+
   
     $invoice = $booking->deduction; // Get the deduction from visa booking
  
@@ -299,8 +301,25 @@
     $visaCountry = $booking->destination->countryName ?? 'N/A';
     $visaType = $booking->visasubtype->name ?? 'N/A';
     
-    $visaFee = is_numeric($invoiceData?->visa_fee ?? $booking->visa->price ?? 'N/A') ? (float)($invoiceData?->visa_fee ?? $booking->visa->price ?? 0) : 0.00;
   
+   /**  
+   $visaFee = is_numeric($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 'N/A') ? (float)($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 0) : 0.00; 
+  */
+
+  $visaFee = (float) (
+    ($invoiceData?->service_charge > 0)
+        ? $invoiceData->service_charge
+        : ($booking->visasubtype->price ?? 0)
+);
+
+ $serviceCharge = (float) (
+    ($invoiceData?->service_charge > 0)
+        ? $invoiceData->service_charge
+        : ($booking->visasubtype->commission ?? 0)
+);
+
+
+
     $paymentMode = $invoiceData?->payment_type ?? 'CASH';
     $currency = '£'; // Default currency
 
@@ -333,6 +352,7 @@
             : 0;
     }
 
+    $subTotal = $visaFee + $serviceCharge;
 
     $price = number_format($price, 2);
 
@@ -354,7 +374,9 @@
                 </tr>
                 <tr>
                     <td style="border: none; font-weight: bold; padding: 5px;">Client ID :</td>
-                    <td style="border: none; padding: 5px;">{{$invoice->billing_id ?? ''}}</td>
+                 
+             
+                    <td style="border: none; padding: 5px;">{{$booking->clint->clientuid ?? ''}}</td>
                 </tr>
             </table>
         </div>
@@ -411,19 +433,23 @@
                 <td>{{ strtoupper($visaCountry) }}</td>
                 <td>{{ strtoupper($visaType) }}</td>
                 <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
-                <td>{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td>
-                <td>{{ $currency }}{{ $price }}</td>
+                <!-- <td>{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td> -->
+                 <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
+
+                <td>{{ $currency }}{{ $subTotal }}</td>
             </tr>
             @forelse($otherClientInfo as $client)
                 <tr>
                     <td>{{ $loop->iteration + 1 }}.</td>
-                    <td>{{ strtoupper($client->name) }}</td>
-                    <td>{{ strtoupper($client->passport_number) }}</td>
+                    <td>{{ strtoupper($client->first_name) .' '. strtoupper($client->last_name) }}</td>
+                    <td>{{ strtoupper($visaCountry) }}</td>
                     <td>{{ strtoupper($visaCountry) }}</td>
                     <td>{{ strtoupper($visaType) }}</td>
                     <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
-                    <td>{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td>
-                    <td>{{ $currency }}{{ $price }}</td>
+                    <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
+    
+                    <!-- <td>{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td> -->
+                    <td>{{ $currency }}{{ $subTotal }}</td>
                 </tr>
             @empty
             @endforelse

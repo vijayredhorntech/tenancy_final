@@ -1301,7 +1301,7 @@
                                                 <label class="block text-sm font-medium text-gray-700">Cities in India Visited:</label>
                                                 <input type="text" name="indiacityvisit" id="cityvisitindia" value="{{ old('indiacityvisit', $visahistory->indiacityvisit ?? '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
-                                  
+                    <!--  -->              
                                                 <label class="block text-sm font-medium text-gray-700">Type of Visa:</label>
                                                 <input type="text" name="indiatypeofvisa" id="typeofvisa" value="{{ old('indiatypeofvisa', $visahistory->indiatypeofvisa ?? '') }}"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
