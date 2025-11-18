@@ -6,7 +6,7 @@
     <div class="w-full border-[1px] border-t-[4px] border-ternary/20 border-t-primary bg-white flex gap-2 flex-col shadow-lg shadow-gray-300">
 
         <div class="bg-primary/10 px-4 py-2 border-b-[2px] border-b-primary/20 flex justify-between">
-            <span class="font-semibold text-ternary text-xl">Conversations</span>
+            <span class="font-semibold text-ternary text-xl">Conversations </span>
         </div>
 
         <div class="w-full py-4 flex px-4 gap-4">

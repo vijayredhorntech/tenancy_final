@@ -1383,10 +1383,6 @@ public function hsAllinvoice(Request $request)
         : null;
 
     $agency = $this->agencyService->getAgencyData(); // null for superadmin, agency model for agency users
-
- 
-
-
  $invoicesQuery = Deduction::with([
         'service_name',
         'agency',
@@ -1394,7 +1390,7 @@ public function hsAllinvoice(Request $request)
         'visaBooking.origin',
         'visaBooking.destination',
         'visaBooking.visasubtype',
-        'visaBooking.clint',
+        'visaBooking',
         'visaApplicant',
         'flightBooking',
         'hotelBooking',
@@ -1403,7 +1399,9 @@ public function hsAllinvoice(Request $request)
         'invoice',
         'docsign'
     ])
+    
     ->where(function ($q) {
+          
         $q->whereNull('invoicestatus')   // Deduction table column
           ->orWhereNotIn('invoicestatus', ['canceled', 'Refunded']); // Deduction table column
     });
@@ -1424,7 +1422,15 @@ public function hsAllinvoice(Request $request)
         });
     // ✅ Apply filters
     // 🔎 Filter by invoice relation
-
+        if ($request->filled('search')) {
+                $search = $request->search;
+                $invoicesQuery->where(function ($q) use ($search) {
+                    $q->where('invoice_number', 'like', "%{$search}%")
+                    ->orWhereHas('invoice', function ($clientQuery) use ($search) {
+                            $clientQuery->where('receiver_name', 'like', "%{$search}%");
+                    });
+                });
+}
   
  if ($request->filled('status') || $request->filled('date_from') || $request->filled('date_to') || $request->filled('search')) {
     $invoicesQuery->where(function ($q) use ($request) {
@@ -1448,13 +1454,8 @@ public function hsAllinvoice(Request $request)
                 if ($request->filled('date_to')) {
                     $subQ->whereDate('created_at', '<=', $request->date_to);
                 }
-                if ($request->filled('search')) {
-                    $search = $request->search;
-                    $subQ->where(function ($innerQ) use ($search) {
-                        $innerQ->where('invoice_no', 'like', "%{$search}%")
-                               ->orWhere('client_name', 'like', "%{$search}%");
-                    });
-                }
+
+                
             })
             ->orWhereDoesntHave('invoice'); // ✅ include rows without invoice
         }
@@ -1465,10 +1466,9 @@ public function hsAllinvoice(Request $request)
         ? $invoicesQuery->paginate($perPage)->appends($request->query())
         : $invoicesQuery->get();
 
-  
 
 
-
+//    dd($invoices);
     return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices'));
 }
 
