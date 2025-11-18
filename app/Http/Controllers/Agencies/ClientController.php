@@ -135,21 +135,46 @@ public function hs_viewAgencyClient($id)
 
     $agency = $this->agencyService->getAgencyData();
     $client = $this->clintRepository->getClientById($id);
+    // dd($client);
 
     if (isset($client) && $client->agency_id == $agency->id) {
         // ✅ Total Invoices
-        $totalInvoicesCount = \App\Models\Deduction::where('client_id', $client->id)
-            ->where('agency_id', $agency->id)
-            ->count();
+        // $totalInvoicesCount = \App\Models\Deduction::where('client_id', $client->id)
+        //     ->where('agency_id', $agency->id)
+        //     ->count();
 
-        // ✅ Total Signed Documents (DocSign)
-        $paidInvoicesCount = Deduction::where('client_id', $client->id)
-            ->where('agency_id', $agency->id)
-            ->whereHas('docsign', function ($docSignQuery) {
-                $docSignQuery->whereHas('docsign', function ($docSignProcessQuery) {
-                    $docSignProcessQuery->where('status', 'Signed');
-                });
-            })->count();
+
+        // // ✅ Total Signed Documents (DocSign)
+        // $paidInvoicesCount = Deduction::where('client_id', $client->id)
+        //     ->where('agency_id', $agency->id)
+        //     ->whereHas('docsign', function ($docSignQuery) {
+        //         $docSignQuery->whereHas('docsign', function ($docSignProcessQuery) {
+        //             $docSignProcessQuery->where('status', 'Signed');
+        //         });
+        //     })->count();
+        // ✅ Total Invoices (with visaBooking filter)
+            $totalInvoicesCount = Deduction::where('client_id', $client->id)
+                ->where('agency_id', $agency->id)
+                ->whereHas('visaBooking', function ($q) {
+                    $q->whereNull('otherclientid')
+                    ->orWhere('otherclientid', '');
+                })
+                ->count();
+
+
+            // ✅ Total Signed Documents (DocSign + visaBooking filter)
+            $paidInvoicesCount = Deduction::where('client_id', $client->id)
+                ->where('agency_id', $agency->id)
+                ->whereHas('visaBooking', function ($q) {
+                    $q->whereNull('otherclientid')
+                    ->orWhere('otherclientid', '');
+                })
+                ->whereHas('docsign', function ($docSignQuery) {
+                    $docSignQuery->whereHas('docsign', function ($docProcessQuery) {
+                        $docProcessQuery->where('status', 'Signed');
+                    });
+                })
+                ->count();
 
         // ✅ Total Bookings (flight/visa/hotel)
         $bookingDeductions = \App\Models\Deduction::where('client_id', $client->id)

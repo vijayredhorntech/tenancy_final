@@ -118,14 +118,14 @@ class VisaController extends Controller
     public function hs_viewSAApplication($id){
 
         // 
-        
+        $countries =Country::get(); 
         $clientData = $this->visaRepository->bookingDataById($id);
         // dd($clientData);
         $origin_id=$clientData->origin_id;
         $destination_id=$clientData->destination_id;
         $forms=VisaServiceTypeDocument::with('from')->
         where('origin_id',$origin_id)->where('destination_id',$destination_id)->get();
-        return view('superadmin.pages.visa.superadminviewapplication',compact('clientData','forms'));
+        return view('superadmin.pages.visa.superadminviewapplication',compact('clientData','forms','countries'));
     }
 
 
@@ -654,9 +654,9 @@ public function hsVisaBook(Request $request)
 
     $existing = VisaBooking::where('client_id', $request->clientId)
         ->where('agency_id', $agency->id)
-        ->where('applicationworkin_status', 'Pending')
+        ->where('payment_status', 'Pending')
         ->first();
-        // dd($existing);
+  
 
     if ($existing) {
         $this->error('You have already applied for a visa. Kindly check your pending application or wait for approval.');
@@ -708,24 +708,28 @@ public function hsVisaBook(Request $request)
 
     public function him_visaApplicationPay(Request $request, $id){
 
+      
         $request->validate([
             'bookingid'    => 'required',
         ]);
    
         // dd($request->all());
         $agency = $this->agencyService->getAgencyData();
+      
         
         // All members are now automatically included, no need for checkbox logic
         $this->visaRepository->updateClientBooking($id,$request->all());
-
+  
         $clientData = $this->visaRepository->bookingDataById($id);
+            $termconditon = app(\App\Repositories\TermConditionRepository::class)->allTeamTypes();
+
         if (isset($clientData) && $clientData->agency_id == $agency->id) {
             // $pay=$this->visaRepository->payment($clientData);
             // dd($clientData);
             // Mail::to($clientData->clint->email)->send(new VisaBookingInProcessMail($clientData, $agency));
             // return redirect()->back()->with('success', 'Visa application confirmed successfully.');
 
-            return view('agencies.pages.invoices.visainvoice',compact('clientData'));
+            return view('agencies.pages.invoices.visainvoice',compact('clientData','termconditon'));
         }
         // return redirect()->back()->with('error', 'Unable to confirm application.');
         return view('agency.pages.visa.payment',compact('clientData'));
@@ -736,8 +740,8 @@ public function hsVisaBook(Request $request)
        /*******Visa Application form *******/
         public function hs_visaApplication($type,Request $request){
  
- 
-            // dd("here");
+   
+              // dd("here");
         /***Ger Agency Rerod in the Visa Application ****/
         $agency = $this->agencyService->getAgencyData();
         
@@ -1236,6 +1240,7 @@ public function hsconfirmApplication(Request $request)
 {
    
     $bookingData = $this->visaRepository->bookingDataById($id);
+    $countries=Country::get(); 
 
     // ✅ First-time view: set flag and redirect to self
 
@@ -1254,7 +1259,7 @@ public function hsconfirmApplication(Request $request)
         ? 'superadmin.pages.visa.veriryvisaapplication'
         : 'superadmin.pages.visa.superadminveriryvisaapplication';
 
-    return view($view, compact('bookingData', 'type'));
+    return view($view, compact('bookingData', 'type','countries'));
 }
 
 

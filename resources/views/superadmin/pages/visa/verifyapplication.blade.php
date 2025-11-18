@@ -162,7 +162,8 @@
                                                         </div>
                                                         <div>
                                                             <label class="block text-xs font-medium text-gray-500 mb-1">Nationality</label>
-                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->citizenship ?? 'N/A' }}</p>
+                                                      
+                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->clientinfo->nationality ?? 'N/A' }}</p>
                                                         </div>
                                                         <div>
                                                             <label class="block text-xs font-medium text-gray-500 mb-1">Phone Number</label>
@@ -251,7 +252,7 @@
                                     <div class="border-t border-gray-200 pt-3 mt-3">
                                         <div class="flex justify-between">
                                             <span class="text-gray-600">
-                                                Additional Members ({{ $additionalMembers }})
+                                                Additional Members ({{ $additionalMembers }} + 1 ) 
                                             </span>
                                             <span class="font-medium">
                                                 £{{ number_format($subtotal * $additionalMembers, 2) }}

@@ -127,16 +127,17 @@
                                       <input type="text" name="firstname"  id="firstName"  class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="As shown in passport" readonly="">
 
                                   </div>
-                                  <div class=" w-full flex flex-col" >
-                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Citizenship</label>
-                                      <input type="text" name="citizenship" value="" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"  id="citizenship" readonly="">
-
-                                  </div>
-                                  <div class=" w-full flex flex-col" >
+                                     <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Email</label>
                                       <input type="email" name="email"  id="email"  class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="Enter your email" readonly="">
 
                                   </div>
+                                  <div class=" w-full flex flex-col" >
+                                      <label for="email"  class=" font-semibold text-gray-800 text-sm">Nationality</label>
+                                      <input type="text" name="citizenship" value="" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"  id="citizenship" readonly="">
+
+                                  </div>
+                               
                                   <div class=" w-full flex flex-col" >
                                       <label for="email"  class=" font-semibold text-gray-800 text-sm">Phone Number</label>
                                       <input type="text"  name="phonenumber"   id="phonenumber" class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60" placeholder="Enter your phone number" readonly="">
@@ -159,13 +160,26 @@
 
                       <div class=" flex w-full justify-end  mt-5">
                           <!-- <a class="bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton">Proceed to Payment </a> -->
-                                   <input type="submit" class="cursor-pointer bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton" value=" Proceed To Payment">
+                                   <!-- <input type="submit" class="cursor-pointer bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton" value=" Proceed To Payment"   onclick="return confirm('Are all the details correct? Please check before proceeding.');"> -->
                         </div>
+                                      <!-- BUTTON -->
+                        <button type="button"
+                                onclick="openConfirmModal()"
+                                class="cursor-pointer bg-secondary text-gray-100 text-lg py-2 px-5 rounded-md submitbutton">
+                            Proceed To Payment
+                        </button>
+
+                                                
 
                       
 
                   </form>
               </div>
+
+
+
+
+
 
               <div class="2xl:w-1/4 sticky top-20 xl:w-1/4 lg:w-1/4 md:w-full sm:w-full w-full  bg-white shadow-lg shadow-black/10 rounded-sm 2xl:mt-0 xl:mt-0 lg:mt-0 md:mt-2 sm:mt-2 mt-2 2xl:ml-5 xl:ml-5 lg:ml-5 md:ml-0 sm:ml-0 ml-0 h-min p-4">
 
@@ -174,20 +188,20 @@
                   </div>
                   <div class="flex justify-between mt-3">
                       <span class="text-black text-md font-normal">Visa Fee:</span>
-                      <span class="text-secondary text-md font-semibold visa-price">&#8377 235.58</span>
+                      <span class="text-secondary text-md font-semibold visa-price">{{ $CURRENCY }}8377 235.58</span>
                   </div>
                   <div class="flex justify-between mt-1.5">
                       <span class="text-black text-md font-normal">Service Fee:</span>
-                      <span class="text-secondary text-md font-semibold visa-commision">₹5,998.00</span>
+                      <span class="text-secondary text-md font-semibold visa-commision">{{ $CURRENCY }}5,998.00</span>
                   </div>
                   <div class="flex justify-between mt-1.5 pb-3 border-b-2 border-b-secondary/30 ">
                       <span class="text-black text-md ">Tax:</span>
-                      <span class="text-secondary text-md font-semibold" > </span>
+                      <span class="text-secondary text-md font-semibold visa-tax" > </span>
                   </div>
 
                   <div class="flex justify-between mt-3">
                       <span class="text-black text-md font-normal">Total:</span>
-                      <span class="text-secondary text-md font-semibold visa-total">&#8377 135.58</span>
+                      <span class="text-secondary text-md font-semibold visa-total">{{ $CURRENCY }}8377 135.58</span>
                   </div>
 
 
@@ -195,6 +209,29 @@
 
               </div>
               {{--    section right div ends here--}}
+
+              
+<!-- CUSTOM CONFIRM MODAL -->
+<div id="confirmModal"
+     class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+    
+    <div class="bg-white p-6 rounded shadow-lg w-[350px] text-center">
+        <h3 class="text-lg font-semibold mb-3">Confirm Details</h3>
+        <p class="mb-4">Are all the details correct?</p>
+
+        <div class="flex justify-between">
+            <button onclick="submitForm()"
+                    class="bg-green-600 text-white px-4 py-2 rounded">
+                Yes, all details are confirmed
+            </button>
+
+            <button onclick="closeConfirmModal()"
+                    class="bg-gray-300 px-4 py-2 rounded">
+                Cancel
+            </button>
+        </div>
+    </div>
+</div>
           </section>
       </div>
     @section('scripts')
@@ -203,8 +240,23 @@
 
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+function openConfirmModal() {
+    document.getElementById('confirmModal').classList.remove('hidden');
+}
+
+function closeConfirmModal() {
+    document.getElementById('confirmModal').classList.add('hidden');
+}
+
+function submitForm() {
+    document.getElementById('visaForm').submit();
+}
+</script>
     <script>
 
+    const CURRENCYes = "{{ config('app.currency') }}";
 
 
 
@@ -243,7 +295,7 @@ document.getElementById('addMoreBtn').addEventListener('click', function () {
 
     // Create the grid container div with the same grid classes
     let gridContainer = document.createElement('div');
-    gridContainer.classList.add('w-full', 'grid', 'lg:grid-cols-6', 'md:grid-cols-6', 'sm:grid-cols-4', 'grid-cols-1', 'gap-1');
+    gridContainer.classList.add('w-full', 'grid', 'lg:grid-cols-5', 'md:grid-cols-5', 'sm:grid-cols-4', 'grid-cols-1', 'gap-1');
 
     // First Name Input
     let firstNameDiv = document.createElement('div');
@@ -300,41 +352,11 @@ document.getElementById('addMoreBtn').addEventListener('click', function () {
     passportDiv.appendChild(passportInput);
 
     // Issue Date Input
-    let issueDateDiv = document.createElement('div');
-    issueDateDiv.classList.add('w-full', 'flex', 'flex-col');
+  
 
-    let issueDateLabel = document.createElement('label');
-    issueDateLabel.setAttribute('for', 'passportissuedate');
-    issueDateLabel.classList.add('font-semibold', 'text-gray-800', 'text-sm');
-    issueDateLabel.textContent = 'Issue Date';
-
-    let issueDateInput = document.createElement('input');
-    issueDateInput.setAttribute('type', 'date');
-    issueDateInput.setAttribute('name', 'passportissuedate[]');
-    issueDateInput.setAttribute('max', getTodayDate());
-    issueDateInput.classList.add('visa-select', 'w-full', 'mt-2', 'py-1.5', 'font-medium', 'text-black/80', 'text-sm', 'rounded-[3px]', 'border-[1px]', 'border-secondary/50', 'bg-[#f3f4f6]', 'focus:outline-none', 'focus:ring-0', 'placeholder-black/60');
-
-    issueDateDiv.appendChild(issueDateLabel);
-    issueDateDiv.appendChild(issueDateInput);
 
     // Expiry Date Input
-    let expireDateDiv = document.createElement('div');
-    expireDateDiv.classList.add('w-full', 'flex', 'flex-col');
-
-    let expireDateLabel = document.createElement('label');
-    expireDateLabel.setAttribute('for', 'passportexpiredate');
-    expireDateLabel.classList.add('font-semibold', 'text-gray-800', 'text-sm');
-    expireDateLabel.textContent = 'Expiry Date';
-
-    let expireDateInput = document.createElement('input');
-    expireDateInput.setAttribute('type', 'date');
-    expireDateInput.setAttribute('name', 'passportexpiredate[]');
-    expireDateInput.setAttribute('min', getTodayDate());
-    expireDateInput.classList.add('visa-select', 'w-full', 'mt-2', 'py-1.5', 'font-medium', 'text-black/80', 'text-sm', 'rounded-[3px]', 'border-[1px]', 'border-secondary/50', 'bg-[#f3f4f6]', 'focus:outline-none', 'focus:ring-0', 'placeholder-black/60');
-
-    expireDateDiv.appendChild(expireDateLabel);
-    expireDateDiv.appendChild(expireDateInput);
-
+  
     // Place of Issue Input
     let issuePlaceDiv = document.createElement('div');
     issuePlaceDiv.classList.add('w-full', 'flex', 'flex-col');
@@ -342,16 +364,41 @@ document.getElementById('addMoreBtn').addEventListener('click', function () {
     let issuePlaceLabel = document.createElement('label');
     issuePlaceLabel.setAttribute('for', 'passengerplace');
     issuePlaceLabel.classList.add('font-semibold', 'text-gray-800', 'text-sm');
-    issuePlaceLabel.textContent = 'Place of Issue';
+    issuePlaceLabel.textContent = 'Nationality';
 
     let issuePlaceInput = document.createElement('input');
     issuePlaceInput.setAttribute('type', 'text');
     issuePlaceInput.setAttribute('name', 'passengerplace[]');
-    issuePlaceInput.setAttribute('placeholder', 'Place of Issue');
+    issuePlaceInput.setAttribute('placeholder', 'Nationality');
     issuePlaceInput.classList.add('visa-select', 'w-full', 'mt-2', 'py-1.5', 'font-medium', 'text-black/80', 'text-sm', 'rounded-[3px]', 'border-[1px]', 'border-secondary/50', 'bg-[#f3f4f6]', 'focus:outline-none', 'focus:ring-0', 'placeholder-black/60');
 
     issuePlaceDiv.appendChild(issuePlaceLabel);
     issuePlaceDiv.appendChild(issuePlaceInput);
+
+
+    // Phone Number Input
+        let phoneDiv = document.createElement('div');
+        phoneDiv.classList.add('w-full', 'flex', 'flex-col');
+
+        let phoneLabel = document.createElement('label');
+        phoneLabel.setAttribute('for', 'passengerphone');
+        phoneLabel.classList.add('font-semibold', 'text-gray-800', 'text-sm');
+        phoneLabel.textContent = 'Phone Number';
+
+        let phoneInput = document.createElement('input');
+        phoneInput.setAttribute('type', 'text');
+        phoneInput.setAttribute('name', 'passengerphone[]');
+        phoneInput.setAttribute('placeholder', 'Phone Number');
+        phoneInput.classList.add(
+            'visa-select', 'w-full', 'mt-2', 'py-1.5',
+            'font-medium', 'text-black/80', 'text-sm',
+            'rounded-[3px]', 'border-[1px]', 'border-secondary/50',
+            'bg-[#f3f4f6]', 'focus:outline-none', 'focus:ring-0',
+            'placeholder-black/60'
+        );
+
+        phoneDiv.appendChild(phoneLabel);
+        phoneDiv.appendChild(phoneInput);
 
     // Remove Button Div (spanning all columns)
     let removeBtnDiv = document.createElement('div');
@@ -373,9 +420,8 @@ document.getElementById('addMoreBtn').addEventListener('click', function () {
     gridContainer.appendChild(firstNameDiv);
     gridContainer.appendChild(lastNameDiv);
     gridContainer.appendChild(passportDiv);
-    gridContainer.appendChild(issueDateDiv);
-    gridContainer.appendChild(expireDateDiv);
     gridContainer.appendChild(issuePlaceDiv);
+    gridContainer.appendChild(phoneDiv);
 
     // Append the grid container and remove button to the main wrapper
     fieldWrapper.appendChild(gridContainer);
@@ -480,9 +526,10 @@ $(document).ready(function () {
         var total = visaPrice + commission + gstAmount; // Correct addition
        
 
-        $(".visa-price").text("£" + visaPrice.toFixed(2)); // Update displayed price
-        $(".visa-commision").text("£" + commission.toFixed(2)); // Update displayed commission
-        $(".visa-total").text("£" + total.toFixed(2)); // Update displayed total
+        $(".visa-price").text( visaPrice.toFixed(2)); // Update displayed price
+        $(".visa-commision").text( commission.toFixed(2)); // Update displayed commission
+        $(".visa-total").text( total.toFixed(2)); // Update displayed total
+        $(".visa-tax").text( gstAmount.toFixed(2));
         $("#processing").html(`<option value="${processing}">${processing}</option>`);
 
     });
@@ -719,9 +766,10 @@ $("#existingUserBtn").on("click", function () {
             const perPersonTotal = visaPrice + commission + gstAmount;
             const grandTotal = perPersonTotal * totalPassengers;
 
-            $(".visa-price").text("€" + visaPrice.toFixed(2) + " × " + totalPassengers);
-            $(".visa-commision").text("€" + commission.toFixed(2));
-            $(".visa-total").text("€" + grandTotal.toFixed(2));
+            $(".visa-price").text(CURRENCYes + visaPrice.toFixed(2) + " × " + totalPassengers);
+            $(".visa-commision").text(CURRENCYes + commission.toFixed(2));
+
+            $(".visa-total").text(CURRENCYes + grandTotal.toFixed(2));
 
         }
 

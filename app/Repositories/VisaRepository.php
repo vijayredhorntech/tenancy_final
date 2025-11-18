@@ -770,6 +770,8 @@ public function saveBooking(array $data)
 {
 
 
+    // dd($data);
+
     try {
             
         if(in_array('self', $data['applicant_type'])){
@@ -884,15 +886,15 @@ public function saveBooking(array $data)
                         $auth->first_name            = $firstname;
                         $auth->last_name             = $data['passengerlastname'][$index];
                         $auth->passport_ic_number    = $data['passengerpassportn'][$index];
-                        $auth->passport_issue_date   = $data['passportissuedate'][$index] ?? null;
-                        $auth->passport_expiry_date  = $data['passportexpiredate'][$index] ?? null;
-                        $auth->passport_issue_place  = $data['passengerplace'][$index] ?? null;
+                        $auth->phone_number           =     $data['passengerphone'][$index] ?? null;
                         $auth->save();
 
                         $other = new OtherClientInfo();
                         $other->setConnection('user_database');
                         $other->authervisa_application_id = $auth->id;
                         $other->application_type          = 'other';
+                        $other->nationality          =$data['passengerplace'][$index] ?? null;
+
                         $other->client_id                 = $clientId;
                         $other->save();
                     }
@@ -926,6 +928,9 @@ public function saveBooking(array $data)
                         $other->setConnection('user_database');
                         $other->authervisa_application_id = $auth->id;
                         $other->application_type          = 'family';
+                        $other->application_type          = 'other';
+                        $other->nationality          =  $data['family_passengerplace'][$i] ?? null;
+
                         $other->client_id                 = $clientId;
                         $other->family_id                 = $familyMember->id ?? null;
                         $other->save();
@@ -937,6 +942,7 @@ public function saveBooking(array $data)
         });
 
     } catch (\Exception $e) {
+        dd($e);
         throw new \Exception("Booking failed: " . $e->getMessage());
     }
 }
@@ -1715,7 +1721,7 @@ public function getBookingByid($id, $type, $request)
         $applyFor   = $clientInfo->apply_for;
         $agency     = $this->agencyService->getAgencyData();
 
-        $basePrice = $visabooking->visasubtype->price + $visabooking->visasubtype->commission;
+        // $basePrice = $visabooking->visasubtype->price + $visabooking->visasubtype->commission;
 
         /* ----------------------------------------------------
         1️⃣ IF SELF SELECTED → ONLY UPDATE MAIN BOOKING
@@ -1723,8 +1729,8 @@ public function getBookingByid($id, $type, $request)
         if ($applyFor === 'self') {
 
             $visabooking->otherclientid = null; // RESET
-            $visabooking->total_amount = $basePrice;
-            $visabooking->amount = $basePrice;
+            // $visabooking->total_amount = $basePrice;
+            // $visabooking->amount = $basePrice;
             $visabooking->payment_status = "Paid";
             $visabooking->confirm_application = 1;
             $visabooking->save();
@@ -1761,8 +1767,7 @@ public function getBookingByid($id, $type, $request)
                     }
                         return true;
 
-           
-            return true;
+       
         }
 
 

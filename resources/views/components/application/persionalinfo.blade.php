@@ -212,17 +212,37 @@
                                         <i class="fa fa-pray absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
                                     </div>
     </div>
-    @endif
-   @if(in_array('Date of Birth', $permission))
-    <!-- Date of Birth -->
+                @endif
+            @if(in_array('Date of Birth', $permission))
+                <!-- Date of Birth -->
+
+                @php
+                $dob = $bookingData->clint->date_of_birth ?? null;
+                if ($dob instanceof \Carbon\Carbon) {
+                    $dobValue = $dob->format('Y-m-d');
+                } else {
+                    try {
+                        $dobValue = \Carbon\Carbon::parse(str_replace('/', '-', $dob))->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        $dobValue = null; // fallback
+                    }
+                }
+            @endphp
+
     <div class="w-full relative group flex flex-col gap-1">
                                     <label for="date_of_birth" class="font-semibold text-ternary/90 text-sm">Date of Birth *</label>
                                     <div class="w-full relative">
-                                        <input type="date" name="date_of_birth" id="date_of_birth" requiresdd
+                                        <input type="date"
+                                            name="date_of_birth"
+                                            id="date_of_birth"
+                                            value="{{ old('date_of_birth', $dobValue) }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded-[3px] border">
+
+                                        <!-- <input type="date" name="date_of_birth" id="date_of_birth" requiresdd
                                               value="{{ old('date_of_birth', $bookingData->clint->date_of_birth ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
                                             @error('date_of_birth') border-red-500 @enderror">
-                                        <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                        <i class="fa fa-calendar absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i> -->
                                     </div>
                                     @error('date_of_birth')
                                     <span class="text-red-500 text-xs mt-1">{{ $message }}</span>

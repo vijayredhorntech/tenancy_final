@@ -1,6 +1,6 @@
                     @php
                    $fatherdetails = $bookingData->clint->clientinfo->father_details ? json_decode($bookingData->clint->clientinfo->father_details) : null;
-                   $motherdetails = $bookingData->clint->clientinfo->mother_details ? json_decode($bookingData->clint->clientinfo->mother_details) : null;
+                           $motherdetails = $bookingData->clint->clientinfo->mother_details ? json_decode($bookingData->clint->clientinfo->mother_details) : null;
                    $spouse = $bookingData->clint->clientinfo->spouse_details ? json_decode($bookingData->clint->clientinfo->spouse_details) : null;
                            
                     @endphp
@@ -11,8 +11,14 @@
                     <div id="fathersection" class="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-black/10 shadow-lg border border-secondary/40">
                                         @if(in_array('Father’s Full Name', $permission))
                                         <div>
-                                        <label for="father_name" class="font-semibold text-sm text-ternary/90">Father Name</label>
-                                        <input type="text" name="father_name" id="father_name" value="{{ old('father_name', $fatherdetails->name ?? '') }}"
+                                        <label for="father_first_name" class="font-semibold text-sm text-ternary/90">Father First Name</label>
+                                        <input type="text" name="father_first_name" id="father_first_name" value="{{ old('father_first_name', $fatherdetails->father_first_name ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                       
+                                        <div>
+                                        <label for="father_last_name" class="font-semibold text-sm text-ternary/90">Father Last Name</label>
+                                        <input type="text" name="father_last_name" id="father_last_name" value="{{ old('father_last_name', $fatherdetails->father_last_name ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
@@ -106,8 +112,13 @@
                     <div id="mothersection" class="mt-4 p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-black/10 shadow-lg border border-secondary/40">
                                         @if(in_array('Mother’s Full Name', $permission))
                                         <div>
-                                        <label for="mother_name" class="font-semibold text-sm text-ternary/90">Mother Name</label>
-                                        <input type="text" name="mother_name" id="mother_name" value="{{ old('mother_name', $motherdetails->name ?? '') }}"
+                                        <label for="mother_first_name" class="font-semibold text-sm text-ternary/90">Mother First Name</label>
+                                        <input type="text" name="mother_first_name" id="mother_first_name" value="{{ old('mother_first_name', $motherdetails->mother_first_name ?? '') }}"
+                                            class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                        </div>
+                                         <div>
+                                        <label for="mother_last_name" class="font-semibold text-sm text-ternary/90">Mother Last Name</label>
+                                        <input type="text" name="mother_last_name" id="mother_last_name" value="{{ old('mother_last_name', $motherdetails->mother_last_name ?? '') }}"
                                             class="w-full pl-2 pr-8 py-1 rounded border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                         </div>
                                         @endif
@@ -199,9 +210,16 @@
 
                                                     @if(in_array('Spouse’s Full Name', $permission))
                                                     <div class="w-full">
-                                                    <label for="spouse_name" class="font-semibold text-ternary/90 text-sm">Husband / Wife Name</label>
-                                                    <input type="text" name="spouse_name" id="spouse_name"
-                                                        value="{{ old('spouse_name', $spouse->name ?? '') }}"
+                                                    <label for="spouse_first_name" class="font-semibold text-ternary/90 text-sm">Husband / Wife First Name</label>
+                                                    <input type="text" name="spouse_first_name" id="spouse_first_name"
+                                                        value="{{ old('spouse_first_name', $spouse->spouse_first_name ?? '') }}"
+                                                        class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
+                                                    </div>
+
+                                                    <div class="w-full">
+                                                    <label for="spouse_last_name" class="font-semibold text-ternary/90 text-sm">Husband / Wife Last Name</label>
+                                                    <input type="text" name="spouse_last_name" id="spouse_last_name"
+                                                        value="{{ old('spouse_name', $spouse->spouse_last_name ?? '') }}"
                                                         class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none placeholder-ternary/70 transition">
                                                     </div>
                                                     @endif

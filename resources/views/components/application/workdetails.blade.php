@@ -213,19 +213,17 @@
                                 @if(in_array('Refrence', $permission))
                                     <!-- Reference: India -->
                                     <div class="w-full relative group flex flex-col gap-1">
-                                        <label for="reference_address_1" class="font-semibold text-ternary/90 text-sm">Reference 1</label>
+                                        <label for="reference_address_1" class="font-semibold text-ternary/90 text-sm">Reference {{ $bookingData->destination->countryName ?? '--' }}</label>
                                         <div class="w-full relative">
                                             <textarea name="reference_address_1" id="reference_address_1"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ $ref['reference_address_1'] ?? '' }}</textarea>
                                             <i class="fa fa-history absolute right-3 top-[10px] text-sm text-secondary/80"></i>
                                         </div>
                                     </div>
-                                @endif
-
-                                @if(in_array('Refrence', $permission))
+                   
                                     <!-- Reference: United Kingdom -->
                                     <div class="w-full relative group flex flex-col gap-1">
-                                        <label for="reference_address_2" class="font-semibold text-ternary/90 text-sm">Reference 2</label>
+                                        <label for="reference_address_2" class="font-semibold text-ternary/90 text-sm">Reference {{ $bookingData->origin->countryName ?? '--' }}</label>
                                         <div class="w-full relative">
                                             <textarea name="reference_address_2" id="reference_address_2"
                                                 class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">{{ $ref['reference_address_2'] ?? '' }}</textarea>

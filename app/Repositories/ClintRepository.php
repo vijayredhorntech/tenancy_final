@@ -251,57 +251,133 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
 
     /****View Clint detials**** */
 
-    public function getClientById($id,$database=null){
+    // public function getClientById($id,$database=null){
        
-        // dd($database);
-            $agency = $this->agencyService->setDatabaseConnection();
+    //     // dd($database);
+    //         $agency = $this->agencyService->setDatabaseConnection();
             
-            if(!$agency){
-            $agency = $this->agencyService->setConnectionByDatabase($database);
+    //         if(!$agency){
+    //         $agency = $this->agencyService->setConnectionByDatabase($database);
             
             
             
-            }
-            // dd($id);
-            // $data=ClientDetails::on('user_database')->with('clientinfo','clientchats')->where('id',$id)->first();
-            $data = ClientDetails::on('user_database')
-            ->with('clientinfo') // Only load clientinfo from user_database
-            ->where('id', $id)
-            ->first();
-        //    dd($)?
+    //         }
+    //         // dd($id);
+    //         // $data=ClientDetails::on('user_database')->with('clientinfo','clientchats')->where('id',$id)->first();
+    //         $data = ClientDetails::on('user_database')
+    //         ->with('clientinfo') // Only load clientinfo from user_database
+    //         ->where('id', $id)
+    //         ->first();
+    //     //    dd($)?
             
-        // Now manually load clientchats from default database
-                if ($data) {
-                $data->setRelation('clientchats',Message::where('client_id', $data->id)->get());
-            }   
-            if ($data) {
+    //     // Now manually load clientchats from default database
+    //             if ($data) {
+    //             $data->setRelation('clientchats',Message::where('client_id', $data->id)->get());
+    //         }   
+    //         if ($data) {
                  
-                $docusing = DocSignDocument::with('docsign','visaBookingApplication')->where('client_id', $id)
-                ->where('agency_id', $data->agency_id)
-                ->get();
-                //   dd($docusing);
-                $data->setRelation('docsign',$docusing);
-            }   
-            if ($data) {
-                $invoices = Deduction::with('service_name')->where('client_id', $id)
-                ->where('agency_id', $data->agency_id)
-                ->get();
-                $data->setRelation('invoice',$invoices);
-            }   
+    //             $docusing = DocSignDocument::with('docsign','visaBookingApplication')->where('client_id', $id)
+    //             ->where('agency_id', $data->agency_id)
+    //             ->get();
+    //             //   dd($docusing);
+    //             $data->setRelation('docsign',$docusing);
+    //         }   
+    //         if ($data) {
+    //             $invoices = Deduction::with('service_name')->where('client_id', $id)
+    //             ->where('agency_id', $data->agency_id)
+    //             ->get();
+    //             $data->setRelation('invoice',$invoices);
+    //         }   
             
-            // Load family members from user_database
-            if ($data) {
-                $familyMembers = FamilyMember::on('user_database')
-                    ->where('client_id', $id)
-                    ->orderBy('created_at')
-                    ->get();
-                $data->setRelation('familyMembers', $familyMembers);
-            }
+    //         // Load family members from user_database
+    //         if ($data) {
+    //             $familyMembers = FamilyMember::on('user_database')
+    //                 ->where('client_id', $id)
+    //                 ->orderBy('created_at')
+    //                 ->get();
+    //             $data->setRelation('familyMembers', $familyMembers);
+    //         }
             
-                // $data=ClientDetails::on('user_database')->with('clientinfo','clientchats')->where('id',$id)->first();
-                return $data;
-                // dd($data); 
+    //             // $data=ClientDetails::on('user_database')->with('clientinfo','clientchats')->where('id',$id)->first();
+    //             return $data;
+    //             // dd($data); 
+    // }
+
+    public function getClientById($id, $database = null)
+{
+    $agency = $this->agencyService->setDatabaseConnection();
+
+    if (!$agency) {
+        $agency = $this->agencyService->setConnectionByDatabase($database);
     }
+
+    // Load client basic details from user_database
+    $data = ClientDetails::on('user_database')
+        ->with('clientinfo')
+        ->where('id', $id)
+        ->first();
+
+    if (!$data) {
+        return null;
+    }
+
+    // Load client chats from default DB
+    $data->setRelation(
+        'clientchats',
+        Message::where('client_id', $data->id)->get()
+    );
+
+    // Load DocSign Documents
+    $docusing = DocSignDocument::with('docsign', 'visaBookingApplication')
+        ->where('client_id', $id)
+        ->where('agency_id', $data->agency_id)
+        ->get();
+
+    $data->setRelation('docsign', $docusing);
+
+    // ⭐ Load invoices same like hsAllinvoice()
+    $invoicesQuery = Deduction::with([
+        'service_name',
+        'agency',
+        'visaBooking.visa',
+        'visaBooking.origin',
+        'visaBooking.destination',
+        'visaBooking.visasubtype',
+        'visaBooking.clint',
+        'visaApplicant',
+        'flightBooking',
+        'hotelBooking',
+        'hotelDetails',
+        'cancelinvoice',
+        'invoice',
+        'docsign'
+    ])
+    ->where('client_id', $id)
+    ->where('agency_id', $data->agency_id)
+    ->where(function ($q) {
+        $q->whereNull('invoicestatus')
+          ->orWhereNotIn('invoicestatus', ['canceled', 'Refunded']);
+    })
+    ->whereHas('visaBooking', function ($q) {
+        $q->whereNull('otherclientid')
+          ->orWhere('otherclientid', '');
+    });
+
+    $invoices = $invoicesQuery->get();
+
+    $data->setRelation('invoice', $invoices);
+
+    // Load family members from user_database
+    $familyMembers = FamilyMember::on('user_database')
+        ->where('client_id', $id)
+        ->orderBy('created_at')
+        ->get();
+
+    $data->setRelation('familyMembers', $familyMembers);
+
+    return $data;
+}
+
 
     public function updateStoreclint($id, $data){
       
@@ -571,39 +647,6 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
 }
 
 
-//     public function step1createclient($data)
-// {
-//     // dd($data);
-//     // Assuming this gets visa booking data from default DB
-//     $visabooking = $this->visaRepository->bookingDataById($data['bookingid']);
-    
-//     // Check if this is a client submission or agency submission
-//     $isClientSubmission = ($data['type'] ?? '') === 'client';
-    
-//     if ($isClientSubmission) {
-//         // For client submissions, we don't need agency data
-//         $userDbConnection = 'user_database'; // Your second DB connection name
-//         $client = ClientDetails::on($userDbConnection)->where('id', $visabooking->client_id)->first();
-//         $this->updateClientData($data, $client, $userDbConnection);
-//         $moreInfo = ClientMoreInfo::on($userDbConnection)->where('clientid', $visabooking->client_id)->first();
-//         $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
-        
-//         // Update other client infos for additional members
-//         $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
-//     } else {
-//         // For agency submissions, get agency data
-//         $agency = $this->agencyService->getAgencyData();
-//         $user = $this->agencyService->getCurrentLoginUser();
-//         $userDbConnection = 'user_database'; // Your second DB connection name
-//         $client = ClientDetails::on($userDbConnection)->where('id', $visabooking->client_id)->first();
-//         $this->updateClientData($data, $client, $userDbConnection);
-//         $moreInfo = ClientMoreInfo::on($userDbConnection)->where('clientid', $visabooking->client_id)->first();
-//         $this->updateMoreClientInfo($moreInfo, $data, $userDbConnection);
-        
-//         // Update other client infos for additional members
-//         $this->updateOtherClientInfos($data, $visabooking->id, $userDbConnection);
-//     }
-// }
 
 
 private function updateClientData(array $data, $client, string $connection = null)
@@ -667,7 +710,8 @@ private function updateMoreClientInfo($info, array $data, string $connection = n
 
 
         $info->father_details = json_encode([
-            'name' => $data['father_name'] ?? null,
+            'father_first_name'=>$data['father_first_name'] ?? null,
+            'father_last_name' => $data['father_last_name'] ?? null,
             'nationality' => $data['father_nationality'] ?? null,
             'birth_place' => $data['father_birth_place'] ?? null,
             'previous_nationality' => $data['father_previous_nationality'] ?? null,
@@ -679,7 +723,8 @@ private function updateMoreClientInfo($info, array $data, string $connection = n
         ]);
     
         $info->mother_details = json_encode([
-            'name' => $data['mother_name'] ?? null,
+            'mother_first_name' => $data['mother_first_name'] ?? null,
+            'mother_last_name' => $data['mother_last_name'] ?? null,
             'nationality' => $data['mother_nationality'] ?? null,
             'birth_place' => $data['mother_birth_place'] ?? null,
             'previous_nationality' => $data['mother_previous_nationality'] ?? null,
@@ -691,7 +736,8 @@ private function updateMoreClientInfo($info, array $data, string $connection = n
         ]);
     
         $info->spouse_details = json_encode([
-            'name' => $data['spouse_name'] ?? null,
+            'spouse_first_name' => $data['spouse_first_name'] ?? null,
+            'spouse_last_name' => $data['spouse_last_name'] ?? null,
             'birth_place' => $data['spouse_birth_place'] ?? null,
             'nationality' => $data['spouse_nationality'] ?? null,
             'previous_nationality' => $data['spouse_previous_nationality'] ?? null,

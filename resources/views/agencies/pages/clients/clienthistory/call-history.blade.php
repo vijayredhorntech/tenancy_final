@@ -131,8 +131,10 @@
                                 <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">{{$loop->iteration}}</td>
                                 <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
                                     <div class="flex items-center gap-1"><i class="fa fa-calendar text-gray-400"></i> {{ \Carbon\Carbon::parse($history->date_time)->format('d-m-Y H:i') }}</div>
+                                    <div class="flex items-center gap-1"><i class="fa fa-id-badge text-gray-400"></i></i> EMP-{{ $history->user->id ?? '-' }}</div>
                                     <div class="flex items-center gap-1"><i class="fa fa-user text-gray-400"></i> {{ $history->user->name ?? '-' }}</div>
                                     <div class="flex items-center gap-1"><i class="fa fa-envelope text-gray-400"></i> {{ $history->user->email ?? '-' }}</div>
+
                                 </td>
                            
                                <!-- Description cell: bigger width -->

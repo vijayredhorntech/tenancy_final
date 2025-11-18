@@ -1,412 +1,585 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Invoice</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice View</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-/* Hide everything by default in print */
-@media print {
-    /* body * {
-        visibility: hidden;        
-    } */
-
-    /* Make the invoice and its children visible */
-    #ViewApplicationDiv,
-    #ViewApplicationDiv * {
-        visibility: visible;
+        /* @media print {
+            .no-print { display: none; }
+            body { margin: 0; padding: 0; }
+            .container { width: 100%; max-width: 100%; }
+        } */
+            @media print {
+    /* Hide everything by default */
+    body * {
+        visibility: hidden !important;
     }
-
-    /* Keep the invoice at the top‑left and use full width */
-    #ViewApplicationDiv {
+    
+    /* Show only the print area and its children */
+    #print-area, #print-area * {
+        visibility: visible !important;
+    }
+    
+    #print-area {
         position: absolute;
         left: 0;
         top: 0;
         width: 100%;
+        margin: 0;
+        padding: 15px;
     }
     
-    /* Optionally hide buttons or other screen‑only elements */
-    .no-print {
+    /* Hide specific elements */
+    .no-print, .phpdebugbar, .debugbar {
         display: none !important;
     }
+    
+    /* Clean print layout */
+    body {
+        margin: 0;
+        padding: 0;
+        background: white !important;
+    }
+    
+    .container {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        padding: 15px;
+    }
 }
-</style>
-    <style>
-        /* Base styles */
-        body {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            position: relative;
-            padding-bottom: 15vh;
-            padding-top: 20px;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-        }
-        
-        /* Decorative corner elements */
-        .top-left, .top-right, .bottom-left, .bottom-right {
-            height: 20px;
-            background-color: rgb(45, 158, 195);
-            position: absolute;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        .top-left {
-            width: 30%;
-            border-bottom-right-radius: 3rem;
-            top: 0;
-            left: 0;
-        }
-        .top-right {
-            width: 20%;
-            top: 0;
-            right: 0;
-        }
-        .bottom-left {
-            width: 60%;
-            bottom: 0;
-            left: 0;
-        }
-        .bottom-right {
-            width: 20%;
-            border-top-left-radius: 3rem;
-            bottom: 0;
-            right: 0;
-        }
-        
-        /* Header styles */
-        .header {
+
+
+        .outer-div {
+            background-color: #fff;
             width: 100%;
-            height: 10vh;
         }
-        .header .row {
-            padding: 0 2%;
+
+        .outer-div-inner {
+            margin: 2% auto;
+            padding: 20px 25px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.07);
+        }
+
+        .header-section {
+            border-bottom: 2px solid #797777;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .invoice-title {
+            text-align: center;
+            font-size: 35px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin: 20px 0;
+        }
+
+        .invoice-info {
             display: flex;
             justify-content: space-between;
+            align-items: flex-start;
+            margin: 30px 0;
         }
-        .left-header, .right-header {
-            width: 50%;
-            height: 10vh;
-            border-bottom: solid 1px rgb(45, 158, 195);
+
+        .invoice-info-box {
+            flex: 1;
+        }
+
+        .invoice-info-right {
+            text-align: right;
+            flex: 1;
+        }
+
+        .to-from-section {
             display: flex;
-            align-items: center;
-            margin: 0;
-            padding: 0 2%;
-            box-sizing: border-box;
+            gap: 40px;
+            margin: 30px 0;
         }
-        .right-header {
-            justify-content: flex-end;
+
+        .to-section, .from-section {
+            flex: 1;
         }
-        .header img {
-            height: 7vh;
-            width: auto;
+
+    
+
+        .to-section h3, .from-section h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #26ace2;
+            margin-bottom: 10px;
         }
-        
-        /* Content styles */
-        section {
-            margin: 0;
-            box-sizing: border-box;
+
+        .section-header {
+            background-color: #26ace2;
+            color: white;
+            padding: 12px 15px;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        .table {
+            margin-top: 15px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table th {
+            background-color: #d0dfea;
+            color: #000;
+            font-weight: 600;
             padding: 10px;
+            border: 1px solid #dee2e6;
+            text-transform: uppercase;
         }
-        
-        /* Signature line */
-        .sign-line {
-            width: 150px;
-            height: 2px;
-            background-color: rgb(45, 158, 195);
+
+        .table td {
+            padding: 10px;
+            border: 1px solid #dee2e6;
         }
-        
-        /* Footer styles */
-        .footer {
-            position: absolute;
-            bottom: 30px;
-            left: 0;
-            height: 7vh;
-            width: 100%;
+
+            table.paymenttable {
+                width: 50%;
+            }
+
+        .text-light-blue {
+            color: #26ace2;
+            font-weight: 600;
         }
-        .footer .row {
-            padding: 0 2%;
+
+        .summary-section {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .summary-item {
             display: flex;
             justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
         }
-        .left-footer, .right-footer {
-            width: 50%;
-            height: 7vh;
-            border-top: solid 1px rgb(45, 158, 195);
-            display: flex;
-            align-items: center;
-            margin: 0;
-            padding: 0 2%;
-            box-sizing: border-box;
+
+        .summary-item.total-row {
+            font-weight: 600;
+            font-size: 16px;
+            border-bottom: 2px solid #333;
+            border-top: 2px solid #333;
+            padding: 12px 0;
+            margin-top: 10px;
         }
-        .right-footer {
-            justify-content: flex-end;
+
+        .terms-section {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-left: 4px solid #26ace2;
         }
-        .footer img {
-            height: 5vh;
-            width: auto;
+
+        .terms-section h4 {
+            font-weight: 600;
+            margin-bottom: 15px;
         }
-        
-        /* Print styles */
-        @media print {
-            /* Hide decorative elements */
-            .top-left, .top-right, .bottom-left, .bottom-right {
-                display: none !important;
-            }
-            
-            /* Fix header and footer positions */
-            .header {
-                position: fixed;
-                top: 0;
-                width: 100%;
-                background: white;
-            }
-            
-            .footer {
-                position: fixed;
-                bottom: 0;
-                width: 100%;
-                background: white;
-            }
-            
-            /* Adjust body padding to avoid content overlap */
-            body {
-                padding-top: 10vh !important;
-                padding-bottom: 10vh !important;
-            }
-            
-            /* Prevent page breaks inside important sections */
-            section {
-                page-break-inside: avoid;
-            }
-            
-            /* Add page margins */
-            @page {
-                margin: 1cm;
-            }
+
+        .terms-section ul {
+            margin-left: 20px;
+        }
+
+        .terms-section li {
+            margin-bottom: 10px;
+            text-align: justify;
+            line-height: 1.6;
+        }
+
+        .signature-section {
+            margin-top: 50px;
+            text-align: right;
+        }
+
+        .signature-line {
+            display: inline-block;
+            border-top: 2px solid #333;
+            padding-top: 10px;
+            margin-top: 60px;
+        }
+
+        .button-section {
+            text-align: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+
+        .float-right {
+            float: right;
+        }
+
+        .responsive-center {
+            text-align: center;
+        }
+
+        h1, h2, h3, h4 {
+            margin-top: 0;
+        }
+
+        .print-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .print-button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
+<body>
 
-<body style="display:flex ; justify-content:center; max-width:768px; margin:0px auto; border:1px solid black">
-    <div style="">
-    <!-- Decorative corner elements -->
-    <div class="top-left"></div>
-    <div class="top-right"></div>
-    <div class="bottom-left"></div>
-    <div class="bottom-right"></div>
 
-    <!-- Header section -->
-    <section class="header">
-        <div class="row">
-            <div class="left-header">
+
+<div id="print-area">
+<div class="outer-div" id="ViewApplicationDiv">
+    <div class="outer-div-inner container">
+        <!-- <div class="header-section">
             @if(isset($booking->agency->profile_picture))
-                <img src="{{ asset('images/agencies/logo/' . $booking->agency->profile_picture) }}" alt="{{$booking->agency->name}}" class="h-16 w-auto" class="h-24 mr-4" />
-                @else
-                <img src="{{asset('assets/images/logo.png')}}" class="h-16 w-auto" alt="">
-                @endif
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="{{ asset('images/agencies/logo/' . $booking->agency->profile_picture) }}" alt="{{$booking->agency->name}}" style="height: 50px; margin: 0 auto;" />
+                </div>
+            @else
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="{{asset('assets/images/logo.png')}}" style="height: 50px; margin: 0 auto;" alt="">
+                </div>
+            @endif
+        </div> -->
+       @if(isset($booking->agency->profile_picture))
+            <div style="text-align: left; margin-bottom: -69px;">
+                <img src="{{ asset('images/agencies/logo/' . $booking->agency->profile_picture) }}" 
+                    alt="{{ $booking->agency->name }}" 
+                    style="height: 50px;">
             </div>
-            <div class="right-header">
-                <!-- <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS96s_5RFcK7qero5zH0q8hhOOa3H4b83GBTbcnTyE&s" alt="Partner Logo"> -->
+        @else
+            <div style="text-align: left; margin-bottom: 20px;">
+                <img src="{{ asset('assets/images/logo.png') }}" 
+                    style="height: 50px;" 
+                    alt="">
             </div>
-        </div>
-    </section>
+        @endif
 
-    <!-- Main content -->
-    <section>
+
+    
     @php
-    use Carbon\Carbon;       // Carbon alias
+    use Carbon\Carbon;
     use Illuminate\Support\Str;
 
-    // dd($booking->clint);
-    /* 1. Safely grab the Invoice model (may be null) */
-    $invoice = $booking;
 
-    /* 2. Split “TO” address if it exists, otherwise empty array */
-    $toParts = $invoice && $invoice->clint->permanent_address
-        ? array_filter(array_map('trim', explode(',', $invoice->clint->permanent_address)))
-        : [];
 
-    /* 3. Split “ISSUED BY” address if it exists, otherwise empty array */
-    $issue = $booking->agency && $booking->agency->address
-        ? array_filter(array_map('trim', explode(',', $booking->agency->address)))
-        : [];
+  
+    $invoice = $booking->deduction; // Get the deduction from visa booking
+ 
+    $invoiceData = $invoice->invoice ?? null; // Get updated invoice data
 
-    /* 4. Human‑readable date or ‘N/A’ */
+    $otherClientInfo = $booking->otherclients ?? [];
+    // Use updated invoice data if available, otherwise fall back to original data
+    $clientName = $invoiceData?->receiver_name ?? ($booking->clint->client_name ?? '');
+    $clientPhone = $invoiceData?->visa_applicant ?? ($booking->clint->phone_number ?? 'N/A');
+    $clientEmail = $booking->clint->email ?? 'N/A';
+    $clientAddress = $invoiceData?->address ?? ($booking->clint->permanent_address ?? '');
+
+    
+    // Get passport and visa details
+    $passportOrigin = $booking->origin->countryName ?? 'N/A';
+    $passportNumber = $booking->clint->passport_number ?? 'N/A';
+    $passportDob = $booking->clint->date_of_birth ?? 'N/A';
+    $visaCountry = $booking->destination->countryName ?? 'N/A';
+    $visaName=$booking->visa->name ?? 'N/A';
+    $visaType = $booking->visasubtype->name ?? 'N/A';
+    
+  
+   /**  
+   $visaFee = is_numeric($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 'N/A') ? (float)($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 0) : 0.00; 
+  */
+
+  $visaFee = (float) (
+    ($invoiceData?->service_charge > 0)
+        ? $invoiceData->service_charge
+        : ($booking->visasubtype->price ?? 0)
+);
+
+ $serviceCharge = (float) (
+    ($invoiceData?->service_charge > 0)
+        ? $invoiceData->service_charge
+        : ($booking->visasubtype->commission ?? 0)
+);
+
+$vatPercent=(float)($booking->visasubtype->commission ?? 0);
+
+
+$amountBase = ($visaFee + $serviceCharge);
+
+$vatCharge = ($amountBase * $vatPercent) / 100;
+
+
+
+
+
+    $paymentMode = $invoiceData?->payment_type ?? 'CASH';
+    $currency = '£'; // Default currency
+
+        $client = $booking->clint;
+
+        $fullAddress = $client->address ?? $client->permanent_address ?? '';
+        $parts = array_map('trim', explode(',', $fullAddress));
+        $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
+   
+        // Build a clean formatted address
+        $toParts = [
+            'street'   => $client->street ?? 'Street Missing',
+            'city'     => $client->city ?? 'City Missing',
+            'county'   => $detectedCounty ?? 'County Missing',
+            'postcode' => $client->zip_code ?? 'Postcode Missing',
+            'country'  => $client->country ?? 'Country Missing',
+        ];
+
+        // If street is empty but address exists → extract first part
+        if (empty($toParts['street']) && !empty($client->address)) {
+            $addressParts = array_filter(array_map('trim', explode(',', $client->address)));
+            $toParts['street'] = $addressParts[0] ?? 'Street Missing';
+        }
+
+  
+
+        // ========== ISSUED BY ADDRESS FORMAT ==========
+      // === AGENCY DETAILS STRUCTURED ===
+$agency = $booking->agency;
+$agencyDetails = $booking->agency->details ?? null;
+
+// RAW ADDRESS (fallback)
+$rawAgencyAddress = $booking->agency->address ?? '';
+
+// 1. Split raw address into parts
+$parts = array_map('trim', explode(',', $rawAgencyAddress));
+
+// 2. Detect county from raw address (3rd or 4th part)
+$detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
+
+// 3. Build final structured array
+    $issuedBy = [
+        'street'   => $agencyDetails->state 
+                        ?? ($parts[0] . ', ' . ($parts[1] ?? 'Street Missing')),    
+        'city'     => $agencyDetails->city 
+                        ?? $parts[2] 
+                        ?? 'City Missing',    
+        'county'   => $agencyDetails->county 
+                        ?? $detectedCounty 
+                        ?? 'County Missing',
+        'postcode' => $agencyDetails->zipcode ?? 'Postcode Missing',
+        'country'  => $agencyDetails->country 
+                        ?? 'United Kingdom',
+    ];
+
     $date = $invoice && $invoice->date
         ? Carbon::parse($invoice->date)->format('d F Y')
         : 'N/A';
 
-    /* 5. Filter term‑conditions collection if present */
     $termtype = $termconditon
         ? $termconditon->where('type', 'VISA APPLICATION')
-        : collect();   // empty collection if $termconditon is null
+        : collect();
 
-@endphp
+         $price = 0;
 
-    <div class="grid grid-cols-3 gap-2 mt-4">
-
-        <div class="w-full ">
-            &nbsp
-        </div>
-        <div class="w-full flex justify-center">
-            <h1 class="text-2xl font-bold">INVOICE</h1>
-        </div>
-        <div class=" w-full text-right flex flex-col">
-            <div class="flex justify-end items-center">
-                <h1 class="font-bold text-sm ">Invoice Date:</h1>
-                <span class="font-normal text-sm ml-2">{{$date}}</span>
-            </div>
-            <div class="flex justify-end items-center">
-                <h1 class="font-bold text-sm ">Invoice No:</h1>
-                <!-- CLDI0006044 -->
-                <span class="font-normal text-sm ml-2">{{$booking->application_number}}</span>
-            </div>
-            <div class="flex justify-end items-center">
-                <h1 class="font-bold text-sm ">Client ID:</h1>
-                <!-- CLDI0006044 -->
-                <span class="font-normal text-sm ml-2">{{$booking->clint->id ??''}}</span>
-            </div>
-
-
-        </div>
-    </div>
-    
-    <div class="mt-4 grid grid-cols-2 ">
-        <div class="w-full ">
-            <h2 class="text-lg font-bold text-[#26ace2]">TO</h2>
-            <p class="text-sm">
-                {{ strtoupper(!empty($invoice->clint->client_name) ? $invoice->clint->client_name : '') }}
-            </p>
-            @foreach($toParts as $line)
-                <p class="text-sm">{{ strtoupper($line) }}</p>
-            @endforeach
-
-            <p class="text-sm"><strong>TEL:</strong> {{ $invoice->clint->phone_number ?? 'N/A' }}</p>
-            <p class="text-sm"><strong>Email:</strong> {{ $invoice->clint->email ?? 'N/A' }}</p>
-
+    if (optional($invoiceData)->status === 'edited') {
         
-        </div>
+        $price = (float) $invoiceData->new_price;
+    } else {
+        
 
-        <div class="w-full text-right">
-            <h2 class="text-lg font-bold text-[#26ace2]">ISSUED BY</h2>
-                    
-            @foreach($issue as $line)
-                <p class="text-sm">{{ strtoupper($line) }}</p>
-            @endforeach
-            <p class="text-sm"><strong>TEL:</strong> {{$booking->agency->phone}}</p>
-            <p class="text-sm"><strong>E-MAIL:</strong>  {{$booking->agency->email}}</p>
+   
+        $price = is_numeric(optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
+            ? (float) (optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
+            : 0;
+    }
+
+    $subTotal = $visaFee + $serviceCharge + $vatCharge;
+    
+
+    $price = number_format($price, 2)+ $vatCharge;
+
+    @endphp
+
+    <div class="invoice-title">INVOICE</div>
+
+    <div class="invoice-info">
+        <div class="invoice-info-box"></div>
+        <div class="invoice-info-right">
+            <table style="width: 100%; border: none;">
+                <tr>
+                    <td style="border: none; font-weight: bold;">Invoice Date :</td>
+                    <td style="border: none;">{{$booking->created_at->format('d F Y')}}</td>
+                </tr>
+                <tr>
+                    <td style="border: none; font-weight: bold;">Invoice No :</td>
+                    <td style="border: none;">{{$booking->application_number}}</td>
+                </tr>
+                <tr>
+                    <td style="border: none; font-weight: bold;">Client ID :</td>
+                 
+             
+                    <td style="border: none;">{{$booking->clint->clientuid ?? ''}}</td>
+                </tr>
+            </table>
         </div>
     </div>
-    <div class="mt-4 w-full">
-        <h2 class="text-md font-bold  bg-[#26ace2] p-3 w-max text-white">OTHER FACILITIES</h2>
-        <h3 class="text-md font-bold text-black mt-6">1. Passenger Details</h3>
-        <div class="w-full overflow-hidden mt-2">
-            <table class="w-full ">
-                <tr class="bg-[#aed6f1] text-black  font-bold text-sm">
-                    <td class="p-1 border-r-[1px] border-gray-100">S#</td>
-                    <td class="p-1 border-r-[1px] border-gray-100">OTHER FACILITIES REMARK</td>
-                    <td class="p-1 border-r-[1px] border-gray-100">AMOUNT</td>
-                    
 
-                </tr>
-                <tr class="text-black text-sm border-b-[1px] border-blue-100">
-                    <td class="p-1">1</td>
-                    <td class="p-1">{{$booking->visa->name}}</td>
-                    <td class="p-1">{{$booking->total_amount??''}}</td>
+    <div class="to-from-section" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; margin: 30px 0;">
+    <!-- TO SECTION (Left) -->
+    <div class="to-section" style="flex: 1; text-align: left;">
+        <h3 style="font-size: 24px; font-weight: 600; color: #26ace2; margin-bottom: 10px;">To</h3>
+        <p style="margin: 0;">
+           {{ strtoupper($toParts['street']) }}<br>
+            {{ strtoupper($toParts['city']) }}<br>
+            {{ strtoupper($toParts['county']) }}<br>
+            {{ strtoupper($toParts['postcode']) }}<br>
+            {{ strtoupper($toParts['country']) }}<br>
+            <strong>TEL:</strong> {{ $clientPhone }}<br>
+            <strong>Email:</strong> {{ $clientEmail }}
+        </p>
+    </div>
 
-                </tr>
-            </table>
-            <p style="float:right"> {{$invoice->amoun??''}}</p>
+    <!-- FROM SECTION (Right) -->
+    <div class="from-section" style="flex: 1; text-align: right;">
+        <h3 style="font-size: 24px; font-weight: 600; color: #26ace2; margin-bottom: 10px;">Issued By</h3>
+        <p style="margin: 0;">
+       
+             {{ strtoupper($issuedBy['street']) }}<br>
+            {{ strtoupper($issuedBy['city']) }}<br>
+            {{ strtoupper($issuedBy['county']) }}<br>
+            {{ strtoupper($issuedBy['postcode']) }}<br>
+            {{ strtoupper($issuedBy['country']) }}<br>
 
-            
-        </div>
-        <table class="min-w-[500px] max-w-xs w-auto">
-                <tr class="bg-[#aed6f1] text-black  font-bold text-sm">
-                    <td class="p-1 border-r-[1px] border-gray-100">PAYMENT MODE</td>
-                    <td class="p-1 border-r-[1px] border-gray-100">AMOUNT</td>
-                    <td class="p-1 border-r-[1px] border-gray-100">Date</td>
-                    
-
-                </tr>
-                <tr class="text-black text-sm border-b-[1px] border-blue-100">
-                    <td class="p-1">{{strtoupper($invoice->payment_type??'')}}</td>
-                    <td class="p-1">{{$invoice->amount??''}}</td>
-                    <td class="p-1">{{$date}}</td>
-
-                </tr>
-            </table>
+            <strong>TEL:</strong> {{ $booking->agency->phone }}<br>
+            <strong>E-MAIL:</strong> {{ $booking->agency->email }}
+        </p>
+    </div>
 </div>
 
-    </section>
+    
+    <div class="section-header">VISA SERVICES</div>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>APPLICANT NAME</th>
+                <th>COUNTRY</th>
+                <th>VISA TYPE</th>
+                <th>VISA FEES</th>
+                <th>SERVICE CHARGE</th>
+                <th>VAT CHARGE</th>
+                <th>AMOUNT</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ strtoupper($clientName) }}</td>
+                <td>{{ strtoupper($passportOrigin) }} <br>
+                        To <br>
+                    {{ strtoupper($visaCountry) }}
+                </td>
 
-    <!-- Repeat sections as needed -->
+                <td>
+                {{ strtoupper($visaName) }}<br>
 
-    <span>Terms and Conditions</span>
-        <strong>Notes:</strong>
-        <ul class="list-disc pl-6 mt-4">
-            @foreach ($termtype as $type)  {{-- each TermType --}} 
-                @foreach ($type->terms as $term)  
-                          {{-- its related TermsCondition rows --}}
-                <section>
-                    
-                    <li>
-                      <h4 class="font-bold mb-2">{{ $term->heading }}</h4>
-                    <p class="mb-4"> {{ $term->description }}</p>
+                {{ strtoupper($visaType) }}
+                  </td>
+                <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
+                 <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
+                 <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
 
-                    </li>
+
+
+                <td>{{ $currency }}{{ $subTotal }}</td>
+            </tr>
+            @forelse($otherClientInfo as $client)
+                <tr>
+                    <td>{{ strtoupper($client->first_name) .' '. strtoupper($client->last_name) }}</td>
+                       <td>{{ strtoupper($passportOrigin) }} <br>
+                    To <br>
+                    {{ strtoupper($visaCountry) }}
+                </td>
+                    <td>   {{ strtoupper($visaName) }}<br>
+                    {{ strtoupper($visaType) }}</td>
+                    <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
+                    <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
+                    <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
+
+    
+                    <!-- <td>{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td> -->
+                    <td>{{ $currency }}{{ $subTotal }}</td>
+                </tr>
+            @empty
+            @endforelse
+        </tbody>
+    </table>
+    
+    <h4 style="text-align: right; margin-top: 15px;"><strong>Total: <span class="text-light-blue">{{ $currency }}{{ $price }}</span></strong></h4>
+
+
+
+    <div class="terms-section">
+        <h4>Terms and Conditions</h4>
+        <ul>
+            @foreach ($termtype as $type)
+                @foreach ($type->terms as $term)
+                    @if($term->display_invoice==1)
+                        <li>
+                            <strong>{{ $term->heading }}</strong><br>
+                            {{ $term->description }}
+                        </li>
+                    @endif
                 @endforeach
-          </section>
             @endforeach
         </ul>
-        
-            @php
-                    // null‑safe chain; returns null if any link is missing
-                    $signature = $booking->visaInvoiceStatus?->docsign?->sign?->signature_data;
-                @endphp
+    </div>
 
-                <div class="flex flex-col items-end">
-                    {{--
-                    <div class="flex justify-end">
-                        @if($signature)
-                       
-                        <img src="{{ $signature }}" alt="Signature" style="height: 100px; width:200px">
-                           
-                        @endif
-                     </div>--}}
-                     <div>
-                        <span class="mt-20 text-right">Yours sincerely</span>
-                   </div> 
-             </div>
-         
-    <!-- Signature line -->
-    <section style="display: flex; justify-content: flex-end; padding-right: 10vh; padding-top: 2vh; padding-bottom: 2vh;">
-        <div class="sign-line"></div>
-    </section>
-                 <div class="no-print flex justify-center mt-6 mb-8">
-            <button onclick="window.print()" class="bg-blue-500 text-white px-6 py-2 rounded shadow hover:bg-blue-600">
-                Print Invoice
-            </button>
+    <div class="signature-section">
+        <p><strong>Yours Sincerely,</strong></p>
+        <div class="signature-line">
+            <strong>{{$booking->agency->name ?? 'Authorized Signatory'}}</strong><br>
+            Authorized Signatory
         </div>
+    </div>
 
-    <!-- Footer section -->
-    <section class="footer">
-        <div class="row">
-            <div class="left-footer">
-                 @if(isset($booking->agency->profile_picture))
-                <img src="{{ asset('images/agencies/logo/' . $booking->agency->profile_picture) }}" alt="{{$booking->agency->name}}" class="h-16 w-auto" class="h-24 mr-4" />
-                @else
-                <img src="{{asset('assets/images/logo.png')}}" class="h-16 w-auto" alt="">
-                @endif
+    <div style="margin-top: 50px; text-align: center; color: #666; font-size: 12px; padding-top: 20px; border-top: 1px solid #26ace2;">
+        <section class="footer">
+            <div class="row" style="display: flex; justify-content: space-between; margin: 0;">
+                <div class="col-md-6" style="flex: 1; text-align: left;">
+                    <img src="bottom.png" style="height: 40px; width: auto;" alt="">
+                </div>
+                <div class="col-md-6" style="flex: 1; text-align: right;">
+                    <img src="https://seeklogo.com/images/I/information-commissioners-office-logo-1743AEAE1C-seeklogo.com.png" style="height: 40px; width: auto;" alt="">
+                </div>
             </div>
-            <div class="right-footer">
-                <img src="https://seeklogo.com/images/I/information-commissioners-office-logo-1743AEAE1C-seeklogo.com.png" alt="Certification Logo">
-            </div>
-        </div>
-    </section>
+        </section>
+    </div>
+
+   
 </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    function printInvoice() {
+        window.print();
+    }
+    </script>
 </body>
 </html>

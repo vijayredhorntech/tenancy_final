@@ -410,11 +410,24 @@
 
                             <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                 @if($booking->confirm_application==0 || $booking->confirm_application==2 )
-                                <a href="{{ route('verify.application', ['id' => $booking->id]) }}" title="Remind for funds">
-                                    <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
-                                        <i class="fa fa-hourglass-half"></i>
-                                    </div>
-                                </a>
+                                <div class="flex items-center gap-2">
+
+                                     <!-- <a href="{{ route('verify.application', ['id' => $booking->id]) }}" title="Edit">
+                                                <div class="bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-200">
+                                                    <i class="fa fa-pen"></i>
+                                                </div>
+                                            </a> -->
+
+
+                                                <a href="{{ route('verify.application', ['id' => $booking->id]) }}" title="Remind for funds">
+                                                <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
+                                                    <i class="fa fa-hourglass-half"></i>
+                                                </div>
+                                            </a>
+
+                                       
+                                        </div>
+
                                 @else
                                 <div class="flex gap-2 items-center">
                                

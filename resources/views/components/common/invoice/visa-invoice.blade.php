@@ -52,12 +52,6 @@
     }
 }
 
-        /* body {
-            background-color: #f5f5f5;
-            padding: 20px;
-            font-family: 'Verdana', sans-serif;
-            font-size: 14px;
-        } */
 
         .outer-div {
             background-color: #fff;
@@ -110,6 +104,8 @@
             flex: 1;
         }
 
+    
+
         .to-section h3, .from-section h3 {
             font-size: 24px;
             font-weight: 600;
@@ -134,7 +130,7 @@
         }
 
         .table th {
-            background-color: #AED6F1;
+            background-color: #d0dfea;
             color: #000;
             font-weight: 600;
             padding: 10px;
@@ -146,6 +142,10 @@
             padding: 10px;
             border: 1px solid #dee2e6;
         }
+
+            table.paymenttable {
+                width: 50%;
+            }
 
         .text-light-blue {
             color: #26ace2;
@@ -261,13 +261,13 @@
             @endif
         </div> -->
        @if(isset($booking->agency->profile_picture))
-            <div style="text-align: left; margin-bottom: 20px;">
+            <div style="text-align: left; margin-bottom: -69px;">
                 <img src="{{ asset('images/agencies/logo/' . $booking->agency->profile_picture) }}" 
                     alt="{{ $booking->agency->name }}" 
                     style="height: 50px;">
             </div>
         @else
-            <div style="text-align: left; margin-bottom: 20px;">
+            <div style="text-align: left; margin-bottom: -69px;">
                 <img src="{{ asset('assets/images/logo.png') }}" 
                     style="height: 50px;" 
                     alt="">
@@ -293,12 +293,14 @@
     $clientPhone = $invoiceData?->visa_applicant ?? ($booking->clint->phone_number ?? 'N/A');
     $clientEmail = $booking->clint->email ?? 'N/A';
     $clientAddress = $invoiceData?->address ?? ($booking->clint->permanent_address ?? '');
+
     
     // Get passport and visa details
     $passportOrigin = $booking->origin->countryName ?? 'N/A';
     $passportNumber = $booking->clint->passport_number ?? 'N/A';
     $passportDob = $booking->clint->date_of_birth ?? 'N/A';
     $visaCountry = $booking->destination->countryName ?? 'N/A';
+    $visaName=$booking->visa->name ?? 'N/A';
     $visaType = $booking->visasubtype->name ?? 'N/A';
     
   
@@ -318,18 +320,71 @@
         : ($booking->visasubtype->commission ?? 0)
 );
 
+$vatPercent=(float)($booking->visasubtype->commission ?? 0);
+
+
+$amountBase = ($visaFee + $serviceCharge);
+
+$vatCharge = ($amountBase * $vatPercent) / 100;
+
+
+
 
 
     $paymentMode = $invoiceData?->payment_type ?? 'CASH';
     $currency = '£'; // Default currency
 
-    $toParts = $clientAddress
-        ? array_filter(array_map('trim', explode(',', $clientAddress)))
-        : [];
+        $client = $booking->clint;
 
-    $issue = $booking->agency && $booking->agency->address
-        ? array_filter(array_map('trim', explode(',', $booking->agency->address)))
-        : [];
+        $fullAddress = $client->address ?? $client->permanent_address ?? '';
+        $parts = array_map('trim', explode(',', $fullAddress));
+        $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
+   
+        // Build a clean formatted address
+        $toParts = [
+            'street'   => $client->street ?? 'Street Missing',
+            'city'     => $client->city ?? 'City Missing',
+            'county'   => $detectedCounty ?? 'County Missing',
+            'postcode' => $client->zip_code ?? 'Postcode Missing',
+            'country'  => $client->country ?? 'Country Missing',
+        ];
+
+        // If street is empty but address exists → extract first part
+        if (empty($toParts['street']) && !empty($client->address)) {
+            $addressParts = array_filter(array_map('trim', explode(',', $client->address)));
+            $toParts['street'] = $addressParts[0] ?? 'Street Missing';
+        }
+
+  
+
+        // ========== ISSUED BY ADDRESS FORMAT ==========
+      // === AGENCY DETAILS STRUCTURED ===
+$agency = $booking->agency;
+$agencyDetails = $booking->agency->details ?? null;
+
+// RAW ADDRESS (fallback)
+$rawAgencyAddress = $booking->agency->address ?? '';
+
+// 1. Split raw address into parts
+$parts = array_map('trim', explode(',', $rawAgencyAddress));
+
+// 2. Detect county from raw address (3rd or 4th part)
+$detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
+
+// 3. Build final structured array
+    $issuedBy = [
+        'street'   => $agencyDetails->state 
+                        ?? ($parts[0] . ', ' . ($parts[1] ?? 'Street Missing')),    
+        'city'     => $agencyDetails->city 
+                        ?? $parts[2] 
+                        ?? 'City Missing',    
+        'county'   => $agencyDetails->county 
+                        ?? $detectedCounty 
+                        ?? 'County Missing',
+        'postcode' => $agencyDetails->zipcode ?? 'Postcode Missing',
+        'country'  => $agencyDetails->country 
+                        ?? 'United Kingdom',
+    ];
 
     $date = $invoice && $invoice->date
         ? Carbon::parse($invoice->date)->format('d F Y')
@@ -346,15 +401,17 @@
         $price = (float) $invoiceData->new_price;
     } else {
         
+
    
         $price = is_numeric(optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
             ? (float) (optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
             : 0;
     }
 
-    $subTotal = $visaFee + $serviceCharge;
+    $subTotal = $visaFee + $serviceCharge + $vatCharge;
+    
 
-    $price = number_format($price, 2);
+    $price = number_format($price, 2)+ $vatCharge;
 
     @endphp
 
@@ -365,18 +422,18 @@
         <div class="invoice-info-right">
             <table style="width: 100%; border: none;">
                 <tr>
-                    <td style="border: none; font-weight: bold; padding: 5px;">Invoice Date :</td>
-                    <td style="border: none; padding: 5px;">{{$booking->created_at->format('d F Y')}}</td>
+                    <td style="border: none; font-weight: bold;">Invoice Date :</td>
+                    <td style="border: none;">{{$booking->created_at->format('d F Y')}}</td>
                 </tr>
                 <tr>
-                    <td style="border: none; font-weight: bold; padding: 5px;">Invoice No :</td>
-                    <td style="border: none; padding: 5px;">{{$booking->visaInvoiceStatus->invoice_number}}</td>
+                    <td style="border: none; font-weight: bold;">Invoice No :</td>
+                    <td style="border: none;">{{$booking->visaInvoiceStatus->invoice_number}}</td>
                 </tr>
                 <tr>
-                    <td style="border: none; font-weight: bold; padding: 5px;">Client ID :</td>
+                    <td style="border: none; font-weight: bold;">Client ID :</td>
                  
              
-                    <td style="border: none; padding: 5px;">{{$booking->clint->clientuid ?? ''}}</td>
+                    <td style="border: none;">{{$booking->clint->clientuid ?? ''}}</td>
                 </tr>
             </table>
         </div>
@@ -387,10 +444,11 @@
     <div class="to-section" style="flex: 1; text-align: left;">
         <h3 style="font-size: 24px; font-weight: 600; color: #26ace2; margin-bottom: 10px;">To</h3>
         <p style="margin: 0;">
-            {{ strtoupper($clientName) }}<br>
-            @foreach($toParts as $line)
-                {{ strtoupper($line) }}<br>
-            @endforeach
+           {{ strtoupper($toParts['street']) }}<br>
+            {{ strtoupper($toParts['city']) }}<br>
+            {{ strtoupper($toParts['county']) }}<br>
+            {{ strtoupper($toParts['postcode']) }}<br>
+            {{ strtoupper($toParts['country']) }}<br>
             <strong>TEL:</strong> {{ $clientPhone }}<br>
             <strong>Email:</strong> {{ $clientEmail }}
         </p>
@@ -400,9 +458,13 @@
     <div class="from-section" style="flex: 1; text-align: right;">
         <h3 style="font-size: 24px; font-weight: 600; color: #26ace2; margin-bottom: 10px;">Issued By</h3>
         <p style="margin: 0;">
-            @foreach($issue as $line)
-                {{ strtoupper($line) }}<br>
-            @endforeach
+       
+             {{ strtoupper($issuedBy['street']) }}<br>
+            {{ strtoupper($issuedBy['city']) }}<br>
+            {{ strtoupper($issuedBy['county']) }}<br>
+            {{ strtoupper($issuedBy['postcode']) }}<br>
+            {{ strtoupper($issuedBy['country']) }}<br>
+
             <strong>TEL:</strong> {{ $booking->agency->phone }}<br>
             <strong>E-MAIL:</strong> {{ $booking->agency->email }}
         </p>
@@ -415,38 +477,49 @@
     <table class="table">
         <thead>
             <tr>
-                <th>SNO.</th>
                 <th>APPLICANT NAME</th>
-                <th>PASSPORT ORIGIN</th>
-                <th>VISA COUNTRY</th>
+                <th>COUNTRY</th>
                 <th>VISA TYPE</th>
                 <th>VISA FEES</th>
                 <th>SERVICE CHARGE</th>
+                <th>VAT CHARGE</th>
                 <th>AMOUNT</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td>1.</td>
                 <td>{{ strtoupper($clientName) }}</td>
-                <td>{{ strtoupper($passportOrigin) }}</td>
-                <td>{{ strtoupper($visaCountry) }}</td>
-                <td>{{ strtoupper($visaType) }}</td>
+                <td>{{ strtoupper($passportOrigin) }} <br>
+                        To <br>
+                    {{ strtoupper($visaCountry) }}
+                </td>
+
+                <td>
+                {{ strtoupper($visaName) }}<br>
+
+                {{ strtoupper($visaType) }}
+                  </td>
                 <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
-                <!-- <td>{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td> -->
                  <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
+                 <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
+
+
 
                 <td>{{ $currency }}{{ $subTotal }}</td>
             </tr>
             @forelse($otherClientInfo as $client)
                 <tr>
-                    <td>{{ $loop->iteration + 1 }}.</td>
                     <td>{{ strtoupper($client->first_name) .' '. strtoupper($client->last_name) }}</td>
-                    <td>{{ strtoupper($visaCountry) }}</td>
-                    <td>{{ strtoupper($visaCountry) }}</td>
-                    <td>{{ strtoupper($visaType) }}</td>
+                       <td>{{ strtoupper($passportOrigin) }} <br>
+                    To <br>
+                    {{ strtoupper($visaCountry) }}
+                </td>
+                    <td>   {{ strtoupper($visaName) }}<br>
+                    {{ strtoupper($visaType) }}</td>
                     <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
                     <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
+                    <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
+
     
                     <!-- <td>{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td> -->
                     <td>{{ $currency }}{{ $subTotal }}</td>
@@ -460,7 +533,7 @@
 
     <div style="margin-top: 20px;">
         <h4><strong>Payment Details</strong></h4>
-        <table class="table">
+        <table class="paymenttable table">
             <thead>
                 <tr>
                     <th>PAYMENT MODE</th>
