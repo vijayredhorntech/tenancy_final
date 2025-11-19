@@ -369,6 +369,7 @@ Route::controller(ClientLoginController::class)->group(function () {
     Route::get('/agencies/clientcreate/{token}','hsClientCreate');
     Route::post('/agencies/clientstore','hs_ClientStore')->name('client.store');
     Route::post('/agencies/clientstoreajax','hs_ClientStoreAjax')->name('client.update');
+    Route::get('/client/search','search')->name('client.search');
   
      
    

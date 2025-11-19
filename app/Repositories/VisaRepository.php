@@ -769,9 +769,6 @@ public function allVisacoutnry($request)
 public function saveBooking(array $data)
 {
 
-
-    // dd($data);
-
     try {
             
         if(in_array('self', $data['applicant_type'])){

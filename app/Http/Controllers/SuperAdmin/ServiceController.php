@@ -795,13 +795,16 @@ public function airport($input){
             ])->where('id',$id)->first();
                 
             $agencyData= $this->agencyService->getAgencyData(); 
-            $getClient= $this->agencyService->checkValidationInfo($application->email,$agencyData,$application->phone_number); 
+            // $getClient= $this->agencyService->checkValidationInfo($application->email,$agencyData,$application->phone_number); 
+              
             // dd($getClient);
-            if($getClient==null){
+            if($application->client_id==null){
             $clientData=$this->hsClientCreate($application,$agencyData);
             $clientAllData=$clientData; 
             }else{
-            $clientAllData=$getClient; 
+                 $agencyData= $this->agencyService->getAgencyData(); 
+               $clientData=$this->agencyService->getClientDetails($application->client_id,$agencyData);
+                 $clientAllData=$clientData; 
             }
 
             
@@ -853,6 +856,7 @@ public function airport($input){
             $data = [
                 "origin"        => $applicationData->combination->origin,
                 "destination"   => $applicationData->combination->destination,
+                "applicant_type"=>['self'],
                 "typeof"        => $applicationData->visa_id,
                 "category"      => $applicationData->visa_subtype,
                 "processing"    => $applicationData->visasubtype->processing,

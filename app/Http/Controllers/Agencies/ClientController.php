@@ -440,6 +440,44 @@ public function hs_agencyUpdateClient(Request $request, $id)
   
     }
 
+   public function search(Request $request)
+{
+    $clientId = trim($request->client_id);
+    $email    = trim($request->email);
+    if (!$clientId && !$email) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Please enter Client ID or Email.',
+        ]);
+    }
+
+    $client = null;
+
+    // 1️⃣ Search by Client ID (if provided)
+    if ($clientId) {
+        $client = $this->agencyService->getAgencyClicntBYSearchValue($clientId);
+    }
+
+    // 2️⃣ If client not found and email provided, search by email
+    if (!$client && $email) {
+        $client = $this->agencyService->getAgencyClicntBYSearchValue($email);
+    }
+    // Not found
+    if (!$client) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Client not found.',
+        ]);
+    }
+
+    // Success
+    return response()->json([
+        'status' => 'success',
+        'data' => $client
+    ]);
+}
+
+
 
         public function hs_ClientStoreAjax(Request $request)
     {

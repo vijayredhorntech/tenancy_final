@@ -291,4 +291,43 @@ public function checkValidationInfo($email, $agencyData, $phoneNumber)
         ->first();
 }
 
+
+public function getAgencyClicntBYSearchValue($searchVariable)
+{
+    // Get all session data
+    $session = session()->all();
+
+    // Get agency by domain
+    $agency = Agency::with('domains')
+        ->whereHas('domains', function ($q) use ($session) {
+            $q->where('domain_name', $session['agency_domain'] ?? null);
+        })
+        ->first();
+
+    if (!$agency) {
+        return false;
+    }
+
+    // Switch DB connection
+    $this->setConnectionByDatabase($agency->database_name);
+
+    // Fields to search
+    $fields = ['clientuid', 'email', 'phone_number'];
+
+    foreach ($fields as $field) {
+        $client = ClientDetails::on('user_database')
+            ->where($field, $searchVariable)
+            // ->where('agency_id', $agency->id)
+            ->first();
+
+        if ($client) {
+            return $client;   // Found → return immediately
+        }
+    }
+
+    return false; // Not found in any field
+}
+
+
+
 }

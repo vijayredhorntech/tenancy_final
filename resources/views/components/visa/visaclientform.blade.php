@@ -3,6 +3,11 @@
 
 </x-main.layout> --}}
 
+@if ($errors->has('error'))
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+        {{ $errors->first('error') }}
+    </div>
+@endif
    <div class="w-full relative">
           <img class="absolute -top-20 left-0  w-full opacity-20" style="z-index: -1" src="{{asset('assets/images/bgImage.png')}}" alt="">
 
@@ -66,12 +71,26 @@
                              
                           </div>
                           <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4"  >
+                                    <div class="w-full flex justify-end mb-3">
+                                        <button type="button" 
+                                                id="openAssignClientModal"
+                                                class="bg-secondary text-white px-4 py-2 rounded-md hover:bg-secondary/80 transition">
+                                            Existing Client
+                                        </button>
+                                    </div>
                              <!-- Client Information Section -->
                                 <div class="mt-5 border-[1px] border-secondary/30 p-4">
                                     <h3 class="text-secondary font-semibold mb-4">Personal Information</h3>
                                     
                                     <div class="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 grid-cols-1 gap-4">
                                         <!-- First Name -->
+                                         <input
+                                                        type="hidden"
+                                                        name="clientId"
+                                                        id="clientId"
+                                                        value="{{ old('clientId') }}"
+                                                    >
+
                                                 <div class="w-full flex flex-col">
                                                     <label for="firstName" class="font-semibold text-gray-800 text-sm">First Name</label>
                                                     <input
@@ -79,6 +98,7 @@
                                                         name="first_name"
                                                         class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"
                                                         placeholder="As shown in passport"
+                                                        value="{{ old('first_name') }}"
                                                     >
                                                     @error('first_name')
                                                         <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -93,6 +113,7 @@
                                                         name="last_name"
                                                         class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"
                                                         placeholder="As shown in passport"
+                                                        value="{{ old('last_name') }}"
                                                     >
                                                     @error('last_name')
                                                         <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -107,6 +128,7 @@
                                                         name="email"
                                                         class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"
                                                         placeholder="Enter your email"
+                                                        value="{{ old('email') }}"
                                                     >
                                                     @error('email')
                                                         <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -121,6 +143,7 @@
                                                         name="phone_number"
                                                         class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"
                                                         placeholder="Enter your phone number"
+                                                        value="{{ old('phone_number') }}"
                                                     >
                                                     @error('phone_number')
                                                         <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -135,6 +158,7 @@
                                                         name="nationality"
                                                         class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"
                                                         placeholder="Your nationality"
+                                                         value="{{ old('nationality') }}"
                                                     >
                                                     @error('nationality')
                                                         <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -149,6 +173,7 @@
                                                         name="zip_code"
                                                         class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"
                                                         placeholder="Your zip/postal code"
+                                                        value="{{ old('zip_code') }}"
                                                     >
                                                     @error('zip_code')
                                                         <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -165,6 +190,7 @@
                                                         name="address"
                                                         class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"
                                                         placeholder="Your full address"
+                                                        value="{{ old('address') }}"
                                                     >
                                                 </div>
 
@@ -176,6 +202,7 @@
                                                         name="city"
                                                         class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"
                                                         placeholder="Your city"
+                                                        value="{{ old('city') }}"
                                                     >
                                                 </div>
 
@@ -183,11 +210,12 @@
                                                 <div class="w-full flex flex-col">
                                                     <label for="dateOfEntry" class="font-semibold text-gray-800 text-sm">Date of Entry</label>
                                                     <input
-                                                        type="date"
-                                                        name="date_of_entry"
-                                                        class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"
-                                                        max="9999-12-31"
-                                                    >
+                                                            type="date"
+                                                            name="date_of_entry"
+                                                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"
+                                                            min="{{ date('Y-m-d') }}"
+                                                            value="{{ old('date_of_entry', date('Y-m-d')) }}"
+                                                        >
                                                   @error('date_of_entry')
                                                         <span class="text-red-600 text-sm">{{ $message }}</span>
                                                     @enderror
@@ -240,6 +268,51 @@
 
               </div>
               {{--    section right div ends here--}}
+
+              <!-- Assign Client Modal -->
+
+              <!-- Assign Client Modal -->
+        <div id="assignClientModal"
+            class="fixed inset-0 hidden items-center justify-center z-[99999]"
+            style="background: rgba(0,0,0,0.2); backdrop-filter: blur(2px);">
+
+            <div class="bg-white w-[400px] p-6 rounded shadow-xl"
+                    style="box-shadow: 0 10px 40px rgba(0,0,0,0.2); border-radius: 8px;">
+
+                    <h2 class="text-lg font-semibold mb-4">Assign Existing Client</h2>
+
+                    <!-- Search Fields -->
+                    <div>
+                        <label class="text-sm font-semibold">Client ID</label>
+                        <input type="text" id="clientIdInput"
+                            class="w-full border p-2 mt-1 rounded">
+
+                        <label class="text-sm font-semibold mt-3">Email</label>
+                        <input type="text" id="clientEmailInput"
+                            class="w-full border p-2 mt-1 rounded">
+                    </div>
+
+                    <!-- Search Button -->
+                    <button id="searchClientBtn"
+                            class="bg-blue-600 text-white px-4 py-2 rounded mt-4 w-full">
+                        Search Client
+                    </button>
+
+                    <!-- Result Area -->
+                    <div id="clientResult"
+                        class="mt-4 hidden border p-3 rounded bg-gray-100"></div>
+
+                    <button id="closeAssignClientModal"
+                            class="bg-red-600 text-white px-4 py-2 rounded mt-4 w-full">
+                        Close
+                    </button>
+
+                </div>
+            </div>
+
+
+
+
           </section>
       </div>
     @section('scripts')
@@ -252,6 +325,79 @@
             $('#selectionid').val(dataId);
         });
     });
+
+
+$(document).ready(function () {
+        $("#openAssignClientModal").click(function () {
+            $("#assignClientModal").removeClass("hidden").addClass("flex");
+        });
+
+        $("#closeAssignClientModal").click(function () {
+            $("#assignClientModal").addClass("hidden").removeClass("flex");
+        });
+});
+
+
+function useClient(data) {
+    //   dd($data);
+    $("#clientId").val(data.id);
+    $("input[name='first_name']").val(data.first_name);
+    $("input[name='last_name']").val(data.last_name);
+    $("input[name='email']").val(data.email);
+    $("input[name='phone_number']").val(data.phone_number);
+    $("input[name='nationality']").val(data.nationality);
+    $("input[name='zip_code']").val(data.zip_code);
+    $("input[name='address']").val(data.address);
+    $("input[name='city']").val(data.city);
+    $("input[name='date_of_entry']").val(data.date_of_entry);
+
+    // Close modal
+    $("#assignClientModal").removeClass("flex").addClass("hidden");
+}
+
+
+$("#searchClientBtn").click(function () {
+    let clientId = $("#clientIdInput").val().trim();
+    let email = $("#clientEmailInput").val().trim();
+
+    // Validation: At least one field must be filled
+    if (clientId === "" && email === "") {
+        $("#clientResult").removeClass("hidden").html(`
+            <p class="text-red-600 font-semibold">Please enter Client ID or Email to search.</p>
+        `);
+        return; // Stop execution
+    }
+
+    $.ajax({
+        url: "/client/search",
+        type: "GET",
+        data: {
+            client_id: clientId,
+            email: email
+        },
+        success: function (response) {
+            if (response.status === "success") {
+
+                $("#clientResult").removeClass("hidden").html(`
+                    <p><b>Name:</b> ${response.data.first_name} ${response.data.last_name}</p>
+                    <p><b>Email:</b> ${response.data.email}</p>
+                    <p><b>Phone:</b> ${response.data.phone_number}</p>
+
+                    <button onclick='useClient(${JSON.stringify(response.data)})'
+                        class="bg-green-600 text-white px-4 py-2 mt-3 rounded w-full">
+                        Use This Client
+                    </button>
+                `);
+
+            } else {
+                $("#clientResult").removeClass("hidden").html(`
+                    <p class="text-red-600 font-semibold">${response.message}</p>
+                `);
+            }
+        }
+    });
+});
+
 
 
 

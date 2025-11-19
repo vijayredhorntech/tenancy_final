@@ -10,6 +10,7 @@ class RequestApplication extends Model
        protected $fillable = [
         'service_type',
         'agency_id',
+        'client_id',
         'country_id',
         'visa_id',
         'visa_subtype',

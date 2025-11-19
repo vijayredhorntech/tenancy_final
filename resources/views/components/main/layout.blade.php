@@ -54,11 +54,11 @@
             transition: all 0.6s;
         }
 
-         input[type="date"]::-webkit-inner-spin-button,
+         /* input[type="date"]::-webkit-inner-spin-button,
          input[type="date"]::-webkit-calendar-picker-indicator {
              display: none !important;
              -webkit-appearance: none !important;
-         }
+         } */
         select {
             -webkit-appearance: none !important; /* Hides the arrow in WebKit-based browsers (Chrome, Safari, Edge) */
             -moz-appearance: none !important;    /* Hides the arrow in Firefox */

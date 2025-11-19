@@ -578,32 +578,66 @@ public function hsViewEditSection($id){
         ]);
     }
 
-    public function him_storeClientVisaRequest(Request $request){
-        $request->validate([
-        'typeof'        => 'required',   // selectedVisaCategory
-        'category'      => 'required',   // selectedVisaType
+public function him_storeClientVisaRequest(Request $request)
+{
+    $request->validate([
+        'typeof'        => 'required',
+        'category'      => 'required',
         'first_name'    => 'required|string|max:255',
         'last_name'     => 'required|string|max:255',
         'email'         => 'required|email|max:255',
         'phone_number'  => 'required|string|max:20',
-        'nationality'   => 'required|string|max:255',
         'address'       => 'required|string|max:500',
         'city'          => 'required|string|max:255',
         'date_of_entry' => 'required|date',
     ]);
 
-    $allSessionData = session()->all();
+    // Fetch session data
+    $session = session()->all();
 
+    // Get agency data
     $agencyData = Agency::with('domains')
-        ->whereHas('domains', function ($query) use ($allSessionData) {
-            $query->where('domain_name', $allSessionData['agency_domain']);
+        ->whereHas('domains', function ($q) use ($session) {
+            $q->where('domain_name', $session['agency_domain']);
         })
         ->first();
+
+    // ---------------------------------------------
+    // Find client ID
+    // ---------------------------------------------
+    $clientId = $request->client_id ?? null;
+
+    if (!$clientId) {
+        $email  = trim($request->email);
+        $client = $this->agencyService->getAgencyClicntBYSearchValue($email);
+
+        if ($client) {
+            $clientId = $client->id;  // or clientuid if needed
+        }
+    }
+
+    // ------------------------------------------------------
+    // 🚨 DUPLICATE APPLICATION CHECK (IMPORTANT)
+    // ------------------------------------------------------
+    
+    $alreadyApplied = RequestApplication::where('agency_id', $agencyData->id)
+        ->where('client_id', $clientId) // check same client
+        ->where('status','pending') // avoid cancelled or rejected
+        ->first();
+
+    if ($alreadyApplied) {
+        return back()->withErrors([
+            'error' => 'You already applied this Visa Application. Kindly Contact You admin.'
+        ])->withInput();
+    }
+
+    // -------------------------------------------------------
 
     $data = [
         'service_type'   => 'Visa',
         'agency_id'      => $agencyData->id ?? null,
         'country_id'     => $request->selectionid ?? 0,
+        'client_id'      => $clientId,
         'visa_id'        => $request->typeof,
         'visa_subtype'   => $request->category,
         'first_name'     => $request->first_name,
@@ -622,7 +656,7 @@ public function hsViewEditSection($id){
     RequestApplication::create($data);
 
     return redirect()->route('visa.thank-you');
-    }
+}
 
 
     /*******Visa BOoking *******/

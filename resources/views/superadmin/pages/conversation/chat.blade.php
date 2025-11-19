@@ -53,9 +53,28 @@
                         <div class="flex flex-col items-end w-full gap-2 mb-4">
                             <div class="w-[70%] flex flex-col items-end">
                                 <div class="w-max">
-                                    <div class="bg-blue-200 w-max px-6 py-2 rounded-tl-full rounded-br-full rounded-tr-full">
-                           
-                                        <span>{{ $message->message }}</span>
+                                    <div class="bg-blue-200 w-max px-6 pr-10 py-2 group rounded-tl-full rounded-br-full rounded-tr-full relative">
+                                        <span>{{ $message->message }} </span> 
+                                       
+                                       
+                                        <div class="absolute top-0 right-[10px] hidden group-hover:block transition ease-in-out duration-2000" 
+                                          onclick="document.getElementById('chatReplySection').classList.toggle('hidden')"
+                                        >
+                                            <i class="fa fa-ellipsis text-xs"></i>
+                                        </div>
+                                        <div id="chatReplySection" class="absolute top-[100%] hidden right-0 bg-black w-[200px] rounded-sm h-max z-50">
+                                              <div class=" text-white">
+                                                    <div class="py-2 mt-2 border-b-[1px] border-b-white cursor-pointer hover:bg-white/10 px-4">
+                                                            Reply
+                                                    </div>
+                                                    <div class="py-2 border-b-[1px] border-b-white cursor-pointer hover:bg-white/10 px-4">
+                                                            Delete
+                                                    </div>
+                                                    <div class="py-2 cursor-pointer hover:bg-white/10 px-4">
+                                                            Delete from Me
+                                                    </div>
+                                              </div>
+                                        </div>
                                     </div>
                                     <div class="flex justify-end">
                                         <p class="text-secondary text-xs">{{ $message->created_at->diffForHumans() }}</p>
@@ -63,6 +82,7 @@
                                 </div>
                             </div>
                         </div>
+                        
                     @else
                         <!-- Other user's messages (left side) -->
                         <div class="flex flex-col gap-2 w-full mb-4" id="sendermessage">
