@@ -13,6 +13,10 @@
             .container { width: 100%; max-width: 100%; }
         } */
             @media print {
+               
+    .page-break-before {
+        page-break-before: always !important;
+    }
     /* Hide everything by default */
     body * {
         visibility: hidden !important;
@@ -552,7 +556,7 @@ $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
         </table>
     </div>
 
-    <div class="terms-section">
+    <div class="terms-section page-break-before">
         <h4>Terms and Conditions</h4>
         <ul>
             @foreach ($termtype as $type)
