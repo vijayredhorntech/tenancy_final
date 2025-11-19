@@ -550,7 +550,7 @@ $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
                 <tr>
                     <td>{{strtoupper($invoiceData?->payment_type ?? 'Cash')}}</td>
                     <td>{{ $currency }} {{ $price }}</td>
-                    <td>{{$booking->created_at->format('Y-m-d')}}</td>
+                    <td>{{$booking->created_at->format('d-m-Y')}}</td>
                 </tr>
             </tbody>
         </table>
