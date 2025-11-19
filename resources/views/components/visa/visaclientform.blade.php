@@ -214,7 +214,7 @@
                                                             name="date_of_entry"
                                                             class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60"
                                                             min="{{ date('Y-m-d') }}"
-                                                            value="{{ old('date_of_entry', date('Y-m-d')) }}"
+                                                            value="{{ old('date_of_entry') }}"
                                                         >
                                                   @error('date_of_entry')
                                                         <span class="text-red-600 text-sm">{{ $message }}</span>

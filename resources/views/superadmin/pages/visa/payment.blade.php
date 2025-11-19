@@ -243,7 +243,9 @@
 
 <script>
 function openConfirmModal() {
+    if(validateVisaForm()) {
     document.getElementById('confirmModal').classList.remove('hidden');
+         }
 }
 
 function closeConfirmModal() {
@@ -251,7 +253,56 @@ function closeConfirmModal() {
 }
 
 function submitForm() {
+    
     document.getElementById('visaForm').submit();
+ 
+}
+
+// MAIN VALIDATION
+function validateVisaForm() {
+    let errors = [];
+
+    // 1. Visa Category
+    let typeofVal = document.getElementById("typeof").value;
+    if (typeofVal === "") {
+        errors.push("Please select a Visa Category.");
+    }
+
+    // 2. Visa Type
+    let categoryVal = document.getElementById("category").value;
+    if (categoryVal === "") {
+        errors.push("Please select Visa Type.");
+    }
+
+    // 3. Date of Entry
+    let dateOfEntry = document.querySelector("input[name='dateofentry']").value;
+    let today = new Date().toISOString().split("T")[0];
+
+    if (dateOfEntry === "") {
+        errors.push("Please select Date of Entry.");
+    } else if (dateOfEntry < today) {
+        errors.push("Date of Entry must be today or later.");
+    }
+
+    // 4. Client/User Selection
+    let clientId = document.querySelector("select[name='clientId']").value;
+    if (clientId === "") {
+        errors.push("Kindly select the user.");
+    }
+
+    // 5. Applicant type: Self / Family
+    let applicantTypes = document.querySelectorAll("input[name='applicant_type[]']:checked");
+    if (applicantTypes.length === 0) {
+        errors.push("At least one applicant type must be selected (Self or Family).");
+    }
+
+    // SHOW ERRORS
+    if (errors.length > 0) {
+        alert(errors.join("\n"));
+        return false;
+    }
+
+    return true;
 }
 </script>
     <script>
@@ -271,11 +322,48 @@ $(document).ready(function() {
 
     
    
+        // $('#existingUserDropdown').select2({
+        //     placeholder: "---Select USer---",
+        //     allowClear: true,
+        //     containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
+        // });
         $('#existingUserDropdown').select2({
-            placeholder: "---Select USer---",
-            allowClear: true,
-            containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
-        });
+                placeholder: "--- Select User ---",
+                allowClear: true,
+
+                matcher: function(params, data) {
+                    if (!params.term || params.term.trim() === '') {
+                        return data;
+                    }
+
+                    let term = params.term.toLowerCase();
+
+                    let text     = (data.text || '').toLowerCase();
+                    let name     = ($(data.element).data('name') + '').toLowerCase();
+                    let first    = ($(data.element).data('first') + '').toLowerCase();
+                    let last     = ($(data.element).data('last') + '').toLowerCase();
+                    let email    = ($(data.element).data('email') + '').toLowerCase();
+                    let phone    = ($(data.element).data('phone_number') + '').toLowerCase();
+                    let cid      = ($(data.element).data('cid') + '').toLowerCase();
+
+                    // MATCH ANY FIELD
+                    if (
+                        text.includes(term) ||
+                        name.includes(term) ||
+                        first.includes(term) ||
+                        last.includes(term) ||
+                        email.includes(term) ||
+                        phone.includes(term) ||
+                        cid.includes(term)
+                    ) {
+                        return data;
+                    }
+
+                    return null;
+                }
+            });
+
+        
       
     });
 
@@ -556,10 +644,9 @@ $("#existingUserBtn").on("click", function () {
             url: "{{ route('get.existing.users') }}", // Update with correct route
             type: "GET",
             success: function (data) {
-                console.log(data);
                 let html = '<option value="">Select User</option>';
                 data.forEach(user => {
-                    html += `<option value="${user.id}"  data-nationality="${user.clientinfo?.nationality ?? 'N/A'}" data-name="${user.first_name}" data-lastname="${user.last_name}"  data-phone_number="${user.phone_number} " data-email="${user.email}" data-passport="${user.passport_number}">${user.client_name}</option>`;
+                    html += `<option value="${user.id}"  data-nationality="${user.clientinfo?.nationality ?? 'N/A'}" data-name="${user.first_name}" data-lastname="${user.last_name}"  data-phone_number="${user.phone_number} " data-email="${user.email}"  data-cid="${user.clientuid}" data-passport="${user.passport_number}">${user.client_name} </option>`;
                 });
                 $("#existingUserDropdown").html(html);
             },

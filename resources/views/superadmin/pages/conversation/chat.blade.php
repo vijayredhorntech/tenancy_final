@@ -62,6 +62,8 @@
                                         >
                                             <i class="fa fa-ellipsis text-xs"></i>
                                         </div>
+
+
                                         <div id="chatReplySection" class="absolute top-[100%] hidden right-0 bg-black w-[200px] rounded-sm h-max z-50">
                                               <div class=" text-white">
                                                     <div class="py-2 mt-2 border-b-[1px] border-b-white cursor-pointer hover:bg-white/10 px-4">
@@ -75,6 +77,10 @@
                                                     </div>
                                               </div>
                                         </div>
+
+
+
+                                        
                                     </div>
                                     <div class="flex justify-end">
                                         <p class="text-secondary text-xs">{{ $message->created_at->diffForHumans() }}</p>
