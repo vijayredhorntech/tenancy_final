@@ -368,6 +368,7 @@ $rawAgencyAddress = $booking->agency->address ?? '';
 // 1. Split raw address into parts
 $parts = array_map('trim', explode(',', $rawAgencyAddress));
 
+
 // 2. Detect county from raw address (3rd or 4th part)
 $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
 
@@ -449,8 +450,8 @@ $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
             {{ strtoupper($toParts['county']) }}<br>
             {{ strtoupper($toParts['postcode']) }}<br>
             {{ strtoupper($toParts['country']) }}<br>
-            <strong>TEL:</strong> {{ $clientPhone }}<br>
-            <strong>Email:</strong> {{ $clientEmail }}
+            <!-- <strong>TEL:</strong> {{ $clientPhone }}<br>
+            <strong>Email:</strong> {{ $clientEmail }} -->
         </p>
     </div>
 
@@ -544,7 +545,7 @@ $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
             <tbody>
                 <tr>
                     <td>{{strtoupper($invoiceData?->payment_type ?? 'Cash')}}</td>
-                    <td>{{ $price }}</td>
+                    <td>{{ $currency }} {{ $price }}</td>
                     <td>{{$booking->created_at->format('Y-m-d')}}</td>
                 </tr>
             </tbody>
