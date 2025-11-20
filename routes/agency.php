@@ -505,6 +505,9 @@ Route::controller(DocumentSignController::class)->group(function () {
     ]);
 })->name('visa.thank-you');
 
+  Route::post('/chat/update',  [ConversationController::class,'update'])->name('chat.update');
+ Route::post('/chat/delete', [ConversationController::class,'delete'])->name('chat.delete');
+
 
 Route::get('/viewinvoice/{id}', [InvoiceController::class, 'hsviewInvoice'])->name('viewinvoice');
 Route::get('/superadmin/retail-invoice/{id}', [InvoiceController::class, 'hsSuperadminRetailInvoiceView'])->name('superadmin.retail.invoice.view');

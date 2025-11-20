@@ -123,6 +123,25 @@ class ConversationController extends Controller
         return view('superadmin.pages.conversation.chat',compact('client','agency'));
        }
 
+
+       public function delete(Request $request)
+        {
+            Message::find($request->id)->delete();
+            return response()->json(['success' => true]);
+        }
+
+
+
+       public function update(Request $request)
+        {
+            $chat = Message::find($request->id);
+            $chat->message = $request->message;
+            $chat->save();
+
+            return response()->json(['success' => true]);
+        }
+
+
     public function hs_sendMessageSAApplication(Request $request){
       
         $request->validate([

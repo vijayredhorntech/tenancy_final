@@ -47,7 +47,70 @@
 
             <!-- Chat messages area -->
             <div class="p-4 w-full h-[600px] bg-white overflow-y-auto" id="chat-messages">
-                @foreach($client->clientchats as $message)
+                 @foreach($client->clientchats as $message)
+                        @if($message->sender_user_type !== 'client')
+                            <div class="flex flex-col items-end w-full gap-2 mb-4">
+                                <div class="w-[70%] flex flex-col items-end">
+                                    <div class="w-max">
+
+                                        <!-- Chat Bubble -->
+                                        <div class="bg-blue-200 w-max px-6 pr-10 py-2 group rounded-tl-full rounded-br-full rounded-tr-full relative">
+                                            <span>{{ $message->message }}</span>
+
+                                            <!-- Menu Icon -->
+                                            <div class="menu-button absolute top-0 right-[10px] hidden group-hover:block cursor-pointer"
+                                                onclick="toggleMenu({{ $message->id }})">
+                                                <i class="fa fa-ellipsis text-xs"></i>
+                                            </div>
+
+                                            <!-- Popup Menu -->
+                                            <div id="chat-menu-{{ $message->id }}" 
+                                                class="absolute top-[100%] hidden right-0 bg-black w-[200px] rounded-sm z-50">
+
+                                                <div class="text-white">
+
+                                                    <div class="py-2 border-b border-white cursor-pointer hover:bg-white/10 px-4"
+                                                        onclick="openEditModal({{ $message->id }}, '{{ addslashes($message->message) }}')">
+                                                        Edit
+                                                    </div>
+
+                                                    <div class="py-2 border-b border-white cursor-pointer hover:bg-white/10 px-4"
+                                                        onclick="deleteMessage({{ $message->id }})">
+                                                        Delete
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Timestamp -->
+                                        <div class="flex justify-end">
+                                            <p class="text-secondary text-xs">{{ $message->created_at->diffForHumans() }}</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        @else
+                            <!-- Sender part unchanged -->
+                            <div class="flex flex-col gap-2 w-full mb-4">
+                                <div class="w-[70%] flex flex-col">
+                                    <div class="w-max">
+                                        <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
+                                            <span>{{ $message->message }}</span>
+                                        </div>
+                                        <div class="flex justify-end">
+                                            <p class="text-secondary text-xs">{{ $message->created_at->diffForHumans() }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+
+
+               {{-- @foreach($client->clientchats as $message)
                     @if($message->sender_user_type !== 'client')
                         <!-- Current user's messages (right side) -->
                         <div class="flex flex-col items-end w-full gap-2 mb-4">
@@ -64,17 +127,15 @@
                                         </div>
 
 
-                                        <div id="chatReplySection" class="absolute top-[100%] hidden right-0 bg-black w-[200px] rounded-sm h-max z-50">
+                                        <div id="chatReplySection" class="chatReplyArea absolute top-[100%] hidden right-0 bg-black w-[200px] rounded-sm h-max z-50">
                                               <div class=" text-white">
                                                     <div class="py-2 mt-2 border-b-[1px] border-b-white cursor-pointer hover:bg-white/10 px-4">
-                                                            Reply
+                                                            Edit
                                                     </div>
                                                     <div class="py-2 border-b-[1px] border-b-white cursor-pointer hover:bg-white/10 px-4">
                                                             Delete
                                                     </div>
-                                                    <div class="py-2 cursor-pointer hover:bg-white/10 px-4">
-                                                            Delete from Me
-                                                    </div>
+                                               
                                               </div>
                                         </div>
 
@@ -104,7 +165,7 @@
                             </div>
                         </div>
                     @endif
-                @endforeach
+                @endforeach --}}
             </div>
 
             <!-- Message input form -->
@@ -136,11 +197,100 @@
     </div>
 </div>
 
+<!-- EDIT MESSAGE MODAL -->
+<div id="editMessageModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-50">
+    <div class="bg-white w-[400px] p-4 rounded shadow">
+        <h3 class="text-lg font-semibold mb-3">Edit Message</h3>
+
+        <form id="editMessageForm">
+            @csrf
+            <input type="hidden" id="edit_message_id">
+            <textarea id="edit_message_text" 
+                class="w-full border p-2 rounded" rows="4"></textarea>
+
+            <div class="flex justify-end mt-3 gap-2">
+                <button type="button" class="px-3 py-1 bg-gray-300 rounded" onclick="closeEditModal()">Cancel</button>
+                <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 
 <!-- Add JavaScript for real-time functionality -->
 
 <script>
+document.addEventListener("click", function(event) {
+
+    // if clicked inside menu OR inside menu button → do nothing
+    if (event.target.closest("[id^='chat-menu-']") || event.target.closest(".menu-button")) {
+        return;
+    }
+
+    // else hide all menus
+    document.querySelectorAll("[id^='chat-menu-']").forEach(menu => {
+        menu.classList.add("hidden");
+    });
+});
+
+
+function toggleMenu(id) {
+    document.querySelectorAll("[id^='chat-menu-']").forEach(menu => menu.classList.add('hidden'));
+    document.getElementById(`chat-menu-${id}`).classList.toggle('hidden');
+}
+
+function openEditModal(id, message) {
+    document.getElementById("chat-menu-" + id).classList.add("hidden");
+    document.getElementById("edit_message_id").value = id;
+    document.getElementById("edit_message_text").value = message;
+    document.getElementById("editMessageModal").classList.remove("hidden");
+}
+
+function closeEditModal() {
+    document.getElementById("editMessageModal").classList.add("hidden");
+}
+
+
+// ======================= UPDATE / EDIT MESSAGE ==========================
+document.getElementById("editMessageForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    let id = document.getElementById("edit_message_id").value;
+    let message = document.getElementById("edit_message_text").value;
+
+    $.ajax({
+        url: "{{ route('chat.update') }}",  // <-- your route
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}",
+            id: id,
+            message: message
+        },
+        success: function(response){
+            location.reload(); // Refresh chat to show updated message
+        }
+    });
+});
+
+
+// ======================= DELETE MESSAGE ================================
+function deleteMessage(id) {
+    if (!confirm("Are you sure you want to delete this message?")) return;
+
+    $.ajax({
+        url: "{{ route('chat.delete') }}",
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}",
+            id: id
+        },
+        success: function(){
+            location.reload();
+        }
+    });
+}
+
   
     document.getElementById('attachment').addEventListener('change', function () {
         const file = this.files[0];
@@ -152,6 +302,8 @@
             nameSpan.classList.add('hidden');
         }
     });
+
+    
 
 
     $(document).ready(function () {
