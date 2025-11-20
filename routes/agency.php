@@ -415,6 +415,8 @@ Route::controller(ClientLoginController::class)->group(function () {
 
 Route::controller(InvoiceController::class)->group(function () {
     Route::get('{type}/invoice/', 'hs_invoice')->name('invoice.index');
+    Route::get('/{type}/invoice', 'hsAllinvoice')->name('invoice.all');
+
     Route::get('/{type}/refund', 'hsrefundInvoice')->name('invoice.refund');
     Route::get('/{type}/canceled', 'hsCanceledInvoice')->name('invoice.canceled');
     Route::get('/invoice/view/{id}', 'hs_viewInvoice')->name('invoice.view');
@@ -430,7 +432,6 @@ Route::controller(InvoiceController::class)->group(function () {
     Route::get('/adjustment/history', 'adjustmentHistory')->name('invoice.adjustment.history');
 
     Route::post('generateinvoice', 'hsGenerateInvoice')->name('generateinvoice');
-    Route::get('/{type}/invoice', 'hsAllinvoice')->name('invoice.all');
     Route::get('{type}/retail-invoices',  'hsRetailInvoices')->name('retail.invoices');
     Route::get('/editinvoice/{id}','hseditInvoice')->name('editinvoice');
     Route::get('/editindex', 'hsEditedInvoices')->name('editindex');

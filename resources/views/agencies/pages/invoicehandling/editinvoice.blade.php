@@ -131,6 +131,10 @@
                                     ($invoice->invoice?->service_charge > 0)
                                         ? $invoice->invoice->service_charge
                                         : ($invoice->visaBooking->visasubtype->commission ?? 0);
+                            $defaultServiceVatCharge=$invoice->visaBooking->visasubtype->gstin ?? 0;
+                        
+                            $gstAmount = (($defaultVisaFee + $defaultServiceCharge) * $defaultServiceVatCharge) / 100;
+
 
                     @endphp
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -151,16 +155,25 @@
                             <input type="number" step="0.01" id="service_charge" name="service_charge" value="{{ old('service_charge', $defaultServiceCharge ?? 0) }}" 
                                 oninput="calculateTotal()" class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
                         </div>
+
+                      
                         
                         <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Discount (£)</label>
                             <input type="number" step="0.01" id="discount" name="discount" value="{{ old('discount', $invoice->invoice->discount ?? 0) }}" 
                                 oninput="calculateTotal()" class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
                         </div>
-                        
+       
+                            <div>
+                            <label class="block font-semibold text-sm text-ternary/90 mb-1">VAT  (£)</label>
+                            <input type="hidden" value="{{  $defaultServiceVatCharge  }}" id="gstpercentage"> 
+                            <input type="number" step="0.01" id="gstAmount" readonly name="gstAmount" value="{{ old('service_charge', $gstAmount ?? 0) }}" 
+                                oninput="calculateTotal()" class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
+                        </div>
+
                         <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Total (£) <span class="text-red-500">*</span></label>
-                            <input type="number" step="0.01" id="total" name="total" value="{{ old('total', $invoice->amount ?? 0) }}" readonly
+                            <input type="number" step="0.01" id="total" name="total" value="{{ old('total', $invoice->amount ?? 0) }}" 
                                 class="w-full bg-gray-100 border border-secondary/40 rounded-md px-3 py-2 text-sm cursor-not-allowed">
                         </div>
                     </div>
@@ -200,10 +213,19 @@
                 const visaFee = parseFloat(document.getElementById('visa_fee').value) || 0;
                 const serviceCharge = parseFloat(document.getElementById('service_charge').value) || 0;
                 const discount = parseFloat(document.getElementById('discount').value) || 0;
+                const gstpercentage = parseFloat(document.getElementById('gstpercentage').value) || 0;
+                const gstAmount = ((visaFee + serviceCharge) * gstpercentage) / 100;
+
                 
-                const total = subtotal + visaFee + serviceCharge - discount;
+             
+                
+                
+                // const total = subtotal + visaFee + serviceCharge - discount;
+                // const total =  visaFee + serviceCharge - discount;
+                const total = visaFee + serviceCharge + gstAmount - discount;
+
                 const finalTotal = Math.max(0, total);
-                
+                document.getElementById('gstAmount').value = gstAmount.toFixed(2);
                 document.getElementById('total').value = finalTotal.toFixed(2);
             }
 

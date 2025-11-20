@@ -1537,11 +1537,110 @@ public function hsviewInvoice(Request $request, $id)
 
     public function hsRetailInvoices(Request $request)
     {
+       
+
         // Load recent retail invoices from deductions with related booking
-        $invoices = Deduction::with(['visaBooking'])
-            ->orderByDesc('id')
-            ->limit(100)
-            ->get();
+        // $invoices = Deduction::with(['visaBooking'])
+        //     ->orderByDesc('id')
+        //     ->limit(100)
+        //     ->get();
+    $agency = $this->agencyService->getAgencyData();
+
+        if($agency){
+                $perPage = $request->filled('per_page') && is_numeric($request->per_page)
+            ? (int) $request->per_page
+            : null;
+
+                    $agency = $this->agencyService->getAgencyData(); // null for superadmin, agency model for agency users
+                        $invoicesQuery = Deduction::with([
+                                'service_name',
+                                'agency',
+                                'visaBooking.visa',
+                                'visaBooking.origin',
+                                'visaBooking.destination',
+                                'visaBooking.visasubtype',
+                                'visaBooking',
+                                'visaApplicant',
+                                'flightBooking',
+                                'hotelBooking',
+                                'hotelDetails',
+                                'cancelinvoice',
+                                'invoice',
+                                'docsign'
+                            ])
+                            
+                            ->where(function ($q) {
+                                
+                                $q->whereNull('invoicestatus')   // Deduction table column
+                                ->orWhereNotIn('invoicestatus', ['canceled', 'Refunded']); // Deduction table column
+                            });
+
+
+   
+
+    // ✅ Filter by agency if agency is logged in
+    if ($agency) {
+        $invoicesQuery->where('agency_id', $agency->id);
+    }
+
+    
+    // ✅ Filter visaBooking where otherclientid is empty or null
+        $invoicesQuery->whereHas('visaBooking', function ($q) {
+            $q->whereNull('otherclientid')
+            ->orWhere('otherclientid', '');
+        });
+    // ✅ Apply filters
+    // 🔎 Filter by invoice relation
+        if ($request->filled('search')) {
+                $search = $request->search;
+                $invoicesQuery->where(function ($q) use ($search) {
+                    $q->where('invoice_number', 'like', "%{$search}%")
+                    ->orWhereHas('invoice', function ($clientQuery) use ($search) {
+                            $clientQuery->where('receiver_name', 'like', "%{$search}%");
+                    });
+                });
+}
+  
+ if ($request->filled('status') || $request->filled('date_from') || $request->filled('date_to') || $request->filled('search')) {
+    $invoicesQuery->where(function ($q) use ($request) {
+        // Handle status filtering
+        if ($request->filled('status')) {
+            if ($request->status === 'Adjusted') {
+                // Filter by invoicestatus in deductions table for Adjusted
+                $q->where('invoicestatus', 'Adjusted');
+            } else {
+                // Filter by status in invoice table for other statuses
+                $q->whereHas('invoice', function ($subQ) use ($request) {
+                    $subQ->where('status', $request->status);
+                });
+            }
+        } else {
+            // Apply other filters
+            $q->whereHas('invoice', function ($subQ) use ($request) {
+                if ($request->filled('date_from')) {
+                    $subQ->whereDate('created_at', '>=', $request->date_from);
+                }
+                if ($request->filled('date_to')) {
+                    $subQ->whereDate('created_at', '<=', $request->date_to);
+                }
+
+                
+            })
+            ->orWhereDoesntHave('invoice'); // ✅ include rows without invoice
+        }
+    });
+}
+
+    $invoices = $perPage
+        ? $invoicesQuery->paginate($perPage)->appends($request->query())
+        : $invoicesQuery->get();
+
+
+
+        }
+        else{
+
+        }
             
 
         return view('agencies.pages.invoicehandling.retail-invoices', compact('invoices'));
@@ -1549,8 +1648,20 @@ public function hsviewInvoice(Request $request, $id)
 
     public function hsSuperadminRetailInvoiceView($id)
     {
+        // dd("heelo");
         $booking = app(\App\Repositories\DocumentSignRepository::class)->checkSignDocument($id);
         $termconditon = app(\App\Repositories\TermConditionRepository::class)->allTeamTypes();
+       $agency = $this->agencyService->getAgencyData();
+
+    //     $totalPassenger=Deduction::with('visabookings')->where('agency_id',$agency->id)-where('dateofentry','2025-11-19');
+    //       $totalPassenger=Deduction::with('visabookings')->where('agency_id',$agency->id)-where('dateofentry','2025-11-19');
+    //      "origin_id" => 237
+    // "destination_id" => 104
+    // "visa_id" => 1
+    // "subtype_id" => 1
+    //     dd($totalPassenger);
+    //     dd($totalPassenger);
+
 
         return view('superadmin.pages.invoicehandling.retailinvoices', [
             'booking' => $booking,

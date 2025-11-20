@@ -253,17 +253,7 @@
 <div id="print-area">
 <div class="outer-div" id="ViewApplicationDiv">
     <div class="outer-div-inner container">
-        <!-- <div class="header-section">
-            @if(isset($booking->agency->profile_picture))
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <img src="{{ asset('images/agencies/logo/' . $booking->agency->profile_picture) }}" alt="{{$booking->agency->name}}" style="height: 50px; margin: 0 auto;" />
-                </div>
-            @else
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <img src="{{asset('assets/images/logo.png')}}" style="height: 50px; margin: 0 auto;" alt="">
-                </div>
-            @endif
-        </div> -->
+
        @if(isset($booking->agency->profile_picture))
             <div style="text-align: left; margin-bottom: -69px;">
                 <img src="{{ asset('images/agencies/logo/' . $booking->agency->profile_picture) }}" 
@@ -311,10 +301,10 @@
    /**  
    $visaFee = is_numeric($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 'N/A') ? (float)($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 0) : 0.00; 
   */
-
+   
   $visaFee = (float) (
-    ($invoiceData?->service_charge > 0)
-        ? $invoiceData->service_charge
+    ($invoiceData?->visa_fee > 0)
+        ? $invoiceData->visa_fee
         : ($booking->visasubtype->price ?? 0)
 );
 
@@ -324,12 +314,13 @@
         : ($booking->visasubtype->commission ?? 0)
 );
 
-$vatPercent=(float)($booking->visasubtype->commission ?? 0);
+$vatPercent=($booking->visasubtype->gstin ?? 0);
+
 
 
 $amountBase = ($visaFee + $serviceCharge);
-
 $vatCharge = ($amountBase * $vatPercent) / 100;
+
 
 
 
@@ -406,17 +397,17 @@ $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
         $price = (float) $invoiceData->new_price;
     } else {
         
-
-   
+ 
         $price = is_numeric(optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
             ? (float) (optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
             : 0;
     }
 
     $subTotal = $visaFee + $serviceCharge + $vatCharge;
-    
 
-    $price = number_format($price, 2)+ $vatCharge;
+
+
+    $price = $price;
 
     @endphp
 
@@ -504,9 +495,9 @@ $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
 
                 {{ strtoupper($visaType) }}
                   </td>
-                <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
-                 <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
-                 <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
+                <td>{{ $currency }}{{ $visaFee }}</td>
+                 <td>{{ $currency }}{{ $serviceCharge }}</td>
+                 <td>{{ $currency }}{{ $vatCharge }}</td>
 
 
 
@@ -521,9 +512,9 @@ $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
                 </td>
                     <td>   {{ strtoupper($visaName) }}<br>
                     {{ strtoupper($visaType) }}</td>
-                    <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
-                    <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
-                    <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
+                    <td>{{ $currency }}{{ $visaFee }}</td>
+                    <td>{{ $currency }}{{ $serviceCharge }}</td>
+                    <td>{{ $currency }}{{ $vatCharge }}</td>
 
     
                     <!-- <td>{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td> -->
