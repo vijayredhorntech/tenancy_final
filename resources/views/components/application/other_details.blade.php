@@ -112,6 +112,23 @@
                                             @enderror
                                         </div>
                                     @endif
+                                    
+                               
+
+                                 @if(in_array('State', $permission))
+                                           <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="city" class="font-semibold text-ternary/90 text-sm">County  *</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="county" id="county" requiresdd
+                                                
+                                                    value="{{ old('county', $bookingData->clint->county ?? '') }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                    @error('city') border-red-500 @enderror">
+                                                <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                      
+                                        </div>
+                                     @endif
                                     <!-- country  -->
                                     @if(in_array('Country of Residence', $permission))
                                         <div class="w-full relative group flex flex-col gap-1">
@@ -143,6 +160,20 @@
                                             @enderror
                                         </div>
                                     @endif
+                                   @if(in_array('Postal Code', $permission))
+                                            <div class="w-full relative group flex flex-col gap-1">
+                                            <label for="city" class="font-semibold text-ternary/90 text-sm">Postal Code  *</label>
+                                            <div class="w-full relative">
+                                                <input type="text" name="zip_code" id="postcode" requiresdd
+                                                
+                                                   value="{{ old('zip_code', $bookingData->clint->zip_code ?? '') }}"
+                                                    class="w-full pl-2 pr-8 py-1 rounded-[3px] rounded-tr-[8px] border-[1px] border-b-[2px] border-r-[2px] border-secondary/40 focus:outline-none focus:ring-0 focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200
+                                                    @error('city') border-red-500 @enderror">
+                                                <i class="fa fa-city absolute right-3 top-[50%] translate-y-[-50%] text-sm text-secondary/80"></i>
+                                            </div>
+                                        </div>
+                                    @endif
+                                  
 
                                     <input type="hidden" name="step" value="address">
                                

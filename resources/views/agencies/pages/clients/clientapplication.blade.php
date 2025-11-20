@@ -390,55 +390,183 @@ $(document).ready(function () {
                 }
             });
         });
+        $(document).ready(function () {
+    // ============ PERSONAL ADDRESS SEARCH ============
+    $("#searchAddress").on("click", function (e) {
+      
+        e.preventDefault();
+        runAddressSearch("#zip_code", "#address-select", "#address-wrapper", fillPersonalAddress);
+    });
+
+    $("#address-select").on("change", function () {
+        fillPersonalAddress($(this).find(":selected"));
+    });
+
+
+    // ============ EMPLOYER ADDRESS SEARCH ============
+    $("#searchEmployessAddress").on("click", function (e) {
+ 
+        e.preventDefault();
+        runAddressSearch("#employee_zip_code", "#employee-address-select", "#employee-address-wrapper", fillEmployerAddress);
+    });
+
+    $("#employee-address-select").on("change", function () {
+        fillEmployerAddress($(this).find(":selected"));
+    });
+});
+
+
+// =============================================
+// 🔍 FUNCTION TO FETCH ADDRESS (USED IN BOTH)
+// =============================================
+function runAddressSearch(zipSelector, selectSelector, wrapperSelector, callback) {
+    const postcode = $(zipSelector).val().trim();
+      
+    if (!postcode) {
+        alert("Please enter a postcode.");
+        return;
+    }
+
+    $.ajax({
+        url: `https://api.getaddress.io/find/${postcode}?api-key=uz1Ks6ukRke3TO_XZBrjeA22850&expand=true&sort=true`,
+        method: "GET",
+        dataType: "json",
+        success: function (response) {
+            const select = $(selectSelector);
+            const wrapper = $(wrapperSelector);
+            select.empty();
+
+            if (response.addresses && response.addresses.length > 0) {
+                select.append(`<option value="">Select an address</option>`);
+
+                response.addresses.forEach((address) => {
+                    const labelText = address.formatted_address.filter(Boolean).join(', ');
+                    const option = $(`
+                        <option value="${labelText}"
+                            data-street="${address.line_1 || ''}${address.line_2 ? ', ' + address.line_2 : ''}"
+                            data-county="${address.county || ''}"
+                            data-city="${address.town_or_city || ''}"
+                            data-postcode="${response.postcode || ''}"
+                            data-country="${address.country || ''}">
+                            ${labelText}
+                        </option>
+                    `);
+                    select.append(option);
+                });
+
+                wrapper.removeClass("hidden");
+            } else {
+                wrapper.addClass("hidden");
+                alert("Invalid postcode or no addresses found.");
+            }
+        },
+        error: function () {
+            alert("Unable to fetch postcode data.");
+        }
+    });
+}
+
+
+// ==================================================
+// 🏠  PERSONAL ADDRESS FILL FUNCTION
+// ==================================================
+function fillPersonalAddress(selected) {
+    $("#permanent_address").val(selected.val());
+    $("#street").val(selected.data("street"));
+    $("#city").val(selected.data("city"));
+    $("#county").val(selected.data("county"));
+    $("#postcode").val(selected.data("postcode"));
+
+    setCountry("#country", selected.data("country"));
+}
+
+
+// ==================================================
+// 🏢  EMPLOYER ADDRESS FILL FUNCTION
+// ==================================================
+function fillEmployerAddress(selected) {
+   
+    $("#employer_address").val(selected.val());
+    $("#employer_city").val(selected.data("city"));
+    $("#employer_county").val(selected.data("county"));
+    $("#employer_postcode").val(selected.data("postcode"));
+
+    setCountry("#employer_country", selected.data("country"));
+}
+
+
+// ==================================================
+// 🌍 UNIVERSAL COUNTRY MATCHER FOR SELECT2
+// ==================================================
+function setCountry(selectId, apiCountry) {
+    apiCountry = (apiCountry || "").trim().toLowerCase();
+
+    let matchedValue = null;
+
+    $(selectId + " option").each(function () {
+        let text = $(this).text().trim().toLowerCase();
+        if (text === apiCountry || text.includes(apiCountry) || apiCountry.includes(text)) {
+            matchedValue = $(this).val();
+        }
+    });
+
+    if (matchedValue) {
+        $(selectId).val(matchedValue).trigger("change");
+    }
+}
+
         // Address lookup
         $(document).ready(function () {
-            $("#searchAddress").on("click", function (e) {
-                e.preventDefault();
+            // $("#searchAddress").on("click", function (e) {
+            //     e.preventDefault();
 
-                const postcode = $("#zip_code").val().trim();
+            //     const postcode = $("#zip_code").val().trim();
 
-                if (!postcode) {
-                    alert("Please enter a postcode.");
-                    return;
-                }
+            //     if (!postcode) {
+            //         alert("Please enter a postcode.");
+            //         return;
+            //     }
 
-                $.ajax({
-                    url: `https://api.getaddress.io/find/${postcode}?api-key=uz1Ks6ukRke3TO_XZBrjeA22850&expand=true&sort=true`,
-                    method: "GET",
-                    dataType: "json",
-                    success: function (response) {
-                        const select = $('#address-select');
-                        const wrapper = $('#address-wrapper');
-                        select.empty();
+            //     $.ajax({
+            //         url: `https://api.getaddress.io/find/${postcode}?api-key=uz1Ks6ukRke3TO_XZBrjeA22850&expand=true&sort=true`,
+            //         method: "GET",
+            //         dataType: "json",
+            //         success: function (response) {
+            //             const select = $('#address-select');
+            //             const wrapper = $('#address-wrapper');
+            //             select.empty();
 
-                        if (response && response.addresses && response.addresses.length > 0) {
-                            select.append(`<option value="">Select an address</option>`);
+            //             if (response && response.addresses && response.addresses.length > 0) {
+            //                 select.append(`<option value="">Select an address</option>`);
 
-                            response.addresses.forEach((address) => {
-                                const labelText = address.formatted_address.filter(Boolean).join(', ');
-                                const option = $(`
-                                    <option value="${labelText}"
-                                            data-street="${address.line_1 || ''}${address.line_2 ? ', ' + address.line_2 : ''}"
-                                            data-county="${address.county || ''}"
-                                            data-city="${address.town_or_city || ''}"
-                                            data-country="${address.country || ''}">
-                                        ${labelText}
-                                    </option>
-                                `);
-                                select.append(option);
-                            });
+            //                 response.addresses.forEach((address) => {
+            //                   $("#postcode").val(response.postcode);
+                                   
+            //                     const labelText = address.formatted_address.filter(Boolean).join(', ');
+            //                     const option = $(`
+            //                         <option value="${labelText}"
+            //                                 data-street="${address.line_1 || ''}${address.line_2 ? ', ' + address.line_2 : ''}"
+            //                                 data-county="${address.county || ''}"
+            //                                 data-city="${address.town_or_city || ''}"
+            //                                 data-postcode="${response.postcode || ''}"
+            //                                 data-country="${address.country || ''}">
+            //                             ${labelText}
+            //                         </option>
+            //                     `);
+            //                     select.append(option);
+            //                 });
 
-                            wrapper.removeClass('hidden');
-                        } else {
-                            wrapper.addClass('hidden');
-                            alert("Invalid postcode or no addresses found.");
-                        }
-                    },
-                    error: function () {
-                        alert("Could not fetch postcode data. Please try again.");
-                    }
-                });
-            });
+            //                 wrapper.removeClass('hidden');
+            //             } else {
+            //                 wrapper.addClass('hidden');
+            //                 alert("Invalid postcode or no addresses found.");
+            //             }
+            //         },
+            //         error: function () {
+            //             alert("Could not fetch postcode data. Please try again.");
+            //         }
+            //     });
+            // });
 
             $("#address-select").on("change", function () {
                 const selected = $(this).find(":selected");
@@ -447,7 +575,16 @@ $(document).ready(function () {
                 $("#street").val(selected.data("street") || "");
                 $("#city").val(selected.data("city") || "");
                 $("#county").val(selected.data("county") || "");
-                $("#country").val(selected.data("country") || "");
+               let apiCountry = selected.data("country") || "";
+
+                // Find and select matching option
+                $("#country option").filter(function () {
+                    return $(this).text().trim().toLowerCase() === apiCountry.trim().toLowerCase();
+                }).prop("selected", true);
+
+                // REQUIRED for Select2
+                $("#country").trigger("change");
+                                $("#postcode").val(selected.data("postcode") || "");
             });
         });
 

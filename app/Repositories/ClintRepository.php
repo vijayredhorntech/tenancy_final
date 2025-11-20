@@ -186,6 +186,7 @@ private function saveClientData(array $data, ClientDetails $client, string $clie
     $client->address = $data['address'] ?? null;
     $client->street = $data['street'] ?? null;
     $client->city = $data['city'] ?? null;
+    
     $client->country = $data['country'] ?? null;
     $client->permanent_address = $data['permanent_address'] ?? null;
 
@@ -651,6 +652,7 @@ private function saveMoreClientInfo(int $clientId, ClientMoreInfo $info, array $
 
 private function updateClientData(array $data, $client, string $connection = null)
 {
+ 
     if ($connection) {
         $client->setConnection($connection);
     }
@@ -667,6 +669,8 @@ private function updateClientData(array $data, $client, string $connection = nul
     $client->address = $data['address'] ?? $client->address;
     $client->street = $data['street'] ?? $client->street;
     $client->city = $data['city'] ?? $client->city;
+    $client->county = $data['county'] ?? $client->county;
+
     $client->country = $data['country'] ?? $client->country;
     $client->permanent_address = $data['permanent_address'] ?? $client->permanent_address;
 

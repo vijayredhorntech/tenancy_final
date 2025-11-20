@@ -385,6 +385,8 @@
                                             data-county="${address.county || ''}"
                                             data-city="${address.town_or_city || ''}"
                                             data-country="${address.country || ''}">
+                                          
+
                                         ${labelText}
                                     </option>
                                 `);
@@ -410,7 +412,10 @@
                 $("#street").val(selected.data("street") || "");
                 $("#city").val(selected.data("city") || "");
                 $("#county").val(selected.data("county") || "");
+                $("#zip_code").val(selected.data("county") || "");
+
                 $("#country").val(selected.data("country") || "");
+                
             });
         });
 

@@ -44,6 +44,27 @@
                                 </div>
                                 @endif
                                  @if(in_array('Employer Address', $permission))
+                                        <!-- zip code -->
+                                        <div class="w-full relative group flex flex-col gap-1">
+                                                    <label for="zip_code" class="font-semibold text-ternary/90 text-sm">Zip/Postal Code</label>
+                                                    <div class="w-full relative flex items-center gap-2">
+                                                        <input type="text" name="employee_zip_code" id="employee_zip_code"
+                                                            class="w-full pl-2 pr-2 py-1 rounded-[3px] rounded-tr-[8px] border border-secondary/40 focus:outline-none focus:border-secondary/70 placeholder-ternary/70 transition ease-in duration-200">
+                                                        <button type="button" id="searchEmployessAddress"
+                                                            class="px-3 py-1 bg-secondary text-white rounded hover:bg-secondary/80">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                        </div>
+                              
+                                    <!-- Select Address -->
+                                        <div class="w-full mt-2 hidden" id="employee-address-wrapper">
+                                                    <label for="employee-address-select" class="text-sm font-semibold text-ternary/90">Select Address</label>
+                                                    <select id="employee-address-select" name="employee-address-select"
+                                                        class="w-full px-2 py-1 border border-secondary/40 rounded focus:outline-none focus:border-secondary/70">
+                                                    </select>
+                                            </div>
+                                
      <!-- Employer Address -->
                                 <div class="w-full relative group flex flex-col gap-1 col-span-2">
                                     <label for="employer_address" class="font-semibold text-ternary/90 text-sm">Employer Address</label>
