@@ -77,16 +77,15 @@
         .invoice-title {
             text-align: center;
             font-size: 35px;
-            font-weight: 600;
+            font-weight: 800;
             text-transform: uppercase;
-            margin: 20px 0;
         }
 
         .invoice-info {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin: 30px 0;
+            margin: 10px 0;
         }
 
         .invoice-info-box {
@@ -94,7 +93,7 @@
         }
 
         .invoice-info-right {
-            text-align: right;
+            text-align: left;
             flex: 1;
         }
 
@@ -118,12 +117,13 @@
         }
 
         .section-header {
+            width:max-content;
             background-color: #26ace2;
             color: white;
-            padding: 12px 15px;
+            padding: 5px 20px;
             font-size: 18px;
             font-weight: 600;
-            margin-top: 30px;
+            margin-top: 15px;
             margin-bottom: 15px;
         }
 
@@ -143,7 +143,7 @@
         }
 
         .table td {
-            padding: 10px;
+            padding: 5px 10px;
             border: 1px solid #dee2e6;
         }
 
@@ -180,10 +180,10 @@
         }
 
         .terms-section {
-            margin-top: 40px;
-            padding: 20px;
+            margin-top: 5px;
+            padding: 10px;
             background-color: #f8f9fa;
-            border-left: 4px solid #26ace2;
+           
         }
 
         .terms-section h4 {
@@ -202,7 +202,7 @@
         }
 
         .signature-section {
-            margin-top: 50px;
+            margin-top: 10px;
             text-align: right;
         }
 
@@ -247,7 +247,142 @@
     </style>
 </head>
 <body>
+@php
+                    use Carbon\Carbon;
+                    use Illuminate\Support\Str;
+                    $invoice = $booking->deduction; // Get the deduction from visa booking
+                
+                    $invoiceData = $invoice->invoice ?? null; // Get updated invoice data
 
+                    $otherClientInfo = $booking->otherclients ?? [];
+                    // Use updated invoice data if available, otherwise fall back to original data
+                    $clientName = $invoiceData?->receiver_name ?? ($booking->clint->client_name ?? '');
+                    $clientPhone = $invoiceData?->visa_applicant ?? ($booking->clint->phone_number ?? 'N/A');
+                    $clientEmail = $booking->clint->email ?? 'N/A';
+                    $clientAddress = $invoiceData?->address ?? ($booking->clint->permanent_address ?? '');
+
+                    
+                    // Get passport and visa details
+                    $passportOrigin = $booking->origin->countryName ?? 'N/A';
+                    $passportNumber = $booking->clint->passport_number ?? 'N/A';
+                    $passportDob = $booking->clint->date_of_birth ?? 'N/A';
+                    $visaCountry = $booking->destination->countryName ?? 'N/A';
+                    $visaName=$booking->visa->name ?? 'N/A';
+                    $visaType = $booking->visasubtype->name ?? 'N/A';
+                    
+                
+                /**  
+                $visaFee = is_numeric($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 'N/A') ? (float)($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 0) : 0.00; 
+                */
+                
+                $visaFee = (float) (
+                    ($invoiceData?->visa_fee > 0)
+                        ? $invoiceData->visa_fee
+                        : ($booking->visasubtype->price ?? 0)
+                );
+
+                $serviceCharge = (float) (
+                    ($invoiceData?->service_charge > 0)
+                        ? $invoiceData->service_charge
+                        : ($booking->visasubtype->commission ?? 0)
+                );
+
+                $vatPercent=($booking->visasubtype->gstin ?? 0);
+
+
+
+                $amountBase = ($visaFee + $serviceCharge);
+                $vatCharge = ($amountBase * $vatPercent) / 100;
+
+
+
+
+
+
+                    $paymentMode = $invoiceData?->payment_type ?? 'CASH';
+                    $currency = '£'; // Default currency
+
+                        $client = $booking->clint;
+
+                        $fullAddress = $client->address ?? $client->permanent_address ?? '';
+                        $parts = array_map('trim', explode(',', $fullAddress));
+                        $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
+                
+                        // Build a clean formatted address
+                        $toParts = [
+                            'street'   => $client->street ?? 'Street Missing',
+                            'city'     => $client->city ?? 'City Missing',
+                            'county'   => $detectedCounty ?? 'County Missing',
+                            'postcode' => $client->zip_code ?? 'Postcode Missing',
+                            'country'  => $client->country ?? 'Country Missing',
+                        ];
+
+                        // If street is empty but address exists → extract first part
+                        if (empty($toParts['street']) && !empty($client->address)) {
+                            $addressParts = array_filter(array_map('trim', explode(',', $client->address)));
+                            $toParts['street'] = $addressParts[0] ?? 'Street Missing';
+                        }
+
+                
+
+                        // ========== ISSUED BY ADDRESS FORMAT ==========
+                    // === AGENCY DETAILS STRUCTURED ===
+                $agency = $booking->agency;
+                $agencyDetails = $booking->agency->details ?? null;
+
+                // RAW ADDRESS (fallback)
+                $rawAgencyAddress = $booking->agency->address ?? '';
+
+                // 1. Split raw address into parts
+                $parts = array_map('trim', explode(',', $rawAgencyAddress));
+
+
+                // 2. Detect county from raw address (3rd or 4th part)
+                $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
+
+                // 3. Build final structured array
+                    $issuedBy = [
+                        'street'   => $agencyDetails->state 
+                                        ?? ($parts[0] . ', ' . ($parts[1] ?? 'Street Missing')),    
+                        'city'     => $agencyDetails->city 
+                                        ?? $parts[2] 
+                                        ?? 'City Missing',    
+                        'county'   => $agencyDetails->county 
+                                        ?? $detectedCounty 
+                                        ?? 'County Missing',
+                        'postcode' => $agencyDetails->zipcode ?? 'Postcode Missing',
+                        'country'  => $agencyDetails->country 
+                                        ?? 'United Kingdom',
+                    ];
+
+                    $date = $invoice && $invoice->date
+                        ? Carbon::parse($invoice->date)->format('d F Y')
+                        : 'N/A';
+
+                    $termtype = $termconditon
+                        ? $termconditon->where('type', 'VISA APPLICATION')
+                        : collect();
+
+                        $price = 0;
+
+                    if (optional($invoiceData)->status === 'edited') {
+                        
+                        $price = (float) $invoiceData->new_price;
+                    } else {
+                        
+                
+                        $price = is_numeric(optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
+                            ? (float) (optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
+                            : 0;
+                    }
+
+                    $subTotal = $visaFee + $serviceCharge + $vatCharge;
+
+
+
+                    $price = $price;
+
+@endphp
 
 
 <div id="print-area">
@@ -255,13 +390,13 @@
     <div class="outer-div-inner container">
 
        @if(isset($booking->agency->profile_picture))
-            <div style="text-align: left; margin-bottom: -69px;">
+            <div style="text-align: left; border-bottom:1px solid black; padding-bottom:10px">
                 <img src="{{ asset('images/agencies/logo/' . $booking->agency->profile_picture) }}" 
                     alt="{{ $booking->agency->name }}" 
                     style="height: 50px;">
             </div>
         @else
-            <div style="text-align: left; margin-bottom: -69px;">
+            <div style="text-align: left; border-bottom:1px solid black; padding-bottom:10px">
                 <img src="{{ asset('assets/images/logo.png') }}" 
                     style="height: 50px;" 
                     alt="">
@@ -269,152 +404,12 @@
         @endif
 
 
-    
-    @php
-    use Carbon\Carbon;
-    use Illuminate\Support\Str;
-
-
-
-  
-    $invoice = $booking->deduction; // Get the deduction from visa booking
- 
-    $invoiceData = $invoice->invoice ?? null; // Get updated invoice data
-
-    $otherClientInfo = $booking->otherclients ?? [];
-    // Use updated invoice data if available, otherwise fall back to original data
-    $clientName = $invoiceData?->receiver_name ?? ($booking->clint->client_name ?? '');
-    $clientPhone = $invoiceData?->visa_applicant ?? ($booking->clint->phone_number ?? 'N/A');
-    $clientEmail = $booking->clint->email ?? 'N/A';
-    $clientAddress = $invoiceData?->address ?? ($booking->clint->permanent_address ?? '');
-
-    
-    // Get passport and visa details
-    $passportOrigin = $booking->origin->countryName ?? 'N/A';
-    $passportNumber = $booking->clint->passport_number ?? 'N/A';
-    $passportDob = $booking->clint->date_of_birth ?? 'N/A';
-    $visaCountry = $booking->destination->countryName ?? 'N/A';
-    $visaName=$booking->visa->name ?? 'N/A';
-    $visaType = $booking->visasubtype->name ?? 'N/A';
-    
-  
-   /**  
-   $visaFee = is_numeric($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 'N/A') ? (float)($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 0) : 0.00; 
-  */
-   
-  $visaFee = (float) (
-    ($invoiceData?->visa_fee > 0)
-        ? $invoiceData->visa_fee
-        : ($booking->visasubtype->price ?? 0)
-);
-
- $serviceCharge = (float) (
-    ($invoiceData?->service_charge > 0)
-        ? $invoiceData->service_charge
-        : ($booking->visasubtype->commission ?? 0)
-);
-
-$vatPercent=($booking->visasubtype->gstin ?? 0);
-
-
-
-$amountBase = ($visaFee + $serviceCharge);
-$vatCharge = ($amountBase * $vatPercent) / 100;
-
-
-
-
-
-
-    $paymentMode = $invoiceData?->payment_type ?? 'CASH';
-    $currency = '£'; // Default currency
-
-        $client = $booking->clint;
-
-        $fullAddress = $client->address ?? $client->permanent_address ?? '';
-        $parts = array_map('trim', explode(',', $fullAddress));
-        $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
-   
-        // Build a clean formatted address
-        $toParts = [
-            'street'   => $client->street ?? 'Street Missing',
-            'city'     => $client->city ?? 'City Missing',
-            'county'   => $detectedCounty ?? 'County Missing',
-            'postcode' => $client->zip_code ?? 'Postcode Missing',
-            'country'  => $client->country ?? 'Country Missing',
-        ];
-
-        // If street is empty but address exists → extract first part
-        if (empty($toParts['street']) && !empty($client->address)) {
-            $addressParts = array_filter(array_map('trim', explode(',', $client->address)));
-            $toParts['street'] = $addressParts[0] ?? 'Street Missing';
-        }
-
-  
-
-        // ========== ISSUED BY ADDRESS FORMAT ==========
-      // === AGENCY DETAILS STRUCTURED ===
-$agency = $booking->agency;
-$agencyDetails = $booking->agency->details ?? null;
-
-// RAW ADDRESS (fallback)
-$rawAgencyAddress = $booking->agency->address ?? '';
-
-// 1. Split raw address into parts
-$parts = array_map('trim', explode(',', $rawAgencyAddress));
-
-
-// 2. Detect county from raw address (3rd or 4th part)
-$detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
-
-// 3. Build final structured array
-    $issuedBy = [
-        'street'   => $agencyDetails->state 
-                        ?? ($parts[0] . ', ' . ($parts[1] ?? 'Street Missing')),    
-        'city'     => $agencyDetails->city 
-                        ?? $parts[2] 
-                        ?? 'City Missing',    
-        'county'   => $agencyDetails->county 
-                        ?? $detectedCounty 
-                        ?? 'County Missing',
-        'postcode' => $agencyDetails->zipcode ?? 'Postcode Missing',
-        'country'  => $agencyDetails->country 
-                        ?? 'United Kingdom',
-    ];
-
-    $date = $invoice && $invoice->date
-        ? Carbon::parse($invoice->date)->format('d F Y')
-        : 'N/A';
-
-    $termtype = $termconditon
-        ? $termconditon->where('type', 'VISA APPLICATION')
-        : collect();
-
-         $price = 0;
-
-    if (optional($invoiceData)->status === 'edited') {
-        
-        $price = (float) $invoiceData->new_price;
-    } else {
-        
- 
-        $price = is_numeric(optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
-            ? (float) (optional($invoiceData)->amount ?? $booking->total_amount ?? 0)
-            : 0;
-    }
-
-    $subTotal = $visaFee + $serviceCharge + $vatCharge;
-
-
-
-    $price = $price;
-
-    @endphp
-
-    <div class="invoice-title">INVOICE</div>
-
     <div class="invoice-info">
         <div class="invoice-info-box"></div>
+        <div class="invoice-info-box">
+                  <div class="invoice-title">INVOICE</div>
+
+        </div>
         <div class="invoice-info-right">
             <table style="width: 100%; border: none;">
                 <tr>
@@ -435,7 +430,7 @@ $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
         </div>
     </div>
 
-    <div class="to-from-section" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; margin: 30px 0;">
+    <div class="to-from-section" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 40px; margin: 20px 0;">
     <!-- TO SECTION (Left) -->
     <div class="to-section" style="flex: 1; text-align: left;">
         <h3 style="font-size: 24px; font-weight: 600; color: #26ace2; margin-bottom: 10px;">To</h3>
@@ -449,9 +444,12 @@ $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
             <strong>Email:</strong> {{ $clientEmail }} -->
         </p>
     </div>
+    <div style="width:26%">
+
+    </div>
 
     <!-- FROM SECTION (Right) -->
-    <div class="from-section" style="flex: 1; text-align: right;">
+    <div class="from-section" style="flex: 1; ">
         <h3 style="font-size: 24px; font-weight: 600; color: #26ace2; margin-bottom: 10px;">Issued By</h3>
         <p style="margin: 0;">
        
@@ -525,7 +523,7 @@ $detectedCounty = $parts[3] ?? $parts[2] ?? 'County Missing';
         </tbody>
     </table>
     
-    <h4 style="text-align: right; margin-top: 15px;"><strong>Total: <span class="text-light-blue">{{ $currency }}{{ $price }}</span></strong></h4>
+    <h5 style="text-align: right; margin-top: 15px;"><strong>Total: <span class="text-light-blue">{{ $currency }}{{ $price }}</span></strong></h4>
 
     <div style="margin-top: 20px;">
         <h4><strong>Payment Details</strong></h4>

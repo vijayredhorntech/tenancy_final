@@ -313,8 +313,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                             Route::post('/updatestore','hs_editStore')->name('uperadmin.ticket'); 
                             // Route::get('/chat/{id}/{token?}', 'hs_chatSAApplication')->name('superadminvisachat.client');
                             Route::get('/chat/{id}/{token?}', 'hs_chatSAApplication')->name('superadminvisachat.client');
-                            Route::post('/chat/update',  'update')->name('chat.update');
-                          Route::post('/chat/delete', 'delete')->name('chat.delete');
+                          
 
                             Route::post('/send', 'hs_sendMessageSAApplication')->name('superadminchat.send_message');
                         });
