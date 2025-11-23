@@ -105,6 +105,14 @@ class ClientController extends Controller
             'email' => 'required|email|max:255',
             'phone_number' => 'required|string|max:20',
             'nationality' => 'required|string|max:255',
+              // Optional fields
+            'zip_code'              => 'required|string|max:20',
+            'street'                => 'required|string|max:255',
+            'passport_ic_number'    => 'required|string|max:255',
+            'date_of_birth' => 'required|date|before:-18 years',
+            'passport_issue_date' => 'required|date|before_or_equal:today',
+            'passport_expiry_date'  => 'required|date|after_or_equal:passport_issue_date',
+            'passport_issue_place'  => 'required|string|max:255',
         ]);
 
         // dd($request->all());

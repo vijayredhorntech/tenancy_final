@@ -97,7 +97,9 @@
                             <div class="flex flex-col gap-2 w-full mb-4">
                                 <div class="w-[70%] flex flex-col">
                                     <div class="w-max">
-                                        <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
+                                         
+                                        <!-- <div class="bg-gray-200 w-max px-6 pr-10 py-2 rounded-tl-full rounded-bl-full rounded-tr-full"> -->
+                                             <div class="bg-gray-200 w-max px-6 pr-10 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
                                             <span>{{ $message->message }}</span>
                                         </div>
                                         <div class="flex justify-end">

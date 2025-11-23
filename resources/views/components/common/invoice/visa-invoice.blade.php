@@ -93,7 +93,8 @@
         }
 
         .invoice-info-right {
-            text-align: left;
+            display:flex;
+           justify-content:end;
             flex: 1;
         }
 
@@ -143,7 +144,7 @@
         }
 
         .table td {
-            padding: 5px 10px;
+            padding: 1px 10px;
             border: 1px solid #dee2e6;
         }
 
@@ -411,20 +412,21 @@
 
         </div>
         <div class="invoice-info-right">
-            <table style="width: 100%; border: none;">
+            <table style=" border: none;">
                 <tr>
-                    <td style="border: none; font-weight: bold;">Invoice Date :</td>
-                    <td style="border: none;">{{$booking->created_at->format('d F Y')}}</td>
+                    <td style="border: none; font-weight: bold; width:60px; white-space:nowrap;line-height:19px">Invoice Date</td>
+                    <td style="border: none; font-weight: bold;  white-space:nowrap; padding:0px 6px;line-height:19px"><span style="font-weight:bold">:</span></td>
+                    <td style="border: none; width:60px; white-space:nowrap;line-height:19px">{{$booking->created_at->format('d F Y')}}</td>
                 </tr>
                 <tr>
-                    <td style="border: none; font-weight: bold;">Invoice No :</td>
-                    <td style="border: none;">{{$booking->visaInvoiceStatus->invoice_number}}</td>
+                    <td style="border: none; font-weight: bold; width:60px; white-space:nowrap;line-height:19px">Invoice No</td>
+                    <td style="border: none; font-weight: bold; white-space:nowrap; padding:0px 6px;line-height:19px"><span style="font-weight:bold">:</span></td>
+                    <td style="border: none; width:60px; white-space:nowrap;line-height:19px">{{$booking->visaInvoiceStatus->invoice_number}}</td>
                 </tr>
                 <tr>
-                    <td style="border: none; font-weight: bold;">Client ID :</td>
-                 
-             
-                    <td style="border: none;">{{$booking->clint->clientuid ?? ''}}</td>
+                    <td style="border: none; font-weight: bold; width:60px; white-space:nowrap;line-height:19px">Client ID</td>
+                    <td style="border: none; font-weight: bold; white-space:nowrap; padding:0px 6px;line-height:19px"><span style="font-weight:bold">:</span></td>
+                    <td style="border: none; width:60px; white-space:nowrap;line-height:19px">{{$booking->clint->clientuid ?? ''}}</td>
                 </tr>
             </table>
         </div>
@@ -434,7 +436,7 @@
     <!-- TO SECTION (Left) -->
     <div class="to-section" style="flex: 1; text-align: left;">
         <h3 style="font-size: 24px; font-weight: 600; color: #26ace2; margin-bottom: 10px;">To</h3>
-        <p style="margin: 0;">
+        <p style="margin: 0; line-height:19px">
            {{ strtoupper($toParts['street']) }}<br>
             {{ strtoupper($toParts['city']) }}<br>
             {{ strtoupper($toParts['county']) }}<br>
@@ -450,19 +452,51 @@
 
     <!-- FROM SECTION (Right) -->
     <div class="from-section" style="flex: 1; ">
-        <h3 style="font-size: 24px; font-weight: 600; color: #26ace2; margin-bottom: 10px;">Issued By</h3>
-        <p style="margin: 0;">
-       
-             {{ strtoupper($issuedBy['street']) }}<br>
-            {{ strtoupper($issuedBy['city']) }}<br>
-            {{ strtoupper($issuedBy['county']) }}<br>
-            {{ strtoupper($issuedBy['postcode']) }}<br>
-            {{ strtoupper($issuedBy['country']) }}<br>
-
-            <strong>TEL:</strong> {{ $booking->agency->phone }}<br>
-            <strong>E-MAIL:</strong> {{ $booking->agency->email }}
-        </p>
-    </div>
+        
+        <div class="invoice-info-right">
+        <table style=" border: none;">
+             <tr>
+                    <td style="border: none; width:60px; white-space:nowrap" colspan="3"><h3 style="font-size: 24px; font-weight: 600; color: #26ace2; margin-bottom: 10px;">Issued By</h3></td>
+                </tr>
+                <tr>
+                    <td style="border: none; font-weight: bold; width:60px; white-space:nowrap">ADDRESS</td>
+                    <td style="border: none; font-weight: bold;  white-space:nowrap; padding:0px 6px"><span style="font-weight:bold">:</span></td>
+                    <td style="border: none; width:60px; white-space:nowrap; line-height:15px">{{ strtoupper($issuedBy['street']) }}</td>
+                </tr>
+                <tr>
+                    <td style="border: none; font-weight: bold; width:60px; white-space:nowrap"></td>
+                    <td style="border: none; font-weight: bold;  white-space:nowrap; padding:0px 6px"></td>
+                    <td style="border: none; width:60px; white-space:nowrap; line-height:14px">{{ strtoupper($issuedBy['city']) }}</td>
+                </tr>
+                <tr>
+                    <td style="border: none; font-weight: bold; width:60px; white-space:nowrap"></td>
+                    <td style="border: none; font-weight: bold;  white-space:nowrap; padding:0px 6px"></td>
+                    <td style="border: none; width:60px; white-space:nowrap; line-height:20px">{{ strtoupper($issuedBy['county']) }}</td>
+                </tr>
+                <tr>
+                    <td style="border: none; font-weight: bold; width:60px; white-space:nowrap"></td>
+                    <td style="border: none; font-weight: bold;  white-space:nowrap; padding:0px 6px"></td>
+                    <td style="border: none; width:60px; white-space:nowrap; line-height:17px">{{ strtoupper($issuedBy['postcode']) }}</td>
+                </tr>
+                <tr>
+                    <td style="border: none; font-weight: bold; width:60px; white-space:nowrap"></td>
+                    <td style="border: none; font-weight: bold;  white-space:nowrap; padding:0px 6px"></td>
+                    <td style="border: none; width:60px; white-space:nowrap; line-height:19px">{{ strtoupper($issuedBy['country']) }}</td>
+                </tr>
+                 <tr>
+                    <td style="border: none; font-weight: bold; width:60px; white-space:nowrap;line-height:19px">TEL</td>
+                    <td style="border: none; font-weight: bold;  white-space:nowrap; padding:0px 6px; line-height:19px"><span style="font-weight:bold">:</span></td>
+                    <td style="border: none; width:60px; white-space:nowrap; line-height:19px">{{ $booking->agency->phone }}</td>
+                </tr>
+                 <tr>
+                    <td style="border: none; font-weight: bold; width:60px; white-space:nowrap;line-height:19px">E-MAIL</td>
+                    <td style="border: none; font-weight: bold;  white-space:nowrap; padding:0px 6px; line-height:19px"><span style="font-weight:bold">:</span></td>
+                    <td style="border: none; width:60px; white-space:nowrap; line-height:19px">{{ $booking->agency->email }}</td>
+                </tr>
+            </table>
+                </div>
+   
+        </div>
 </div>
 
     
@@ -493,13 +527,14 @@
 
                 {{ strtoupper($visaType) }}
                   </td>
-                <td>{{ $currency }}{{ $visaFee }}</td>
-                 <td>{{ $currency }}{{ $serviceCharge }}</td>
-                 <td>{{ $currency }}{{ $vatCharge }}</td>
+                    <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
+                    <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
+                    <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
 
 
 
-                <td>{{ $currency }}{{ $subTotal }}</td>
+                    <td>{{ $currency }}{{ number_format($subTotal, 2) }}</td>
+
             </tr>
             @forelse($otherClientInfo as $client)
                 <tr>
@@ -510,20 +545,20 @@
                 </td>
                     <td>   {{ strtoupper($visaName) }}<br>
                     {{ strtoupper($visaType) }}</td>
-                    <td>{{ $currency }}{{ $visaFee }}</td>
-                    <td>{{ $currency }}{{ $serviceCharge }}</td>
-                    <td>{{ $currency }}{{ $vatCharge }}</td>
+                    <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
+                    <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
+                    <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
 
     
                     <!-- <td>{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td> -->
-                    <td>{{ $currency }}{{ $subTotal }}</td>
+                    <td>{{ $currency }}{{ number_format($subTotal, 2) }}</td>
                 </tr>
             @empty
             @endforelse
         </tbody>
     </table>
     
-    <h5 style="text-align: right; margin-top: 15px;"><strong>Total: <span class="text-light-blue">{{ $currency }}{{ $price }}</span></strong></h4>
+    <h5 style="text-align: right; margin-top: 15px;"><strong>Total: <span class="text-light-blue">{{ $currency }}{{ number_format($price, 2) }}</span></strong></h4>
 
     <div style="margin-top: 20px;">
         <h4><strong>Payment Details</strong></h4>
@@ -538,7 +573,7 @@
             <tbody>
                 <tr>
                     <td>{{strtoupper($invoiceData?->payment_type ?? 'Cash')}}</td>
-                    <td>{{ $currency }} {{ $price }}</td>
+                    <td>{{ $currency }} {{ number_format($price, 2) }}</td>
                     <td>{{$booking->created_at->format('d-m-Y')}}</td>
                 </tr>
             </tbody>

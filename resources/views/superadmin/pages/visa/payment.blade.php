@@ -115,7 +115,7 @@
 
                           <div class="addresspart flex flex-col mt-5 border-[1px] border-secondary/30 p-4"  style="display: none" id="selfDetailsSection">
                               <div class="flex justify-between items-center mb-3">
-                                  <span class="font-semibold text-gray-800">Self Details</span>
+                                  <span class="font-semibold text-gray-800">Self Details </span>
                               </div>
                               <div class="w-full grid lg:grid-cols-5 md:grid-cols-5 sm:grid-cols-4 grid-cols-1 gap-1">
                                   <div class=" w-full flex flex-col" >
@@ -799,14 +799,15 @@ $("#existingUserBtn").on("click", function () {
                     </div>
                 </div>
                 <div class="w-full grid lg:grid-cols-5 md:grid-cols-5 sm:grid-cols-4 grid-cols-1 gap-1 family-member-fields">
-                    <div class="w-full flex flex-col">
-                        <label class="font-semibold text-gray-800 text-sm">First Name</label>
-                        <input type="text" name="family_passengerfirstname[]" value="${member.first_name || ''}" 
-                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
-                    </div>
+                 
                     <div class="w-full flex flex-col">
                         <label class="font-semibold text-gray-800 text-sm">Last Name</label>
                         <input type="text" name="family_passengerlastname[]" value="${member.last_name || ''}" 
+                            class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
+                    </div>
+                       <div class="w-full flex flex-col">
+                        <label class="font-semibold text-gray-800 text-sm">First Name</label>
+                        <input type="text" name="family_passengerfirstname[]" value="${member.first_name || ''}" 
                             class="visa-select w-full mt-2 py-1.5 font-medium text-black/80 text-sm rounded-[3px] border-[1px] border-secondary/50 bg-[#f3f4f6] focus:outline-none focus:ring-0" readonly>
                     </div>
                     <div class="w-full flex flex-col">

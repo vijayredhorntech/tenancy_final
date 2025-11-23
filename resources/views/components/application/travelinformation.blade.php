@@ -137,7 +137,7 @@
                                 @if(in_array('Countries to Visit', $permission)) 
                                 <!-- Places to be Visited * -->
                                 <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Countries to Visit *</label>
+                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Country Departure  *</label>
                                     <div class="w-full relative">
                                     
                                         <input type="text" name="countriesofvisit" id="countriesofvisit" requiresdd
@@ -155,7 +155,7 @@
                                 @if(in_array('Main Destination Country', $permission)) 
                                 <!-- Main Destination Country * -->
                                 <div class="w-full relative group flex flex-col gap-1">
-                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Main Destination Country *</label>
+                                    <label for="country" class="font-semibold text-ternary/90 text-sm">  Country Arrival *</label>
                                     <div class="w-full relative">
                                     
                                         <input type="text" name="maindestinationcountry" id="maindestinationcountry" requiresdd
