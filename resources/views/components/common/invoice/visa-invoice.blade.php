@@ -437,6 +437,8 @@
     <div class="to-section" style="flex: 1; text-align: left;">
         <h3 style="font-size: 24px; font-weight: 600; color: #26ace2; margin-bottom: 10px;">To</h3>
         <p style="margin: 0; line-height:19px">
+
+           {{ strtoupper($clientName) }}<br>
            {{ strtoupper($toParts['street']) }}<br>
             {{ strtoupper($toParts['city']) }}<br>
             {{ strtoupper($toParts['county']) }}<br>
