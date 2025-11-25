@@ -598,13 +598,7 @@
         </ul>
     </div>
 
-    <div class="signature-section">
-        <p><strong>Yours Sincerely,</strong></p>
-        <div class="signature-line">
-            <strong>{{$booking->agency->name ?? 'Authorized Signatory'}}</strong><br>
-            Authorized Signatory
-        </div>
-    </div>
+
 
     <div style="margin-top: 50px; text-align: center; color: #666; font-size: 12px; padding-top: 20px; border-top: 1px solid #26ace2;">
         <section class="footer">
