@@ -707,7 +707,7 @@
                                     <!-- Street -->
                                         <div class="w-full relative group flex flex-col gap-1 mb-4">
                                             <label for="street" class="font-semibold text-ternary/90 text-sm">
-                                                Street
+                                               House No/Street
                                             </label>
                                             <div class="w-full relative">
                                                 <input type="text" name="street" id="street"
@@ -724,7 +724,7 @@
                                     <!-- City -->
                                     @if(in_array('State', $permission))
                                         <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="city" class="font-semibold text-ternary/90 text-sm">City *</label>
+                                            <label for="city" class="font-semibold text-ternary/90 text-sm">Village/Town/City *</label>
                                             <div class="w-full relative">
                                                 <input type="text" name="city" id="city" requiresdd
                                                 
@@ -738,7 +738,7 @@
                                             @enderror
                                         </div>
                                        <div class="w-full relative group flex flex-col gap-1">
-                                            <label for="city" class="font-semibold text-ternary/90 text-sm">County  *</label>
+                                            <label for="city" class="font-semibold text-ternary/90 text-sm">State/District/County  *</label>
                                             <div class="w-full relative">
                                                 <input type="text" name="county" id="county" requiresdd
                                                 

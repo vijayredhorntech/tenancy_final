@@ -581,6 +581,14 @@
             </tbody>
         </table>
     </div>
+     
+   @if(!empty($booking->client_remark))
+    <div style="margin-top: 40px;">
+        <h4>Remark</h4>
+        <p>{{$booking->client_remark}}</p>
+      
+    </div>
+    @endif
 
     <div class="terms-section page-break-before">
         <h4>Terms and Conditions</h4>

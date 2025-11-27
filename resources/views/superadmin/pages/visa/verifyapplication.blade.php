@@ -332,12 +332,11 @@
                                                 </svg>
                                                 Copy URL
                                         </button>
-
-                     
-
                                     @endif
                
                                         @endif
+
+                                        
                            
                                 @else
                                     <button class="w-full bg-gray-400 cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg text-center flex items-center justify-center">
@@ -349,12 +348,12 @@
                                     <p class="text-sm text-red-500 text-center">Please contact administrator to add funds</p>
                                 @endif
 
-                                <a href="{{ route('agency_dashboard') }}" class="block w-full border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg text-center transition duration-200 hover:bg-gray-50 flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
-                                    </svg>
-                                    Back to Dashboard
-                                </a>
+                                    <button type="button"
+                                        class="w-full bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center text-center"
+                                        onclick="openRemarkModal('', '{{ $clientData->client_remark }}')">
+                                        {{ $clientData->client_remark ? 'Edit Invoice Remark' : 'Add Invoice Remark' }}
+                                    </button>
+
                             </div>
                         </div>
                     </div>
@@ -363,6 +362,118 @@
         </div>
 </form>  
     </div>
+
+    <div id="invoiceRemarkModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 backdrop-blur-sm hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4">
+            <!-- Modal Header -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 rounded-t-2xl">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 id="modalTitle" class="text-xl font-bold text-white flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                            </svg>
+                            Add Invoice Remark
+                        </h3>
+                        <p class="text-blue-100 text-sm mt-1">Add a note or comment for this invoice</p>
+                    </div>
+                    <button onclick="closeRemarkModal()" class="text-white/80 hover:text-white transition-colors p-1 rounded-full hover:bg-white/10">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Modal Body -->
+            <div class="p-6">
+                <input type="hidden" id="booking_id" value="{{$clientData->id}}">
+                <input type="hidden" id="type" value="client">
+
+                
+                <div class="mb-1 flex justify-between items-center">
+                    <label for="remark" class="block text-sm font-medium text-gray-700">
+                        Remark <span class="text-red-500">*</span>
+                    </label>
+                    <span id="charCount" class="text-xs text-gray-500">0/500</span>
+                </div>
+                
+                <textarea id="remark"
+                        class="w-full border border-gray-300 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all resize-none"
+                        rows="4"
+                        placeholder="Enter your remark here... (e.g., Special instructions, payment notes, etc.)"></textarea>
+                
+                <div class="text-red-500 text-sm mt-2 h-5" id="remarkError"></div>
+                
+                <!-- Remark Type Selection -->
+               
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="bg-gray-50 px-6 py-4 rounded-b-2xl flex justify-end gap-3">
+                <button onclick="closeRemarkModal()"
+                        class="px-5 py-2.5 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors font-medium flex items-center">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                    Cancel
+                </button>
+                
+                <button onclick="saveInvoiceRemark()"
+                        class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 rounded-lg text-white transition-colors font-medium flex items-center shadow-md">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Save Remark
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+
+   <script>
+        function openRemarkModal(id = '', remark = '') {
+            document.getElementById('invoiceRemarkModal').classList.remove('hidden');
+            // document.getElementById('booking_id').value = id || '';
+            document.getElementById('remark').value = remark || '';
+            document.getElementById('modalTitle').innerText = id ? "Edit Invoice Remark" : "Add Invoice Remark";
+        }
+
+        function closeRemarkModal() {
+            document.getElementById('invoiceRemarkModal').classList.add('hidden');
+        }
+
+        function saveInvoiceRemark() {
+            const id = document.getElementById('booking_id').value;
+            const remark = document.getElementById('remark').value;
+            const type = document.getElementById('type').value;
+
+
+            
+            fetch("{{ route('invoice.remark.save') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: JSON.stringify({ id: id, remark: remark ,type: type })
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                closeRemarkModal();
+                location.reload();
+            })
+            .catch(() => {
+                document.getElementById('remarkError').innerText = "Remark is required!";
+            });
+        }
+</script>
+
+
+
+
     <script>
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(function () {

@@ -479,6 +479,9 @@ Route::controller(DocumentSignController::class)->group(function () {
 
    Route::controller(VisaController::class)->group(function () {
 
+         Route::post('/invoice/remark/save','saveRemark')->name('invoice.remark.save');
+
+
         //   Route::get('/application/{id}/{token}/client','hsfillApplication')->name('application.fill');
           Route::get('/application/{type}/{id}/{token}','hsfillApplication')->name('application.fill');
 

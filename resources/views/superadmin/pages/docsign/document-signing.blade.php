@@ -207,11 +207,11 @@
                         <div class="p-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <p class="text-sm text-gray-500 mb-1">Document Title</p>
+                                    <p class="text-sm text-gray-500 mb-1">Visa Name</p>
                                     <p class="text-base font-medium text-gray-900">{{ $signature->document->name }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500 mb-1">Document Type</p>
+                                    <p class="text-sm text-gray-500 mb-1">Service</p>
                                     <p class="text-base font-medium text-gray-900">Visa</p>
                                 </div>
                                 <div>
@@ -219,8 +219,8 @@
                                     <p class="text-base font-medium text-gray-900">{{ $signature->created_at->format('d M Y') }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500 mb-1">Reference Number</p>
-                                    <p class="text-base font-medium text-gray-900">DOC-{{ strtoupper(substr($signature->document->name, 0, 3)) }}-{{ $signature->id }}</p>
+                                    <p class="text-sm text-gray-500 mb-1">Application Number</p>
+                                    <p class="text-base font-medium text-gray-900">{{$signature->document->visaBookingApplication->application_number}}</p>
                                 </div>
                             </div>
                         </div>

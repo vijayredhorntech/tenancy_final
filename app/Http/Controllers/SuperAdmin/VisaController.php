@@ -1437,4 +1437,36 @@ public function hsGetClientFamilyMembers($clientId)
     }
 }
 
+
+
+
+
+
+public function saveRemark(Request $request)
+{
+
+   
+   $request->validate([
+        'id'     => 'required|integer',   // or 'required|integer' if editing always
+        'remark' => 'required|string|max:500',
+        'type'   => 'required|in:client,agency'
+    ]);
+
+    if($request->type=='client'){
+                 
+           VisaBooking::updateOrCreate(
+                ['id' => $request->id],
+                ['client_remark' => $request->remark]
+            );
+    }
+ 
+
+    return response()->json([
+        'message' => 'Remark saved successfully!'
+    ]);
+}
+
+
+
+
 }

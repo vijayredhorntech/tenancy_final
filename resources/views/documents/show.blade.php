@@ -249,6 +249,7 @@
 </head>
 <body>
 @php
+
                     use Carbon\Carbon;
                     use Illuminate\Support\Str;
                     $invoice = $booking->deduction; // Get the deduction from visa booking
@@ -579,6 +580,16 @@
         </table>
     </div>
 
+
+ 
+   @if(!empty($booking->client_remark))
+    <div style="margin-top: 40px;">
+        <h4>Remark</h4>
+        <p>{{$booking->client_remark}}</p>
+      
+    </div>
+    @endif
+
     <div class="terms-section page-break-before">
         <h4>Terms and Conditions</h4>
         <ul>
@@ -596,11 +607,7 @@
     </div>
 
     <div class="signature-section">
-        <p><strong>Yours Sincerely,</strong></p>
-        <div class="signature-line">
-            <strong>{{$booking->agency->name ?? 'Authorized Signatory'}}</strong><br>
-            Authorized Signatory
-        </div>
+       
     </div>
 
     <div style="margin-top: 50px; text-align: center; color: #666; font-size: 12px; padding-top: 20px; border-top: 1px solid #26ace2;">
