@@ -605,10 +605,11 @@ public function him_storeClientVisaRequest(Request $request)
     // ---------------------------------------------
     // Find client ID
     // ---------------------------------------------
-    $clientId = $request->client_id ?? null;
+   $clientId = $request->client_id ? intval($request->client_id) : null;
+   $email = trim($request->email);
 
     if (!$clientId) {
-        $email  = trim($request->email);
+       
         $client = $this->agencyService->getAgencyClicntBYSearchValue($email);
 
         if ($client) {
@@ -616,14 +617,20 @@ public function him_storeClientVisaRequest(Request $request)
         }
     }
 
+
     // ------------------------------------------------------
     // 🚨 DUPLICATE APPLICATION CHECK (IMPORTANT)
     // ------------------------------------------------------
     
     $alreadyApplied = RequestApplication::where('agency_id', $agencyData->id)
-        ->where('client_id', $clientId) // check same client
-        ->where('status','pending') // avoid cancelled or rejected
+        ->where('email', $email)
+        ->where('visa_id', $request->typeof)
+        ->where('country_id', $request->selectionid)
+        ->where('status', 'pending')
         ->first();
+
+
+
 
     if ($alreadyApplied) {
         return back()->withErrors([
@@ -653,9 +660,11 @@ public function him_storeClientVisaRequest(Request $request)
         'status'         => 'pending',
     ];
 
-    RequestApplication::create($data);
+    // RequestApplication::create($data);
+    $requestApp = RequestApplication::create($data);
+    $requestId  = $requestApp->id;
 
-    return redirect()->route('visa.thank-you');
+    return redirect()->route('visa.thank-you', ['id' => $requestId]);
 }
 
 

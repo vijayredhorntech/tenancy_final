@@ -501,12 +501,23 @@ Route::controller(DocumentSignController::class)->group(function () {
            Route::post('agencies/visa-application-client-store','him_storeClientVisaRequest')->name('visa.applicationclient.store');
     });
 
-    Route::get('/visa/thank-you', function () {
-    return view('visa.thank-you', [
-        'applicationId' => 'VS-' . strtoupper(uniqid()),
-        'destination' => 'United States' // You can pass the actual destination from your form
-    ]);
-})->name('visa.thank-you');
+//     Route::get('/visa/thank-you', function () {
+//     return view('visa.thank-you', [
+//         'applicationId' => 'VS-' . strtoupper(uniqid()),
+//         'destination' => 'United States' // You can pass the actual destination from your form
+//     ]);
+// })->name('visa.thank-you');
+    Route::get('/visa/thank-you/{id}', function ($id) {
+
+        $application = \App\Models\RequestApplication::latest('id')->first();
+
+        return view('visa.thank-you', [
+            'applicationId' => 'VS-' . str_pad($application->id, 6, '0', STR_PAD_LEFT),
+            'destination' => $application->country->name ?? 'Unknown',
+            'data' => $application
+        ]);
+
+    })->name('visa.thank-you');
 
   Route::post('/chat/update',  [ConversationController::class,'update'])->name('chat.update');
  Route::post('/chat/delete', [ConversationController::class,'delete'])->name('chat.delete');

@@ -113,7 +113,7 @@ class ConversationController extends Controller
 
           /****Chat process **** */
     public function hs_chatSAApplication($id, $token = null){
-        
+ 
          $agency = Agency::where('agencytoken',$token)->first();
 
         // $agency = Agency::where('id',$client->agency_id)->first();
@@ -152,6 +152,8 @@ class ConversationController extends Controller
             'sender_id' => 'required|integer',
             'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // 2MB max
         ]);
+
+   
 
         // Handle file upload
         $filename = null;

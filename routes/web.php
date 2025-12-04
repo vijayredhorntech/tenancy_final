@@ -315,7 +315,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                             Route::get('/chat/{id}/{token?}', 'hs_chatSAApplication')->name('superadminvisachat.client');
                           
 
-                            Route::post('/send', 'hs_sendMessageSAApplication')->name('superadminchat.send_message');
+                            // Route::post('/send', 'hs_sendMessageSAApplication')->name('superadminchat.send_message');
                         });
 
 
@@ -490,6 +490,12 @@ Route::middleware([LogUserActivity::class])->group(function () {
 
 /*****Client  */
 /*****Common Route ***** */
+
+      Route::controller(ConversationController::class)->group(function () {
+                     
+
+                            Route::post('/send', 'hs_sendMessageSAApplication')->name('superadminchat.send_message');
+                        });
 
 
 

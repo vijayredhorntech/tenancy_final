@@ -326,7 +326,9 @@ function deleteMessage(id) {
                   if (
                         (clientId === data.sender_id && senderId === data.receiver_id) ||
                         (senderId === data.sender_id && clientId === data.receiver_id)
-                    )   {
+                    )   
+                    
+                    {
             let messageHtml = '';
 
             if (data.type !== 'client') {

@@ -312,6 +312,7 @@ function deleteMessage(id) {
             const $chatForm = $('#chat-form');
             const $chatMessages = $('#chat-messages');
 
+        
             // Scroll to bottom on load
             $chatMessages.scrollTop($chatMessages[0].scrollHeight);
 
@@ -337,6 +338,7 @@ function deleteMessage(id) {
                         }
                     },
                     error: function (xhr) {
+                       
                         console.error('Error:', xhr.responseText);
                     }
                 });

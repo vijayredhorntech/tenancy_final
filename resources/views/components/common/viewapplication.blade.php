@@ -112,6 +112,8 @@
                     </div>
 
                     {{-- Travel Group Members --}}
+             
+                      {{-- Travel Group Members --}}
                     <div class="bg-white rounded-xl shadow-md overflow-hidden">
                         <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b border-gray-200">
                             <h3 class="text-lg font-bold text-gray-800 flex items-center">
@@ -121,38 +123,59 @@
                                 Travel Family Members
                             </h3>
                         </div>
-                        <div class="p-6">
 
+                      
+                     <div class="p-6">
                             @if(count($clientData->otherclients) > 0)
-                                <div class="overflow-x-auto">
-                                    <table class="min-w-full divide-y divide-gray-200">
-                                        <thead class="bg-gray-50">
-                                        <tr>
-                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Passport</th>
-                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Issue Date</th>
-                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiry Date</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach($clientData->otherclients as $otherclient)
-                                            <tr>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{{ $otherclient->name  ?? 'N/A' }} {{ $otherclient->lastname  ?? 'N/A' }}</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $otherclient->passport_number ?? 'N/A' }}</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $otherclient->passport_issue_date ?? 'N/A' }}</td>
-                                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-500">{{ $otherclient->passport_expire_date ?? 'N/A' }}</td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
+                                <div class="space-y-4">
+                                    @foreach($clientData->otherclients as $index => $otherclient)
+                                 
+                         
+                                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-primary transition-colors duration-200">
+                                            <div class="flex items-start justify-between">
+                                                <div class="flex-1">
+                                                    <div class="flex items-center mb-3">
+                                                        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mr-3">
+                                                            <span class="text-primary font-bold">{{ $index + 1 }}</span>
+                                                        </div>
+                                                        <div>
+                                                            <h4 class="text-base font-semibold text-gray-800">{{ $otherclient->client_name ?? 'N/A' }} </h4>
+                                                            <p class="text-sm text-gray-500">Travel Group Member</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 ml-13">
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-500 mb-1">Passport Number</label>
+                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->passport_ic_number ?? 'N/A' }}</p>
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-500 mb-1">Nationality</label>
+                                                      
+                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->clientinfo->nationality ?? 'N/A' }}</p>
+                                                        </div>
+                                                        <div>
+                                                            <label class="block text-xs font-medium text-gray-500 mb-1">Phone Number</label>
+                                                            <p class="text-sm text-gray-800 font-medium">{{ $otherclient->phone_number ?? 'N/A' }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             @else
-                                <div class="text-center py-4 text-gray-500">
-                                    No additional members in this application
+                                <div class="text-center py-8">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                    <p class="text-gray-500 font-medium">No additional members in this application</p>
+                                    <p class="text-sm text-gray-400 mt-1">Only the main applicant is included</p>
                                 </div>
                             @endif
                         </div>
                     </div>
+       
+              
                 </div>
 
                 {{-- Right Column --}}
@@ -195,17 +218,7 @@
                                 </div>
                             </div>
 
-                            <div class="mt-6 bg-blue-50 border border-blue-100 rounded-lg p-4">
-                                <div class="flex">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <div>
-                                        <h4 class="font-semibold text-blue-800">Payment Required</h4>
-                                        <p class="text-sm text-blue-600 mt-1">Complete your payment to proceed with the visa processing.</p>
-                                    </div>
-                                </div>
-                            </div>
+                   
 
                             <div class="mt-6 space-y-3">
                             
@@ -223,7 +236,5 @@
 
     
     <div class="flex justify-center mt-4">
-        <button onclick="window.print()" class="bg-[#28a745] text-white text-sm px-2 py-1 rounded-sm">
-            Print Invoice
-        </button>
+  
  </div>
