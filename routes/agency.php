@@ -190,6 +190,19 @@ Route::group([
         Route::get('verifyapplication/{id}/{type}', 'hs_veriryvisaapplication')->name('verifyvisa.application');
 
 
+
+        Route::get('/edit-application/{id}', 'hs_editApplication')->name('edit.application');
+        Route::post('/visa/edit/{id}', 'hs_editVisa')->name('visa.edit');
+        Route::get('/editvisa/selectvisa', 'hs_selectVisa')->name('edit.visa.selectvisa');
+        Route::post('/updatevisabook','hseditUpdateBooking')->name('update.visa.book');
+
+
+          
+          
+
+
+
+
         Route::get('/documentpending','hsVisaDocumentpending')->name('visa.documentpending');
         Route::get('/visaview/{id}','hsVisaVisa')->name('visa.applicationview');
         Route::get('/editapplication/{id}','hsEditVisaApplication')->name('visaedit.application');    

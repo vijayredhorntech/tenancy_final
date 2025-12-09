@@ -412,18 +412,21 @@
                                 @if($booking->confirm_application==0 || $booking->confirm_application==2 )
                                 <div class="flex items-center gap-2">
 
-                                     <!-- <a href="{{ route('verify.application', ['id' => $booking->id]) }}" title="Edit">
+                               
+
+                                             <a href="{{ route('edit.application', ['id' => $booking->id]) }}" title="Edit">
                                                 <div class="bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-200">
-                                                    <i class="fa fa-pen"></i>
-                                                </div>
-                                            </a> -->
-
-
-                                                <a href="{{ route('verify.application', ['id' => $booking->id]) }}" title="Remind for funds">
-                                                <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
-                                                    <i class="fa fa-hourglass-half"></i>
+                                                    <i class="fa fa-edit"></i> 
                                                 </div>
                                             </a>
+
+                                                <a href="{{ route('verify.application', ['id' => $booking->id]) }}" title="Remind for funds">
+                                                    <div class="bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-200">
+                                                        <i class="fa fa-hourglass-half"></i> 
+                                                    </div>
+                                            </a>
+
+                                             
 
                                        
                                         </div>

@@ -102,5 +102,10 @@ class OtherClientInfo extends Model
     {
         return $this->belongsTo(ClientDetails::class, 'client_id');
     }
+
+     public function familyMembers()
+    {
+        return $this->belongsTo(FamilyMember::class, 'family_id');
+    }
 }
  

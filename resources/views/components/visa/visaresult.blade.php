@@ -31,8 +31,8 @@
 {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
 
 @php
-    // Check if visas exists and not empty
-    if(!empty($visas) && $visas->count() > 0){
+    // Check if visas exist and not empty
+    if (!empty($visas) && $visas->count() > 0) {
 
         // Collect all non-null title images into an array
         $titleImages = collect($visas)->pluck('title_image')->filter();
@@ -45,14 +45,31 @@
         // Pick any visa's ID safely (first item)
         $visaId = $visas->first()->id ?? null;
 
-        // Generate URL
-        $getStartedUrl = isset($applicationdata)
-            ? route('amendment.visa.selectvisa', [
+        // Generate URL based on conditions
+        if (isset($applicationdata) && isset($edit) ) {
+
+            // Edit Visa mode
+           $getStartedUrl = route('edit.visa.selectvisa', [
+              'id' => $visaId,
+              'applicationid' => $applicationdata->application_number
+            ]);
+
+        } elseif (isset($applicationdata)) {
+
+            // Amendment Visa mode
+                $getStartedUrl = route('amendment.visa.selectvisa', [
                 'type' => 'agencies',
                 'id' => $visaId,
                 'applicationid' => $applicationdata->application_number
-              ])
-            : route('visa.payment', ['id' => $visaId]);
+            ]);
+
+        } else {
+
+            // New Visa mode
+            $getStartedUrl = route('visa.payment', [
+                'id' => $visaId
+            ]);
+        }
 
     } else {
         // No visas → fallback
@@ -60,6 +77,7 @@
         $getStartedUrl = '#'; // no link when no visa exists
     }
 @endphp
+
 
 
         <div class=" w-full ">
@@ -76,16 +94,18 @@
 
                                 @if(isset($applicationdata))
                                
+                            
                                <form action="{{ route('amendment.visa.selectvisa', ['type' => 'agencies']) }}" 
                                     method="POST" 
                                     enctype="multipart/form-data">
                                     @csrf
                                     <input type="hidden" name="application_number" value="{{$applicationdata->application_number}}">
-                               @else
+                                @else
+                               
                                  
                                 <form action="{{ route('searchvisa') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
-                            @endif
+                                    @endif
                             {{--add this div if there are 4 inputs--}}
                     
                             <div class=" grid grid lg:grid-cols-4 md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-2 p-4">

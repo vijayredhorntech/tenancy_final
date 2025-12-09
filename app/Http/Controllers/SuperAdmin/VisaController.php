@@ -741,6 +741,7 @@ public function hsVisaBook(Request $request)
                 ->first();
               return view('agencies.pages.amendment.visa-fifth-step',compact('clientData','checkBalance','amendmentHistory'));
             }
+            //   dd($clientData);
             return view('superadmin.pages.visa.verifyapplication',compact('clientData','checkBalance'));
         }
         return redirect()->route('agency.application', ['type' => 'all']);
@@ -1474,6 +1475,99 @@ public function saveRemark(Request $request)
         'message' => 'Remark saved successfully!'
     ]);
 }
+
+
+
+public function hs_editApplication($id)
+{
+    $countries=Country::get();
+
+     $applicationData=$this->visaRepository->bookingDataById($id);
+    // $formAction  = route('amendment.visa.searchresult');
+    $formAction = route('visa.edit', $id);
+      // ✅ If everything is correct, return the view
+    return view('agencies.pages.amendment.visa-first-step', compact('applicationData','countries','formAction'));
+}
+
+
+public function hs_editVisa(Request $request,$id)
+{
+    $countries=Country::get();
+     $applicationData=$this->visaRepository->bookingDataById($id);
+     $orgin=$request->origincountry;
+     $destination=$request->destinationcountry;
+     $visas = $this->visaRepository->getVisabySearch($orgin,$destination);
+     $edit=true;
+     $agency = $this->agencyService->getAgencyData();
+    return view('agencies.pages.amendment.visa-second-step',compact('visas','countries','orgin','destination','applicationData','edit'));
+
+}   
+public function hs_selectVisa(Request $request)
+{
+     
+     $request->validate([
+        'applicationid' => 'required|string|max:500',
+       ]);
+
+        $id=$request->id;   
+        $agencyData = $this->agencyService->getAgencyData(); 
+        $applicationData = $this->visaRepository->getBookingByApplicationNumber($request->applicationid);
+         
+        $clientInformation=$this->agencyService->getClientDetails($applicationData->client_id,$agencyData) ;
+       
+        $sectedvisa=$this->visaRepository->getVisabySearchcoutnry($id);
+        $orgin=$sectedvisa->origin;
+        $destination=$sectedvisa->destination;
+     
+        $visas = $this->visaRepository->getVisabySearch($orgin,$destination);
+
+        $familyMembers=$this->visaRepository->bookingDataById($applicationData->id)->otherclients;
+    
+        return view('agencies.pages.amendment.edit-third-step',compact('visas','clientInformation','applicationData','familyMembers'));
+       
+  
+}
+
+public function hseditUpdateBooking(Request $request){
+                    $messages = [
+                        'applicant_type.required' => 'Please select at least one applicant type.',
+                        'applicant_type.min' => 'At least one applicant type must be selected (Self or Family).',
+                        'clientId.required'       => 'Kindly select the user.',
+                    ];
+                    $data = $request->validate([
+                        'origin'        => 'required|integer|exists:countries,id',
+                        'destination'   => 'required|integer|exists:countries,id',
+                        'typeof'        => 'required|integer|exists:visa_types,id',
+                        'category'      => 'required|integer|exists:visa_subtypes,id',
+                        'dateofentry'   => 'required|date|after_or_equal:today',
+                        'clientId'      => 'required|integer',
+                        'applicant_type'   => 'required|array|min:1',   // ✅ Must be array & min one selected
+                        'applicant_type.*' => 'in:self,family',         // ✅ Each checkbox value allowed
+                    ],$messages);
+
+
+                    // dd($request->all());
+                  
+                    // Get the current user (assumes client is authenticated)
+                        $agency = $this->agencyService->getAgencyData();
+                    // Check for existing pending application
+                    // dd($request->applicationid());
+                   
+                
+    // Proceed to book visa
+    $booking = $this->visaRepository->editUpdateBooking($request->all(),$request->applicationid);
+
+    if (!$booking) {
+        return redirect()->back()->with('error', 'Visa booking failed. Please try again.');
+    }
+
+    return redirect()
+        ->route('verify.application', ['id' => $booking->id])
+        ->with('success', 'Booking successful. Please verify your application.');
+
+    
+}
+
 
 
 

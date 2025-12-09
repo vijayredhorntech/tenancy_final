@@ -793,6 +793,7 @@ public function airport($input){
                 'combination.origincountry',
                 'combination.destinationcountry'
             ])->where('id',$id)->first();
+
                 
             $agencyData= $this->agencyService->getAgencyData(); 
             // $getClient= $this->agencyService->checkValidationInfo($application->email,$agencyData,$application->phone_number); 
@@ -809,17 +810,24 @@ public function airport($input){
 
             
             $booking=$this->hsconvertApplicationStore($clientAllData,$application);
+                  if (!$booking) {
+                return redirect()->back()->with('error', 'Visa booking failed. Please try again.');
+            }
                 // Example: update status to "in progress"
                 $application->status = 'send';
                 $application->save();
 
-                if (!$booking) {
-                return redirect()->back()->with('error', 'Visa booking failed. Please try again.');
-            }
+          
 
-            return redirect()
-                ->route('verify.application', ['id' => $booking->id])
-                ->with('success', 'Booking successful. Please verify your application.');
+            return redirect()->route('edit.visa.selectvisa', [
+                'id' => $application->visa_id,
+                'applicationid' => $booking->application_number
+            ]);
+
+
+            // return redirect()
+            //     ->route('verify.application', ['id' => $booking->id])
+            //     ->with('success', 'Booking successful. Please verify your application.');
  }
 
 

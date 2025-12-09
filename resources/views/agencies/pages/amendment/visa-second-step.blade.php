@@ -5,6 +5,7 @@
         :orgin="$orgin" 
         :destination="$destination" 
         :applicationdata="$applicationData"
+        :edit="$edit"
       
     />
 
