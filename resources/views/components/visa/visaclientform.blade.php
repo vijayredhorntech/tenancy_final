@@ -369,7 +369,7 @@ $("#searchClientBtn").click(function () {
     }
 
     $.ajax({
-        url: "/client/search",
+        url: "{{ url('client/search') }}",
         type: "GET",
         data: {
             client_id: clientId,
