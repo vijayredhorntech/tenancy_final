@@ -124,19 +124,49 @@
                     <h3 class="text-lg font-semibold text-ternary mb-4">Summary</h3>
                  
                     @php
-                        $defaultVisaFee = $invoice->invoice->visa_fee > 0 
-                            ? $invoice->invoice->visa_fee 
-                            : ($invoice->visaBooking->visasubtype->price ?? 0);
-                           $defaultServiceCharge = 
-                                    ($invoice->invoice?->service_charge > 0)
-                                        ? $invoice->invoice->service_charge
-                                        : ($invoice->visaBooking->visasubtype->commission ?? 0);
-                            $defaultServiceVatCharge=$invoice->visaBooking->visasubtype->gstin ?? 0;
-                        
-                            $gstAmount = (($defaultVisaFee + $defaultServiceCharge) * $defaultServiceVatCharge) / 100;
+                                /* ================= MEMBER COUNT ================= */
 
+                                // Safe count of other members
+                                $otherMemberCount = $invoice->visaBooking->otherMembersFromUserDB
+                                    ? $invoice->visaBooking->otherMembersFromUserDB->count()
+                                    : 0;
+                              
+                                // If otherclientid is NULL → include main applicant
+                                if ($invoice->visaBooking->otherclientid === null) {
+                                    $totalMember = 1 + $otherMemberCount;
+                                } else {
+                                    $totalMember = $otherMemberCount;
+                                }
 
-                    @endphp
+                                // Ensure at least 1 member (safety)
+                                $totalMember = max(1, $totalMember);
+                                
+
+                                /* ================= PRICING ================= */
+
+                                // Visa fee per person
+                                $visaFeePerPerson = ($invoice->invoice->visa_fee > 0)
+                                    ? $invoice->invoice->visa_fee/$totalMember
+                                    : ($invoice->visaBooking->visasubtype->price ?? 0);
+                                                              // Total visa fee for all members
+                                $defaultVisaFee = $visaFeePerPerson * $totalMember;
+ 
+                                $visaServiceChargePerPerson=($invoice->invoice?->service_charge > 0)
+                                    ? $invoice->invoice->service_charge/$totalMember
+                                    : ($invoice->visaBooking->visasubtype->commission ?? 0);
+                                // Service charge (one time)
+                                $defaultServiceCharge =$visaServiceChargePerPerson * $totalMember;
+
+                                // VAT %
+                                $defaultServiceVatCharge = $invoice->visaBooking->visasubtype->gstin ?? 0;
+
+                                // VAT amount
+                                $gstAmount = (($defaultVisaFee + $defaultServiceCharge) * $defaultServiceVatCharge) / 100;
+
+                                // Final total (before discount if needed)
+                                $finalTotal = $defaultVisaFee + $defaultServiceCharge + $gstAmount - ($invoice->invoice->discount ?? 0);
+                            @endphp
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">SubTotal (£)</label>

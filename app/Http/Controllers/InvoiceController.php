@@ -173,7 +173,6 @@ public function hs_EditedInvoices(Request $request)
         ->with(['service_name', 'agency', 'visaBooking'])
         ->orderByDesc('updated_at')
         ->get();
-
     return view('superadmin.pages.invoicehandling.editindex', compact('invoices'));
 }
 
@@ -197,7 +196,11 @@ public function hs_EditedInvoices(Request $request)
     ]);
 
     $invoice = Deduction::with(['service_name', 'visaBooking.clint', 'invoice'])->findOrFail($id);
+    // dd($invoice);
 
+
+
+    // dd($invoice);
     
     // Update deduction amount
     // $invoice->amount = $request->total;
@@ -359,206 +362,6 @@ public function hs_retrieveInvoice($id)
         ->with('success', 'Invoice retrieved successfully.');
 }
 
-
-
-// public function hsupdateRefundInvoice(Request $request)
-// {
-
-//     $request->validate([
-//         'application_id'   => 'required|exists:deductions,id',
-//         'reason'       => 'nullable|string',
-//         'refundamount' => 'nullable|numeric|min:0',
-//         'payment_mode' => 'required|string',
-//         'total'        => 'required|numeric|min:0',
-//     ]);
-
-//     $agency   = $this->agencyService->getAgencyData();
-//     $agencyId = $agency->id;
-
-//     // Find deduction with invoice relation
-//     $deduction = Deduction::with('invoice','visabooking')
-//         ->where('id', $request->application_id) // fixed: use invoice_id
-//         ->where('agency_id', $agencyId)
-//         ->first();
-
-//     if (!$deduction) {
-//         return back()->with('error', 'Invoice not found.');
-//     }
-
-//     // Update deduction status
-//     $deduction->invoicestatus = 'Canceled';
-//     $deduction->save();
-
-//     // Format invoice number with "R"
-//     $number = $deduction->invoice_number;
-//     if ($number && preg_match('/^([A-Za-z]+)(\d+)$/', $number, $matches)) {
-//         $formattedInvoice = $matches[1] . 'R' . $matches[2];
-//     } else {
-//         $formattedInvoice = $number ?? 'INV' . uniqid();
-//     }
-
-//     // Prepare invoice update data
-//         $invoiceData = [
-//             'receiver_name'      => $request->receiver_name ?? 'Dummy Client',
-//             'invoice_date'       => $request->invoice_date ?? Carbon::now()->format('Y-m-d'),
-//             'due_date'           => $request->invoice_date ?? Carbon::now()->addDays(14)->format('Y-m-d'), // optional
-//             'different_name'     => $request->different_name ?? null,
-//             'address'            => $request->address ?? 'Dummy Address',
-//             'bookingid'          => $request->bookingid ?? null,
-//             'visa_applicant'     => $request->visa_applicant_name ?? 'Self',
-//             'service_id'         => $request->service_id ?? null,
-//             'billing_id'         => $request->billing_id ?? null,
-//             'applicant_id'       => $request->applicant_id ?? null,
-//             'amount'             => $request->total ?? '0',
-//             'discount'           => $request->discount ?? 0,
-//             'payment_type'       => $request->payment_mode ?? 'CASH',
-//             'visa_fee'           => $request->visa_fee ?? 0,
-//             'service_charge'     => $request->service_charge ?? 0,
-//             'new_invoice_number' => $formattedInvoice,
-//             'status'             => 'Canceled',
-//             'new_price'          => $request->total ?? '0',
-//             'type'               => 'agency',
-//         ];
-
-//     // Update or create invoice
-//     if ($deduction->invoice) {
-//         $deduction->invoice->update($invoiceData);
-//     } else {
-//         $invoiceData['bookingid'] = $deduction->id;
-//         $deduction->invoice()->create($invoiceData);
-//     }
-
-//     // Save cancel invoice record
-//     $cancelInvoice = CancelInvoice::firstOrNew([
-//         'invoice_id' => $deduction->invoice->id, // make sure $deduction->invoice exists
-//     ]);
-
-//     $cancelInvoice->application_number = $formattedInvoice;
-//     $cancelInvoice->type               = 'manual';
-//     $cancelInvoice->remark             = $request->remark;
-//     $cancelInvoice->reason             = $request->reason;
-//     $cancelInvoice->cancelled_by       = Auth::id();
-//     $cancelInvoice->status             = 1;
-//     $cancelInvoice->amount             = $request->total;
-//     $cancelInvoice->safi               = $request->safi ?? 0;
-//     $cancelInvoice->atol               = $request->atol ?? 0;
-//     $cancelInvoice->credit_charge      = $request->credit_charge ?? 0;
-//     $cancelInvoice->penalty            = $request->penalty ?? 0;
-//     $cancelInvoice->admin              = $request->admin ?? 0;
-//     $cancelInvoice->misc               = $request->misc ?? 0;
-//     $cancelInvoice->cancelled_date     = now();
-
-//     $cancelInvoice->save();
-
-//     return redirect()
-//         ->route('invoice.all', ['type' => 'agencies'])
-//         ->with('success', 'Invoice canceled successfully.');
-// }
-
-// public function hsupdateRefundInvoice(Request $request)
-// {
-//     $request->validate([
-//         'application_id'   => 'required|exists:deductions,id',
-//         'reason'           => 'nullable|string',
-//         'remark'           => 'nullable|string',
-//         'refundamount'     => 'nullable|numeric|min:0',
-//         'payment_mode'     => 'required|string',
-//         'total'            => 'required|numeric|min:0',
-//         'discount'         => 'nullable|numeric|min:0',
-//         'visa_fee'         => 'nullable|numeric|min:0',
-//         'service_charge'   => 'nullable|numeric|min:0',
-//         'safi'             => 'nullable|numeric|min:0',
-//         'atol'             => 'nullable|numeric|min:0',
-//         'credit_charge'    => 'nullable|numeric|min:0',
-//         'penalty'          => 'nullable|numeric|min:0',
-//         'admin'            => 'nullable|numeric|min:0',
-//         'misc'             => 'nullable|numeric|min:0',
-//     ]);
-
-//     $agency   = $this->agencyService->getAgencyData();
-//     $agencyId = $agency->id ?? null;
-
-//     // Find deduction with invoice relation
-//     $deduction = Deduction::with('invoice', 'visabooking')
-//         ->where('id', $request->application_id)
-//         ->where('agency_id', $agencyId)
-//         ->first();
-
-//            ->where('applicationworkin_status', 'Cancell ')
-//                     ->first();
-//     if (!$deduction) {
-//         return back()->with('error', 'Invoice not found.');
-//     }
-
-//     // Update deduction status
-//     $deduction->invoicestatus = 'Canceled';
-//     $deduction->save();
-
-//     // Format invoice number with "R" if original exists
-//     $number = $deduction->invoice_number ?? null;
-//     if ($number && preg_match('/^([A-Za-z]+)(\d+)$/', $number, $matches)) {
-//         $formattedInvoice = $matches[1] . 'R' . $matches[2];
-//     } else {
-//         $formattedInvoice = 'INV' . uniqid();
-//     }
-
-//     // Prepare invoice update data
-//     $invoiceData = [
-//         'receiver_name'      => $request->receiver_name ?? 'Dummy Client',
-//         'invoice_date'       => $request->invoice_date ?? now()->format('Y-m-d'),
-//         'due_date'           => $request->invoice_date ?? now()->addDays(14)->format('Y-m-d'),
-//         'different_name'     => $request->different_name ?? null,
-//         'address'            => $request->address ?? 'Dummy Address',
-//         'bookingid'          => $deduction->id,
-//         'visa_applicant'     => $request->visa_applicant_name ?? 'Self',
-//         'service_id'         => $request->service_id ?? null,
-//         'billing_id'         => $request->billing_id ?? null,
-//         'applicant_id'       => $request->applicant_id ?? null,
-//         'amount'             => $request->total ?? '0',
-//         'discount'           => $request->discount ?? 0,
-//         'payment_type'       => $request->payment_mode ?? 'CASH',
-//         'visa_fee'           => $request->visa_fee ?? 0,
-//         'service_charge'     => $request->service_charge ?? 0,
-//         'new_invoice_number' => $formattedInvoice,
-//         'status'             => 'Canceled',
-//         'new_price'          => $request->total ?? '0',
-//         'type'               => 'agency',
-//     ];
-
-//     // Update existing invoice or create new one
-//     if ($deduction->invoice) {
-//         $deduction->invoice->update($invoiceData);
-//         $invoice = $deduction->invoice;
-//     } else {
-//         $invoice = $deduction->invoice()->create($invoiceData);
-//     }
-
-//     // Save or update cancel invoice record
-//     $cancelInvoice = CancelInvoice::firstOrNew([
-//         'invoice_id' => $invoice->id,
-//     ]);
-
-//     $cancelInvoice->application_number = $formattedInvoice;
-//     $cancelInvoice->type               = 'manual';
-//     $cancelInvoice->remark             = $request->remark ?? null;
-//     $cancelInvoice->reason             = $request->reason ?? null;
-//     $cancelInvoice->cancelled_by       = Auth::id();
-//     $cancelInvoice->status             = 1;
-//     $cancelInvoice->amount             = $request->total ?? 0;
-//     $cancelInvoice->safi               = $request->safi ?? 0;
-//     $cancelInvoice->atol               = $request->atol ?? 0;
-//     $cancelInvoice->credit_charge      = $request->credit_charge ?? 0;
-//     $cancelInvoice->penalty            = $request->penalty ?? 0;
-//     $cancelInvoice->admin              = $request->admin ?? 0;
-//     $cancelInvoice->misc               = $request->misc ?? 0;
-//     $cancelInvoice->cancelled_date     = now();
-
-//     $cancelInvoice->save();
-
-//     return redirect()
-//         ->route('invoice.all', ['type' => 'agencies'])
-//         ->with('success', 'Invoice canceled successfully.');
-// }
 public function hsupdateRefundInvoice(Request $request)
 {
     $request->validate([
@@ -1468,7 +1271,6 @@ public function hsAllinvoice(Request $request)
 
 
 
-//    dd($invoices);
     return view('superadmin.pages.invoicehandling.allinvoices', compact('invoices'));
 }
 
@@ -1476,12 +1278,13 @@ public function hsAllinvoice(Request $request)
 
     public function hseditInvoice($id){
         
-    $invoice = Deduction::with(['service_name', 'visaBooking.clint', 'visaBooking.origin', 'visaBooking.destination', 'visaBooking.visasubtype', 'visaBooking.visa', 'invoice'])->findOrFail($id);
-  
+    $invoice = Deduction::with(['service_name', 'visaBooking.origin', 'visaBooking.destination', 'visaBooking.visasubtype', 'visaBooking.visa',  'invoice'])->findOrFail($id);
+     $this->agencyService->getClientinfoById($invoice);
+    // dd($invoice);
     $clientData=$this->visaRepository->bookingDataById($invoice->flight_booking_id);
     // Check if user is agency or superadmin
     $agency = $this->agencyService->getAgencyData();
-    
+
     if ($agency) {
         // Agency user - return agency view
         return view('agencies.pages.invoicehandling.editinvoice', compact('invoice'));

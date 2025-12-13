@@ -243,7 +243,7 @@
 
                                 {{-- GST Amount --}}
                                 <div class="flex justify-between">
-                                    <span class="text-gray-600">GST ({{ number_format($gstPercent, 2) }}%)</span>
+                                    <span class="text-gray-600">VAT ({{ number_format($gstPercent, 2) }}%)</span>
                                     <span class="font-medium">£{{ number_format($gstAmount, 2) }}</span>
                                 </div>
 

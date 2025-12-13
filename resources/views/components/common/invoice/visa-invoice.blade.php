@@ -272,19 +272,33 @@
                     $visaType = $booking->visasubtype->name ?? 'N/A';
                     
                 
+                     // Safe count of other members
+                        $otherMemberCount = $booking->otherclients
+                            ? $booking->otherclients->count()
+                            : 0;
+                              
+                                // If otherclientid is NULL → include main applicant
+                          if ($booking->otherclientid === null) {
+                              $totalMember = 1 + $otherMemberCount;
+                          } else {
+                              $totalMember = $otherMemberCount;
+                          }
+
+                        // Ensure at least 1 member (safety)
+                        $totalMember = max(1, $totalMember);
                 /**  
-                $visaFee = is_numeric($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 'N/A') ? (float)($invoiceData?->visa_fee ?? $booking->visasubtype->price ?? 0) : 0.00; 
+                $visaFee = is_numeric($invoiceData?->visa_fee/$totalMember ?? $booking->visasubtype->price ?? 'N/A') ? (float)($invoiceData?->visa_fee/$totalMember ?? $booking->visasubtype->price ?? 0) : 0.00; 
                 */
                 
                 $visaFee = (float) (
                     ($invoiceData?->visa_fee > 0)
-                        ? $invoiceData->visa_fee
+                        ? $invoiceData->visa_fee/$totalMember
                         : ($booking->visasubtype->price ?? 0)
                 );
 
                 $serviceCharge = (float) (
                     ($invoiceData?->service_charge > 0)
-                        ? $invoiceData->service_charge
+                        ? $invoiceData->service_charge/$totalMember
                         : ($booking->visasubtype->commission ?? 0)
                 );
 
