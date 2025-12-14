@@ -104,7 +104,7 @@
         <div class="relative ml-4">
            <div class="rounded-full h-10 w-10 flex justify-center items-center hover:bg-ternary/60 hover:text-white cursor-pointer" onclick="toggleNotificationPanel()">
                 <div id="notificationBadge" class="absolute top-0 right-0 text-xs text-white bg-primary font-semibold h-4 w-4 rounded-full flex justify-center items-center hidden"> </div>
-                <div class="absolute top-0 right-0 text-xs text-white bg-primary font-semibol h-4 w-4 rounded-full flex justify-center items-center">{{ isset($pendingNotifications) ? $pendingNotifications->count() : 0 }}</div>
+                <div class="absolute top-0 right-0 text-xs text-white bg-danger font-semibol h-4 w-4 rounded-full flex justify-center items-center">{{ isset($pendingNotifications) ? $pendingNotifications->count() : 0 }}</div>
             
                 <i class="fa fa-bell" title="Notifications"></i>
             </div>

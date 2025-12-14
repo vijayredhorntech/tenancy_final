@@ -16,6 +16,8 @@ class Deduction extends Model
         'flight_booking_id',
         'amount',
         'date',
+        'agency_pay',
+         'superadmin_pay',
         'superadmin_invoice_number',
     ];
     

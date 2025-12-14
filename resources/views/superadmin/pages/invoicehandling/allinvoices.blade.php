@@ -114,7 +114,15 @@
                  
                         @forelse($invoices as $invoice)
 
-                              
+                              @php
+                                    if ($invoice->invoice && $invoice->invoice->status === 'edited') {
+                                        $finalAmount = $invoice->invoice->new_price ?? 0;
+                                    } elseif ($invoice->invoicestatus === 'Adjusted') {
+                                        $finalAmount = $invoice->invoice->amount ?? $invoice->amount ?? 0;
+                                    } else {
+                                        $finalAmount = $invoice->amount ?? 0;
+                                    }
+                                @endphp
 
 
                                     <tr>
@@ -130,7 +138,11 @@
                                                 {{ $invoice->invoice_number ?? 'N/A' }} <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-medium">Amendment</span>
                                            
                                             @else
+                                                @if($invoice->agency_pay=="Paid")
+                                                             {{ $invoice->invoice_number ?? 'N/A' }}    <span class="bg-red-100 text-red-600 px-2 py-1 rounded text-xs font-medium">Paid</span>
+                                                @else
                                                 {{ $invoice->invoice_number ?? 'N/A' }}
+                                                @endif
                                             @endif
                                         </td>
                                                                                 
@@ -163,18 +175,10 @@
                                         <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm">{{$invoice->date ? \Carbon\Carbon::parse($invoice->date)->format('d-m-Y') : '—'}}</td>
                                         {{-- <td class="border-[1px] border-secondary/50  px-4 py-1 text-ternary/80 font-medium text-sm"> {{$invoice['amount']}}</td> --}}
                                           <td class="border-[1px] border-secondary/50 px-4 py-1 text-ternary/80 font-medium text-sm">
-                                            @if($invoice->invoice && $invoice->invoice->status === 'edited')
-                                                £{{ number_format($invoice->invoice->new_price ?? 0, 2) }}
-                                            @elseif($invoice->invoicestatus === 'Adjusted')
-                                                £{{ number_format($invoice->invoice->amount ?? $invoice->amount ?? 0, 2) }}
-                                            @else
-                                                £{{ number_format($invoice['amount'] ?? 0, 2) }}
-                                            @endif
+                                          {{$finalAmount}} 
                                         </td>
 
 
-                                        
-                               
                                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                                             <div class="relative inline-block">
                                                 <!-- Action Dropdown Button -->
@@ -198,12 +202,23 @@
                                                     </a>
                                                     
                                                     <!-- Edit Option -->
-                                                    <a href="{{ route('editinvoice', $invoice->id) }}"
+                                                    
+                                                  
+                                                @if($invoice->agency_pay!=='Paid')
+                                                    <!-- Pay Option -->
+                                                     <a href="{{ route('editinvoice', $invoice->id) }}"
                                                     class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-purple-500 hover:bg-purple-600">
                                                         Edit
                                                     </a>
                                                     
-                                                    <!-- Cancel Option -->
+                                                    <button onclick="openPayModal('{{ $invoice->id }}', '{{ $invoice->invoice_number ?? 'N/A' }}', '{{ $finalAmount ?? 0 }}', '{{ $receiverName }}', '{{ $invoice->visaBooking->clint->permanent_address ?? 'N/A' }}')"
+                                                            class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-blue-500 hover:bg-blue-600">
+                                                        Pay
+                                                    </button>
+                                                    
+                                                    
+                                                @endif
+                                                  <!-- Cancel Option -->
                                                     <a href="{{ route('cancel.invoice', ['id' => $invoice->id]) }}"
                                                     onclick="return confirm('Are you sure you want to cancel this invoice?')"
                                                     class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-red-500 hover:bg-red-600">
@@ -221,14 +236,8 @@
                                                     <span>Amendment</span>
                                                 </a>
 
-                                                    <!-- Pay Option -->
-                                                    <button onclick="openPayModal('{{ $invoice->id }}', '{{ $invoice->invoice_number ?? 'N/A' }}', '{{ $invoice->amount ?? 0 }}', '{{ $receiverName }}', '{{ $invoice->visaBooking->clint->permanent_address ?? 'N/A' }}')"
-                                                            class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-blue-500 hover:bg-blue-600">
-                                                        Pay
-                                                    </button>
-                                                    
                                                     <!-- Refund Option -->
-                                                    <button onclick="openRefundModal('{{ $invoice->id }}', '{{ $invoice->invoice_number ?? 'N/A' }}', '{{ $invoice->amount ?? 0 }}')"
+                                                    <button onclick="openRefundModal('{{ $invoice->id }}', '{{ $invoice->invoice_number ?? 'N/A' }}', '{{ $$finalAmount ?? 0 }}')"
                                                             class="flex justify-center items-center w-full px-3 py-2 text-xs text-white bg-green-500 hover:bg-green-600 rounded-b-[3px]">
                                                         Refund
                                                     </button>
@@ -259,6 +268,22 @@
     
     <!-- Include Pay Modal -->
     @include('components.pay-modal')
+
+
+        @if(session('reopen_pay_modal'))
+         
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        openPayModal(
+            "{{ old('invoice_id') }}",
+            "{{ old('invoice_number', '') }}",
+            "{{ old('subtotal', 0) }}",
+            "{{ old('receiver_name', '') }}",
+            "{{ old('receiver_address', '') }}"
+        );
+    });
+    </script>
+    @endif
 
     <script>
         function toggleDropdown(dropdownId) {
@@ -308,4 +333,5 @@
             });
         });
     </script>
+    
 </x-agency.layout>

@@ -22,6 +22,7 @@ class Navbar extends Component
     public $user;
     public $login_time; 
     public $services;
+    public $pendingNotification=[];
 
     public function __construct(AgencyService $agencyService)
     {
@@ -64,6 +65,7 @@ class Navbar extends Component
             'user_data' => $this->user,
             'services' => $this->services,
             'login_time' => $this->login_time,
+            'pendingNotifications'=>$this->pendingNotification,
         ]);
     }
 }

@@ -22,6 +22,10 @@
         <form id="payForm" method="POST" action="{{ route('invoice.pay.process') }}">
             @csrf
             <input type="hidden" id="pay_invoice_id" name="invoice_id" value="">
+            <input type="hidden" id="pay_subtotalhidden" name="subtotal" value="">
+            <input type="hidden" id="invoice_number" name="invoice_number" value="">
+
+            
             
             <div class="mt-6 space-y-6">
                 <!-- Invoice Details Section -->
@@ -200,6 +204,10 @@ function openPayModal(invoiceId, invoiceNumber, totalAmount, receiverName, recei
     document.getElementById('pay_invoice_date').value = formattedDate;
     document.getElementById('pay_paid_amount').textContent = '0';
     document.getElementById('pay_pending_amount').textContent = parseFloat(totalAmount).toFixed(2);
+    document.getElementById('invoice_number').value = invoiceNumber;
+    document.getElementById('pay_subtotalhidden').value =  totalAmount;
+
+
     
     // Show modal
     document.getElementById('payModal').classList.remove('hidden');
