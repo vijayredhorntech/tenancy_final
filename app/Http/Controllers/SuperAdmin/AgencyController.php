@@ -27,11 +27,14 @@ use Illuminate\Support\Facades\Mail;
 use App\Traits\Agency\AgenciesPdfTrait;
 use App\Services\AgencyService;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Carbon\Carbon;
+use App\Traits\Toastable;
 
 class AgencyController extends Controller
 {
 
-    use AgenciesPdfTrait;
+    use AgenciesPdfTrait,Toastable;
     protected $agencyService;
 
     public function __construct(AgencyService $agencyService)
@@ -94,6 +97,21 @@ class AgencyController extends Controller
         return view('superadmin.pages.agencies.create_agency', ['user_data' => $user, 'services' => $service, 'countries' => $countries]);
     }
 
+
+    /**
+      * *Change Status 
+     *  */
+        public function hsToggleTax(Agency $agency)
+        {
+        
+            $agency->update([
+                'tax_status' => !$agency->tax_status,
+            ]);
+            $this->success("Tax status updated successfully.");
+            return back();
+        }
+
+    
 
     // code for store agency
 
@@ -274,13 +292,19 @@ class AgencyController extends Controller
             $created =DatabaseHelper::createDatabaseForUser($request->database_name, $agency, $profile);
             if ($created) {
                 // Database creation successful
-                return redirect()->route('agency')->with('success', 'Agency and domain created successfully.');
+            $this->success("Agency and domain created successfully.");
+
+                return redirect()->route('agency');
             } else {
                 // Database creation failed
                 $agency->delete();
                 $agency_details->delete();
-                return redirect()->back()->with('error', 'Failed to create database.');
+                $this->error("Failed to create database.");
+
+                return redirect()->back();
             }
+
+                $this->success("Agency and domain created successfully.");
 
             return redirect()->route('agency')->with('success', 'Agency and domain created successfully.');
         } catch (\Exception $e) {
@@ -292,7 +316,8 @@ class AgencyController extends Controller
 
                 $agency->delete();
             }
-            dd($e->getMessage());
+                $this->error($e->getMessage());
+
             return redirect()->back()->withInput()->with('error', 'Failed to create agency and domain: ' . $e->getMessage());
         }
     }
@@ -371,10 +396,14 @@ class AgencyController extends Controller
 
 
             \DB::commit();
-            return redirect()->route('agency')->with('success', 'Agency and domain created successfully.');
+                $this->success("Agency and domain Update successfully.");
+
+            return redirect()->route('agency');
         } catch (\Exception $e) {
             \DB::rollBack(); // Rollback transaction on error
-            return response()->json(['error' => 'Something went wrong', 'message' => $e->getMessage()], 500);
+                  $this->error('Something went wrong', $e->getMessage());
+                 return back();
+            // return response()->json(['error' => 'Something went wrong', 'message' => $e->getMessage()], 500);
         }
     }
 
@@ -443,78 +472,7 @@ class AgencyController extends Controller
         }
     }
 
-       /*****  Route for agency   ***** */
-    public function him_agencylogin()
-    {
-
-    // dd('heelo');    
-        $domin = session('user_data');
-        if (isset($domin)) {
-            return redirect()->route('agency_dashboard');
-        }
-        $domain   = session('agency_domain');
-
-        $agency = Agency::with('details')->whereHas('domains', function ($query) use ($domain) {
-            $query->where('domain_name', $domain);
-        })->with('domains')->first();
-
-        // dd($agency);
-
-        if (!$agency) {
-            return redirect()->route('login')->with('error', 'Domain not found.');
-        }
- 
-        if ($agency->details->status == 0) {
-            return view('agencies.permission');
-        }
-
-        if ($agency) {
-      
-            // return view('agencies.welcome', ['agency' => $agency]);
-
-            $countries=Country::get(); 
-            return view('agencies.login', ['agency' => $agency,'countries'=>$countries]);
-        } else {
-            return redirect()->route('login')->with('error', 'Domain not found.');
-        }
-    }
-
-
-    public function showAgencyLogin($domain)
-{
-    // Check if user already logged in
-    $sessionUser = session('user_data');
-    if ($sessionUser && isset($sessionUser['agency_id'])) {
-        $sessionAgencyId = $sessionUser['agency_id'];
-
-        $matchedAgency = Agency::whereHas('domains', function ($query) use ($domain) {
-            $query->where('domain_name', $domain);
-        })->first();
-
-        if ($matchedAgency && $matchedAgency->id == $sessionAgencyId) {
-            return redirect()->route('agency_dashboard');
-        }
-    }
-
-    // Get agency by domain
-    $agency = Agency::with('details')->whereHas('domains', function ($query) use ($domain) {
-        $query->where('domain_name', $domain);
-    })->with('domains')->first();
-
-    if (!$agency) {
-        return redirect()->route('login')->with('error', 'Domain not found.');
-    }
-
-    if ($agency->details->status == 0) {
-        return view('agencies.permission');
-    }
-
-    $fullUrl = optional($agency->domains->first())->full_url;
-    session(['agency_full_url' => $fullUrl]);
-
-    // Show the login view for this agency
-    return view('agencies.login', ['agency' => $agency]);
-}
+   
 
 
 
@@ -585,6 +543,203 @@ class AgencyController extends Controller
         }
     }
 
+
+        /*****  Route for agency   ***** */
+    public function him_agencylogin()
+    {
+
+        $domin = session('user_data');
+        if (isset($domin)) {
+            return redirect()->route('agency_dashboard');
+        }
+        $domain   = session('agency_domain');
+
+        $agency = Agency::with('details')->whereHas('domains', function ($query) use ($domain) {
+            $query->where('domain_name', $domain);
+        })->with('domains')->first();
+
+        // dd($agency);
+
+        if (!$agency) {
+            return redirect()->route('login')->with('error', 'Domain not found.');
+        }
+ 
+        if ($agency->details->status == 0) {
+            return view('agencies.permission');
+        }
+
+        if ($agency) {
+      
+            // return view('agencies.welcome', ['agency' => $agency]);
+
+            $countries=Country::get(); 
+            return view('agencies.login', ['agency' => $agency,'countries'=>$countries]);
+        } else {
+            return redirect()->route('login')->with('error', 'Domain not found.');
+        }
+    }
+
+
+    public function him_sendOtp(Request $request)
+    {
+  
+        // ✅ AJAX validation
+        $request->validate([
+            'email'    => 'required|email',
+            'domain'   => 'required',
+            'database' => 'required',
+        ]);
+
+        /* ================= AGENCY CHECK ================= */
+
+        $domain = $request->domain; // coming from hidden input
+
+
+       $agency = Agency::with(['details', 'domains'])
+            ->whereHas('domains', function ($q) use ($domain) {
+                $q->where('domain_name', $domain);
+            })
+            ->where('email', $request->email)
+            ->where('database_name', $request->database)
+            ->first();
+
+
+        if (!$agency) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Email is not found Kindly to connect with the administrator'
+            ], 404);
+        }
+
+        if ($agency->details->status == 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Your agency is inactive'
+            ], 403);
+        }
+
+        /* ================= OTP LOGIC ================= */
+
+        $otp = rand(100000, 999999);
+
+        // Store OTP in session (recommended for now)
+        Session::put('agency_forgot_otp', [
+            'email'      => $request->email,
+            'otp'        => $otp,
+            'expires_at' => Carbon::now()->addMinutes(10),
+            'domain'     => $domain,
+            'database'   => $request->database,
+        ]);
+
+        /* ================= SEND MAIL ================= */
+        try {
+            Mail::raw("Your OTP is: {$otp}", function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject('Agency Password Reset OTP');
+            });
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to send OTP email'
+            ], 500);
+        }
+
+        /* ================= AJAX RESPONSE ================= */
+        return response()->json([
+            'success' => true,
+            'message' => 'OTP sent successfully'
+        ]);
+    }
+
+    public function verifyOtp(Request $request)
+        {
+            $request->validate([
+                'otp' => 'required'
+            ]);
+
+            $otpData = session('agency_forgot_otp');
+
+            if (!$otpData) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'OTP session expired. Please resend OTP.'
+                ]);
+            }
+
+            if (Carbon::now()->greaterThan($otpData['expires_at'])) {
+                session()->forget('agency_forgot_otp');
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'OTP expired. Please resend OTP.'
+                ]);
+            }
+
+            if ($otpData['otp'] != $request->otp) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Invalid OTP'
+                ]);
+            }
+
+            /* ================= OTP VERIFIED = LOGIN ================= */
+
+            session([
+                // ✅ SAME KEY USED BY NORMAL LOGIN
+                'user_data' => [
+                    'email'    => $otpData['email'],
+                    'domain'   => $otpData['domain'],
+                    'database' => $otpData['database'],
+                    'login_via'=> 'otp',
+                ]
+            ]);
+
+            session()->forget('agency_forgot_otp');
+
+            return response()->json([
+                'success'  => true,
+                'redirect' => route('agency_dashboard')
+            ]);
+        }
+
+
+
+        public function showAgencyLogin($domain)
+    {
+        // Check if user already logged in
+        $sessionUser = session('user_data');
+        if ($sessionUser && isset($sessionUser['agency_id'])) {
+            $sessionAgencyId = $sessionUser['agency_id'];
+
+            $matchedAgency = Agency::whereHas('domains', function ($query) use ($domain) {
+                $query->where('domain_name', $domain);
+            })->first();
+
+            if ($matchedAgency && $matchedAgency->id == $sessionAgencyId) {
+                return redirect()->route('agency_dashboard');
+            }
+        }
+
+        // Get agency by domain
+        $agency = Agency::with('details')->whereHas('domains', function ($query) use ($domain) {
+            $query->where('domain_name', $domain);
+        })->with('domains')->first();
+
+        if (!$agency) {
+            return redirect()->route('login')->with('error', 'Domain not found.');
+        }
+
+        if ($agency->details->status == 0) {
+            return view('agencies.permission');
+        }
+
+        $fullUrl = optional($agency->domains->first())->full_url;
+        session(['agency_full_url' => $fullUrl]);
+
+        // Show the login view for this agency
+        return view('agencies.login', ['agency' => $agency]);
+    }
 
     /*
           *

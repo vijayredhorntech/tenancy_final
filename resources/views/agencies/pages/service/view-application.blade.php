@@ -206,31 +206,18 @@
                                 </div>
                             </div>
 
-                            <div class="mt-6 bg-blue-50 border border-blue-100 rounded-lg p-4">
-                                <div class="flex">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mt-0.5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    {{-- <div>
-                                        <h4 class="font-semibold text-blue-800">Payment Required</h4>
-                                        <p class="text-sm text-blue-600 mt-1">Complete your payment to proceed with the visa processing.</p>
-                                    </div> --}}
-                                </div>
-                            </div>
+                      
 
                             <div class="mt-6 space-y-3">
-                               {{-- <a href="{{ route('applications.view', $requestDatas->id) }}" title="View Application">
-                                            <div class="bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
-                                                  <h4 class="font-semibold text-blue-800">Payment Required</h4>
-                                            </div>
-                                        </a> --}}
-
-                                <a href="{{ route('applications.view', $requestDatas->id) }}"  class="block w-full border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg text-center transition duration-200 hover:bg-gray-50 flex items-center justify-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z" />
-                                    </svg>
-                                     Proceed Application
-                                </a>
+                                  <a href="{{ route('applications.proceed', $requestDatas->id) }}"
+                                        class="block w-full border border-gray-300 text-gray-700 font-medium py-3 px-4 rounded-lg text-center transition duration-200 hover:bg-gray-50 flex items-center justify-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 01-18 0z"/>
+                                            </svg>
+                                            Proceed Application
+                                        </a>
                             </div>
                         </div>
                     </div> 

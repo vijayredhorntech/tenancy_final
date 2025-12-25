@@ -194,12 +194,14 @@
                                 oninput="calculateTotal()" class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
                         </div>
        
+                        @if($invoice->tax_status)
                             <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">VAT  (£)</label>
                             <input type="hidden" value="{{  $defaultServiceVatCharge  }}" id="gstpercentage"> 
                             <input type="number" step="0.01" id="gstAmount" readonly name="gstAmount" value="{{ old('service_charge', $gstAmount ?? 0) }}" 
                                 oninput="calculateTotal()" class="w-full border border-secondary/40 rounded-md px-3 py-2 focus:ring-primary focus:border-primary text-sm">
                         </div>
+                        @endif
 
                         <div>
                             <label class="block font-semibold text-sm text-ternary/90 mb-1">Total (£) <span class="text-red-500">*</span></label>

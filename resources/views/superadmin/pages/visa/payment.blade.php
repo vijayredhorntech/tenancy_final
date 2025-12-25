@@ -194,10 +194,12 @@
                       <span class="text-black text-md font-normal">Service Fee:</span>
                       <span class="text-secondary text-md font-semibold visa-commision">{{ $CURRENCY }}5,998.00</span>
                   </div>
+                  @if($agency->tax_status)
                   <div class="flex justify-between mt-1.5 pb-3 border-b-2 border-b-secondary/30 ">
                       <span class="text-black text-md ">Tax:</span>
                       <span class="text-secondary text-md font-semibold visa-tax" > </span>
                   </div>
+                  @endif
 
                   <div class="flex justify-between mt-3">
                       <span class="text-black text-md font-normal">Total:</span>
@@ -227,7 +229,7 @@
 
             <button onclick="closeConfirmModal()"
                     class="bg-gray-300 px-4 py-2 rounded">
-                Cancel
+                Amendment
             </button>
         </div>
     </div>
@@ -240,6 +242,7 @@
 
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
 <script>
 function openConfirmModal() {
@@ -309,6 +312,7 @@ function validateVisaForm() {
 
     const CURRENCYes = "{{ config('app.currency') }}";
 
+      const agencyTaxEnabled = {{ $agency && $agency->tax_status ? 'true' : 'false' }};
 
 
 $(document).ready(function () {
@@ -322,11 +326,6 @@ $(document).ready(function() {
 
     
    
-        // $('#existingUserDropdown').select2({
-        //     placeholder: "---Select USer---",
-        //     allowClear: true,
-        //     containerCssClass: 'visa-select w-full mt-2 py-3 px-10 font-medium text-black/80 text-md rounded-[3px] border-[0px] bg-[#f3f4f6] focus:outline-none focus:ring-0 placeholder-black/60'
-        // });
         $('#existingUserDropdown').select2({
                 placeholder: "--- Select User ---",
                 allowClear: true,
@@ -599,19 +598,19 @@ $(document).ready(function () {
 
     // When Category (`#category`) changes, update the price
     $("#category").on("change", function () {
+
         var selectedOption = $(this).find(":selected");
         var visaPrice = parseFloat(selectedOption.data("price")) || 0;  // Convert to number, default 0
         var commission = parseFloat(selectedOption.data("commission")) || 0;  // Convert to number, default 0
-        var gst = parseFloat(selectedOption.data("gst")) || 0;  // Convert to number, default 0
+
+        // var gst = parseFloat(selectedOption.data("gst")) || 0;  // Convert to number, default 0
+          var gst = agencyTaxEnabled ? (parseFloat(selectedOption.data("gst")) || 0) : 0;
       
         var balance = parseFloat(selectedOption.data("balance")) || 0;
         var processing = selectedOption.data("processing") || "";
         var gstAmount = ((visaPrice + commission) * gst) / 100;
-
-
-
-
-        var total = visaPrice + commission + gstAmount; // Correct addition
+       var total = visaPrice + commission + gstAmount; // Correct addition
+ 
        
 
         $(".visa-price").text( visaPrice.toFixed(2)); // Update displayed price
@@ -833,10 +832,14 @@ $("#existingUserBtn").on("click", function () {
     }
 
       function updateVisaPrice() {
+           
             const selected = $("#category").find(":selected");
             const visaPrice = parseFloat(selected.data("price")) || 0;
             const commission = parseFloat(selected.data("commission")) || 0;
-            const gst = parseFloat(selected.data("gst")) || 0;
+        
+            // const gst = parseFloat(selected.data("gst")) || 0;
+            var gst = agencyTaxEnabled ? (parseFloat(selectedOption.data("gst")) || 0) : 0;
+
             const gstAmount = ((visaPrice + commission) * gst) / 100;
      
 

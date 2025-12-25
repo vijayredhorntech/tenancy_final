@@ -312,7 +312,7 @@ public function getAgencyClicntBYSearchValue($searchVariable)
     $this->setConnectionByDatabase($agency->database_name);
 
     // Fields to search
-    $fields = ['clientuid', 'email', 'phone_number'];
+    $fields = ['clientuid', 'email', 'phone_number','id'];
 
     foreach ($fields as $field) {
         $client = ClientDetails::on('user_database')

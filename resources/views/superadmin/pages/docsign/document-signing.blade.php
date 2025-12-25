@@ -219,7 +219,7 @@
                                     <p class="text-base font-medium text-gray-900">{{ $signature->created_at->format('d M Y') }}</p>
                                 </div>
                                 <div>
-                                    <p class="text-sm text-gray-500 mb-1">Application Number</p>
+                                    <p class="text-sm text-gray-500 mb-1">Invoice Number</p>
                                     <p class="text-base font-medium text-gray-900">{{$signature->document->visaBookingApplication->application_number}}</p>
                                 </div>
                             </div>

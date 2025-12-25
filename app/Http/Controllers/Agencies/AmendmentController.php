@@ -84,10 +84,13 @@ public function hsamendmentVisaApplication(Request $request)
         $destination=$request->destinationcountry;
         $visas = $this->visaRepository->getVisabySearch($orgin,$destination);
         $countries=Country::get();
+        $edit=''; 
+        $agency=$applicationData->agency;
+
         
         $agency = $this->agencyService->getAgencyData();
 
-              return view('agencies.pages.amendment.visa-second-step',compact('visas','countries','orgin','destination','applicationData'));
+              return view('agencies.pages.amendment.visa-second-step',compact('visas','countries','orgin','destination','applicationData','edit','agency'));
     
        
  }

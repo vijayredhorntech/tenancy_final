@@ -272,7 +272,7 @@
               <!-- Assign Client Modal -->
 
               <!-- Assign Client Modal -->
-        <div id="assignClientModal"
+        <!-- <div id="assignClientModal"
             class="fixed inset-0 hidden items-center justify-center z-[99999]"
             style="background: rgba(0,0,0,0.2); backdrop-filter: blur(2px);">
 
@@ -281,7 +281,6 @@
 
                     <h2 class="text-lg font-semibold mb-4">Assign Existing Client</h2>
 
-                    <!-- Search Fields -->
                     <div>
                         <label class="text-sm font-semibold">Client ID</label>
                         <input type="text" id="clientIdInput"
@@ -291,14 +290,11 @@
                         <input type="text" id="clientEmailInput"
                             class="w-full border p-2 mt-1 rounded">
                     </div>
-
-                    <!-- Search Button -->
                     <button id="searchClientBtn"
                             class="bg-blue-600 text-white px-4 py-2 rounded mt-4 w-full">
                         Search Client
                     </button>
 
-                    <!-- Result Area -->
                     <div id="clientResult"
                         class="mt-4 hidden border p-3 rounded bg-gray-100"></div>
 
@@ -314,7 +310,65 @@
 
 
           </section>
-      </div>
+      </div> -->
+      <!-- Assign Client Modal -->
+    <div id="assignClientModal"
+        class="fixed inset-0 hidden items-center justify-center z-[99999]"
+        style="background: rgba(0,0,0,0.2); backdrop-filter: blur(2px);">
+
+        <div class="bg-white w-[400px] p-6 rounded shadow-xl"
+            style="box-shadow: 0 10px 40px rgba(0,0,0,0.2); border-radius: 8px;">
+
+            <h2 class="text-lg font-semibold mb-4">Assign Existing Client</h2>
+
+            <!-- ================= SEARCH SECTION ================= -->
+            <div id="searchSection">
+                <label class="text-sm font-semibold">Client ID</label>
+                <input type="text" id="clientIdInput"
+                    class="w-full border p-2 mt-1 rounded">
+
+                <label class="text-sm font-semibold mt-3 block">Email</label>
+                <input type="text" id="clientEmailInput"
+                    class="w-full border p-2 mt-1 rounded">
+
+                <button id="searchClientBtn"
+                        class="bg-blue-600 text-white px-4 py-2 rounded mt-4 w-full">
+                    Search Client
+                </button>
+            </div>
+
+            <!-- ================= OTP SECTION ================= -->
+            <div id="otpSection" class="hidden mt-4">
+                <label class="text-sm font-semibold">Enter OTP</label>
+                <input type="text" id="otpInput"
+                    class="w-full border p-2 mt-1 rounded"
+                    placeholder="Enter 6-digit OTP">
+
+                <button id="verifyOtpBtn"
+                        class="bg-green-600 text-white px-4 py-2 rounded mt-3 w-full">
+                    Verify OTP
+                </button>
+            </div>
+
+            <!-- ================= RESULT SECTION ================= -->
+            <div id="clientResult"
+                class="hidden mt-4 border p-3 rounded bg-gray-100"></div>
+
+            <!-- ================= CLOSE BUTTON ================= -->
+            <button id="closeAssignClientModal"
+                    class="bg-red-600 text-white px-4 py-2 rounded mt-4 w-full">
+                Close
+            </button>
+
+        </div>
+    </div>
+
+
+      <!-- OTP Section -->
+ 
+
+
+      
     @section('scripts')
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script>
@@ -356,29 +410,153 @@ function useClient(data) {
 }
 
 
+// $("#searchClientBtn").click(function () {
+//     let clientId = $("#clientIdInput").val().trim();
+//     let email = $("#clientEmailInput").val().trim();
+
+//     // Validation: At least one field must be filled
+//     if (clientId === "" && email === "") {
+//         $("#clientResult").removeClass("hidden").html(`
+//             <p class="text-red-600 font-semibold">Please enter Client ID or Email to search.</p>
+//         `);
+//         return; // Stop execution
+//     }
+
+//     $.ajax({
+//         url: "{{ url('client/search') }}",
+//         type: "GET",
+//         data: {
+//             client_id: clientId,
+//             email: email
+//         },
+//         success: function (response) {
+//             if (response.status === "success") {
+
+//                 $("#clientResult").removeClass("hidden").html(`
+//                     <p><b>Name:</b> ${response.data.first_name} ${response.data.last_name}</p>
+//                     <p><b>Email:</b> ${response.data.email}</p>
+//                     <p><b>Phone:</b> ${response.data.phone_number}</p>
+
+//                     <button onclick='useClient(${JSON.stringify(response.data)})'
+//                         class="bg-green-600 text-white px-4 py-2 mt-3 rounded w-full">
+//                         Use This Client
+//                     </button>
+//                 `);
+
+//             } else {
+//                 $("#clientResult").removeClass("hidden").html(`
+//                     <p class="text-red-600 font-semibold">${response.message}</p>
+//                 `);
+//             }
+//         }
+//     });
+// });
+
+
+
+    // $("#verifyOtpBtn").click(function () {
+    //     let otp = $("#otpInput").val().trim();
+
+    //     if (otp === "") {
+    //         alert("Enter OTP");
+    //         return;
+    //     }
+
+    //     $.ajax({
+    //         url: "{{ url('client/verify-otp') }}",
+    //         type: "POST",
+    //         data: {
+    //             otp: otp,
+    //             _token: "{{ csrf_token() }}"
+    //         },
+    //         success: function (response) {
+    //             if (response.status === "success") {
+    //                 $("#clientResult").html(`
+    //                     <p><b>Name:</b> ${response.data.first_name} ${response.data.last_name}</p>
+    //                     <p><b>Email:</b> ${response.data.email}</p>
+    //                     <p><b>Phone:</b> ${response.data.phone_number}</p>
+
+    //                     <button onclick='useClient(${JSON.stringify(response.data)})'
+    //                         class="bg-green-600 text-white px-4 py-2 mt-3 rounded w-full">
+    //                         Use This Client
+    //                     </button>
+    //                 `);
+    //                 $("#otpSection").addClass("hidden");
+    //             } else {
+    //                 alert(response.message);
+    //             }
+    //         }
+    //     });
+    // });
+
+    // Open modal
+$("#openAssignClientModal").click(function () {
+    $("#assignClientModal").removeClass("hidden").addClass("flex");
+});
+
+// Close modal
+$("#closeAssignClientModal").click(function () {
+    $("#assignClientModal").addClass("hidden").removeClass("flex");
+    $("#otpSection").addClass("hidden");
+    $("#clientResult").addClass("hidden").html("");
+    $("#otpInput").val("");
+});
+
+// Search Client → Send OTP
 $("#searchClientBtn").click(function () {
     let clientId = $("#clientIdInput").val().trim();
     let email = $("#clientEmailInput").val().trim();
 
-    // Validation: At least one field must be filled
     if (clientId === "" && email === "") {
-        $("#clientResult").removeClass("hidden").html(`
-            <p class="text-red-600 font-semibold">Please enter Client ID or Email to search.</p>
-        `);
-        return; // Stop execution
+        $("#clientResult").removeClass("hidden").html(
+            `<p class="text-red-600 font-semibold">Enter Client ID or Email</p>`
+        );
+        return;
     }
 
     $.ajax({
         url: "{{ url('client/search') }}",
         type: "GET",
+        data: { client_id: clientId, email: email },
+        success: function (response) {
+            if (response.status === "otp_sent") {
+                $("#clientResult").removeClass("hidden").html(
+                    `<p class="text-green-600">${response.message}</p>`
+                );
+                $("#otpSection").removeClass("hidden");
+                $("#searchSection").addClass("hidden");
+
+
+                
+            } else {
+                $("#clientResult").removeClass("hidden").html(
+                    `<p class="text-red-600">${response.message}</p>`
+                );
+            }
+        }
+    });
+});
+
+// Verify OTP
+$("#verifyOtpBtn").click(function () {
+    let otp = $("#otpInput").val().trim();
+
+    if (otp === "") {
+        alert("Please enter OTP");
+        return;
+    }
+
+    $.ajax({
+        url: "{{ url('client/verify-otp') }}",
+        type: "POST",
         data: {
-            client_id: clientId,
-            email: email
+            otp: otp,
+            _token: "{{ csrf_token() }}"
         },
         success: function (response) {
             if (response.status === "success") {
 
-                $("#clientResult").removeClass("hidden").html(`
+                $("#clientResult").html(`
                     <p><b>Name:</b> ${response.data.first_name} ${response.data.last_name}</p>
                     <p><b>Email:</b> ${response.data.email}</p>
                     <p><b>Phone:</b> ${response.data.phone_number}</p>
@@ -389,10 +567,9 @@ $("#searchClientBtn").click(function () {
                     </button>
                 `);
 
+                $("#otpSection").addClass("hidden");
             } else {
-                $("#clientResult").removeClass("hidden").html(`
-                    <p class="text-red-600 font-semibold">${response.message}</p>
-                `);
+                alert(response.message);
             }
         }
     });

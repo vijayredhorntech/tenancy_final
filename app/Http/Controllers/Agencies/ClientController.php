@@ -21,6 +21,10 @@ use App\Services\ClientHistoryService;
 use App\Models\FamilyMember; 
 use App\Traits\Toastable;
 
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
+
+
 
 
 class ClientController extends Controller
@@ -448,10 +452,49 @@ public function hs_agencyUpdateClient(Request $request, $id)
   
     }
 
-   public function search(Request $request)
+//    public function search(Request $request)
+// {
+//     $clientId = trim($request->client_id);
+//     $email    = trim($request->email);
+//     if (!$clientId && !$email) {
+//         return response()->json([
+//             'status' => 'error',
+//             'message' => 'Please enter Client ID or Email.',
+//         ]);
+//     }
+
+//     $client = null;
+
+//     // 1️⃣ Search by Client ID (if provided)
+//     if ($clientId) {
+//         $client = $this->agencyService->getAgencyClicntBYSearchValue($clientId);
+//     }
+
+//     // 2️⃣ If client not found and email provided, search by email
+//     if (!$client && $email) {
+//         $client = $this->agencyService->getAgencyClicntBYSearchValue($email);
+//     }
+//     // Not found
+//     if (!$client) {
+//         return response()->json([
+//             'status' => 'error',
+//             'message' => 'Client not found.',
+//         ]);
+//     }
+
+//     // Success
+//     return response()->json([
+//         'status' => 'success',
+//         'data' => $client
+//     ]);
+// }
+
+
+public function search(Request $request)
 {
     $clientId = trim($request->client_id);
     $email    = trim($request->email);
+
     if (!$clientId && !$email) {
         return response()->json([
             'status' => 'error',
@@ -461,16 +504,14 @@ public function hs_agencyUpdateClient(Request $request, $id)
 
     $client = null;
 
-    // 1️⃣ Search by Client ID (if provided)
     if ($clientId) {
         $client = $this->agencyService->getAgencyClicntBYSearchValue($clientId);
     }
 
-    // 2️⃣ If client not found and email provided, search by email
     if (!$client && $email) {
         $client = $this->agencyService->getAgencyClicntBYSearchValue($email);
     }
-    // Not found
+
     if (!$client) {
         return response()->json([
             'status' => 'error',
@@ -478,12 +519,61 @@ public function hs_agencyUpdateClient(Request $request, $id)
         ]);
     }
 
-    // Success
+
+    // 🔐 Generate OTP
+    $otp = rand(100000, 999999);
+
+    // Store OTP in session
+    Session::put('client_otp', $otp);
+    Session::put('client_otp_id', $client->id);
+
+    // ✉️ Send OTP Email
+     Mail::send([], [], function ($message) use ($client, $otp) {
+    $message->to($client->email)
+            ->subject('OTP Verification')
+            ->text("Your OTP is: {$otp}");
+});
+
+   
+
+    return response()->json([
+        'status' => 'otp_sent',
+        'message' => 'OTP sent to registered email.',
+    ]);
+}
+
+public function verifyOtp(Request $request)
+{
+    $request->validate([
+        'otp' => 'required'
+    ]);
+
+    if (
+        Session::get('client_otp') != $request->otp ||
+        !Session::has('client_otp_id')
+    ) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Invalid OTP'
+        ]);
+    }
+
+    $clientId = Session::get('client_otp_id');
+ 
+    $client = $this->agencyService->getAgencyClicntBYSearchValue($clientId);
+
+
+    // Clear OTP session
+    Session::forget(['client_otp', 'client_otp_id']);
+
     return response()->json([
         'status' => 'success',
         'data' => $client
     ]);
 }
+
+
+
 
 
 

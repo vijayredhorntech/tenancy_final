@@ -362,28 +362,15 @@ class VisaController extends Controller
         $countries=Country::get();
         
         $agency = $this->agencyService->getAgencyData();
+   
+  
         if($agency==null){
              return view('agencies.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination'));
         }
-        return view('superadmin.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination'));
+        return view('superadmin.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination','agency'));
     }
 
 
-
-    // public function hsestorevisa(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'vid'            => 'required',
-    //         'name'         => 'required|string|max:255',
-    //         'description'  => 'nullable|string', // Allows HTML content (Quill Editor)
-         
-    //     ]);
-
-    //     $visa = $this->visaRepository->updateVisa($request->vid,$data);
-
-    //     // $visa = $this->visaRepository->updateVisa($id, $data);
-    //     return redirect()->route('visa.view',['id' => $request->vid])->with('success', 'Visa updated successfully!');
-    // }
     public function hsestorevisa(Request $request)
 {
     try {
@@ -541,12 +528,12 @@ public function hsViewEditSection($id){
         $status="true";
         // dd($visas);
           $agency = $this->agencyService->getAgencyData();
-        //   dd($agency);
+
         if($agency==null){
             //  dd("heelo");
              return view('agencies.pages.visa.visapricesession',compact('visas','status'));
         }
-        return view('superadmin.pages.visa.payment',compact('visas','status'));
+        return view('superadmin.pages.visa.payment',compact('visas','status','agency'));
     }
 
 
@@ -724,6 +711,7 @@ public function hsVisaBook(Request $request)
 
 
     public function hs_verifyapplication($id){
+ 
         $agency = $this->agencyService->getAgencyData();
         $checkuser = $this->visaRepository->bookingDataById($id);
 
@@ -739,10 +727,10 @@ public function hsVisaBook(Request $request)
                 ->where('agency_id', $agency->id)
                 ->latest()  // Orders by created_at (or updated_at if you specify)
                 ->first();
-              return view('agencies.pages.amendment.visa-fifth-step',compact('clientData','checkBalance','amendmentHistory'));
+              return view('agencies.pages.amendment.visa-fifth-step',compact('clientData','checkBalance','amendmentHistory','agency'));
             }
             //   dd($clientData);
-            return view('superadmin.pages.visa.verifyapplication',compact('clientData','checkBalance'));
+            return view('superadmin.pages.visa.verifyapplication',compact('clientData','checkBalance','agency'));
         }
         return redirect()->route('agency.application', ['type' => 'all']);
     }
@@ -768,14 +756,9 @@ public function hsVisaBook(Request $request)
             $termconditon = app(\App\Repositories\TermConditionRepository::class)->allTeamTypes();
 
         if (isset($clientData) && $clientData->agency_id == $agency->id) {
-            // $pay=$this->visaRepository->payment($clientData);
-            // dd($clientData);
-            // Mail::to($clientData->clint->email)->send(new VisaBookingInProcessMail($clientData, $agency));
-            // return redirect()->back()->with('success', 'Visa application confirmed successfully.');
-
-            return view('agencies.pages.invoices.visainvoice',compact('clientData','termconditon'));
+       
+            return view('agencies.pages.invoices.visainvoice',compact('clientData','termconditon','agency'));
         }
-        // return redirect()->back()->with('error', 'Unable to confirm application.');
         return view('agency.pages.visa.payment',compact('clientData'));
        }
 
@@ -1499,7 +1482,7 @@ public function hs_editVisa(Request $request,$id)
      $visas = $this->visaRepository->getVisabySearch($orgin,$destination);
      $edit=true;
      $agency = $this->agencyService->getAgencyData();
-    return view('agencies.pages.amendment.visa-second-step',compact('visas','countries','orgin','destination','applicationData','edit'));
+    return view('agencies.pages.amendment.visa-second-step',compact('visas','countries','orgin','destination','applicationData','edit','agency'));
 
 }   
 public function hs_selectVisa(Request $request)
@@ -1510,10 +1493,10 @@ public function hs_selectVisa(Request $request)
        ]);
 
         $id=$request->id;   
-        $agencyData = $this->agencyService->getAgencyData(); 
+        $agency = $this->agencyService->getAgencyData(); 
         $applicationData = $this->visaRepository->getBookingByApplicationNumber($request->applicationid);
          
-        $clientInformation=$this->agencyService->getClientDetails($applicationData->client_id,$agencyData) ;
+        $clientInformation=$this->agencyService->getClientDetails($applicationData->client_id,$agency) ;
        
         $sectedvisa=$this->visaRepository->getVisabySearchcoutnry($id);
         $orgin=$sectedvisa->origin;
@@ -1523,7 +1506,7 @@ public function hs_selectVisa(Request $request)
 
         $familyMembers=$this->visaRepository->bookingDataById($applicationData->id)->otherclients;
     
-        return view('agencies.pages.amendment.edit-third-step',compact('visas','clientInformation','applicationData','familyMembers'));
+        return view('agencies.pages.amendment.edit-third-step',compact('visas','clientInformation','applicationData','familyMembers','agency'));
        
   
 }

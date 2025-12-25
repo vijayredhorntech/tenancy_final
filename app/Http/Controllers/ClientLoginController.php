@@ -23,6 +23,8 @@ use App\Models\Invoice;
 use App\Models\Country; 
 use App\Models\Service; 
 
+use Carbon\Carbon;
+
 
 
 
@@ -65,52 +67,212 @@ class ClientLoginController extends Controller
         return view('clients.login');
     }
 
-    public function hsClientLoginStore(Request $request){
+    public function hsClientLoginStore(Request $request)
+{
+    /* ================= VALIDATION ================= */
 
-       
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-         // Find client using email and clientuid
-            $client = ClientDetails::where('email', $request->email)
-            ->where('clientuid', $request->password)
-            ->first();
-            if ($client) {
-               $agency=Agency::with(['domains', 'userAssignments.service', 'balance'])->where('id',$client->agency_id)->first();
-
-                $agencyconnnection = $this->agencyService->setConnectionByDatabase($agency->database_name);
-
-              
-                //    dd($client);
-                // dd($agency);
-                $agencydatabase=ClientDetails::on('user_database')->where('clientuid',$client->clientuid)->first();
-             
-                // dd($agency);
-                $data=[
-                'domain' => $agency->domains->domain_name,
-                'database' => $agency->database_name,
-                'full_url'=>$agency->domains->full_url,
-                'agencydatabaseclient'=>$agencydatabase,
-                
-            ];
-
-               session(['type' => 'client']);
-               \session(['user_data' => $data]);
-            
-               return redirect()->route('client.profile');
-    }
-
-    // If client not found, return error
-    return back()->withErrors([
-        'email' => 'Invalid login details.',
+    $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required',
     ]);
+      
+    /* ================= DOMAIN FROM SESSION ================= */
+    $domain = session('agency_domain');
+ 
+
+    if (!$domain) {
+        return back()->withErrors([
+            'email' => 'Session expired. Please reload and try again.',
+        ]);
     }
+
+    /* ================= GET AGENCY VIA DOMAIN RELATION ================= */
+    $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])
+        ->whereHas('domains', function ($q) use ($domain) {
+            $q->where('domain_name', $domain);
+        })
+        ->first();
+
+    if (!$agency) {
+        return back()->withErrors([
+            'email' => 'Invalid domain or agency not found.',
+        ]);
+    }
+
+
+    /* ================= FIND CLIENT (MAIN DB) ================= */
+    $client = ClientDetails::where('email', $request->email)
+        ->where('clientuid', $request->password) // ⚠️ hash later
+        ->first();
+
+    if (!$client) {
+   
+        return back()->withErrors([
+            'email' => 'Invalid login details.',
+        ]);
+    }
+
+    /* ================= SWITCH TO AGENCY DATABASE ================= */
+    $this->agencyService->setConnectionByDatabase($agency->database_name);
+
+    /* ================= GET CLIENT FROM AGENCY DB ================= */
+    $agencyDatabaseClient = ClientDetails::on('user_database')
+        ->where('clientuid', $client->clientuid)
+        ->first();
+
+    /* ================= SAVE SESSION ================= */
+    session([
+        'type' => 'client',
+        'user_data' => [
+            'domain'               => $agency->domains->first()->domain_name,
+            'database'             => $agency->database_name,
+            'full_url'             => $agency->domains->first()->full_url ?? null,
+            'agencydatabaseclient' => $agencyDatabaseClient,
+        ],
+    ]);
+
+    /* ================= REDIRECT ================= */
+    return redirect()->route('client.profile');
+}
+
+public function sendOtp(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+    ]);
+
+    /* ================= DOMAIN FROM SESSION ================= */
+    $domain = session('agency_domain');
+
+    if (!$domain) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Session expired. Please reload the page.',
+        ]);
+    }
+
+    /* ================= FIND CLIENT ================= */
+    $client = ClientDetails::where('email', $request->email)->first();
+
+    if (!$client) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Email not registered.',
+        ]);
+    }
+
+    /* ================= GENERATE OTP ================= */
+    $otp = rand(100000, 999999);
+
+    /* ================= STORE OTP IN SESSION ================= */
+    session([
+        'client_forgot_otp' => [
+            'otp'        => $otp,
+            'email'      => $client->email,
+            'domain'     => $domain,
+            'expires_at' => Carbon::now()->addMinutes(5),
+        ]
+    ]);
+
+    /* ================= SEND EMAIL ================= */
+    Mail::raw("Your OTP is: {$otp}. It will expire in 5 minutes.", function ($message) use ($client) {
+        $message->to($client->email)
+                ->subject('Client Login OTP');
+    });
+
+    return response()->json([
+        'success' => true,
+        'message' => 'OTP sent successfully.',
+    ]);
+}
+
+
+public function verifyOtp(Request $request)
+{
+    $request->validate([
+        'otp' => 'required',
+    ]);
+
+    $otpData = session('client_forgot_otp');
+
+    if (!$otpData) {
+        return response()->json([
+            'success' => false,
+            'message' => 'OTP session expired. Please resend OTP.',
+        ]);
+    }
+
+    /* ================= EXPIRY CHECK ================= */
+    if (Carbon::now()->greaterThan($otpData['expires_at'])) {
+        session()->forget('client_forgot_otp');
+
+        return response()->json([
+            'success' => false,
+            'message' => 'OTP expired. Please resend OTP.',
+        ]);
+    }
+
+    /* ================= OTP MATCH ================= */
+    if ($otpData['otp'] != $request->otp) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Invalid OTP.',
+        ]);
+    }
+
+    /* ================= GET AGENCY ================= */
+    $agency = Agency::with(['domains', 'userAssignments.service', 'balance'])
+        ->whereHas('domains', function ($q) use ($otpData) {
+            $q->where('domain_name', $otpData['domain']);
+        })
+        ->first();
+
+    if (!$agency) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Agency not found.',
+        ]);
+    }
+
+    /* ================= GET CLIENT ================= */
+    $client = ClientDetails::where('email', $otpData['email'])->first();
+
+    if (!$client) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Client not found.',
+        ]);
+    }
+
+    /* ================= SWITCH DB ================= */
+    $this->agencyService->setConnectionByDatabase($agency->database_name);
+
+    $agencyDatabaseClient = ClientDetails::on('user_database')
+        ->where('clientuid', $client->clientuid)
+        ->first();
+
+    /* ================= SAVE SESSION (SAME AS LOGIN) ================= */
+    session([
+        'type' => 'client',
+        'user_data' => [
+            'domain'               => $agency->domains->first()->domain_name,
+            'database'             => $agency->database_name,
+            'full_url'             => $agency->domains->first()->full_url ?? null,
+            'agencydatabaseclient' => $agencyDatabaseClient,
+        ],
+    ]);
+
+    session()->forget('client_forgot_otp');
+
+    return response()->json([
+        'success'  => true,
+        'redirect' => route('client.profile'),
+    ]);
+}
 
     /****Profile **** */
     public function hsClientProfile(){
-// dd('heelo');
+
         // $agency=Agency::with(['domains', 'userAssignments.service', 'balance'])->where('id',$client->agency_id)->first();
         // $agencyconnnection = $this->agencyService->setConnectionByDatabase($agency->database_name);
 

@@ -1,3 +1,5 @@
+
+
 <div id="sideBarDiv" class="z-20 w-72 p-4 h-[100vh] bg-ternary overflow-x-hidden overflow-y-auto flex-none xl:static lg:static absolute top-0 left-0 xl:block lg:block hidden ">
     <div class="w-full flex flex-col justify-center items-center border-b-[1px] pb-2 border-b-gray-100/20 shadow-lg shadow-gray-700/10">
         @if(isset($user) && isset($user->profile))
@@ -162,7 +164,7 @@
 
         <!-- Client Agency Part -->
         @canany(['agency view', 'manage everything'])
-        <a href="{{route('agency')}}">
+        <!-- <a href="{{route('agency')}}">
             <div class="{{Route::currentRouteName()==='agency'?'border-gray-100/60 bg-secondary/90':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
                 <div class="flex items-center">
                     <i class="fa-regular fa-building mr-2 text-sm"></i>
@@ -170,7 +172,49 @@
                 </div>
                 <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
             </div>
-        </a>
+        </a> -->
+               <div class="">
+            @php
+                $agencyRoutes = ['agency view', 'manage everything'];
+                $isAgencyActive = in_array(Route::currentRouteName(), $agencyRoutes);
+                $isAgencyParentActive = $isAgencyActive;
+            @endphp
+            <div onclick="toggleModule('agencyDiv','agencyArrow')" class="sidebar-item {{$isAgencyParentActive ? 'border-gray-100/60 bg-secondary/90 parent-active' : 'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] cursor-pointer  relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                <div class="flex items-center">
+                             <i class="fa-regular fa-building mr-2 text-sm"></i>
+                    <span class="text-lg font-medium">Client Agency/ (B2B)</span>
+                </div>
+                <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                <i class="fa fa-angle-down text-xl text-white/90 sidebar-arrow {{$isAgencyActive ? '' : '-rotate-90'}} transition ease-in duration-2000 " id="agencyArrow"> </i>
+            </div>
+            <ul id="agencyDiv" class="pl-10 mt-2 flex flex-col sub-module-list {{$isAgencyActive ? '' : 'hidden'}}">
+                <a href="{{route('agency')}}">
+                    <li class="sidebar-item {{Route::currentRouteName()==='agency'?'border-gray-100/60 bg-primary/90 shadow-lg active':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fa fa-eye mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">View Client Agency/ (B2B)</span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+
+                <a href="#">
+                
+                    <li class="sidebar-item {{Route::currentRouteName()==='staff.attandance'?'border-gray-100/60 bg-primary/90 shadow-lg active':'border-ternary'}}  w-full flex justify-between items-center py-2 px-4 rounded-[3px] text-white/90 border-[1px] border-b-[3px] border-r-[3px] relative hover:border-gray-100/60  hover:bg-secondary/90 transition ease-in duration-2000">
+                        <div class="flex items-center">
+                            <i class="fa fa-hotel mr-2 text-sm"></i>
+                            <span class="text-lg font-medium">Client Agency Setting </span>
+                        </div>
+                        <i class="fa fa-caret-left text-2xl text-ternary absolute -right-1.5 top-[50%] translate-y-[-50%]"></i>
+                    </li>
+                </a>
+                
+           
+
+            </ul>
+        </div>
+
+
 
         @endcanany
 

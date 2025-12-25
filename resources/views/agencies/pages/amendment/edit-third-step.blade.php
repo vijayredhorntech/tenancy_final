@@ -252,10 +252,12 @@
                       <span class="text-black text-md font-normal">Service Fee:</span>
                       <span class="text-secondary text-md font-semibold visa-commision">{{ $CURRENCY }}5,998.00</span>
                   </div>
-                  <div class="flex justify-between mt-1.5 pb-3 border-b-2 border-b-secondary/30 ">
-                      <span class="text-black text-md ">Tax:</span>
-                      <span class="text-secondary text-md font-semibold visa-tax" > </span>
-                  </div>
+                 @if($agency->tax_status)
+                    <div class="flex justify-between mt-1.5 pb-3 border-b-2 border-b-secondary/30 ">
+                        <span class="text-black text-md ">Tax:</span>
+                        <span class="text-secondary text-md font-semibold visa-tax" > </span>
+                    </div>
+                @endif
 
                   <div class="flex justify-between mt-3">
                       <span class="text-black text-md font-normal">Total:</span>
@@ -285,7 +287,7 @@
 
             <button onclick="closeConfirmModal()"
                     class="bg-gray-300 px-4 py-2 rounded">
-                Cancel
+                Amendment
             </button>
         </div>
     </div>
@@ -302,6 +304,8 @@
 <script>
 
 const CURRENCYes = "{{ config('app.currency') }}";
+const agencyTaxEnabled = {{ $agency && $agency->tax_status ? 'true' : 'false' }};
+
 let autoTrigger = false;
 
 $(document).ready(function () {
@@ -575,10 +579,15 @@ function addPassenger(){
 // ---- Visa Cost Update ---- //
 function updateVisaPrice(){
 
+    
     let sel = $("#category").find(":selected");
     let price = parseFloat(sel.data("price") || 0);
     let commiss = parseFloat(sel.data("commission") || 0);
-    let gst = parseFloat(sel.data("gst") || 0);
+    // let gst = parseFloat(sel.data("gst") || 0);
+   var gst = agencyTaxEnabled ? (parseFloat(sel.data("gst")) || 0) : 0;
+//    alert(agencyTaxEnabled);
+
+
 
     let gstAmt = ((price + commiss) * gst) / 100;
     let perPerson = price + commiss + gstAmt;

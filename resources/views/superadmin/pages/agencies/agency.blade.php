@@ -683,6 +683,9 @@
                         Status
                     </td>
                     <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">
+                        Tax Status 
+                    </td>
+                    <td class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">
                         Action
                     </td>
                 </tr>
@@ -729,13 +732,28 @@
                             </div>
                         </td>
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
-{{--                            <span class="bg-{{$agency['status']==='Inactive'?'danger':'success'}}/10 text-{{$agency['status']==='Inactive'?'danger':'success'}} px-2 py-1 rounded-[3px] font-bold">{{$agency['status']}}</span>--}}
                                 <span class="bg-{{$agency->details->status=='0'?'danger':'success'}}/10 text-{{$agency->details->status=='0'?'danger':'success'}} px-2 py-1 rounded-[3px] font-bold"> {{ $agency->details->status == '0' ? 'Inactive' : 'Active' }}</span>
-
-<!-- <span class="bg-success/10 text-success px-2 py-1 rounded-[3px] font-bold">Active</span> -->
-
-
                         </td>
+                       <td class="border-[2px] border-secondary/40 px-4 py-2 text-ternary/80 font-medium text-sm text-center">
+                                <form action="{{ route('agencies.toggle.tax', $agency->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <button type="submit" title="Toggle Tax Status" class="focus:outline-none">
+                                        <div class="
+                                            {{ $agency->tax_status
+                                                ? 'bg-green-500/20 text-green-600 hover:bg-green-500 hover:text-primary'
+                                                : 'bg-gray-500/20 text-gray-600 hover:bg-gray-500 hover:text-primary' }}
+                                            h-12 w-18 flex justify-center items-center rounded-xl
+                                            transition ease-in duration-2000 text-2xl">
+                                            
+                                            <i class="fa {{ $agency->tax_status ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
+                                        </div>
+                                    </button>
+                                </form>
+                    </td>
+
+
                         <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">
                             <div class="flex gap-2 items-center">
 
@@ -748,12 +766,7 @@
                                 </a>
                             @endcanany
 
-{{--                                <a href="{{route('agencies.invoice')}}" title="View Invoices">--}}
-{{--                                    <div--}}
-{{--                                        class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">--}}
-{{--                                        <i class="fa fa-file"></i>--}}
-{{--                                    </div>--}}
-{{--                                </a>--}}
+
 
                             @canany(['view agencydashboard', 'manage everything'])
                                 <a href="{{route('agencies.history',['id' => $agency->id])}}" title="View funds details">
@@ -785,7 +798,17 @@
 
             </table>
         </div>
+            <script>
+                // Livewire events
+                window.addEventListener('toast', event => {
+                    toastr[event.detail.type](event.detail.message);
+                });
 
+                // Session flash (Controller)
+                @if(session('toast'))
+                    toastr["{{ session('toast')['type'] }}"]("{{ session('toast')['message'] }}");
+                @endif
+            </script>
         <script> 
 
         let counter = 1; // Initial counter for input names/IDs

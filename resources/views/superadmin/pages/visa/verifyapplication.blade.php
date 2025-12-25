@@ -205,7 +205,8 @@
                                 @php
                                     $price = (float) ($clientData->visasubtype->price ?? 0);
                                     $commission = (float) ($clientData->visasubtype->commission ?? 0);
-                                    $gstPercent = (float) ($clientData->visasubtype->gstin ?? 0);
+                                    $taxStatus  = (bool) ($agency->tax_status ?? false);
+                                     $gstPercent = $taxStatus ? (float) ($clientData->visasubtype->gstin ?? 0) : 0;
 
                                     // Calculate GST amount
                                     $gstAmount = (($price + $commission) * $gstPercent) / 100;
@@ -242,10 +243,12 @@
                                 </div>
 
                                 {{-- GST Amount --}}
+                                @if($agency->tax_status)
                                 <div class="flex justify-between">
                                     <span class="text-gray-600">VAT ({{ number_format($gstPercent, 2) }}%)</span>
                                     <span class="font-medium">£{{ number_format($gstAmount, 2) }}</span>
                                 </div>
+                            @endif 
 
                                 {{-- Additional Members --}}
                                 @if($additionalMembers > 0)

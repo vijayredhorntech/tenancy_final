@@ -302,7 +302,10 @@
                         : ($booking->visasubtype->commission ?? 0)
                 );
 
-                $vatPercent=($booking->visasubtype->gstin ?? 0);
+            
+               $activeTax  = (bool) ($booking->agency->tax_status ?? false);
+                $vatPercent = $activeTax ? (float) ($booking->visasubtype->gstin ?? 0) : 0;
+             
 
 
 
@@ -526,7 +529,9 @@
                 <th>VISA TYPE</th>
                 <th>VISA FEES</th>
                 <th>SERVICE CHARGE</th>
+                @if($agency->tax_status)
                 <th>VAT CHARGE</th>
+                @endif
                 <th>AMOUNT</th>
             </tr>
         </thead>
@@ -545,7 +550,9 @@
                   </td>
                     <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
                     <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
-                    <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
+                @if($agency->tax_status)
+                     <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
+                @endif
 
 
 
@@ -563,8 +570,9 @@
                     {{ strtoupper($visaType) }}</td>
                     <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
                     <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
-                    <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
-
+                @if($agency->tax_status)
+                          <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
+                 @endif
     
                     <!-- <td>{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td> -->
                     <td>{{ $currency }}{{ number_format($subTotal, 2) }}</td>

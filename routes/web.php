@@ -103,6 +103,8 @@ Route::get('/agencylogout',[AuthController::class,'agency_logout'])->name("agenc
 Route::get('/getflight',[ServiceController::class,'getflight']);
 Route::get('/{d}', [AgencyController::class, 'him_agencyhomepage']);
 Route::get('/agency/login/', [AgencyController::class, 'him_agencylogin'])->name('agency.login');
+Route::post('agency/forgot/send-otp', [AgencyController::class, 'him_sendOtp'])->name('agency.forgot.send.otp');
+ Route::post('agency/forgot/verify-otp', [AgencyController::class, 'verifyOtp'])->name('agency.forgot.verify.otp');
     // Service Management
 
 // Route::get('/logout',[AuthController::class,'superadmin_logout'])->name("superadmin_logout");
@@ -141,9 +143,9 @@ Route::middleware([LogUserActivity::class])->group(function () {
                     Route::get('/serviceupdate/{id}', 'hs_serviceupdate')->middleware('can:service update')->name('superadmin_serviceupdate');
                     Route::post('/serviceupdate_store', 'hs_update_store')->name('serviceupdate_store');
                     Route::get('/servicedelete/{id}', 'hs_servicedelete')->middleware('can:service delete')->name('superadmin_servicedelete');
-                  
                 });
 
+              
              
 
 
@@ -151,6 +153,7 @@ Route::middleware([LogUserActivity::class])->group(function () {
                 /***Route for Agency ***/
                     Route::controller(AgencyController::class)->group(function () {
                         Route::get('/agency','him_agency_index')->middleware('can:agency view')->name('agency');
+                        Route::patch('/agencies/{agency}/toggle-tax','hsToggleTax')->name('agencies.toggle.tax');
                          Route::get('create', 'him_create_agency')->middleware('can:agency create')->name('create_agency');
                         Route::post('store', 'him_store_agency')->middleware('can:agency create')->name('agencies.store');
                         Route::get('edit/{id}', 'him_edit_agency')->middleware('can:agency update')->name('agencies.edit');

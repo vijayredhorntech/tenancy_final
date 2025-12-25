@@ -6,6 +6,7 @@
         :destination="$destination" 
         :applicationdata="$applicationData"
         :edit="$edit"
+        :agencyData="$agency"
       
     />
 

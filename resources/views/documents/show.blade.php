@@ -289,8 +289,9 @@
                         : ($booking->visasubtype->commission ?? 0)
                 );
 
-                $vatPercent=($booking->visasubtype->gstin ?? 0);
-
+                $taxStatus  = (bool) ($booking->agency->tax_status ?? false);
+                $vatPercent = $taxStatus ? (float) ($booking->visasubtype->gstin ?? 0) : 0;
+      
 
 
                 $amountBase = ($visaFee + $serviceCharge);
@@ -378,6 +379,7 @@
                             : 0;
                     }
 
+
                     $subTotal = $visaFee + $serviceCharge + $vatCharge;
 
 
@@ -437,7 +439,9 @@
     <!-- TO SECTION (Left) -->
     <div class="to-section" style="flex: 1; text-align: left;">
         <h3 style="font-size: 24px; font-weight: 600; color: #26ace2; margin-bottom: 10px;">To</h3>
+        
         <p style="margin: 0; line-height:19px">
+            {{ strtoupper($clientName) }}<br>
            {{ strtoupper($toParts['street']) }}<br>
             {{ strtoupper($toParts['city']) }}<br>
             {{ strtoupper($toParts['county']) }}<br>
@@ -511,7 +515,9 @@
                 <th>VISA TYPE</th>
                 <th>VISA FEES</th>
                 <th>SERVICE CHARGE</th>
-                <th>VAT CHARGE</th>
+                @if($booking->agency->tax_status)
+                  <th>VAT CHARGE</th>
+                @endif
                 <th>AMOUNT</th>
             </tr>
         </thead>
@@ -530,7 +536,10 @@
                   </td>
                 <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
                  <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
-                 <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
+                @if($booking->agency->tax_status)
+                    <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
+                @endif
+
 
 
 
@@ -547,9 +556,10 @@
                     {{ strtoupper($visaType) }}</td>
                     <td>{{ $currency }}{{ number_format($visaFee, 2) }}</td>
                     <td>{{ $currency }}{{ number_format($serviceCharge, 2) }}</td>
-                    <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
-
-    
+                    @if($booking->agency->tax_status)
+                        <td>{{ $currency }}{{ number_format($vatCharge, 2) }}</td>
+                    @endif
+        
                     <!-- <td>{{ $currency }}{{ number_format(is_numeric($invoiceData?->service_charge ?? 0) ? (float)($invoiceData?->service_charge ?? 0) : 0, 2) }}</td> -->
                     <td>{{ $currency }}{{ number_format($subTotal, 2) }}</td>
                 </tr>

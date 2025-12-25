@@ -48,6 +48,7 @@ use App\Http\Controllers\InvoiceController;
 
 use App\Events\MessageSent;
 
+
 Route::post('/agencies/agencies_store', [AgencyController::class, 'him_agencies_store'])->name('agency_login');
 
 // Flight request route for homepage users (no authentication required)
@@ -339,6 +340,9 @@ Route::group([
 Route::controller(ClientLoginController::class)->group(function () {
       
     Route::get('/{d}/clientlogin','hsClientLogin')->name('client.login');
+    Route::post('/client/forgot/send-otp','sendOtp')->name('client.forgot.send.otp');
+    Route::post('/client/forgot/verify-otp','verifyOtp') ->name('client.forgot.verify.otp');
+
     Route::post('/clientlogin','hsClientLoginStore')->name('clientloginstore');
     Route::get('/client/application','hsClientApplication')->name('client.application');
     Route::get('/client/application/view/{id}','hsClientApplicationView')->name('client.application.view');
@@ -382,7 +386,9 @@ Route::controller(ClientLoginController::class)->group(function () {
     Route::get('/agencies/clientcreate/{token}','hsClientCreate');
     Route::post('/agencies/clientstore','hs_ClientStore')->name('client.store');
     Route::post('/agencies/clientstoreajax','hs_ClientStoreAjax')->name('client.update');
-    Route::get('/client/search','search')->name('client.search');
+    // Route::get('/client/search','search')->name('client.search');
+    Route::get('client/search', [ClientController::class, 'search']);
+    Route::post('client/verify-otp', [ClientController::class, 'verifyOtp']);
   
      
    

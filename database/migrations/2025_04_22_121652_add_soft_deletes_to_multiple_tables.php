@@ -11,7 +11,7 @@ class AddSoftDeletesToMultipleTables extends Migration
      */
     protected $tables = [
         'add_balances','agencies', 'agency_details', 'airlines', 'airports', 'apply_user_leaves',
-        'assignments', 'attendances', 'authervisa_applications', 'balances', 'cache',
+        'assignments', 'attendances',  'balances', 'cache',
         'cache_locks', 'cities', 'countries',
         'deductions', 'domains', 'failed_jobs', 'flight_bookings', 'flight_bookings_passenger_details',
         'flight_settings', 'fromdocuments', 'hotel_booking_details', 'hotel_bookings',

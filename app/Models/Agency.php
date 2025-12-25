@@ -23,6 +23,7 @@ class Agency extends Model
         'country', 
         'database_name', 
         'user_id',
+        'tax_status',
     ];
 
     // Define the relationship to the User model

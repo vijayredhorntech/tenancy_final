@@ -10,135 +10,258 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet"/>
 
-    {{--    ===google fonts link--}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap"
-          rel="stylesheet">
-    {{--    ===google fonts link ends--}}
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@100..900&display=swap" rel="stylesheet">
 
-    {{--    ===font awesome link===--}}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-          integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    {{--    ===font awesome link ends===--}}
-    <style>
-        ::-webkit-scrollbar {
-            width: 2px;
-            height: 2px;
-        }
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
 
-        /* Track */
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        /* Handle */
-        ::-webkit-scrollbar-thumb {
-            background: #ff4216;
-        }
-
-        /* Handle on hover */
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        /* Firefox */
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
-
-
-        input[type="date"]::-webkit-datetime-edit {
-            color: #172432b3; /* Change placeholder text color */
-        }
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            opacity: 0;
-        }
-
-
-        select {
-            -webkit-appearance: none !important; /* Hides the arrow in WebKit-based browsers (Chrome, Safari, Edge) */
-            -moz-appearance: none !important;    /* Hides the arrow in Firefox */
-            appearance: none !important;         /* Standard property */
-            background: white !important ;
-            color: rgba(75, 85, 99, 0.7);/* Removes background if needed */
-        }
-        select option {
-            color: rgba(75, 85, 99, 0.7); /* Match placeholder text */
-            background-color: #ffffff; /* Ensure options have a white background */
-        }
-
-    </style>
-    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-
 </head>
-<body class="" style="font-family: 'Public Sans', serif;">
 
-<div class="w-full h-screen bg-center bg-cover bg-no-repeat relative" style="background-image: url({{asset('assets/images/loginBanner.jpg')}})">
-    <div class="w-full absolute top-0 left-0 w-full h-full flex justify-center items-center bg-ternary/50 p-2">
-        <form method="POST" action="{{ route('agency_login') }}" class="max-w-[500px] w-full bg-ternary/80  px-6 py-16 flex flex-col border-r-[5px] border-b-[5px] border-ternary/50 items-center xl:rounded-tl-[50px] ld:rounded-tl-[50px] md:rounded-tl-[50px] rounded-tl-[10px] xl:rounded-br-[50px] lg:rounded-br-[50px] md:rounded-br-[50px] rounded-br-[10px] rounded-tr-[10px] rounded-bl-[10px] flex flex-col items-center  shadow-lg shadow-gray-500">
+<body style="font-family:'Public Sans', serif;">
 
-          {{--  <img src="" alt="" class="h-[100px] w-auto"> --}}
-            <div class="w-full xl:flex lg:flex md:flex hidden flex-col items-center py-6">
-                <span class="text-gray-300 text-2xl font-semibold">Welcome Back! Let's Get You Logged In</span>
-                <p class="text-center mt-2 text-sm text-gray-400">"Enter your credentials to access your account and explore all the exciting features. If you don’t have an account yet, sign up and join our community today!"</p>
-            </div>
+<!-- ================= LOGIN FORM ================= -->
+<div id="loginForm" class="w-full h-screen bg-center bg-cover relative"
+     style="background-image:url({{ asset('assets/images/loginBanner.jpg') }})">
+
+    <div class="absolute inset-0 flex justify-center items-center bg-ternary/50 p-2">
+
+        <form method="POST" action="{{ route('agency_login') }}"
+              class="max-w-[500px] w-full bg-ternary/80 px-6 py-16 flex flex-col
+                     border-r-[5px] border-b-[5px] border-ternary/50
+                     items-center shadow-lg rounded-[10px]">
 
             @csrf
-            <div class="w-full mt-6 flex flex-col items-center gap-4">
-                <div class=" w-full flex flex-col gap-1 ">
-                    <label for="email" class="font-semibold text-md text-gray-300">Email</label>
-                    <div class="relative w-full">
-                        <i class="fa fa-user absolute text-gray-300 left-8 top-[50%] translate-y-[-50%]"></i>
-                        <input class="w-full px-4 pl-16 py-3 border-[2px] border-gray-400 bg-transparent text-gray-300 placeholder-gray-400 rounded-full focus:outline-none focus:ring-0 focus:border-gray-300" id="email"  type="email" name="email" :value="old('email')"   placeholder="Enter your email....." required/>
-                    </div>
-                    @error('email') <span class="text-danger font-semibold text-sm mt-1"><i class="fa fa-triangle-exclamation mr-2"></i> {{ $message }}</span> @enderror
-                </div>
-                <div class=" w-full flex flex-col gap-1 mt-4">
-                    <label for="password" class="font-semibold text-md text-gray-300">Password</label>
-                    <div class="relative w-full">
-                        <i class="fa fa-lock absolute text-gray-300 left-8 top-[50%] translate-y-[-50%]"></i>
-                        <input id="password" class="w-full px-4 pl-16 py-3 border-[2px] border-gray-400 bg-transparent text-gray-300 placeholder-gray-400 rounded-full focus:outline-none focus:ring-0 focus:border-gray-300" type="password" name="password"  autocomplete="current-password" placeholder="Enter your password....." required/>
-                    </div>
-                    @error('password') <span class="text-danger font-semibold text-sm mt-1"><i class="fa fa-triangle-exclamation mr-2"></i> {{ $message }}</span> @enderror
 
-                </div>
-
-                <!-- Hidden value -->
-                <input type="hidden" id="form2Example22" class="form-control"
-                name="domain" value="{{ $agency->domains->domain_name }}" />
-
-                <input type="hidden" id="form2Example22" class="form-control"
-                name="database" value="{{ $agency->database_name }}" />
-
-
+            <div class="hidden xl:flex flex-col items-center py-6">
+                <span class="text-gray-300 text-2xl font-semibold">
+                    Welcome Back! Let's Get You Logged In
+                </span>
+                <p class="mt-2 text-sm text-gray-400 text-center max-w-md">
+                    Please enter your registered email and password to continue.
+                </p>
             </div>
-            <div class="mt-12 w-full">
-                <button class="w-full px-2 xl:py-4 lg:py-4 md:py-4 py-2 border-[2px] border-secondary/50 bg-secondary/40 text-gray-200 font-semibold rounded-full text-lg hover:bg-secondary/80 hover:text-white hover:border-secondary transition ease-in duration-2000" type="submit">
-                    {{ __('Log in') }}
+
+            <div class="w-full mt-6 flex flex-col gap-4">
+
+                <div>
+                    <label class="text-gray-300 font-semibold">Email</label>
+                    <div class="relative">
+                        <i class="fa fa-user absolute left-8 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                        <input type="email" name="email" required
+                               class="w-full px-4 pl-16 py-3 border-2 border-gray-400 bg-transparent text-gray-300 rounded-full">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-gray-300 font-semibold">Password</label>
+                    <div class="relative">
+                        <i class="fa fa-lock absolute left-8 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                        <input type="password" name="password" required
+                               class="w-full px-4 pl-16 py-3 border-2 border-gray-400 bg-transparent text-gray-300 rounded-full">
+                    </div>
+                </div>
+
+                <input type="hidden" name="domain" value="{{ $agency->domains->domain_name }}">
+                <input type="hidden" name="database" value="{{ $agency->database_name }}">
+            </div>
+
+            <div class="mt-10 w-full">
+                <button class="w-full py-3 bg-secondary/40 border-2 border-secondary/50 text-gray-200 rounded-full">
+                    Log in
                 </button>
 
-                @if (Route::has('password.request'))
-                    <div class="mr-1 flex justify-center mt-4">
-                        <a class="text-md text-gray-400 underline font-semibold hover:text-secondary/80 transition ease-in duration-2000 group" href="{{ route('password.request') }}">
-                            <i class="fa fa-lock mr-2 group-hover:hidden"></i> <i class="fa fa-unlock-keyhole mr-2 hidden group-hover:inline-block"></i> {{ __('Forgot Password?') }}
-                        </a>
-                    </div>
-                @endif
+                <div class="text-center mt-4">
+                    <a onclick="showForgot()" class="cursor-pointer text-gray-400 underline">
+                        Forgot Password?
+                    </a>
+                </div>
             </div>
         </form>
     </div>
 </div>
+
+<!-- ================= FORGOT PASSWORD ================= -->
+<div id="forgotForm" class="w-full h-screen bg-center bg-cover relative hidden"
+     style="background-image:url({{ asset('assets/images/loginBanner.jpg') }})">
+
+    <div class="absolute inset-0 flex justify-center items-center bg-ternary/50 p-2">
+
+        <form id="forgotAjaxForm"
+              class="max-w-[500px] w-full bg-ternary/80 px-6 py-16 flex flex-col
+                     border-r-[5px] border-b-[5px] border-ternary/50
+                     items-center shadow-lg rounded-[10px]">
+
+            @csrf
+
+            <div class="flex flex-col items-center mb-6">
+                <span class="text-gray-300 text-2xl font-semibold">
+                    Forgot Password
+                </span>
+                <p class="mt-2 text-sm text-gray-400 text-center max-w-md">
+                    Enter your registered email address to receive a one-time password (OTP).
+                </p>
+            </div>
+
+            <div class="w-full">
+                <label class="text-gray-300 font-semibold">Email</label>
+                <div class="relative">
+                    <i class="fa fa-user absolute left-8 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                    <input type="email" name="email" required
+                           class="w-full px-4 pl-16 py-3 border-2 border-gray-400 bg-transparent text-gray-300 rounded-full">
+                </div>
+            </div>
+
+            <input type="hidden" name="domain" value="{{ $agency->domains->domain_name }}">
+            <input type="hidden" name="database" value="{{ $agency->database_name }}">
+            
+     
+            <button class="mt-8 w-full py-3 bg-secondary/40 border-2 border-secondary/50 text-gray-200 rounded-full">
+                Send OTP
+            </button>
+               <a href="javascript:void(0)"
+                onclick="backToLogin()"
+                class="backlogin text-gray-400 underline cursor-pointer mt-4">
+                Back to Login
+                </a>
+           
+        </form>
+    </div>
+</div>
+
+<!-- ================= VERIFY OTP ================= -->
+<div id="otpForm" class="w-full h-screen bg-center bg-cover relative hidden"
+     style="background-image:url({{ asset('assets/images/loginBanner.jpg') }})">
+
+    <div class="absolute inset-0 flex justify-center items-center bg-ternary/50 p-2">
+
+        <form id="verifyOtpForm"
+              class="max-w-[500px] w-full bg-ternary/80 px-6 py-16 flex flex-col
+                     border-r-[5px] border-b-[5px] border-ternary/50
+                     items-center shadow-lg rounded-[10px]">
+
+            @csrf
+
+            <div class="flex flex-col items-center mb-6">
+                <span class="text-gray-300 text-2xl font-semibold">
+                    Verify OTP
+                </span>
+                <p class="mt-2 text-sm text-gray-400 text-center max-w-md">
+                    Please enter the OTP sent to your registered email address.
+                </p>
+            </div>
+
+            <div class="w-full">
+                <label class="text-gray-300 font-semibold">OTP</label>
+                <div class="relative">
+                    <i class="fa fa-key absolute left-8 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                    <input type="text" name="otp" required
+                           class="w-full px-4 pl-16 py-3 border-2 border-gray-400 bg-transparent text-gray-300 rounded-full">
+                </div>
+            </div>
+
+             
+            <button class="mt-8 w-full py-3 bg-secondary/40 border-2 border-secondary/50 text-gray-200 rounded-full">
+                Verify OTP
+            </button>
+
+               <a href="javascript:void(0)"
+                onclick="backToLogin()"
+                class="backlogin text-gray-400 underline cursor-pointer mt-4">
+                Back to Login
+                </a>
+        </form>
+    </div>
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* ================= GET DOM ELEMENTS ================= */
+    const loginForm      = document.getElementById('loginForm');
+    const forgotForm     = document.getElementById('forgotForm');
+    const otpForm        = document.getElementById('otpForm');
+
+    const forgotAjaxForm = document.getElementById('forgotAjaxForm');
+    const verifyOtpForm  = document.getElementById('verifyOtpForm');
+
+      /* ================= BACK TO LOGIN ================= */
+    window.backToLogin = function () {
+        otpForm.classList.add('hidden');
+        forgotForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+    };
+
+
+
+
+    const csrf = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute('content');
+
+    /* ================= SHOW FORGOT ================= */
+    window.showForgot = function () {
+        loginForm.classList.add('hidden');
+        forgotForm.classList.remove('hidden');
+    };
+
+    /* ================= SEND OTP ================= */
+    forgotAjaxForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        fetch("{{ route('agency.forgot.send.otp') }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrf
+            },
+            body: new FormData(forgotAjaxForm)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                forgotForm.classList.add('hidden');
+                otpForm.classList.remove('hidden');
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(() => {
+            alert('Server error while sending OTP');
+        });
+    });
+
+    /* ================= VERIFY OTP ================= */
+    verifyOtpForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        fetch("{{ route('agency.forgot.verify.otp') }}", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrf
+            },
+            body: new FormData(verifyOtpForm)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert('OTP verified successfully. You can now reset your password.');
+                // next step: show reset password form
+                window.location.reload(); 
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(() => {
+            alert('Server error while verifying OTP');
+        });
+    });
+
+});
+</script>
+
+
 </body>
 </html>
-
-
-

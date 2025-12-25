@@ -30,7 +30,10 @@
 <!-- Before closing body tag -->
 {{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
 
+      
 @php
+
+
     // Check if visas exist and not empty
     if (!empty($visas) && $visas->count() > 0) {
 
@@ -76,6 +79,8 @@
         $randomImage = asset('assets/images/india-visa-application-requirements.jpg');
         $getStartedUrl = '#'; // no link when no visa exists
     }
+
+    $isTaxDisplay=$agencyData->tax_status; 
 @endphp
 
 
@@ -270,7 +275,11 @@
                                                 <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Processing</th>
                                                 <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Embassy fee</th>
                                                 <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Service fee</th>
+
+                               
+                                                @if($isTaxDisplay)
                                                 <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">VAT (20%)</th>
+                                                @endif 
                                                 <th class="border-[2px] border-secondary/40 bg-gray-100 px-4 py-1.5 text-ternary/80 font-bold text-md">Total cost</th>
                                             </tr>
 
@@ -283,8 +292,24 @@
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $subvisa->processing }}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$subvisa->price}}</td>
                                                     <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$subvisa->commission}}</td>
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{ $subvisa->gstin ?? 'N/A' }} %</td>
-                                                    <td class="border-[2px] border-secondary/40  px-4 py-1 text-ternary/80 font-medium text-sm">{{$subvisa->price+$subvisa->commission}}</td>
+                                                        @php
+                                                            $baseAmount = $subvisa->price + $subvisa->commission;
+                                                            $gstPercent = $subvisa->gstin ?? 0;
+                                                            $gstAmount  = ($isTaxDisplay) ? ($baseAmount * $gstPercent / 100) : 0;
+                                                            $total      = $baseAmount + $gstAmount;
+                                                        @endphp
+
+                                                        @if($isTaxDisplay)
+                                                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                                                {{ $gstPercent }} %
+                                                            </td>
+                                                        @endif
+
+                                                            <td class="border-[2px] border-secondary/40 px-4 py-1 text-ternary/80 font-medium text-sm">
+                                                                {{ number_format($total, 2) }}
+                                                            </td>
+
+                                                 
 
                                                 </tr>
 
