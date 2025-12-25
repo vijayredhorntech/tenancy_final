@@ -152,37 +152,7 @@
                                             <i class="fa fa-eye"></i>
                                         </div>
                                     </a>
-                               
-                                    {{--             <a href="{{ route('visa.editcountry', ['id' => $visa->id]) }}" title="Edit Country">
-                                        <div class=" bg-primary/10 text-primary h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-primary hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-pencil"></i>
-                                        </div>
-                                    </a>
-                               
-
-                                    <a href="{{ route('requiredclient.field', ['id' => $visa->id]) }}" title="Assign  Country">
-                                        <div class=" bg-success/10 text-success h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-success hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-plus"></i>
-                                        </div>
-                                    </a>
-                                    
-                                    --}}
-                                    
-
-                                    <!-- <a href="{{ route('visa.view', ['id' => $visa->id]) }}" title="Assign to Visa Request"> -->
-                                    <!-- <a href="{{ route('visa.assigncountry', ['id' => $visa->id]) }}" title="Assign to Visa Request">
-                                        <div class="bg-green-100 text-green-600 h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-green-600 hover:text-white transition ease-in duration-200">
-                                            <i class="fa fa-eye"></i>
-                                        </div>
-                                    </a> -->
-
-
-                                    <!-- <a href="" title="View Dashboard">
-                                        <div class=" bg-danger/10 text-danger h-6 w-8 flex justify-center items-center rounded-[3px] hover:bg-danger hover:text-white transition ease-in duration-2000">
-                                            <i class="fa fa-computer"></i>
-                                        </div>
-                                    </a> -->
-
+      
 
                                 </div>
                             </td>
@@ -197,7 +167,9 @@
 
 
                 </table>
-                {{--  {{ $visas->onEachSide(0)->links() }}--}}
+                <div>
+               {{ $applyCountires->links() }}
+</div>
 
 
             </div>
