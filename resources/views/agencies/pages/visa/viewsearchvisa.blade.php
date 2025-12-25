@@ -4,5 +4,7 @@
         :countries="$countries" 
         :orgin="$orgin" 
         :destination="$destination" 
+        :agencyData="$agency" 
+
     />
 </x-main.layout>

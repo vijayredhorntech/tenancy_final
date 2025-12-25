@@ -362,10 +362,19 @@ class VisaController extends Controller
         $countries=Country::get();
         
         $agency = $this->agencyService->getAgencyData();
+ 
+      
    
   
         if($agency==null){
-             return view('agencies.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination'));
+            $domain=session('agency_domain');
+                $agency = Agency::with('domains')
+                    ->whereHas('domains', function ($q) use ($domain) {
+                        $q->where('name', $domain); // or ->where('full_url', $domain)
+                    })
+                    ->first();
+            
+             return view('agencies.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination','agency'));
         }
         return view('superadmin.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination','agency'));
     }
