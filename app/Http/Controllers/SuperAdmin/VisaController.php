@@ -368,6 +368,7 @@ class VisaController extends Controller
   
         if($agency==null){
             $domain=session('agency_domain');
+            dd($domain);
                 $agency = Agency::with('domains')
                     ->whereHas('domains', function ($q) use ($domain) {
                         $q->where('name', $domain); // or ->where('full_url', $domain)
