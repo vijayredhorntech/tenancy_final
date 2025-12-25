@@ -85,6 +85,7 @@ class ClientController extends Controller
     public function hs_index(Request $request)
     {
         
+     
 
         $clients = $this->clintRepository->getAllClint($request);
         $agency = $this->agencyService->getAgencyData();

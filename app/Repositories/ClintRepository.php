@@ -56,14 +56,7 @@ class ClintRepository implements ClintRepositoryInterface
 
 
 
-    // public function getAllClint(){
  
-   
-    //     /**Get Agency record *****/
-    //     $agency = $this->agencyService->getAgencyData();
-    //     return ClientDetails::with('clientinfo')->where('agency_id',$agency->id)->paginate(10);
-    // }
-
 
     // In ClintRepository.php
     public function getAllClint($data)
