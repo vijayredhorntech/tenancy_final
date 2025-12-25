@@ -407,20 +407,7 @@ public function getagencyVisaApplication($request,$id)
             $visa->description = $data['description'];
             $visa->save();
 
-            // Save Visa Subtypes in a loop
-            // foreach ($data['subtype'] as $key => $subtypeName) {
-            //     VisaSubtype::create([
-            //         'visa_type_id' => $visa->id, // Assuming Visa Type ID is the VisaService ID
-            //         'name' => $subtypeName,
-            //         'price' => $data['subtypeprice'][$key],
-            //         'commission' => $data['commission'][$key],
-            //         'validity' => $data['validity'][$key],
-            //         'processing' => $data['processing'][$key],
-            //         'gstin' => $data['gstin'][$key],
-            //         'status' => 1 // Default status as active
-            //     ]);
-            // }
-    
+        
             return $visa;
         });
     }

@@ -2680,7 +2680,7 @@
                     </div>
                 </div>
               @endif
-               <!-- <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="previewvisadetails">
+               {{-- <div class="bg-white rounded-xl shadow-md overflow-hidden section-container" data-section="previewvisadetails">
                 <div class="bg-gradient-to-r from-gray-50 to- gray-100 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                     <h2 class="text-xl font-bold text-gray-800 flex items-center">
                         <i class="fas fa-briefcase text-primary mr-2"></i>
@@ -2719,13 +2719,13 @@ I
 
                     </div>
                 </div>
-            </div> --!>
+            </div> --}}
                <div class="flex justify-between mt-8">
-                <!-- <a href="{{ route('download.fillapplication', ['id' => $bookingData->id]) }}">
+                {{-- <a href="{{ route('download.fillapplication', ['id' => $bookingData->id]) }}">
                     <button class="bg-success text-white px-6 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-success focus:ring-opacity-50">
                         Download
                     </button>
-                </a> -->
+                </a> --}}
 
 
            <div class="flex justify-end mt-4">
