@@ -742,10 +742,10 @@
                                     <button type="submit" title="Toggle Tax Status" class="focus:outline-none">
                                         <div class="
                                             {{ $agency->tax_status
-                                                ? 'bg-green-500/20 text-green-600 hover:bg-green-500 hover:text-primary'
-                                                : 'bg-gray-500/20 text-gray-600 hover:bg-gray-500 hover:text-primary' }}
-                                            h-12 w-18 flex justify-center items-center rounded-xl
-                                            transition ease-in duration-2000 text-2xl">
+                                                ? ' text-green-600  hover:text-primary'
+                                                : ' text-gray-600  hover:text-danger' }}
+                                             flex justify-center items-center rounded-xl
+                                            transition ease-in duration-2000 text-4xl">
                                             
                                             <i class="fa {{ $agency->tax_status ? 'fa-toggle-on' : 'fa-toggle-off' }}"></i>
                                         </div>

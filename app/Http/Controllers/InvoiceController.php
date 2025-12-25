@@ -1429,10 +1429,11 @@ public function hsAllinvoice(Request $request)
     $clientData=$this->visaRepository->bookingDataById($invoice->flight_booking_id);
     // Check if user is agency or superadmin
     $agency = $this->agencyService->getAgencyData();
+    
 
     if ($agency) {
         // Agency user - return agency view
-        return view('agencies.pages.invoicehandling.editinvoice', compact('invoice'));
+        return view('agencies.pages.invoicehandling.editinvoice', compact('invoice','agency'));
     } else {
         // Superadmin user - return superadmin view
         return view('superadmin.pages.invoicehandling.editinvoice', compact('invoice'));
