@@ -348,8 +348,9 @@ public function verifyOtp(Request $request)
                 $q->where('display_invoice', 1);
             },
         ])->get();
+        $countries=Country::get(); 
         
-        return view('clients.applicationview', compact('booking', 'forms', 'termconditon'));
+        return view('clients.applicationview', compact('booking', 'forms', 'termconditon','countries'));
     }
 
     /****Client Conversation *** */
