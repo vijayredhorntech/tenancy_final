@@ -402,6 +402,7 @@ public function hs_agencyUpdateClient(Request $request, $id)
 
 
     public function hs_agencyChatClient($id){
+
         $agency = $this->agencyService->getAgencyData();
         
         $client = $this->clintRepository->getClientById($id);

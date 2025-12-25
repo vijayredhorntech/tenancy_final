@@ -36,100 +36,105 @@
 
             <!-- Chat messages area -->
             <div class="p-4 w-full h-[600px] bg-white overflow-y-auto" id="chat-messages">
-                  @foreach($messages  as $message)
-                        @if($message->sender_user_type == 'client')
-                            <div class="flex flex-col items-end w-full gap-2 mb-4">
-                                <div class="w-[70%] flex flex-col items-end">
-                                    <div class="w-max">
+                  @foreach($messages as $message)
 
-                                        <!-- Chat Bubble -->
-                                        <div class="bg-blue-200 w-max px-6 pr-10 py-2 group rounded-tl-full rounded-br-full rounded-tr-full relative">
-                                            <span>{{ $message->message }}</span>
+    @php
+        $isToday = $message->created_at->isToday();
+        $timeLabel = $isToday 
+            ? $message->created_at->format('h:i A') 
+            : $message->created_at->format('d M Y, h:i A');
+    @endphp
 
-                                            <!-- Menu Icon -->
-                                            <div class="menu-button absolute top-0 right-[10px] hidden group-hover:block cursor-pointer"
-                                                onclick="toggleMenu({{ $message->id }})">
-                                                <i class="fa fa-ellipsis text-xs"></i>
-                                            </div>
+    @if($message->sender_user_type == 'client')
+        <div class="flex flex-col items-end w-full gap-2 mb-4">
+            <div class="w-[70%] flex flex-col items-end">
+                <div class="w-max">
 
-                                            <!-- Popup Menu -->
-                                            <div id="chat-menu-{{ $message->id }}" 
-                                                class="absolute top-[100%] hidden right-0 bg-black w-[200px] rounded-sm z-50">
+                    <!-- Chat Bubble -->
+                    <div class="bg-blue-200 w-max px-6 pr-10 py-2 group rounded-tl-full rounded-br-full rounded-tr-full relative">
 
-                                                <div class="text-white">
-
-                                                    <div class="py-2 border-b border-white cursor-pointer hover:bg-white/10 px-4"
-                                                        onclick="openEditModal({{ $message->id }}, '{{ addslashes($message->message) }}')">
-                                                        Edit
-                                                    </div>
-
-                                                    <div class="py-2 border-b border-white cursor-pointer hover:bg-white/10 px-4"
-                                                        onclick="deleteMessage({{ $message->id }})">
-                                                        Delete
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Timestamp -->
-                                        <div class="flex justify-end">
-                                            <p class="text-secondary text-xs">{{ $message->created_at->diffForHumans() }}</p>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
+                        @if($message->is_delete)
+                            <span class="italic text-gray-600">This message was deleted</span>
                         @else
-                            <!-- Sender part unchanged -->
-                            <div class="flex flex-col gap-2 w-full mb-4">
-                                <div class="w-[70%] flex flex-col">
-                                    <div class="w-max">
-                                        <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
-                                            <span>{{ $message->message }}</span>
-                                        </div>
-                                        <div class="flex justify-end">
-                                            <p class="text-secondary text-xs">{{ $message->created_at->diffForHumans() }}</p>
-                                        </div>
+                            <span>{{ $message->message }}</span>
+
+                            @if($message->is_edit)
+                                <span class="text-[10px] italic text-gray-600 ml-1">(edited)</span>
+                            @endif
+                        @endif
+
+                        <!-- Menu Icon (hide if deleted) -->
+                        @if(!$message->is_delete)
+                            <div class="menu-button absolute top-0 right-[10px] hidden group-hover:block cursor-pointer"
+                                onclick="toggleMenu({{ $message->id }})">
+                                <i class="fa fa-ellipsis text-xs"></i>
+                            </div>
+                        @endif
+
+                        <!-- Popup Menu -->
+                        @if(!$message->is_delete)
+                            <div id="chat-menu-{{ $message->id }}" 
+                                class="absolute top-[100%] hidden right-0 bg-black w-[200px] rounded-sm z-50">
+                                <div class="text-white">
+                                    <div class="py-2 border-b border-white cursor-pointer hover:bg-white/10 px-4"
+                                        onclick="openEditModal({{ $message->id }}, '{{ addslashes($message->message) }}')">
+                                        Edit
+                                    </div>
+
+                                    <div class="py-2 border-b border-white cursor-pointer hover:bg-white/10 px-4"
+                                        onclick="deleteMessage({{ $message->id }})">
+                                        Delete
                                     </div>
                                 </div>
                             </div>
                         @endif
-                    @endforeach
 
-               {{-- @foreach($messages as $message)
-                    @if($message->sender_user_type == 'client')
-                        <!-- Current user's messages (right side) -->
-                        <div class="flex flex-col items-end w-full gap-2 mb-4">
-                            <div class="w-[70%] flex flex-col items-end">
-                                <div class="w-max">
-                                    <div class="bg-blue-200 w-max px-6 py-2 rounded-tl-full rounded-br-full rounded-tr-full">
-                           
-                                        <span>{{ $message->message }}</span>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <p class="text-secondary text-xs">{{ $message->created_at->diffForHumans() }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @else
-                        <!-- Other user's messages (left side) -->
-                        <div class="flex flex-col gap-2 w-full mb-4">
-                            <div class="w-[70%] flex flex-col">
-                                <div class="w-max">
-                                    <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
-                                        <span>{{ $message->message }}</span>
-                                    </div>
-                                    <div class="flex justify-end">
-                                        <p class="text-secondary text-xs">{{ $message->created_at->diffForHumans() }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
-                @endforeach --}}
+                    </div>
+
+                    <!-- Timestamp -->
+                    <div class="flex justify-end">
+                        <p class="text-secondary text-xs">
+                            {{ $timeLabel }}
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    @else
+        <!-- Receiver -->
+        <div class="flex flex-col gap-2 w-full mb-4">
+            <div class="w-[70%] flex flex-col">
+                <div class="w-max">
+                    <div class="bg-gray-200 w-max px-6 py-2 rounded-tl-full rounded-bl-full rounded-tr-full">
+
+                        @if($message->is_delete)
+                            <span class="italic text-gray-600">This message was deleted</span>
+                        @else
+                            <span>{{ $message->message }}</span>
+
+                            @if($message->is_edit)
+                                <span class="text-[10px] italic text-gray-600 ml-1">(edited)</span>
+                            @endif
+                        @endif
+
+                    </div>
+
+                    <div class="flex justify-end">
+                        <p class="text-secondary text-xs">
+                            {{ $timeLabel }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+@endforeach
+
+
+        
             </div>
 
             <!-- Message input form -->

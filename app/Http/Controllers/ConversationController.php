@@ -124,22 +124,47 @@ class ConversationController extends Controller
        }
 
 
-       public function delete(Request $request)
-        {
-            Message::find($request->id)->delete();
-            return response()->json(['success' => true]);
+    //    public function delete(Request $request)
+    //     {
+    //         Message::find($request->id)->delete();
+    //         return response()->json(['success' => true]);
+    //     }
+        public function delete(Request $request)
+    {
+        $chat = Message::find($request->id);
+
+        if (!$chat) {
+            return response()->json(['success' => false, 'message' => 'Message not found'], 404);
         }
 
+        $chat->is_delete = true;
+        $chat->deleted_at_manual = now();
+        $chat->deleted_user_id = auth()->id(); // optional
+        $chat->save();
+
+        return response()->json(['success' => true]);
+    }
 
 
-       public function update(Request $request)
+
+
+      public function update(Request $request)
         {
             $chat = Message::find($request->id);
+
+            if (!$chat) {
+                return response()->json(['success' => false, 'message' => 'Message not found'], 404);
+            }
+
             $chat->message = $request->message;
+            $chat->is_edit = true; 
+            $chat->edited_at = now(); 
+            $chat->updated_user_id = auth()->id(); // optional log
             $chat->save();
 
             return response()->json(['success' => true]);
         }
+
 
 
     public function hs_sendMessageSAApplication(Request $request){

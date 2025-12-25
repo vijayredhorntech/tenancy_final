@@ -304,19 +304,12 @@ public function verifyOtp(Request $request)
       
         $detials=[];
         
-        // $client_data= Auth::guard('client')->user();
         $storedata= $this->agencyService->getLoginClient(); 
         $client_data= $storedata['agencydatabaseclient'];
-        // dd($client_data);
         
         $agency=Agency::where('id',$client_data->agency_id)->first();
         $messages = Message::where('client_id', $client_data->id)
-        // ->where('sender_user_type', 'client')
         ->get();
-        // dd($client_data);
-        // $userData = session('user_data');
-        // dd($userData);
-        // dd($client_data);
         $agency=Agency::where('id',$client_data->agency_id)->first();
         return view('clients.support',compact('messages','client_data','agency'));
     }
