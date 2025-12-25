@@ -373,7 +373,7 @@ class VisaController extends Controller
                         $q->where('name', $domain); // or ->where('full_url', $domain)
                     })
                     ->first();
-            
+            dd($agency);
              return view('agencies.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination','agency'));
         }
         return view('superadmin.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination','agency'));
