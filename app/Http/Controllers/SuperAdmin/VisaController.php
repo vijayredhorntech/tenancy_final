@@ -368,16 +368,13 @@ class VisaController extends Controller
   
         if($agency==null){
             $domain=session('agency_domain');
-            $data=Agency::with('domains')->get(); 
-            dd($data);
-
-
+          
                 $agency = Agency::with('domains')
                     ->whereHas('domains', function ($q) use ($domain) {
-                        $q->where('name', $domain); // or ->where('full_url', $domain)
+                        $q->where('domain_name', $domain); // or ->where('full_url', $domain)
                     })
                     ->first();
-            dd($agency);
+       
              return view('agencies.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination','agency'));
         }
         return view('superadmin.pages.visa.viewsearchvisa',compact('visas','countries','orgin','destination','agency'));
